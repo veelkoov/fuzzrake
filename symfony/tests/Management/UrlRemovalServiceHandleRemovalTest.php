@@ -15,6 +15,7 @@ use App\Utils\TestUtils\UtcClockMock;
 use App\ValueObject\Notification;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
@@ -25,6 +26,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     private DateTimeInterface $now;
     private MessengerInterface&MockObject $messengerMock;
 
+    #[Override]
     protected function setUp(): void
     {
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
@@ -43,6 +45,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         $this->now = UtcClock::now();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         TestsBridge::reset();

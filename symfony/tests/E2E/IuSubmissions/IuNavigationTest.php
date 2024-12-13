@@ -16,51 +16,47 @@ class IuNavigationTest extends AbstractTestWithEM
 
     public function testAbortWorksOnDataPage(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($this->client);
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-
-        $this::submitInvalidForm($client, 'Continue', [
+        $this::submitInvalidForm($this->client, 'Continue', [
             'iu_form[name]' => 'Some name',
             'iu_form[ages]' => 'ADULTS',
         ]);
 
         self::assertInputValueSame('iu_form[name]', 'Some name', "Partial data hasn't been saved");
 
-        $this::submitValidForm($client, 'Start over or withdraw', []);
+        $this::submitValidForm($this->client, 'Start over or withdraw', []);
 
         self::assertSelectorTextContains('h1', 'Inclusion/update request', "Haven't been redirected back");
 
-        self::skipRulesAndCaptcha($client);
+        self::skipRulesAndCaptcha($this->client);
 
         self::assertInputValueSame('iu_form[name]', '', 'Previously set "name" value got preserved');
     }
 
     public function testAbortWorksOnContactAndPasswordPage(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($this->client);
+        self::skipData($this->client, true);
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, true);
-
-        $this::submitInvalidForm($client, 'Submit', [
+        $this::submitInvalidForm($this->client, 'Submit', [
             'iu_form[contactAllowed]'         => 'FEEDBACK',
             'iu_form[emailAddressObfuscated]' => 'test-some-email@example.com',
         ]);
 
         self::assertInputValueSame('iu_form[emailAddressObfuscated]', 'test-some-email@example.com', "Partial data hasn't been saved");
 
-        $this::submitValidForm($client, 'Start over or withdraw', []);
+        $this::submitValidForm($this->client, 'Start over or withdraw', []);
 
         self::assertSelectorTextContains('h1', 'Inclusion/update request', "Haven't been redirected back");
 
-        self::skipRulesAndCaptcha($client);
+        self::skipRulesAndCaptcha($this->client);
 
         self::assertInputValueSame('iu_form[name]', '', 'Previously set "name" value got preserved');
 
-        self::skipData($client, true);
+        self::skipData($this->client, true);
 
         self::assertInputValueSame('iu_form[emailAddressObfuscated]', '', 'Previously set "emailAddressObfuscated" value got preserved');
     }
@@ -70,12 +66,10 @@ class IuNavigationTest extends AbstractTestWithEM
      */
     public function testBackWorksOnDataPage(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($this->client);
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-
-        $this::submitValidForm($client, 'Continue', [
+        $this::submitValidForm($this->client, 'Continue', [
             'iu_form[name]'            => 'test-some-name',
             'iu_form[ages]'            => 'ADULTS',
             'iu_form[nsfwWebsite]'     => 'NO',
@@ -86,7 +80,7 @@ class IuNavigationTest extends AbstractTestWithEM
             'iu_form[makerId]'         => 'ABRTEST',
         ]);
 
-        $this::submitValidForm($client, 'Back', [
+        $this::submitValidForm($this->client, 'Back', [
             'iu_form[contactAllowed]'         => 'FEEDBACK',
             'iu_form[emailAddressObfuscated]' => 'test-some-email@example.com',
         ]);
@@ -94,14 +88,14 @@ class IuNavigationTest extends AbstractTestWithEM
         self::assertSelectorTextContains('h2', 'Few instructions and tips', "Haven't been redirected back");
         self::assertInputValueSame('iu_form[name]', 'test-some-name', 'Previously set "name" value not preserved');
 
-        $this::submitValidForm($client, 'Continue', []);
+        $this::submitValidForm($this->client, 'Continue', []);
         self::assertInputValueSame('iu_form[emailAddressObfuscated]', 'test-some-email@example.com', 'Previously set "emailAddressObfuscated" value not preserved');
 
-        $this::submitValidForm($client, 'Submit', [
+        $this::submitValidForm($this->client, 'Submit', [
             'iu_form[password]' => 'test-some-password',
         ]);
 
-        self::performImport($client, true, 1);
+        self::performImport($this->client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('ABRTEST');

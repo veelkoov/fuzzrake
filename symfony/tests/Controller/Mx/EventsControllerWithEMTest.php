@@ -5,40 +5,51 @@ declare(strict_types=1);
 namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use Override;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @medium
  */
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
+    private KernelBrowser $client;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'testing',
+        ]);
+    }
+
     public function testEventAddAndEdit(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/mx/events/new');
+        static::assertResponseStatusCodeIs($this->client, 200);
 
-        $client->request('GET', '/mx/events/new');
-        static::assertResponseStatusCodeIs($client, 200);
-
-        $client->submitForm('Save', [
+        $this->client->submitForm('Save', [
             'event[newMakersCount]'             => 2,
             'event[updatedMakersCount]'         => 0,
             'event[reportedUpdatedMakersCount]' => 0,
         ]);
 
-        $client->followRedirect();
-        static::assertResponseStatusCodeIs($client, 200);
+        $this->client->followRedirect();
+        static::assertResponseStatusCodeIs($this->client, 200);
         static::assertSelectorTextContains('#events-list p', '2 new makers based on received I/U requests.');
 
-        $client->click($client->getCrawler()->filter('i.fa-edit')->ancestors()->link());
-        static::assertResponseStatusCodeIs($client, 200);
+        $this->client->click($this->client->getCrawler()->filter('i.fa-edit')->ancestors()->link());
+        static::assertResponseStatusCodeIs($this->client, 200);
 
-        $client->submitForm('Save', [
+        $this->client->submitForm('Save', [
             'event[newMakersCount]'             => 0,
             'event[updatedMakersCount]'         => 1,
             'event[reportedUpdatedMakersCount]' => 1,
         ]);
 
-        $client->followRedirect();
-        static::assertResponseStatusCodeIs($client, 200);
+        $this->client->followRedirect();
+        static::assertResponseStatusCodeIs($this->client, 200);
         static::assertSelectorTextContains('#events-list p', '1 updated maker based on received I/U request.');
         static::assertSelectorTextContains('#events-list p', '1 maker updated after report sent by a visitor(s). Thank you for your contribution!');
     }

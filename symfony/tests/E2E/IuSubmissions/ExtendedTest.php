@@ -99,7 +99,6 @@ class ExtendedTest extends AbstractTestWithEM
 
         self::sanityChecks();
 
-        $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
         $repo = self::getArtisanRepository();
         $loader = new JsonArtisanDataLoader('extended_test');
 
@@ -125,29 +124,29 @@ class ExtendedTest extends AbstractTestWithEM
         $oldData1 = $loader->getArtisanData('a1.1-persisted');
         $newData1 = $loader->getArtisanData('a1.2-send', self::NOT_IN_FORM);
         $makerId1 = $oldData1->getMakerId();
-        self::validateIuFormOldDataSubmitNew($client, $makerId1, $oldData1, $newData1);
+        self::validateIuFormOldDataSubmitNew($makerId1, $oldData1, $newData1);
 
         $oldData2 = new Artisan();
         $newData2 = $loader->getArtisanData('a2.2-send', self::NOT_IN_FORM);
         $makerId2 = '';
-        self::validateIuFormOldDataSubmitNew($client, $makerId2, $oldData2, $newData2);
+        self::validateIuFormOldDataSubmitNew($makerId2, $oldData2, $newData2);
 
         $oldData3 = $loader->getArtisanData('a3.1-persisted');
         $newData3 = $loader->getArtisanData('a3.2-send', self::NOT_IN_FORM);
         $makerId3 = $oldData3->getLastMakerId();
-        self::validateIuFormOldDataSubmitNew($client, $makerId3, $oldData3, $newData3);
+        self::validateIuFormOldDataSubmitNew($makerId3, $oldData3, $newData3);
 
         $oldData4 = new Artisan();
         $newData4 = $loader->getArtisanData('a4.2-send', self::NOT_IN_FORM);
         $makerId4 = '';
-        self::validateIuFormOldDataSubmitNew($client, $makerId4, $oldData4, $newData4);
+        self::validateIuFormOldDataSubmitNew($makerId4, $oldData4, $newData4);
 
         $oldData5 = $loader->getArtisanData('a5.1-persisted');
         $newData5 = $loader->getArtisanData('a5.2-send', self::NOT_IN_FORM);
         $makerId5 = $oldData5->getLastMakerId();
-        self::validateIuFormOldDataSubmitNew($client, $makerId5, $oldData5, $newData5);
+        self::validateIuFormOldDataSubmitNew($makerId5, $oldData5, $newData5);
 
-        $this->performImport($client, true, $finalCount);
+        $this->performImport($this->client, true, $finalCount);
 
         self::flush();
         self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount artisans in the DB after import");
@@ -168,27 +167,27 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
+    private function validateIuFormOldDataSubmitNew(string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
-        $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
-        self::assertResponseStatusCodeIs($client, 200);
-        self::skipRulesAndCaptcha($client);
+        $this->client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
+        self::assertResponseStatusCodeIs($this->client, 200);
+        self::skipRulesAndCaptcha($this->client);
 
-        self::assertNotFalse($client->getResponse()->getContent());
-        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), false);
+        self::assertNotFalse($this->client->getResponse()->getContent());
+        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent(), false);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form();
+        $form = $this->client->getCrawler()->selectButton('Continue')->form();
         self::setValuesInForm($form, $newData, false);
-        self::submitValid($client, $form);
+        self::submitValid($this->client, $form);
 
-        self::assertNotFalse($client->getResponse()->getContent());
-        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), true);
+        self::assertNotFalse($this->client->getResponse()->getContent());
+        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent(), true);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $form = $this->client->getCrawler()->selectButton('Submit')->form();
         self::setValuesInForm($form, $newData, true);
-        self::submitValid($client, $form);
+        self::submitValid($this->client, $form);
 
-        self::assertIuSubmittedAnyResult($client);
+        self::assertIuSubmittedAnyResult($this->client);
     }
 
     private static function getIuFormUrlForMakerId(string $urlMakerId): string

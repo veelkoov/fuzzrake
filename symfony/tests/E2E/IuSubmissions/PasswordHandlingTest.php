@@ -17,21 +17,19 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
     public function testNewMakerPasswordIsHashed(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($this->client);
+        self::skipData($this->client, true);
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, true);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'NO',
             'iu_form[password]'       => 'some-password',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport($client, true, 1);
+        self::performImport($this->client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('TESTMID');
@@ -40,8 +38,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
     public function testMakerUpdatedWithCorrectPasswordHasUnchangedHash(): void
     {
-        $client = static::createClient();
-
         $artisan = self::getArtisan(
             name: 'Old name',
             makerId: 'MAKERID',
@@ -56,22 +52,22 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
+        $this->client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($this->client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $this->client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]' => 'known-password',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport($client, true, 1);
+        self::performImport($this->client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
@@ -81,8 +77,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
     public function testMakerUpdatedWithPasswordChangeHasUpdatedHash(): void
     {
-        $client = static::createClient();
-
         $artisan = self::getArtisan(
             name: 'Old name',
             makerId: 'MAKERID',
@@ -97,24 +91,24 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
+        $this->client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($this->client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $this->client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport($client, true, 1);
+        self::performImport($this->client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
@@ -125,8 +119,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
     public function testNotAcceptedMakerWithWrongPasswordDoesntGetUpdated(): void
     {
-        $client = static::createClient();
-
         $artisan = self::getArtisan(
             name: 'Old name',
             makerId: 'MAKERID',
@@ -141,24 +133,24 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
+        $this->client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($this->client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $this->client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
         ]);
-        $this::submitValid($client, $form);
+        $this::submitValid($this->client, $form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport($client, false, 1);
+        self::performImport($this->client, false, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
