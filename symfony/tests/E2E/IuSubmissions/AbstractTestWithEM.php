@@ -29,7 +29,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
 
     protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void
     {
-        $crawler = $client->request('GET', '/mx/submissions/');
+        $crawler = $client->request('GET', '/mx/submissions/1/');
 
         $links = $crawler->filter('table a')->links();
 

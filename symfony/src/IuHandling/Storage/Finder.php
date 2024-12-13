@@ -11,6 +11,7 @@ use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use Symfony\Component\Finder\Finder as FileFinder;
 use Symfony\Component\Finder\SplFileInfo;
+use TRegx\CleanRegex\Exception\ReplacementExpectationFailedException;
 
 final class Finder
 {
@@ -20,7 +21,12 @@ final class Finder
 
     public static function getSingleFrom(string $directoryPath, string $id): ?SubmissionData
     {
-        $relativeFilePath = SubmissionData::getFilePathFromId($id);
+        try {
+            $relativeFilePath = SubmissionData::getFilePathFromId($id);
+        } catch (ReplacementExpectationFailedException) {
+            return null;
+        }
+
         $absoluteFilePath = $directoryPath.'/'.$relativeFilePath;
 
         if (!file_exists($absoluteFilePath)) {
