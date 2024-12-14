@@ -11,10 +11,17 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
+    protected KernelBrowser $client;
+
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'testing',
+        ]);
 
         Submissions::emptyTestSubmissionsDir();
     }
@@ -29,20 +36,20 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
 
     protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void
     {
-        $crawler = $client->request('GET', '/mx/submissions/');
+        $crawler = $this->client->request('GET', '/mx/submissions/1/');
 
         $links = $crawler->filter('table a')->links();
 
         self::assertCount($expectedImports, $links);
 
         foreach ($links as $link) {
-            $crawler = $client->request('GET', $link->getUri());
+            $crawler = $this->client->request('GET', $link->getUri());
 
             $form = $crawler->selectButton('Import')->form([
                 'submission[directives]' => $acceptAll ? 'accept' : '',
             ]);
 
-            $client->submit($form);
+            $this->client->submit($form);
         }
     }
 }

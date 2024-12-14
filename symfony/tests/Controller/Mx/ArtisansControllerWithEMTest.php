@@ -6,6 +6,8 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use Override;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @medium
@@ -14,6 +16,17 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 {
     use FormsChoicesValuesAndLabelsTestTrait;
 
+    private KernelBrowser $client;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'testing',
+        ]);
+    }
+
     /**
      * @param list<array{value: string, label: string}> $choices
      *
@@ -21,10 +34,8 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testFormsChoicesValuesAndLabels(array $choices): void
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/mx/artisans/new');
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = $this->client->request('GET', '/mx/artisans/new');
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         foreach ($choices as $choice) {
             $label = $choice['label'];
@@ -37,19 +48,17 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
     public function testNewArtisan(): void
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/mx/artisans/new');
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = $this->client->request('GET', '/mx/artisans/new');
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         $form = $crawler->selectButton('Save')->form([
             'artisan[makerId]' => 'MAKERID',
             'artisan[name]'    => 'New artisan',
         ]);
 
-        $client->submit($form);
-        $client->followRedirect();
-        self::assertResponseStatusCodeIs($client, 200);
+        $this->client->submit($form);
+        $this->client->followRedirect();
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         self::clear();
 
@@ -58,24 +67,22 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
     public function testEditArtisan(): void
     {
-        $client = static::createClient();
-
         /** @noinspection PhpRedundantOptionalArgumentInspection Make sure defaults for ages and worksWithMinors don't change. */
         $artisan = self::getArtisan(password: 'password-555', ages: null, worksWithMinors: null);
         self::persistAndFlush($artisan);
 
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match.');
 
-        $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = $this->client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         $form = $crawler->selectButton('Save')->form([
             'artisan[makerId]' => 'MAKERID',
         ]);
 
-        $client->submit($form);
-        $client->followRedirect();
-        self::assertResponseStatusCodeIs($client, 200);
+        $this->client->submit($form);
+        $this->client->followRedirect();
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         unset($artisan);
         self::clear();
@@ -88,34 +95,30 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
     public function testDeleteArtisanAnd404Response(): void
     {
-        $client = static::createClient();
-
         $artisan = self::getArtisan(makerId: 'MAKERID');
         self::persistAndFlush($artisan);
 
-        $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = $this->client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         $form = $crawler->selectButton('Delete')->form();
-        $client->submit($form);
-        $client->followRedirect();
-        self::assertResponseStatusCodeIs($client, 200);
+        $this->client->submit($form);
+        $this->client->followRedirect();
+        self::assertResponseStatusCodeIs($this->client, 200);
 
         self::clear();
 
-        $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeIs($client, 404);
+        $this->client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        self::assertResponseStatusCodeIs($this->client, 404);
     }
 
     public function testSubmittingEmptyDoesnt500(): void
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/mx/artisans/new');
+        $form = $this->client->getCrawler()->selectButton('Save')->form();
+        $this->client->submit($form);
 
-        $client->request('GET', '/mx/artisans/new');
-        $form = $client->getCrawler()->selectButton('Save')->form();
-        $client->submit($form);
-
-        self::assertResponseStatusCodeIs($client, 422);
+        self::assertResponseStatusCodeIs($this->client, 422);
     }
 
     /**
@@ -125,17 +128,15 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testContactUpdates(array $data): void
     {
-        $client = static::createClient();
-
         $artisan = self::getArtisan();
         $artisan
             ->setEmailAddress($data['init_original'])
             ->setEmailAddressObfuscated($data['init_obfuscated']);
         self::persistAndFlush($artisan);
 
-        $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        $this->client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
 
-        self::submitValidForm($client, 'Save', [
+        self::submitValidForm($this->client, 'Save', [
             'artisan[emailAddressObfuscated]' => $data['set_obfuscated'],
             'artisan[emailAddress]'           => $data['set_original'],
         ]);

@@ -18,8 +18,6 @@ class ArtisanUrlsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function index(ArtisanUrlRepository $repository): Response
     {
-        $this->authorize();
-
         $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
 
         return $this->render('mx/artisan_urls/index.html.twig', [

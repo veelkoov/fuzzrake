@@ -13,7 +13,10 @@ class ButtonClickedTraitTest extends WebTestCaseWithEM
 {
     public function testClicked(): void
     {
-        $client = self::createClient();
+        $client = self::createClient([], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'testing',
+        ]);
         $event = self::addSimpleGenericEvent();
 
         $editUrl = '/mx/events/'.$event->getId().'/edit';

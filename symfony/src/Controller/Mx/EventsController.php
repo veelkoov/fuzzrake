@@ -9,7 +9,6 @@ use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
 use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -25,10 +24,9 @@ class EventsController extends FuzzrakeAbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $manager,
-        EnvironmentsService $environments,
         CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($environments, $creatorRepository);
+        parent::__construct($creatorRepository);
     }
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
@@ -38,7 +36,9 @@ class EventsController extends FuzzrakeAbstractController
     {
         $event ??= new Event();
 
-        $this->authorize($event->isEditable());
+        if (!$event->isEditable()) {
+            throw $this->createAccessDeniedException();
+        }
 
         $form = $this->createForm(EventType::class, $event, [
             AbstractTypeWithDelete::OPT_DELETABLE => null !== $event->getId(),
