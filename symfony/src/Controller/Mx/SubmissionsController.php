@@ -12,7 +12,6 @@ use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Cache as CacheService;
-use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -36,10 +35,9 @@ class SubmissionsController extends FuzzrakeAbstractController
         private readonly SubmissionsService $submissions,
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
-        EnvironmentsService $environments,
         CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($environments, $creatorRepository);
+        parent::__construct($creatorRepository);
     }
 
     /**
@@ -49,8 +47,6 @@ class SubmissionsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function submissions(int $page): Response
     {
-        $this->authorize();
-
         $submissionsPage = $this->submissions->getSubmissions($page);
 
         return $this->render('mx/submissions/index.html.twig', [
@@ -65,8 +61,6 @@ class SubmissionsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function social(): Response
     {
-        $this->authorize();
-
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
         $artisans = array_filter(Artisan::wrapAll($this->creatorRepository->getNewWithLimit()),
@@ -81,8 +75,6 @@ class SubmissionsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function submission(Request $request, string $id): Response
     {
-        $this->authorize();
-
         try {
             $input = $this->submissions->getUpdateInputBySubmissionId($id);
         } catch (MissingSubmissionException $exception) {

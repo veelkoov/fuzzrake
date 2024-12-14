@@ -8,7 +8,6 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\NewArtisan;
 use App\Filtering\FiltersData\Item;
 use App\Service\DataService;
-use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\Completeness;
@@ -31,7 +30,6 @@ class AppExtensions extends AbstractExtension
     private int $uniqueInt = 1;
 
     public function __construct(
-        private readonly EnvironmentsService $environments,
         private readonly DataService $dataService,
     ) {
         $this->friendly = new HumanFriendly();
@@ -63,30 +61,17 @@ class AppExtensions extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('is_dev_env', $this->isDevEnvFunction(...)),
-            new TwigFunction('is_dev_or_test_env', $this->isDevOrTestEnvFunction(...)),
-            new TwigFunction('get_latest_event_timestamp', $this->getLatestEventTimestamp(...)),
-
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),
             new TwigFunction('comma_separated_other', $this->commaSeparatedOther(...)),
             new TwigFunction('completeness_text', $this->completenessText(...)),
             new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
+            new TwigFunction('get_latest_event_timestamp', $this->getLatestEventTimestamp(...)),
             new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
             new TwigFunction('is_new', $this->isNew(...)),
             new TwigFunction('unique_int', fn () => $this->uniqueInt++),
             new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
         ];
-    }
-
-    public function isDevEnvFunction(): bool
-    {
-        return $this->environments->isDev();
-    }
-
-    public function isDevOrTestEnvFunction(): bool
-    {
-        return $this->environments->isDevOrTest();
     }
 
     public function getLatestEventTimestamp(): ?string

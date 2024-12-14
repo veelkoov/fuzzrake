@@ -106,7 +106,7 @@
                 </div>
             {% endif %}
 
-            {% if is_dev_env() %}
+            {% if is_granted('ROLE_ADMIN') %}
                 <div class="text-end p-0">
                     <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}" role="button">
                         <i class="fas fa-edit"></i>

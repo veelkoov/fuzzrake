@@ -7,6 +7,7 @@ namespace App\Form\Mx;
 use App\Utils\Enforce;
 use App\Utils\Mx\CreatorUrlsSelectionData;
 use App\Utils\Mx\GroupedUrls;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -16,6 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreatorUrlsSelectionType extends AbstractType
 {
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $urls = Enforce::objectOf($options['urls'], GroupedUrls::class);
@@ -24,9 +26,7 @@ class CreatorUrlsSelectionType extends AbstractType
             $builder->add($url->getId(), CheckboxType::class, [
                 'required' => false,
                 'label' => $url->getLabel(),
-                'getter' => function (CreatorUrlsSelectionData $choices, FormInterface $form): bool {
-                    return $choices->get($form->getName());
-                },
+                'getter' => fn (CreatorUrlsSelectionData $choices, FormInterface $form): bool => $choices->get($form->getName()),
                 'setter' => function (CreatorUrlsSelectionData &$choices, bool $selected, FormInterface $form): void {
                     $choices->set($form->getName(), $selected);
                 },
@@ -43,6 +43,7 @@ class CreatorUrlsSelectionType extends AbstractType
         ;
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
