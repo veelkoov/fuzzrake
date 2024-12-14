@@ -252,10 +252,11 @@ function action() {
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
 
-        'dbcommit')     action_dbcommit ;;
         'dbpull')       action_dbpull ;;
-        'dbpush')       action_dbpush ;;
         'dbdump')       action_dbdump ;;
+        'dbcommit')     action_dbcommit ;;
+        'dbpdc')        action_dbpull && action_dbdump && action_dbcommit ;;
+        'dbpush')       action_dbpush ;;
 
         'release-beta') action_release_beta ;;
         'release-prod') action_release_prod ;;
@@ -267,6 +268,9 @@ function action() {
         'species')      run_gradle run --args sync-species "$@" ;;
         'filters')      run_gradle run --args update-filters "$@" ;;
         'miniatures')   run_gradle run --args update-miniatures "$@" ;;
+
+        # Ugly but hopefully truly temporary
+        'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake sync-species && fuzzrake-git-HEAD/bin/fuzzrake update-filters && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
 
         *) error "Unknown action: '$action'" ;;
     esac
