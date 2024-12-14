@@ -16,7 +16,6 @@ use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
 use Exception;
 use InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
