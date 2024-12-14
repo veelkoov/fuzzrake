@@ -9,15 +9,11 @@ KOTLIN_DIR_REL_PATH='kotlin'
 SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-path
 SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
 DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
-TMP_DATABASE_REL_PATH="$DATABASE_REL_PATH.tmp"
 DB_DUMP_DIR_REL_PATH='db_dump'
 DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_REL_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
 
 PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
 BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
-
-# Volatile information, easily reproducible
-DB_IGNORED_TABLES=(artisans_commissions_statuses artisans_volatile_data artisans_urls_states submissions)
 
 function run_command() {
     echo "Executing: $*"
@@ -120,48 +116,42 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-    run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$TMP_DATABASE_REL_PATH"
     backup_private_data
-    run_command sqlite3   "$TMP_DATABASE_REL_PATH" 'DROP TABLE artisans_private_data;'
-    run_command sqlite3   "$TMP_DATABASE_REL_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
-    run_command chmod a+w "$TMP_DATABASE_REL_PATH"
-    run_command mv        "$TMP_DATABASE_REL_PATH" "$DATABASE_REL_PATH"
+
+    run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$DATABASE_REL_PATH"
+    run_command chmod a+w "$DATABASE_REL_PATH"
 }
 
 function action_dbpush() {
-    run_command cp "$DATABASE_REL_PATH" "$TMP_DATABASE_REL_PATH"
-    run_command sqlite3 "$TMP_DATABASE_REL_PATH" "UPDATE artisans_private_data SET original_contact_info = '', notes = '';"
-    run_command scp -p  "$TMP_DATABASE_REL_PATH" "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH"
-    run_command scp -p  "$TMP_DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
-    run_command rm      "$TMP_DATABASE_REL_PATH"
+    echo "$(tput setaf 1)$(tput bold)WARNING!$(tput sgr0) Destructive action."
+    read -rp 'Confirm by typing "overwrite": ' user_input
+
+    if [[ $user_input != 'overwrite' ]]; then
+        exit 1
+    fi
+
+    run_command scp -p "$DATABASE_REL_PATH" "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH"
+    run_command scp -p "$DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
 }
 
 function action_dbdump() {
     # shellcheck disable=SC2207 # Yes, split by whitespace
     TABLE_NAMES=($(sqlite3 "$DATABASE_REL_PATH" .tables))
 
-    for TABLE_NAME in "${DB_IGNORED_TABLES[@]}"; do # Sanity check
-        if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            error "$TABLE_NAME does not exist in the DB $DATABASE_REL_PATH"
-        fi
-    done
-
     backup_private_data
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
-        if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+        run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
 
-            echo 'Dumping to JSON...'
+        echo 'Dumping to JSON...'
 
-            if grep 'CREATE TABLE' "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
-                order_by='artisan_id'
-            else
-                order_by='id'
-            fi
-
-            sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
+        if grep 'CREATE TABLE' "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
+            order_by='artisan_id'
+        else
+            order_by='id'
         fi
+
+        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
     done
 }
 
