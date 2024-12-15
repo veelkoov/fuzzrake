@@ -7,18 +7,20 @@ namespace App\Management;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Service\Notifications\MessengerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\ValueObject\Notification;
+use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Psl\Iter;
 use Psl\Vec;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 final class UrlRemovalService
@@ -38,7 +40,7 @@ final class UrlRemovalService
         private readonly string $websiteShortName,
         private readonly string $primaryBaseUrl,
         private readonly RouterInterface $router,
-        private readonly MessengerInterface $messenger,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -71,6 +73,9 @@ final class UrlRemovalService
         return new CreatorUrlsRemovalData($removedUrls, $remainingUrls, $hide, $sendEmail);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function handleRemoval(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         $creator->setNotes($this->getNewNotes($creator, $data));
@@ -80,11 +85,11 @@ final class UrlRemovalService
             $creator->setInactiveReason('All previously known websites/social accounts are no longer working or are inactive');
         }
 
-        $this->entityManager->flush();
-
         if ($data->sendEmail) {
             $this->sendNotification($creator, $data);
         }
+
+        $this->entityManager->flush();
     }
 
     private function getNewNotes(Creator $creator, CreatorUrlsRemovalData $data): string
@@ -108,14 +113,17 @@ final class UrlRemovalService
         }
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
-            ['_fragment' => $creator->getLastMakerId()], RouterInterface::ABSOLUTE_PATH);
+            ['_fragment' => $creator->getLastMakerId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::IU_FORM_START,
-            ['makerId' => $creator->getLastMakerId()], RouterInterface::ABSOLUTE_PATH);
+            ['makerId' => $creator->getLastMakerId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
-            [], RouterInterface::ABSOLUTE_PATH);
+            [], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         $subject = $data->hide ? "Your card at $this->websiteShortName has been hidden"
             : "Your information at $this->websiteShortName may require your attention";
@@ -144,7 +152,7 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->messenger->send(new Notification($subject, $contents, recipient: $creator->getEmailAddress()));
+        $this->messageBus->dispatch(new EmailNotificationV1($subject, $contents, recipient: $creator->getEmailAddress()));
     }
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string

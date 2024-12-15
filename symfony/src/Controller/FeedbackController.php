@@ -7,13 +7,14 @@ namespace App\Controller;
 use App\Form\FeedbackType;
 use App\Service\Captcha;
 use App\Service\DataService;
-use App\Service\Notifications\MessengerInterface;
 use App\ValueObject\Feedback;
-use App\ValueObject\Notification;
+use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -21,7 +22,7 @@ class FeedbackController extends AbstractController
 {
     public function __construct(
         private readonly RouterInterface $router,
-        private readonly MessengerInterface $messenger,
+        private readonly MessageBusInterface $messageBus,
         private readonly DataService $dataService,
         private readonly Captcha $captcha,
     ) {
@@ -45,10 +46,14 @@ class FeedbackController extends AbstractController
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             if (!$this->captcha->isValid($request, 'feedback_form_captcha')) {
                 $big_error_message = "Captcha failed. Please retry submitting. If this doesn't help, try another browser or other network connection.";
-            } elseif (!$this->sendFeedback($feedback)) {
-                $big_error_message = 'Could not sent the message due to server error. Sorry for the inconvenience!';
             } else {
-                return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
+                try {
+                    $this->sendFeedback($feedback);
+
+                    return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
+                } catch (ExceptionInterface) {
+                    $big_error_message = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
+                }
             }
         }
 
@@ -65,7 +70,10 @@ class FeedbackController extends AbstractController
         return $this->render('feedback/feedback_sent.html.twig');
     }
 
-    private function sendFeedback(Feedback $feedback): bool
+    /**
+     * @throws ExceptionInterface
+     */
+    private function sendFeedback(Feedback $feedback): void
     {
         $contents = <<<contents
             Subject: $feedback->subject
@@ -74,8 +82,6 @@ class FeedbackController extends AbstractController
             $feedback->details
             contents;
 
-        $notification = new Notification('Feedback submitted', $contents);
-
-        return $this->messenger->send($notification);
+        $this->messageBus->dispatch(new EmailNotificationV1('Feedback submitted', $contents));
     }
 }
