@@ -21,6 +21,6 @@
 - name: 'Enable and start messenger worker service'
   ansible.builtin.systemd_service:
     daemon_reload: '{{ service_result.changed }}'
-    enabled:       false # TODO
+    enabled:       true
     name:          '{{ systemd_service_name }}'
-    state:         'stopped' # TODO
+    state:         'started'
