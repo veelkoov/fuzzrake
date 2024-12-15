@@ -72,7 +72,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', 'DESC')
             // TODO: No pagination. https://github.com/veelkoov/fuzzrake/issues/248
-            ->setMaxResults(Pagination::PAGE_SIZE)
+            ->setMaxResults(100)
             ->getQuery()
             ->getResult();
     }
