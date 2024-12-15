@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -178,7 +179,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     public function testProperHidingMessageSentWhenDesired(): void
     {
         $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): void {
+            function (EmailNotificationV1 $notification): Envelope {
                 $this->assertEquals('Your card at ShortWebsiteName has been hidden', $notification->subject);
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Hidden Creator!
@@ -194,6 +195,8 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
                     CONTENTS, $notification->contents);
+
+                return new Envelope($notification);
             });
 
         $creator = Creator::new()->setName('The Hidden Creator')->setMakerId('CREATOR');
@@ -213,7 +216,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
         $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): void {
+            function (EmailNotificationV1 $notification): Envelope {
                 $this->assertEquals('Your information at ShortWebsiteName may require your attention', $notification->subject);
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Updated Creator!
@@ -229,6 +232,8 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
                     CONTENTS, $notification->contents);
+
+                return new Envelope($notification);
             });
 
         $creator = Creator::new()->setName('The Updated Creator')->setMakerId('CREATOR');
