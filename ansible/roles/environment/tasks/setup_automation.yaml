@@ -14,8 +14,9 @@
 - name: 'Setup messenger worker service'
   ansible.builtin.template:
     dest: '{{ systemd_service_conf_path }}'
+    mode: '0644'
     src:  'messenger_worker.service.j2'
-  register: service_result
+  register: 'service_result'
 
 - name: 'Enable and start messenger worker service'
   ansible.builtin.systemd_service:
