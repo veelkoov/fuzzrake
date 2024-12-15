@@ -23,6 +23,7 @@
   ansible.builtin.import_tasks: 'setup_backend.yaml'
   tags: 'backend'
 
-- name: 'Setup cronjob'
-  ansible.builtin.import_tasks: 'setup_cronjob.yaml'
-  tags: 'cronjob'
+- name: 'Setup automation'
+  when: 'setup_automation | default(false)'
+  ansible.builtin.import_tasks: 'setup_automation.yaml'
+  tags: 'automation'

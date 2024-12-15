@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Service\Notifications;
+namespace App\Service;
 
 use App\Utils\Email as EmailUtils;
-use App\ValueObject\Notification;
-use Override;
-use Psr\Log\LoggerInterface;
+use App\ValueObject\Messages\EmailNotificationV1;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Email;
 
-class EmailService implements MessengerInterface
+final class EmailService
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
         private readonly string $contactEmail,
         private readonly MailerInterface $mailer,
     ) {
     }
 
-    #[Override]
-    public function send(Notification $notification): bool
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[AsMessageHandler]
+    public function send(EmailNotificationV1 $notification): void
     {
         $email = (new Email())
             ->from($this->contactEmail)
@@ -38,18 +39,6 @@ class EmailService implements MessengerInterface
             $email->attach($notification->attachedJsonData, 'data.json', 'application/json');
         }
 
-        try {
-            $this->mailer->send($email);
-        } catch (TransportExceptionInterface) {
-            try { // Retry once (timeouts happening). TODO: https://github.com/veelkoov/fuzzrake/issues/258
-                $this->mailer->send($email);
-            } catch (TransportExceptionInterface $exception) {
-                $this->logger->warning('Sending email failed.', ['exception' => $exception->getMessage()]);
-
-                return false;
-            }
-        }
-
-        return true;
+        $this->mailer->send($email);
     }
 }
