@@ -4,7 +4,6 @@ namespace App\Tests\Management;
 
 use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
-use App\Service\Notifications\MessengerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
@@ -12,19 +11,22 @@ use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
 use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
-use App\ValueObject\Notification;
+use App\ValueObject\Messages\EmailNotificationV1;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class UrlRemovalServiceHandleRemovalTest extends TestCase
 {
     private UrlRemovalService $subject;
     private DateTimeInterface $now;
-    private MessengerInterface&MockObject $messengerMock;
+    private MessageBusInterface&MockObject $messengerBusMock;
 
     #[Override]
     protected function setUp(): void
@@ -36,10 +38,10 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         $routerMock->expects($this->atMost(3))->method('generate')
             ->willReturnOnConsecutiveCalls('/#CREATOR', '/ui/update', '/contact');
 
-        $this->messengerMock = $this->createMock(MessengerInterface::class);
+        $this->messengerBusMock = $this->createMock(MessageBusInterface::class);
 
         $this->subject = new UrlRemovalService($entityManagerMock, 'ShortWebsiteName',
-            'https://website.base.address.example.com', $routerMock, $this->messengerMock);
+            'https://website.base.address.example.com', $routerMock, $this->messengerBusMock);
 
         UtcClockMock::start();
         $this->now = UtcClock::now();
@@ -51,6 +53,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         TestsBridge::reset();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testEmptyNotesGetSet(): void
     {
         $creator = new Creator();
@@ -70,6 +75,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
             EXPECTED, $creator->getNotes());
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testNonEmptyNotesGetUpdated(): void
     {
         $creator = Creator::new()->setNotes("  Some previous stuff\nBlah blah\n");
@@ -91,6 +99,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
             EXPECTED, $creator->getNotes());
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testCreatorGettingHiddenWhenDesired(): void
     {
         $creator = new Creator();
@@ -102,6 +113,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
             $creator->getInactiveReason());
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testCreatorNotGettingHiddenWhenNotDesired(): void
     {
         $creator = new Creator();
@@ -112,6 +126,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         self::assertEquals('', $creator->getInactiveReason());
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testUrlsAreUpdatedAsDesired(): void
     {
         $creator = Creator::new()
@@ -143,9 +160,12 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         self::assertEquals('', $creator->getFaqUrl());
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testMessageNotSentWhenNotDesired(): void
     {
-        $this->messengerMock->expects($this->never())->method('send');
+        $this->messengerBusMock->expects($this->never())->method('dispatch');
 
         $creator = new Creator();
         $data = new CreatorUrlsRemovalData(new GroupedUrls([]), new GroupedUrls([]), false, false);
@@ -153,10 +173,13 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         $this->subject->handleRemoval($creator, $data);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testProperHidingMessageSentWhenDesired(): void
     {
-        $this->messengerMock->expects($this->once())->method('send')->willReturnCallback(
-            function (Notification $notification): bool {
+        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
+            function (EmailNotificationV1 $notification): Envelope {
                 $this->assertEquals('Your card at ShortWebsiteName has been hidden', $notification->subject);
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Hidden Creator!
@@ -173,7 +196,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                     https://website.base.address.example.com/contact
                     CONTENTS, $notification->contents);
 
-                return true;
+                return new Envelope($notification);
             });
 
         $creator = Creator::new()->setName('The Hidden Creator')->setMakerId('CREATOR');
@@ -187,10 +210,13 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
         $this->subject->handleRemoval($creator, $data);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
-        $this->messengerMock->expects($this->once())->method('send')->willReturnCallback(
-            function (Notification $notification): bool {
+        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
+            function (EmailNotificationV1 $notification): Envelope {
                 $this->assertEquals('Your information at ShortWebsiteName may require your attention', $notification->subject);
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Updated Creator!
@@ -207,7 +233,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                     https://website.base.address.example.com/contact
                     CONTENTS, $notification->contents);
 
-                return true;
+                return new Envelope($notification);
             });
 
         $creator = Creator::new()->setName('The Updated Creator')->setMakerId('CREATOR');
