@@ -1,4 +1,4 @@
-FROM php:8.3.12-fpm-alpine3.19
+FROM php:8.3.14-fpm-alpine3.19
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE "$DEV_MACHINE"
@@ -10,15 +10,16 @@ ENV DOCKER_UID "$DOCKER_UID"
 # Packages installation
 #
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev openjdk21-jre-headless
 
-RUN apk add --no-cache icu php-intl util-linux zip libzip-dev libpng libpng-dev acl
+RUN apk add --no-cache icu php-intl util-linux zip libpng acl
 
-RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
-    && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
-    && sed -ri 's/builtin echo/echo/g' /tmp/symfony_installer \
-    && sh /tmp/symfony_installer \
-    && rm /tmp/symfony_installer
+# TODO: What's this even for
+#RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
+#    && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
+#    && sed -ri 's/builtin echo/echo/g' /tmp/symfony_installer \
+#    && sh /tmp/symfony_installer \
+#    && rm /tmp/symfony_installer
 
 RUN docker-php-ext-install -j$(nproc) intl opcache zip gd bcmath
 
@@ -26,11 +27,12 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
         && rm /tmp/composer_installer
 
+# git is needed for managing Symfony recipes in the container
 RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         echo "Setting up develop software" \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
-        && apk add --no-cache chromium chromium-chromedriver; \
+        && apk add --no-cache chromium chromium-chromedriver git; \
     else \
         echo "Skipping develop software"; \
     fi
