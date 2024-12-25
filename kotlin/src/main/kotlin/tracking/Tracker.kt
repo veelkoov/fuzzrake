@@ -1,7 +1,6 @@
 package tracking
 
 import config.Configuration
-import tracking.contents.CreatorItems
 import data.ThreadSafe
 import database.Database
 import database.entities.Creator
@@ -12,6 +11,7 @@ import database.tables.Creators
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.with
 import tracking.contents.CreatorData
+import tracking.contents.CreatorItems
 import tracking.contents.TrackedContentsProvider
 import tracking.processing.Processor
 import web.url.ThreadSafeCreatorUrl
