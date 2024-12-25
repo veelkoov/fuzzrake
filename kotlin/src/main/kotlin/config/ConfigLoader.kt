@@ -7,9 +7,10 @@ private const val CFG_FILE_NAME = "fuzzrake-config.yaml"
 
 class ConfigLoader {
     fun locateAndLoad(): Configuration {
-        val file = searchConfigFilePath()
+        val configurationFile = searchConfigFilePath()
+        val yamlConfiguration = Yaml.readFrom(configurationFile, YamlConfiguration::class.java)
 
-        return Yaml.readFrom(file, Configuration::class.java)
+        return Configuration.from(configurationFile.parentFile.toPath(), yamlConfiguration)
     }
 
     private fun searchConfigFilePath(): File {

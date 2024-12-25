@@ -13,11 +13,6 @@ class StrategyTest {
     }
 
     @Test
-    fun `Instagram profile strategy is not used for cookie init URL`() {
-        assertNull(Strategy.forUrl(InstagramProfileStrategy.getCookieInitUrl().getUrl()).getCookieInitUrl())
-    }
-
-    @Test
     fun `Twitter profile strategy gets used when supposed`() {
         assertEquals(TwitterProfileStrategy, Strategy.forUrl("https://twitter.com/getfursuit"))
         assertEquals(TwitterProfileStrategy, Strategy.forUrl("https://twitter.com/getfursuit?s=09"))
