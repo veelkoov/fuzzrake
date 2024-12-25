@@ -12,14 +12,15 @@ import kotlin.test.assertIs
 
 class CookieEagerHttpClientTest {
     private val getTestCases = mapOf(
+        // Not cookie eager
         listOf(
             "https://www.instagram.com/getfursu.it/",
             "https://www.instagram.com/finland/",
         ) to listOf(
-            "https://www.instagram.com/",
             "https://www.instagram.com/getfursu.it/",
             "https://www.instagram.com/finland/",
         ),
+        // Cookie eager
         listOf(
             "https://twitter.com/getfursuit",
             "https://twitter.com/veelkoov",
