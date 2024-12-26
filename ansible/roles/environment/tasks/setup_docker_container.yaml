@@ -17,6 +17,6 @@
     name:  '{{ php_fpm_container_name }}'
     published_ports: '127.0.0.1:{{ php_fpm_container_port }}:9000'
     restart_policy:  'unless-stopped'
-    user: 'root:root'
+    user: 'root:root' # FIXME: Root should not be needed!
     volumes:
-      - '{{ symfony_dir_path }}:/var/www/html'
+      - '{{ symfony_dir_path }}:/var/www/html/' # FIXME!

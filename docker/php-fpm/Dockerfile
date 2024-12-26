@@ -10,9 +10,9 @@ ENV DOCKER_UID "$DOCKER_UID"
 # Packages installation
 #
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev openjdk21-jre-headless
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev
 
-RUN apk add --no-cache icu php-intl util-linux zip libpng acl
+RUN apk add --no-cache icu php-intl util-linux libzip libpng acl openjdk21-jre-headless
 
 # TODO: What's this even for
 #RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
@@ -74,12 +74,10 @@ WORKDIR /var/www/html
 VOLUME /var/www/html
 
 #
-# Allow setting Composer home to a volume, to preserve cache e.g. between Jenkins jobs
+# Put composer cache in var to keep in between container rebuilds
 #
 
-RUN mkdir /composer
-ENV COMPOSER_HOME /composer
-VOLUME /composer
+ENV COMPOSER_HOME /var/www/html/symfony/var/composer
 
 #
 # Development stuff, but OK to be included in production image

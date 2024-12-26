@@ -1,6 +1,6 @@
 ---
-frontend_deployment_path: '/var/www/prod'
-backend_deployment_path:  '/opt/prod'
+frontend_deployment_path: '/var/www/prod' # FIXME
+backend_deployment_path:  '/opt/prod' # FIXME
 
 branch:      'main'
 app_env:     'prod'
