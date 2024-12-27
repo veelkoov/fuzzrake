@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("jvm") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
     application
 
     id("org.jetbrains.kotlinx.kover") version "0.7.4"
@@ -55,6 +55,30 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
 }
 
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+application {
+    mainClass.set("FuzzrakeKt")
+}
+
+tasks.build {
+    finalizedBy(tasks.installDist)
+}
+
+tasks.distTar {
+    enabled = false
+}
+
+tasks.distZip {
+    enabled = false
+}
+
 tasks.test {
     useJUnitPlatform()
 
@@ -69,16 +93,4 @@ tasks.jacocoTestReport {
         html.required.set(true)
         csv.required.set(false)
     }
-}
-
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-kotlin {
-    jvmToolchain(17)
-}
-
-application {
-    mainClass.set("FuzzrakeKt")
 }
