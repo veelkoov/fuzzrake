@@ -221,7 +221,7 @@ function action() {
     case $action in
         'setup')        action_run_setup ;;
         'branch')
-            run_in_symfony install
+            run_in_symfony composer install
             run_yarn install
             run_yarn encore production
         ;;
