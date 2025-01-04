@@ -1,4 +1,4 @@
-FROM php:8.3.12-fpm-alpine3.19
+FROM php:8.4.2-fpm-alpine3.21
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE "$DEV_MACHINE"
@@ -26,11 +26,12 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
         && rm /tmp/composer_installer
 
+# git is needed for Composer/Symfony recipes
 RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         echo "Setting up develop software" \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
-        && apk add --no-cache chromium chromium-chromedriver; \
+        && apk add --no-cache chromium chromium-chromedriver git; \
     else \
         echo "Skipping develop software"; \
     fi
