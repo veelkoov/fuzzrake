@@ -16,7 +16,6 @@ mkdir -p -m 700 /tmp/phpstan
 
 for TARGET in \
         /var/www/html/var \
-        /composer \
         /tmp/phpstan \
 ; do
     setfacl  -R -m u:www-data:rwX -m u:"$DOCKER_UID":rwX "$TARGET"
