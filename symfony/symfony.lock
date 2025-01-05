@@ -71,9 +71,6 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
-    "ezyang/htmlpurifier": {
-        "version": "v4.13.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.0",
         "recipe": {

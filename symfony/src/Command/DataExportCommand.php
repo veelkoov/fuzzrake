@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Data\Definitions\Fields\Fields;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\StrUtils;
 use Override;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -53,7 +54,7 @@ class DataExportCommand extends Command
                 $value = $artisan->get($field);
 
                 $sheet->getCell([$col++, $row])
-                    ->setValue($value);
+                    ->setValue(StrUtils::asStr($value));
             }
 
             ++$row;
