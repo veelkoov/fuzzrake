@@ -69,9 +69,9 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function waitForLoadingIndicatorToDisappear(): void
+    private function waitForLoadingIndicatorToDisappear(int $millisecondsForAnimation = 500): void
     {
-        self::waitUntilHides('#loading-indicator', 550);
+        self::waitUntilHides('#loading-indicator', $millisecondsForAnimation);
     }
 
     /**
