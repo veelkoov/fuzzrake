@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6198e9df64e35f0076d56396c786402",
+    "content-hash": "cb2dcfe3cdc4aae7408aaef510b21e9f",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -8445,16 +8445,16 @@
         },
         {
             "name": "rawr/phpunit-data-provider",
-            "version": "dev-applied-ExplicitNullableParamTypeRector-rule",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/veelkoov/phpunit-data-provider.git",
-                "reference": "62faf36e13508ad03771f28d0f29cb2617f39d9c"
+                "url": "https://github.com/t-regx/phpunit-data-provider.git",
+                "reference": "69b1c46e542e94beb140a7a004dce148778f49d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veelkoov/phpunit-data-provider/zipball/62faf36e13508ad03771f28d0f29cb2617f39d9c",
-                "reference": "62faf36e13508ad03771f28d0f29cb2617f39d9c",
+                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/69b1c46e542e94beb140a7a004dce148778f49d9",
+                "reference": "69b1c46e542e94beb140a7a004dce148778f49d9",
                 "shasum": ""
             },
             "require": {
@@ -8469,12 +8469,7 @@
                     "TRegx\\PhpUnit\\DataProviders\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Test\\": "test/",
-                    "Test\\Unit\\": "test/Unit/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -8486,15 +8481,16 @@
             ],
             "description": "Lightweight builder for PhpUnit data providers",
             "support": {
-                "source": "https://github.com/veelkoov/phpunit-data-provider/tree/applied-ExplicitNullableParamTypeRector-rule"
+                "issues": "https://github.com/t-regx/phpunit-data-provider/issues",
+                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.3.0"
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/danon"
+                    "url": "https://github.com/danon",
+                    "type": "github"
                 }
             ],
-            "time": "2025-01-06T10:31:09+00:00"
+            "time": "2023-11-18T16:20:03+00:00"
         },
         {
             "name": "react/cache",
@@ -10144,7 +10140,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "rawr/phpunit-data-provider": 20,
         "rawr/t-regx": 20
     },
     "prefer-stable": false,
