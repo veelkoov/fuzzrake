@@ -66,7 +66,7 @@ VOLUME /var/www/html
 # Put composer cache in var to keep in between container rebuilds
 #
 
-ENV COMPOSER_HOME=/var/www/html/symfony/var/composer
+ENV COMPOSER_HOME=/var/www/html/var/composer
 
 #
 # Development stuff, but OK to be included in production image
