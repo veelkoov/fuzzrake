@@ -47,11 +47,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ObfuscableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
-    private ArtisanE $artisan;
-
-    public function __construct(?ArtisanE $artisan = null)
+    public function __construct(private ArtisanE $artisan = new ArtisanE())
     {
-        $this->artisan = $artisan ?? new ArtisanE();
     }
 
     public static function new(): self
