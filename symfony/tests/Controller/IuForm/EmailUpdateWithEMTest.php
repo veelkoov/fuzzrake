@@ -12,6 +12,9 @@ use Override;
 use Psl\Dict;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
+/**
+ * @medium
+ */
 class EmailUpdateWithEMTest extends WebTestCaseWithEM
 {
     use IuFormTrait;

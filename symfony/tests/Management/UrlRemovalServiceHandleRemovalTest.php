@@ -22,6 +22,9 @@ use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @small
+ */
 class UrlRemovalServiceHandleRemovalTest extends TestCase
 {
     private UrlRemovalService $subject;

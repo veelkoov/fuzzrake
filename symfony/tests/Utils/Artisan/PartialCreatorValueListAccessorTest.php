@@ -9,6 +9,9 @@ use App\Utils\Artisan\PartialCreatorValueListAccessor;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class PartialCreatorValueListAccessorTest extends TestCase
 {
     public function testGetAndSet(): void

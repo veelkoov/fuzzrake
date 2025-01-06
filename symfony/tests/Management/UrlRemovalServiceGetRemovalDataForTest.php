@@ -10,6 +10,9 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 
+/**
+ * @small
+ */
 class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 {
     public function testEmainNotSentWhenNoContactPermitted(): void

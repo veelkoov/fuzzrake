@@ -8,6 +8,9 @@ use App\Repository\ArtisanValueRepository;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 
+/**
+ * @medium
+ */
 class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
 {
     public function testGetDistinctValues(): void
