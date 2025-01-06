@@ -16,7 +16,7 @@
         "google/recaptcha": "^1.2",
         "nette/utils": "^v4.0.5",
         "phpoffice/phpspreadsheet": "^3.7.0",
-        "veelkoov/t-regx": "applied-ExplicitNullableParamTypeRector-rule",
+        "rawr/t-regx": "dev-applied-ExplicitNullableParamTypeRector-rule",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "*",
         "symfony/doctrine-messenger": "*",
@@ -50,7 +50,7 @@
         "phpstan/phpstan-doctrine": "^1.3",
         "phpstan/phpstan-phpunit": "^1.1",
         "phpstan/phpstan-symfony": "^1.2",
-        "veelkoov/phpunit-data-provider": "applied-ExplicitNullableParamTypeRector-rule",
+        "rawr/phpunit-data-provider": "dev-applied-ExplicitNullableParamTypeRector-rule",
         "rector/rector": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
@@ -65,12 +65,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/veelkoov/T-Regx"
+            "url": "https://github.com/veelkoov/t-regx"
         },
         {
             "type": "vcs",
             "url": "https://github.com/veelkoov/phpunit-data-provider"
-        },
+        }
     ],
     "config": {
         "preferred-install": {

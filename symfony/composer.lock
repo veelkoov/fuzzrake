@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7de4f2fe664fc7ea31508e900b7c60da",
+    "content-hash": "f6198e9df64e35f0076d56396c786402",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -1245,67 +1245,6 @@
             "time": "2024-12-27T00:36:43+00:00"
         },
         {
-            "name": "ezyang/htmlpurifier",
-            "version": "v4.18.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "cb56001e54359df7ae76dc522d08845dc741621b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/cb56001e54359df7ae76dc522d08845dc741621b",
-                "reference": "cb56001e54359df7ae76dc522d08845dc741621b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
-            },
-            "require-dev": {
-                "cerdic/css-tidy": "^1.7 || ^2.0",
-                "simpletest/simpletest": "dev-master"
-            },
-            "suggest": {
-                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
-                "ext-bcmath": "Used for unit conversion and imagecrash protection",
-                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
-                "ext-tidy": "Used for pretty-printing HTML"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "library/HTMLPurifier.composer.php"
-                ],
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
-                "exclude-from-classmap": [
-                    "/library/HTMLPurifier/Language/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Edward Z. Yang",
-                    "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com"
-                }
-            ],
-            "description": "Standards compliant HTML filter written in PHP",
-            "homepage": "http://htmlpurifier.org/",
-            "keywords": [
-                "html"
-            ],
-            "support": {
-                "issues": "https://github.com/ezyang/htmlpurifier/issues",
-                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.18.0"
-            },
-            "time": "2024-11-01T03:51:45+00:00"
-        },
-        {
             "name": "google/recaptcha",
             "version": "1.3.0",
             "source": {
@@ -1732,16 +1671,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.29.7",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "02c8625411dcb96e1f63d58c47460284e15b2e80"
+                "reference": "2fc12fdc58d39297c7b8c72d65b37a1a25d65ab5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/02c8625411dcb96e1f63d58c47460284e15b2e80",
-                "reference": "02c8625411dcb96e1f63d58c47460284e15b2e80",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/2fc12fdc58d39297c7b8c72d65b37a1a25d65ab5",
+                "reference": "2fc12fdc58d39297c7b8c72d65b37a1a25d65ab5",
                 "shasum": ""
             },
             "require": {
@@ -1758,25 +1697,24 @@
                 "ext-xmlwriter": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "ezyang/htmlpurifier": "^4.15",
                 "maennchen/zipstream-php": "^2.1 || ^3.0",
                 "markbaker/complex": "^3.0",
                 "markbaker/matrix": "^3.0",
-                "php": "^7.4 || ^8.0",
+                "php": "^8.1",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "dev-main",
-                "dompdf/dompdf": "^1.0 || ^2.0 || ^3.0",
+                "dompdf/dompdf": "^2.0 || ^3.0",
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "mitoteam/jpgraph": "^10.3",
                 "mpdf/mpdf": "^8.1.1",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^8.5 || ^9.0",
+                "phpunit/phpunit": "^10.5",
                 "squizlabs/php_codesniffer": "^3.7",
                 "tecnickcom/tcpdf": "^6.5"
             },
@@ -1831,9 +1769,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.29.7"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/3.7.0"
             },
-            "time": "2024-12-27T05:10:37+00:00"
+            "time": "2024-12-27T05:34:47+00:00"
         },
         {
             "name": "psr/cache",
@@ -2298,16 +2236,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "0.41.5",
+            "version": "dev-applied-ExplicitNullableParamTypeRector-rule",
             "source": {
                 "type": "git",
-                "url": "https://github.com/t-regx/T-Regx.git",
-                "reference": "6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29"
+                "url": "https://github.com/veelkoov/T-Regx.git",
+                "reference": "5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/t-regx/T-Regx/zipball/6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29",
-                "reference": "6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29",
+                "url": "https://api.github.com/repos/veelkoov/T-Regx/zipball/5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8",
+                "reference": "5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8",
                 "shasum": ""
             },
             "require": {
@@ -2329,18 +2267,48 @@
                     "TRegx\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "classmap": [
+                    "test/"
+                ],
+                "files": [
+                    "test/Supposition/format.php",
+                    "test/Supposition/provided.php"
+                ],
+                "psr-4": {
+                    "Test\\": "test/",
+                    "Test\\Feature\\TRegx\\": "test/Feature/",
+                    "Test\\Functional\\TRegx\\": "test/Functional/",
+                    "Test\\Legacy\\TRegx\\": "test/Legacy/",
+                    "Test\\Structure\\TRegx\\": "test/Structure/",
+                    "Test\\Supposition\\TRegx\\": "test/Supposition/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "/test/**",
+                    "/test"
+                ]
+            },
+            "scripts": {
+                "fqn": [
+                    "fqn-check src"
+                ],
+                "test": [
+                    "phpunit test --no-coverage"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "PHP regular expression brought up to modern standards.",
             "keywords": [
-                "Match",
-                "PCRE",
                 "delimiters",
                 "expression",
+                "match",
                 "pattern",
                 "patterns",
+                "pcre",
                 "preg",
                 "prepared",
                 "prepared patterns",
@@ -2354,16 +2322,15 @@
                 "tregx"
             ],
             "support": {
-                "issues": "https://github.com/t-regx/T-Regx/issues",
-                "source": "https://github.com/t-regx/T-Regx/tree/0.41.5"
+                "source": "https://github.com/veelkoov/T-Regx/tree/applied-ExplicitNullableParamTypeRector-rule"
             },
             "funding": [
                 {
-                    "url": "https://github.com/Danon",
-                    "type": "github"
+                    "type": "github",
+                    "url": "https://github.com/Danon"
                 }
             ],
-            "time": "2023-08-08T14:47:38+00:00"
+            "time": "2025-01-06T10:35:25+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -8478,16 +8445,16 @@
         },
         {
             "name": "rawr/phpunit-data-provider",
-            "version": "3.3.0",
+            "version": "dev-applied-ExplicitNullableParamTypeRector-rule",
             "source": {
                 "type": "git",
-                "url": "https://github.com/t-regx/phpunit-data-provider.git",
-                "reference": "69b1c46e542e94beb140a7a004dce148778f49d9"
+                "url": "https://github.com/veelkoov/phpunit-data-provider.git",
+                "reference": "62faf36e13508ad03771f28d0f29cb2617f39d9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/69b1c46e542e94beb140a7a004dce148778f49d9",
-                "reference": "69b1c46e542e94beb140a7a004dce148778f49d9",
+                "url": "https://api.github.com/repos/veelkoov/phpunit-data-provider/zipball/62faf36e13508ad03771f28d0f29cb2617f39d9c",
+                "reference": "62faf36e13508ad03771f28d0f29cb2617f39d9c",
                 "shasum": ""
             },
             "require": {
@@ -8502,7 +8469,12 @@
                     "TRegx\\PhpUnit\\DataProviders\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Test\\": "test/",
+                    "Test\\Unit\\": "test/Unit/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -8514,16 +8486,15 @@
             ],
             "description": "Lightweight builder for PhpUnit data providers",
             "support": {
-                "issues": "https://github.com/t-regx/phpunit-data-provider/issues",
-                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.3.0"
+                "source": "https://github.com/veelkoov/phpunit-data-provider/tree/applied-ExplicitNullableParamTypeRector-rule"
             },
             "funding": [
                 {
-                    "url": "https://github.com/danon",
-                    "type": "github"
+                    "type": "github",
+                    "url": "https://github.com/danon"
                 }
             ],
-            "time": "2023-11-18T16:20:03+00:00"
+            "time": "2025-01-06T10:31:09+00:00"
         },
         {
             "name": "react/cache",
@@ -10172,7 +10143,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "rawr/phpunit-data-provider": 20,
+        "rawr/t-regx": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
