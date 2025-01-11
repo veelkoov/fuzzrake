@@ -111,7 +111,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             throw new InvalidArgumentException("Getter for $field->value does not exist");
         }
 
-        return call_user_func($callback);
+        return call_user_func($callback); // @phpstan-ignore-line
     }
 
     public function equals(Field $field, self $other): bool // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221

@@ -8,8 +8,11 @@ use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Enforce;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
+use LogicException;
 
 use function Psl\Iter\contains;
 
@@ -127,10 +130,10 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         while (true) { // Handle multiple pages
             self::waitForLoadingIndicatorToDisappear();
 
-            $displayedCreatorIds = [
-                ...$displayedCreatorIds,
-                ...$crawler->filter('#creators-table-body tr')->each(fn ($node, $_) => $node->attr('id')),
-            ];
+            foreach ($crawler->filter('#creators-table-body tr') as $node) {
+                $displayedCreatorIds[] = Enforce::objectOf($node, WebDriverElement::class)
+                    ->getAttribute('id') ?? throw new LogicException('Missing ID');
+            }
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {
                 $this->client->findElement(WebDriverBy::id('next-items-page-link'))->click();

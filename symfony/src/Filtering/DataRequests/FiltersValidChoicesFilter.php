@@ -10,6 +10,7 @@ use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Service\SpeciesService;
+use App\Utils\Arrays\Lists;
 
 class FiltersValidChoicesFilter
 {
@@ -86,6 +87,6 @@ class FiltersValidChoicesFilter
             }
         }
 
-        return array_intersect($givenOptions, $allowed);
+        return Lists::intersect($givenOptions, $allowed);
     }
 }

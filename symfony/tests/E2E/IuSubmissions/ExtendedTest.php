@@ -284,8 +284,6 @@ class ExtendedTest extends AbstractTestWithEM
                 throw new UnbelievableRuntimeException($exception);
             }
 
-            self::assertIsString($matchedText);
-
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
             } else {
@@ -334,7 +332,6 @@ class ExtendedTest extends AbstractTestWithEM
 
             try {
                 $textMatch = $match->first();
-                self::assertIsString($textMatch);
 
                 self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
             } catch (SubjectNotMatchedException $exception) {
@@ -443,8 +440,6 @@ class ExtendedTest extends AbstractTestWithEM
     private static function validateArtisanAfterImport(Artisan $expected): void
     {
         $actual = self::findArtisanByMakerId($expected->getMakerId());
-
-        self::assertNotNull($actual);
 
         foreach (Fields::all() as $fieldName => $field) {
             if (Field::PASSWORD === $field) {

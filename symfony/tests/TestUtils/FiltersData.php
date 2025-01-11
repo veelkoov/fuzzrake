@@ -8,6 +8,7 @@ use App\Entity\CreatorSpecie;
 use App\Entity\KotlinData;
 use App\Entity\Specie;
 use App\Repository\KotlinDataRepository;
+use App\Utils\Arrays\Lists;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Traits\UtilityClass;
@@ -80,11 +81,7 @@ class FiltersData
      */
     private static function getSpecieNamesFrom(array $creators): array
     {
-        return array_unique(Iter\reduce(
-            Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes()),
-            fn (array $c1, array $c2): array => [...$c1, ...$c2],
-            [],
-        ));
+        return Lists::unique(array_merge(...Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes())));
     }
 
     /**

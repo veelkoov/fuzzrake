@@ -14,7 +14,6 @@ use App\Entity\MakerId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Nette\Utils\Arrays;
 
 /**
  * @method ArtisanUrl|null find($id, $lockMode = null, $lockVersion = null)
@@ -115,6 +114,6 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        return Arrays::map($input, fn (string $type): string => $connection->quote($type));
+        return array_map(fn (string $type): string => $connection->quote($type), $input);
     }
 }
