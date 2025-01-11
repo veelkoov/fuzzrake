@@ -41,9 +41,6 @@ trait AssertsTrait
         sort($expected);
         sort($actual);
 
-        $expected = array_values($expected);
-        $actual = array_values($actual);
-
         self::assertEquals($expected, $actual, $message);
     }
 }

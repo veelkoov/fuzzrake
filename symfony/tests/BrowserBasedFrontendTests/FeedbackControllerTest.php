@@ -56,7 +56,9 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         $this->client->clickLink('submit the feedback form');
 
         self::assertCount(2, $this->client->getWindowHandles());
-        $this->client->switchTo()->window($this->client->getWindowHandles()[1]);
+        $handle = $this->client->getWindowHandles()[1];
+        self::assertIsString($handle);
+        $this->client->switchTo()->window($handle);
 
         $this->client->waitForVisibility('h1', 10);
         self::assertSelectorTExtSame('h1', 'Feedback form');

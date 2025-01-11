@@ -73,7 +73,7 @@ abstract class AbstractIuFormController extends AbstractController
      * @param class-string<BaseForm> $type
      * @param array<string, mixed>   $options
      */
-    protected function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
+    protected function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface // @phpstan-ignore missingType.generics
     {
         return $this
             ->createForm($type, $state->artisan, $options)

@@ -19,7 +19,7 @@ class DataQuery
     private array $result = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private array $searchedItems = [];
 

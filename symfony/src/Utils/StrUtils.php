@@ -18,7 +18,7 @@ final class StrUtils
     {
         $names = $makerIds = [];
 
-        foreach (array_filter($artisans) as /* @var Artisan $artisan */ $artisan) {
+        foreach ($artisans as /* @var Artisan $artisan */ $artisan) {
             $names = array_merge($artisan->getAllNames(), $names);
             $makerIds = array_merge($artisan->getAllMakerIds(), $makerIds);
         }

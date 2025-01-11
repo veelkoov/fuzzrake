@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
-use App\Utils\Arrays\Arrays;
+use App\Utils\Arrays\Lists;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
@@ -63,7 +63,7 @@ class EventsController extends AbstractController
     {
         $requestedTypes = explode(',', (string) $request->query->get('types', ''));
 
-        $result = Arrays::intersect([
+        $result = Lists::intersect([
             Event::TYPE_DATA_UPDATED,
             Event::TYPE_GENERIC,
             Event::TYPE_CS_UPDATED,

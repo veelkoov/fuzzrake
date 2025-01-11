@@ -1,5 +1,5 @@
 parameters:
-  level: 9
+  level: 10
   paths:
     - src
     - tests
@@ -19,3 +19,46 @@ parameters:
 
     psFixerConfig:             'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string}'
     psLanguagesFixerConfig:    'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string}'
+
+  ignoreErrors:
+    -
+      message: '#^Method App\\Controller\\[^ ]+ has parameter \$form with generic interface Symfony\\Component\\Form\\FormInterface but does not specify its types\: TData$#'
+      identifier: missingType.generics
+      count: 9
+      path: src/Controller/*
+
+    -
+      message: '#^Class App\\Form\\[^ ]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
+      identifier: missingType.generics
+      count: 8
+      path: src/Form/*
+
+    -
+      message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+      identifier: missingType.iterableValue
+      count: 13
+      path: src/Repository/*
+
+    -
+      message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+      identifier: missingType.iterableValue
+      count: 13
+      path: src/Repository/*
+
+    -
+      message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+      identifier: missingType.iterableValue
+      count: 13
+      path: src/Repository/*
+
+    -
+      message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+      identifier: missingType.iterableValue
+      count: 13
+      path: src/Repository/*
+
+    - # This is from a recipe
+      message: '#^Call to function method_exists\(\) with ''Symfony\\\\Component\\\\Dotenv\\\\Dotenv'' and ''bootEnv'' will always evaluate to true\.$#'
+      identifier: function.alreadyNarrowedType
+      count: 1
+      path: tests/bootstrap.php
