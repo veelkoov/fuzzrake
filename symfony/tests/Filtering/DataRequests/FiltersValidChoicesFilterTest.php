@@ -9,6 +9,7 @@ use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
+use Veelkoov\Debris\StringList;
 
 /**
  * @medium
@@ -36,15 +37,15 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
         $choices = new Choices(
             '',
             '',
-            ['FI', '?', 'UK', '*'],
-            ['Liquid', '?', 'Solid', '*'],
-            ['Finnish', 'Czech', '?', 'English', '*'],
-            ['Toony', '?', '*', 'Yellow', '!'],
-            ['LED eyes', '?', '*', 'Oven', '!'],
-            ['Full plantigrade', '?', '*', 'Pancakes', '!'],
-            ['Standard commissions', '?', 'Waffles', '*'],
-            ['Pancakes', '!', '-', 'Kettles', '*'],
-            ['Birds', '?', 'Furniture', '*'],
+            StringList::from(['FI', '?', 'UK', '*']),
+            StringList::from(['Liquid', '?', 'Solid', '*']),
+            StringList::from(['Finnish', 'Czech', '?', 'English', '*']),
+            StringList::from(['Toony', '?', '*', 'Yellow', '!']),
+            StringList::from(['LED eyes', '?', '*', 'Oven', '!']),
+            StringList::from(['Full plantigrade', '?', '*', 'Pancakes', '!']),
+            StringList::from(['Standard commissions', '?', 'Waffles', '*']),
+            StringList::from(['Pancakes', '!', '-', 'Kettles', '*']),
+            StringList::from(['Birds', '?', 'Furniture', '*']),
             false, false, false, false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
