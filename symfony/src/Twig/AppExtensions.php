@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\NewArtisan;
+use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
 use App\Service\DataService;
 use App\Twig\Utils\HumanFriendly;
@@ -170,16 +171,11 @@ class AppExtensions extends AbstractExtension
         return $result;
     }
 
-    /**
-     * @param Item[] $items
-     *
-     * @return Item[]
-     */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array
+    public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (Item $item) => $pattern->test($item->label));
+        return $items->filter(fn (Item $item) => $pattern->test($item->label));
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Service\SpeciesService;
+use Veelkoov\Debris\StringList;
 
 class FiltersValidChoicesFilter
 {
@@ -22,26 +23,26 @@ class FiltersValidChoicesFilter
     public function getOnlyValidChoices(Choices $choices): Choices
     {
         $countries = self::onlyValidValues($choices->countries,
-            $this->dataService->getCountries(), Consts::FILTER_VALUE_UNKNOWN);
+            StringList::from($this->dataService->getCountries()), Consts::FILTER_VALUE_UNKNOWN);
         $states = self::onlyValidValues($choices->states,
-            $this->dataService->getStates(), Consts::FILTER_VALUE_UNKNOWN);
+            StringList::from($this->dataService->getStates()), Consts::FILTER_VALUE_UNKNOWN);
         $languages = self::onlyValidValues($choices->languages,
-            $this->dataService->getLanguages(), Consts::FILTER_VALUE_UNKNOWN);
+            StringList::from($this->dataService->getLanguages()), Consts::FILTER_VALUE_UNKNOWN);
 
         $styles = self::onlyValidValues($choices->styles,
-            Styles::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            StringList::from(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $features = self::onlyValidValues($choices->features,
-            Features::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            StringList::from(Features::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $orderTypes = self::onlyValidValues($choices->orderTypes,
-            OrderTypes::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            StringList::from(OrderTypes::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $productionModels = self::onlyValidValues($choices->productionModels,
-            ProductionModels::getValues(), ProductionModels::getValues(), Consts::FILTER_VALUE_UNKNOWN);
+            StringList::from(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
-            $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
+            StringList::from($this->speciesService->getValidNames()), Consts::FILTER_VALUE_UNKNOWN);
 
         $openFor = self::onlyValidValues($choices->openFor,
-            $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
+            StringList::from($this->dataService->getOpenFor()), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
 
         return new Choices(
             $choices->makerId,
@@ -66,26 +67,8 @@ class FiltersValidChoicesFilter
         );
     }
 
-    /**
-     * @param list<string>        $givenOptions
-     * @param string|list<string> ...$validOptions
-     *
-     * @return list<string>
-     */
-    private static function onlyValidValues(array $givenOptions, string|array ...$validOptions): array
+    private static function onlyValidValues(StringList $givenOptions, StringList $validOptions, string ...$additionalValidOptions): StringList
     {
-        $allowed = [];
-
-        foreach ($validOptions as $options) {
-            if (is_string($options)) {
-                $options = [$options];
-            }
-
-            foreach ($options as $option) {
-                $allowed[] = $option;
-            }
-        }
-
-        return array_intersect($givenOptions, $allowed);
+        return $validOptions->plusAll($additionalValidOptions)->intersect($givenOptions);
     }
 }
