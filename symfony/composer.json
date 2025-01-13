@@ -43,7 +43,6 @@
         "twig/html-extra": "^3.12"
     },
     "require-dev": {
-        "ext-dom": "*",
         "friendsofphp/php-cs-fixer": "*",
         "phpdocumentor/reflection-docblock": "*",
         "phpstan/extension-installer": "^1.1",
