@@ -74,7 +74,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
     }
 
     /**
-     * @template T of object
+     * @template T
      *
      * @param class-string<T> $class
      *
@@ -88,7 +88,11 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
             throw new InvalidArgumentException("Expected an array of $class");
         }
 
-        return array_map(fn ($item) => Enforce::objectOf($item, $class), $input);
+        foreach ($input as $item) {
+            Enforce::objectOf($item, $class);
+        }
+
+        return $input;
     }
 
     /**
@@ -106,7 +110,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
     }
 
     /**
-     * @template T of object
+     * @template T
      *
      * @param class-string<T> $class
      *
