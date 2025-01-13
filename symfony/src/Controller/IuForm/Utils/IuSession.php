@@ -6,6 +6,7 @@ namespace App\Controller\IuForm\Utils;
 
 use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
@@ -71,9 +72,18 @@ class IuSession
         $this->session->set($this->keySavedData, $data);
     }
 
-    public function getSaved(): mixed
+    /**
+     * @return array<string, psFieldValue>|null
+     */
+    public function getSaved(): ?array
     {
-        return $this->session->get($this->keySavedData);
+        $result = $this->session->get($this->keySavedData);
+
+        if (null !== $result && !is_array($result)) {
+            throw new InvalidArgumentException('Saved session data is malformed.');
+        }
+
+        return $result; // @phpstan-ignore return.type (Not checking more. This whole submission in session stuff needs to go.)
     }
 
     public function getId(): string

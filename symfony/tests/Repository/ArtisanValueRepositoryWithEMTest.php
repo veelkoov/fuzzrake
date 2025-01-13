@@ -4,7 +4,6 @@ namespace App\Tests\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\ArtisanValue;
-use App\Repository\ArtisanValueRepository;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 
@@ -24,7 +23,6 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
         );
 
         $subject = self::getEM()->getRepository(ArtisanValue::class);
-        self::assertInstanceOf(ArtisanValueRepository::class, $subject);
 
         $result = $subject->getDistinctValues(Field::FEATURES->value);
 
@@ -43,7 +41,6 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
         );
 
         $subject = self::getEM()->getRepository(ArtisanValue::class);
-        self::assertInstanceOf(ArtisanValueRepository::class, $subject);
 
         $result = $subject->countDistinctInActiveCreatorsHaving(Field::FEATURES->value);
 
@@ -67,7 +64,6 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
         );
 
         $subject = self::getEM()->getRepository(ArtisanValue::class);
-        self::assertInstanceOf(ArtisanValueRepository::class, $subject);
 
         $result = $subject->countActiveCreatorsHavingAnyOf([Field::FEATURES->value, Field::OTHER_FEATURES->value]);
 

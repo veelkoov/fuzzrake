@@ -100,10 +100,9 @@ class IuState
         if ([] !== $result->getErrors()) {
             $this->hasRestoreErrors = true;
 
-            $savedData = $this->session->getSaved();
-            SecureValues::forLogs($savedData);
-
-            $this->logger->info('Tried to restore data in given context.', $this->getLogContext(['savedData' => $savedData]));
+            $savedCopy = $saved;
+            SecureValues::forLogs($savedCopy);
+            $this->logger->info('Tried to restore data in given context.', $this->getLogContext(['savedData' => $savedCopy]));
         }
 
         foreach ($result->getErrors() as $error) {

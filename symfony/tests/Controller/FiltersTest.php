@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use JsonException;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @medium
@@ -59,7 +60,8 @@ class FiltersTest extends WebTestCaseWithEM
         $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim((string) $node->text()));
+        $resultMakerIds = $crawler->filter('td.makerId')->each(fn (Crawler $node, $_) => $node->text(''));
+
         self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }
