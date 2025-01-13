@@ -8,13 +8,10 @@ use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
-use App\Utils\Enforce;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverElement;
-use LogicException;
-
-use function Psl\Iter\contains;
+use Psl\Iter;
+use Symfony\Component\Panther\DomCrawler\Crawler;
 
 /**
  * @large
@@ -40,7 +37,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
                             $showToMinors = false === $nsfwWebsite
                                 && false === $nsfwSocial
-                                && (false === $doesNsfw || (null === $doesNsfw && contains([Ages::MIXED, Ages::MINORS], $ages)))
+                                && (false === $doesNsfw || (null === $doesNsfw && Iter\contains([Ages::MIXED, Ages::MINORS], $ages)))
                                 && true === $worksWithMinors;
 
                             $showAsSfw = false === $nsfwWebsite
@@ -130,10 +127,11 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         while (true) { // Handle multiple pages
             self::waitForLoadingIndicatorToDisappear();
 
-            foreach ($crawler->filter('#creators-table-body tr') as $node) {
-                $displayedCreatorIds[] = Enforce::objectOf($node, WebDriverElement::class)
-                    ->getAttribute('id') ?? throw new LogicException('Missing ID');
-            }
+            $displayedCreatorIds = [
+                ...$displayedCreatorIds,
+                ...$crawler->filter('#creators-table-body tr')
+                    ->each(fn (Crawler $node, $_) => $node->attr('id', '')),
+            ];
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {
                 $this->client->findElement(WebDriverBy::id('next-items-page-link'))->click();
@@ -147,6 +145,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         }
 
         foreach ($displayedCreatorIds as $creatorId) {
+            self::assertIsString($creatorId); // Workaround lacking type hinting in crawler's each()
             self::assertArrayHasKey($creatorId, $expected, "Should not display {$creators[$creatorId]->getName()}");
         }
     }
