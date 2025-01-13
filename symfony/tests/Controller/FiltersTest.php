@@ -9,11 +9,8 @@ use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Enforce;
-use DOMElement;
-use Facebook\WebDriver\WebDriverElement;
 use JsonException;
-use LogicException;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @medium
@@ -63,12 +60,7 @@ class FiltersTest extends WebTestCaseWithEM
         $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        $resultMakerIds = [];
-
-        foreach ($crawler->filter('td.makerId') as $node) {
-            $resultMakerIds[] = trim(Enforce::objectOf($node, DOMElement::class)->nodeValue
-                ?? throw new LogicException('Missing node value'));
-        }
+        $resultMakerIds = $crawler->filter('td.makerId')->each(fn (Crawler $node, $_) => $node->text(''));
 
         self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }

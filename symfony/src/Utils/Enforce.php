@@ -74,7 +74,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
     }
 
     /**
-     * @template T of object
+     * @template T
      *
      * @param class-string<T> $class
      *
@@ -106,7 +106,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
     }
 
     /**
-     * @template T of object
+     * @template T
      *
      * @param class-string<T> $class
      *
