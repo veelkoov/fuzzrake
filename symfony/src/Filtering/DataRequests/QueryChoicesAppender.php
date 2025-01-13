@@ -55,7 +55,7 @@ class QueryChoicesAppender
         $this->applyCreatorValuesCount($builder, StringList::from($this->choices->languages), Field::LANGUAGES);
     }
 
-    public function applyPaging(Query $query): void
+    public function applyPaging(Query $query): void // @phpstan-ignore missingType.generics
     {
         $query
             ->setFirstResult(Pagination::getFirstIdx($this->choices->pageSize, $this->choices->pageNumber))

@@ -32,11 +32,11 @@ final class PayMethodFixer extends AbstractListFixer
     {
         $joinedSubject = PackedStringList::pack($subject); // Cheap and lame
 
-        return [
+        return array_values([
             'wise.com',
             'boosty.to',
             ...$this->nsp->search($joinedSubject)->all(),
-        ];
+        ]);
     }
 
     #[Override]

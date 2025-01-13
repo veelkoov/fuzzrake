@@ -13,12 +13,12 @@ final class CreatorId
 
     final public const string VALID_REGEX = '^([A-Z0-9]{7})?$';
 
+    private static ?Pattern $pattern = null;
+
     public static function isValid(string $creatorId): bool
     {
-        static $pattern = null;
+        self::$pattern ??= Pattern::of(self::VALID_REGEX);
 
-        $pattern ??= Pattern::of(self::VALID_REGEX);
-
-        return $pattern->test($creatorId);
+        return self::$pattern->test($creatorId);
     }
 }

@@ -100,11 +100,8 @@ class StatisticsController extends AbstractController
             $result[$count][] = $item->label;
         }
 
-        foreach ($result as $item => $items) {
-            $result[$item] = implode(', ', $items);
-        }
+        $result = array_flip(array_map(fn (array $items) => implode(', ', $items), $result));
 
-        $result = array_flip($result); // @phpstan-ignore-line
         arsort($result);
 
         foreach ($input->specialItems as $item) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Utils\Arrays\Lists;
 use App\Utils\Regexp\Replacements;
 use InvalidArgumentException;
 
@@ -42,7 +43,7 @@ class SpeciesService
             }
         }
 
-        return array_unique($result);
+        return Lists::unique($result);
     }
 
     /**
