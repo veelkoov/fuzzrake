@@ -50,14 +50,14 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
 
         $result = $subject->getOnlyValidChoices($choices);
 
-        self::assertEquals(['FI', '?'], $result->countries);
-        self::assertEquals(['Liquid', '?'], $result->states);
-        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages);
-        self::assertEquals(['Toony', '?', '*'], $result->styles);
-        self::assertEquals(['LED eyes', '?', '*'], $result->features);
-        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes);
-        self::assertEquals(['Standard commissions', '?'], $result->productionModels);
-        self::assertEquals(['Pancakes', '!', '-'], $result->openFor);
-        self::assertEquals(['Birds', '?'], $result->species);
+        self::assertEquals(['FI', '?'], $result->countries->toArray());
+        self::assertEquals(['Liquid', '?'], $result->states->toArray());
+        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->toArray());
+        self::assertEquals(['Toony', '?', '*'], $result->styles->toArray());
+        self::assertEquals(['LED eyes', '?', '*'], $result->features->toArray());
+        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->toArray());
+        self::assertEquals(['Standard commissions', '?'], $result->productionModels->toArray());
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->toArray());
+        self::assertEquals(['Birds', '?'], $result->species->toArray());
     }
 }

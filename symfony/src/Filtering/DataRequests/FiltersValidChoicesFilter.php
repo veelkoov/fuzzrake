@@ -69,6 +69,6 @@ class FiltersValidChoicesFilter
 
     private static function onlyValidValues(StringList $givenOptions, StringList $validOptions, string ...$additionalValidOptions): StringList
     {
-        return $validOptions->plusAll($additionalValidOptions)->intersect($givenOptions);
+        return $givenOptions->intersect($validOptions->plusAll($additionalValidOptions));
     }
 }
