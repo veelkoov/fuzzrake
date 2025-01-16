@@ -15,6 +15,6 @@ readonly class MutableFilterData
         MutableSpecialItem ...$specialItems,
     ) {
         $this->items = new MutableSet();
-        $this->specialItems = MutableSpecialItemList::from($specialItems);
+        $this->specialItems = new MutableSpecialItemList($specialItems);
     }
 }

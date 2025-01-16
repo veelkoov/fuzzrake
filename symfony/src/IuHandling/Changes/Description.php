@@ -56,7 +56,7 @@ class Description
     private function addChange(Field $field, mixed $old, mixed $new): void
     {
         if ($field->isList()) {
-            $change = new ListChange($field, StringList::from(Enforce::strList($old)), StringList::from(Enforce::strList($new)));
+            $change = new ListChange($field, new StringList(Enforce::strList($old)), new StringList(Enforce::strList($new)));
         } else {
             $change = new SimpleChange($field, $old, $new);
         }

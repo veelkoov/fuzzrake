@@ -37,15 +37,15 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
         $choices = new Choices(
             '',
             '',
-            StringList::from(['FI', '?', 'UK', '*']),
-            StringList::from(['Liquid', '?', 'Solid', '*']),
-            StringList::from(['Finnish', 'Czech', '?', 'English', '*']),
-            StringList::from(['Toony', '?', '*', 'Yellow', '!']),
-            StringList::from(['LED eyes', '?', '*', 'Oven', '!']),
-            StringList::from(['Full plantigrade', '?', '*', 'Pancakes', '!']),
-            StringList::from(['Standard commissions', '?', 'Waffles', '*']),
-            StringList::from(['Pancakes', '!', '-', 'Kettles', '*']),
-            StringList::from(['Birds', '?', 'Furniture', '*']),
+            StringList::of('FI', '?', 'UK', '*'),
+            StringList::of('Liquid', '?', 'Solid', '*'),
+            StringList::of('Finnish', 'Czech', '?', 'English', '*'),
+            StringList::of('Toony', '?', '*', 'Yellow', '!'),
+            StringList::of('LED eyes', '?', '*', 'Oven', '!'),
+            StringList::of('Full plantigrade', '?', '*', 'Pancakes', '!'),
+            StringList::of('Standard commissions', '?', 'Waffles', '*'),
+            StringList::of('Pancakes', '!', '-', 'Kettles', '*'),
+            StringList::of('Birds', '?', 'Furniture', '*'),
             false, false, false, false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
