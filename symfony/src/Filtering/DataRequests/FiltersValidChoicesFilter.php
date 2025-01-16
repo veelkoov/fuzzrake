@@ -23,11 +23,11 @@ class FiltersValidChoicesFilter
     public function getOnlyValidChoices(Choices $choices): Choices
     {
         $countries = self::onlyValidValues($choices->countries,
-            new StringList($this->dataService->getCountries()), Consts::FILTER_VALUE_UNKNOWN);
+            $this->dataService->getCountries(), Consts::FILTER_VALUE_UNKNOWN);
         $states = self::onlyValidValues($choices->states,
-            new StringList($this->dataService->getStates()), Consts::FILTER_VALUE_UNKNOWN);
+            $this->dataService->getStates(), Consts::FILTER_VALUE_UNKNOWN);
         $languages = self::onlyValidValues($choices->languages,
-            new StringList($this->dataService->getLanguages()), Consts::FILTER_VALUE_UNKNOWN);
+            $this->dataService->getLanguages(), Consts::FILTER_VALUE_UNKNOWN);
 
         $styles = self::onlyValidValues($choices->styles,
             new StringList(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
@@ -39,7 +39,7 @@ class FiltersValidChoicesFilter
             new StringList(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
-            new StringList($this->speciesService->getValidNames()), Consts::FILTER_VALUE_UNKNOWN);
+            $this->speciesService->validNames, Consts::FILTER_VALUE_UNKNOWN);
 
         $openFor = self::onlyValidValues($choices->openFor,
             new StringList($this->dataService->getOpenFor()), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);

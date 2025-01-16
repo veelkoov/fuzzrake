@@ -22,6 +22,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
+use Veelkoov\Debris\StringList;
 
 class DataService
 {
@@ -77,18 +78,12 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getCountries(): array
+    public function getCountries(): StringList
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getStates(): array
+    public function getStates(): StringList
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
     }
@@ -101,10 +96,7 @@ class DataService
         return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getLanguages(): array
+    public function getLanguages(): StringList
     {
         return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
             CacheTags::ARTISANS, __METHOD__);

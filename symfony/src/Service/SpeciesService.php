@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Utils\Arrays\Lists;
 use App\Utils\Regexp\Replacements;
 use InvalidArgumentException;
+use Veelkoov\Debris\StringList;
 
 class SpeciesService
 {
-    /**
-     * @var list<string>
-     */
-    private readonly array $validNames;
+    public readonly StringList $validNames;
 
     /**
      * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, mixed>} $speciesDefinitions
@@ -26,32 +23,22 @@ class SpeciesService
 
     /**
      * @param array<mixed> $input
-     *
-     * @return list<string>
      */
-    private function getValidNamesFromArray(array $input): array
+    private function getValidNamesFromArray(array $input): StringList
     {
-        $result = [];
+        $result = StringList::mut();
 
         foreach ($input as $key => $value) {
-            $result[] = (string) $key;
+            $result->add((string) $key);
 
             if (is_array($value)) {
-                $result = [...$result, ...$this->getValidNamesFromArray($value)];
+                $result->addAll($this->getValidNamesFromArray($value));
             } elseif (null !== $value) {
                 throw new InvalidArgumentException('Expected an array with string keys and null or array values');
             }
         }
 
-        return Lists::unique($result);
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getValidNames(): array
-    {
-        return $this->validNames;
+        return $result->unique()->frozen();
     }
 
     public function getListFixerReplacements(): Replacements

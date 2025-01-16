@@ -8,6 +8,7 @@ use App\Entity\ArtisanValue;
 use App\Utils\Arrays\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringList;
 
 /**
  * @method ArtisanValue|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,10 +25,7 @@ class ArtisanValueRepository extends ServiceEntityRepository
         parent::__construct($registry, ArtisanValue::class);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getDistinctValues(string $fieldName): array
+    public function getDistinctValues(string $fieldName): StringList
     {
         $result = $this->getEntityManager()->createQuery('
             SELECT DISTINCT cv.value
@@ -37,7 +35,7 @@ class ArtisanValueRepository extends ServiceEntityRepository
             ->setParameter('fieldName', $fieldName)
             ->getSingleColumnResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
     /**
