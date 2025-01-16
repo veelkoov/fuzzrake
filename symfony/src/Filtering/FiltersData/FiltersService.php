@@ -118,7 +118,7 @@ class FiltersService
      */
     private function rawToFilterData(array $rawFilterData): FilterData
     {
-        $specialItems = SpecialItemList::map(
+        $specialItems = SpecialItemList::mapFrom(
             Enforce::array($rawFilterData['specialItems'] ?? []),
             function (mixed $rawSpecialItem): SpecialItem {
                 $rawSpecialItem = Enforce::array($rawSpecialItem);
@@ -141,7 +141,7 @@ class FiltersService
      */
     private function rawToItems(array $rawItems): ItemList
     {
-        return ItemList::map($rawItems, function (mixed $rawItem): Item {
+        return ItemList::mapFrom($rawItems, function (mixed $rawItem): Item {
             $rawItem = Enforce::array($rawItem);
 
             return new Item(
@@ -215,7 +215,7 @@ class FiltersService
             $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
         }
 
-        $specialItems = SpecialItemList::map($specialItems, fn (MutableSpecialItem $item) => SpecialItem::from($item));
+        $specialItems = SpecialItemList::mapFrom($specialItems, fn (MutableSpecialItem $item) => SpecialItem::from($item));
 
         $items = ItemList::mapWithKey(
             $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),

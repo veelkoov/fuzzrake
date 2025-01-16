@@ -112,8 +112,7 @@ class QueryChoicesAppender
     private function applyCountries(QueryBuilder $builder): void
     {
         if ($this->choices->countries->isNotEmpty()) {
-            $countries = Vec\map($this->choices->countries,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+            $countries = $this->choices->countries->map(fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
         }
@@ -122,8 +121,7 @@ class QueryChoicesAppender
     private function applyStates(QueryBuilder $builder): void
     {
         if ($this->choices->states->isNotEmpty()) {
-            $states = Vec\map($this->choices->states,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+            $states = $this->choices->states->map(fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
         }
@@ -364,10 +362,7 @@ class QueryChoicesAppender
                     ->andWhere("$valuesAlias.fieldName IN (:$parameterAlias)")
             ));
 
-            $builder->setParameter($parameterAlias, Vec\filter(
-                [$primaryField->value, $otherField?->value],
-                fn (?string $name): bool => null !== $name,
-            ));
+            $builder->setParameter($parameterAlias, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
         }
 
         if ($items->common->isNotEmpty()) {

@@ -27,7 +27,7 @@ readonly class ListChange implements ChangeInterface
         $name = $this->field->value;
 
         if ($this->added->isNotEmpty()) {
-            $res = 'Added '.$name.': "'.implode('", "', $this->added->toArray()).'"';
+            $res = 'Added '.$name.': "'.$this->added->join('", "').'"';
         } else {
             $res = '';
         }
@@ -35,7 +35,7 @@ readonly class ListChange implements ChangeInterface
         if ($this->removed->isNotEmpty()) {
             $res .= '' === $res ? "Removed {$name}" : ' and removed';
 
-            $res .= ': "'.implode('", "', $this->removed->toArray()).'"';
+            $res .= ': "'.$this->removed->join('", "').'"';
         } elseif ('' === $res) {
             $res = "{$name} did not change";
         }

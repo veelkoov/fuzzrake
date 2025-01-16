@@ -9,7 +9,6 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
-use Psl\Vec;
 use Veelkoov\Debris\StringList;
 
 class Description
@@ -30,7 +29,7 @@ class Description
 
     public function getText(): string
     {
-        return implode("\n", Vec\map($this->changes, fn (ChangeInterface $change) => $change->getDescription()));
+        return StringList::mapFrom($this->changes, fn (ChangeInterface $change) => $change->getDescription())->join("\n");
     }
 
     /**
