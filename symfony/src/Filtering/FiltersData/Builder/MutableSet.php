@@ -47,7 +47,7 @@ class MutableSet implements IteratorAggregate, ArrayAccess
 
     public function getReadonlyList(): ItemList
     {
-        return ItemList::mapFrom($this->items, fn (MutableItem $item) => Item::from($item));
+        return ItemList::mapFrom($this->items, Item::from(...));
     }
 
     public function sort(): void

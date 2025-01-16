@@ -20,7 +20,7 @@ readonly class FilterData
     {
         return new FilterData(
             $source->items->getReadonlyList(),
-            SpecialItemList::mapFrom($source->specialItems, fn ($item) => SpecialItem::from($item)),
+            SpecialItemList::mapFrom($source->specialItems, SpecialItem::from(...)),
         );
     }
 }

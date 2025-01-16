@@ -88,10 +88,7 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getOpenFor(): array
+    public function getOpenFor(): StringList
     {
         return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
     }

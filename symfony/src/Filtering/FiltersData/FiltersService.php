@@ -215,7 +215,7 @@ class FiltersService
             $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
         }
 
-        $specialItems = SpecialItemList::mapFrom($specialItems, fn (MutableSpecialItem $item) => SpecialItem::from($item));
+        $specialItems = SpecialItemList::mapFrom($specialItems, SpecialItem::from(...));
 
         $items = ItemList::mapWithKey(
             $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),

@@ -42,7 +42,7 @@ class FiltersValidChoicesFilter
             $this->speciesService->validNames, Consts::FILTER_VALUE_UNKNOWN);
 
         $openFor = self::onlyValidValues($choices->openFor,
-            new StringList($this->dataService->getOpenFor()), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
+            $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
 
         return new Choices(
             $choices->makerId,
