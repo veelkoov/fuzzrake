@@ -48,11 +48,11 @@ class QueryChoicesAppender
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
-        $this->applyCreatorValuesCount($builder, new StringList($this->choices->productionModels), Field::PRODUCTION_MODELS);
-        $this->applyCreatorValuesCount($builder, new StringList($this->choices->styles), Field::STYLES, Field::OTHER_STYLES);
-        $this->applyCreatorValuesCount($builder, new StringList($this->choices->orderTypes), Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
-        $this->applyCreatorValuesCount($builder, new StringList($this->choices->features), Field::FEATURES, Field::OTHER_FEATURES, true);
-        $this->applyCreatorValuesCount($builder, new StringList($this->choices->languages), Field::LANGUAGES);
+        $this->applyCreatorValuesCount($builder, $this->choices->productionModels, Field::PRODUCTION_MODELS);
+        $this->applyCreatorValuesCount($builder, $this->choices->styles, Field::STYLES, Field::OTHER_STYLES);
+        $this->applyCreatorValuesCount($builder, $this->choices->orderTypes, Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $this->applyCreatorValuesCount($builder, $this->choices->features, Field::FEATURES, Field::OTHER_FEATURES, true);
+        $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
     }
 
     public function applyPaging(Query $query): void // @phpstan-ignore missingType.generics
