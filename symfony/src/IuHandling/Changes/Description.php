@@ -9,8 +9,8 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
-
-use function Psl\Vec\map;
+use Psl\Vec;
+use Veelkoov\Debris\StringList;
 
 class Description
 {
@@ -30,7 +30,7 @@ class Description
 
     public function getText(): string
     {
-        return implode("\n", map($this->changes, fn (ChangeInterface $change) => $change->getDescription()));
+        return implode("\n", Vec\map($this->changes, fn (ChangeInterface $change) => $change->getDescription()));
     }
 
     /**
@@ -56,7 +56,7 @@ class Description
     private function addChange(Field $field, mixed $old, mixed $new): void
     {
         if ($field->isList()) {
-            $change = new ListChange($field, Enforce::strList($old), Enforce::strList($new));
+            $change = new ListChange($field, StringList::from(Enforce::strList($old)), StringList::from(Enforce::strList($new)));
         } else {
             $change = new SimpleChange($field, $old, $new);
         }
