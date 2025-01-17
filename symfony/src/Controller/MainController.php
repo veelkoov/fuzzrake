@@ -10,6 +10,7 @@ use App\Filtering\DataRequests\RequestParser;
 use App\Filtering\FiltersData\FiltersService;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\DataService;
+use App\Species\SpeciesService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Creator\CreatorId;
 use App\ValueObject\Routing\RouteName;

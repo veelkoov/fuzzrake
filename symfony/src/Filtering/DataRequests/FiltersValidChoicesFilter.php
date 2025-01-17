@@ -9,7 +9,7 @@ use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
-use App\Service\SpeciesService;
+use App\Species\SpeciesService;
 
 class FiltersValidChoicesFilter
 {
