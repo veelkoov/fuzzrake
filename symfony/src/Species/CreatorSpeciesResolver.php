@@ -28,63 +28,57 @@ class CreatorSpeciesResolver {
         $this->other = $this->species->getByName("Other"); // grep-species-other
     }
 
-    /**
-     * @param list<string> $speciesDoes
-     * @param list<string> $speciesDoesnt
-     * @return list<string>
-     */
-    public function resolveDoes(array $speciesDoes, array $speciesDoesnt): array {
-        $assumedSpeciesDoes = [] === $speciesDoes && [] !== $speciesDoesnt
-            ?[$this->mostSpecies->name] : $speciesDoes;
-
-        $ordered = $this->getOrderedDoesDoesnt($assumedSpeciesDoes, $speciesDoesnt);
-
-        $result = new Map();
-
+//    /**
+//     * @param list<string> $speciesDoes
+//     * @param list<string> $speciesDoesnt
+//     * @return list<string>
+//     */
+//    public function resolveDoes(array $speciesDoes, array $speciesDoesnt): array {
+//        $assumedSpeciesDoes = [] === $speciesDoes && [] !== $speciesDoesnt
+//            ?[$this->mostSpecies->name] : $speciesDoes;
+//
+//        $ordered = $this->getOrderedDoesDoesnt($assumedSpeciesDoes, $speciesDoesnt);
+//
+//        $result = new Map();
+//
 //        foreach ($ordered as $specieName => $does) {
 //            $descendants = $this->getVisibleSelfAndDescendants($this->species->getByName($specieName));
 //
 //            foreach ($descendants as $descendant) {
-//                if ($does) {
-//                    $result [] = $descendant;
-//                } else {
-////                    remove
-//                }
-//            }
-////            if ($does) {
-////                $descendants.forEach(result::add);
-////            } else {
-////                $descendants.forEach(result::remove);
-////            }
+//              if ($does) {
+//                  $descendants.forEach(result::add);
+//              } else {
+//                  $descendants.forEach(result::remove);
+//              }
 //        }
+//
+//        return $result->;
+//    }
 
-        return $result->;
-    }
-
-    /**
-     * @param list<string> $speciesDoes
-     * @param list<string> $speciesDoesnt
-     * @return Map<Specie, bool> "Specie name" => Does?
-     */
-    public function getOrderedDoesDoesnt(array $speciesDoes, array $speciesDoesnt): Map
-    {
-        $knownDoes = speciesDoes.map(::getVisibleSpecieOrParentOrOtherForUnusual).flatten().toSet()
-        $knownDoesnt = speciesDoesnt.map(::getVisibleSpecieOrEmptySetForUnusual).flatten().toSet()
-
-        var result: List<Pair<Specie, Boolean>> = listOf<Pair<Specie, Boolean>>()
-            .plus(knownDoes.map { specie -> specie to true })
-            .plus(knownDoesnt.map { specie -> specie to false })
-
-        result = result.sortedWith { item1: Pair<Specie, Boolean>, item2: Pair<Specie, Boolean> ->
-            val depthDiff = item1.first.getDepth() - item2.first.getDepth()
-
-            if (0 != depthDiff) { depthDiff } else {
-                if (item2.second) 1 else 0 - if (item1.second) 1 else 0
-            }
-        }
-
-        return result.toMap() // Map<Specie, Boolean>
-    }
+//    /**
+//     * @param list<string> $speciesDoes
+//     * @param list<string> $speciesDoesnt
+//     * @return Map<Specie, bool> "Specie name" => Does?
+//     */
+//    public function getOrderedDoesDoesnt(array $speciesDoes, array $speciesDoesnt): Map
+//    {
+//        $knownDoes = speciesDoes.map(::getVisibleSpecieOrParentOrOtherForUnusual).flatten().toSet()
+//        $knownDoesnt = speciesDoesnt.map(::getVisibleSpecieOrEmptySetForUnusual).flatten().toSet()
+//
+//        var result: List<Pair<Specie, Boolean>> = listOf<Pair<Specie, Boolean>>()
+//            .plus(knownDoes.map { specie -> specie to true })
+//            .plus(knownDoesnt.map { specie -> specie to false })
+//
+//        result = result.sortedWith { item1: Pair<Specie, Boolean>, item2: Pair<Specie, Boolean> ->
+//            val depthDiff = item1.first.getDepth() - item2.first.getDepth()
+//
+//            if (0 != depthDiff) { depthDiff } else {
+//                if (item2.second) 1 else 0 - if (item1.second) 1 else 0
+//            }
+//        }
+//
+//        return result.toMap() // Map<Specie, Boolean>
+//    }
 
     /**
      * @return list<string>
