@@ -26,6 +26,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Psl\Dict;
 use Psl\Vec;
+use Veelkoov\Debris\StringList;
 
 /**
  * @extends ServiceEntityRepository<Artisan>
@@ -189,30 +190,24 @@ class ArtisanRepository extends ServiceEntityRepository
         return (int) $resultData;
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getDistinctCountries(): array
+    public function getDistinctCountries(): StringList
     {
         $result = $this->createQueryBuilder('a')
             ->select('DISTINCT a.country')
             ->getQuery()
             ->getSingleColumnResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getDistinctStates(): array
+    public function getDistinctStates(): StringList
     {
         $result = $this->createQueryBuilder('a')
             ->select('DISTINCT a.state')
             ->getQuery()
             ->getSingleColumnResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
     /**

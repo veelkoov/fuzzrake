@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Utils\Json;
 use JsonException;
+use Veelkoov\Debris\StringList;
 
 /**
  * @phpstan-type psCountryData array{name: string, code: string, region: string}
@@ -26,15 +27,9 @@ class CountriesDataService
         $this->loadCountriesData($projectDir);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getRegions(): array
+    public function getRegions(): StringList
     {
-        $result = array_unique(array_map(fn (array $country): string => $country['region'], $this->data));
-        sort($result);
-
-        return $result;
+        return StringList::mapFrom($this->data, fn (array $country): string => $country['region'])->unique()->sorted();
     }
 
     public function getRegionFrom(string $countryCode): string

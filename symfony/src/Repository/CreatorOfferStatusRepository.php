@@ -12,6 +12,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringList;
 
 /**
  * @method CreatorOfferStatus|null find($id, $lockMode = null, $lockVersion = null)
@@ -110,10 +111,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
         return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getDistinctOpenFor(): array
+    public function getDistinctOpenFor(): StringList
     {
         $result = $this->createQueryBuilder('acs')
             ->select('DISTINCT acs.offer')
@@ -122,6 +120,6 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleColumnResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 }

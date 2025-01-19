@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use Veelkoov\Debris\StringList;
+
 class MutableSpecies implements Species
 {
     /**
@@ -25,14 +27,14 @@ class MutableSpecies implements Species
         return $this->byName[$name] ?? throw new SpecieException("No specie named '$name'");
     }
 
-    public function getNames(): array
+    public function getNames(): StringList
     {
-        return array_keys($this->byName); // TODO: Sort?
+        return new StringList(array_keys($this->byName)); // TODO: Sort?
     }
 
-    public function getVisibleNames(): array
+    public function getVisibleNames(): StringList
     {
-        return array_keys(array_filter($this->byName, fn (MutableSpecie $specie): bool => !$specie->hidden));
+        return new StringList(array_keys(array_filter($this->byName, fn (MutableSpecie $specie): bool => !$specie->hidden)));
     }
 
     public function hasName(string $name): bool

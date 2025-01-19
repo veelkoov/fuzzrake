@@ -7,6 +7,7 @@ namespace App\Species;
 use App\Utils\Regexp\Replacements;
 use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\StringList;
 
 /**
  * @phpstan-type TSpecies             array<string, TSubspecies>
@@ -35,12 +36,9 @@ class SpeciesService
         $this->fixerReplacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['regex_prefix'], $speciesDefinitions['regex_suffix']);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getValidNames(): array
+    public function getValidNames(): StringList
     {
-        return $this->species->getNames();
+        return new StringList($this->species->getNames());
     }
 
     public function getListFixerReplacements(): Replacements

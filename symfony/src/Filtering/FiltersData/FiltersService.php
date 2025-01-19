@@ -9,6 +9,8 @@ use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use App\Filtering\FiltersData\Builder\SpecialItems;
+use App\Filtering\FiltersData\Data\ItemList;
+use App\Filtering\FiltersData\Data\SpecialItemList;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
@@ -19,7 +21,6 @@ use App\Service\DataService;
 use App\Utils\Enforce;
 use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Dict;
 use Psl\Vec;
 
 class FiltersService
@@ -117,17 +118,18 @@ class FiltersService
      */
     private function rawToFilterData(array $rawFilterData): FilterData
     {
-        $specialItems = [];
+        $specialItems = SpecialItemList::mapFrom(
+            Enforce::array($rawFilterData['specialItems'] ?? []),
+            function (mixed $rawSpecialItem): SpecialItem {
+                $rawSpecialItem = Enforce::array($rawSpecialItem);
 
-        foreach (Enforce::array($rawFilterData['specialItems'] ?? []) as $rawSpecialItem) {
-            $rawSpecialItem = Enforce::array($rawSpecialItem);
+                $value = Enforce::string($rawSpecialItem['value'] ?? '');
+                $label = Enforce::string($rawSpecialItem['label'] ?? '');
+                $count = Enforce::int($rawSpecialItem['count'] ?? 0);
 
-            $value = Enforce::string($rawSpecialItem['value'] ?? '');
-            $label = Enforce::string($rawSpecialItem['label'] ?? '');
-            $count = Enforce::int($rawSpecialItem['count'] ?? 0);
-
-            $specialItems[] = new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
-        }
+                return new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
+            },
+        );
 
         $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
 
@@ -136,25 +138,20 @@ class FiltersService
 
     /**
      * @param array<mixed> $rawItems
-     *
-     * @return list<Item>
      */
-    private function rawToItems(array $rawItems): array
+    private function rawToItems(array $rawItems): ItemList
     {
-        $result = [];
-
-        foreach ($rawItems as $rawItem) {
+        return ItemList::mapFrom($rawItems, function (mixed $rawItem): Item {
             $rawItem = Enforce::array($rawItem);
 
-            $result[] = new Item(
+            return new Item(
                 Enforce::string($rawItem['value'] ?? ''),
                 Enforce::string($rawItem['label'] ?? ''),
                 Enforce::int($rawItem['count'] ?? 0),
                 $this->rawToItems(Enforce::array($rawItem['subItems'] ?? [])),
             );
-        }
-
-        return $result;
+        },
+        );
     }
 
     /**
@@ -218,11 +215,12 @@ class FiltersService
             $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
         }
 
-        $specialItems = Vec\map($specialItems, fn (MutableSpecialItem $item): SpecialItem => SpecialItem::from($item));
+        $specialItems = SpecialItemList::mapFrom($specialItems, SpecialItem::from(...));
 
-        $items = $this->dataService->countDistinctInActiveCreatorsHaving($primaryField);
-        $items = Dict\map_with_key($items, fn (string $item, int $count): Item => new Item($item, $item, $count));
-        $items = Vec\values($items);
+        $items = ItemList::mapWithKey(
+            $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),
+            fn (string $item, int $count): Item => new Item($item, $item, $count),
+        );
 
         return new FilterData($items, $specialItems);
     }
