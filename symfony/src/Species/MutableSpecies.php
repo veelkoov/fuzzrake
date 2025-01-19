@@ -8,57 +8,52 @@ use Veelkoov\Debris\StringList;
 
 class MutableSpecies implements Species
 {
-    /**
-     * @var array<string, MutableSpecie>
-     */
-    private array $byName = [];
+    private StringMutableSpecieMap $byName;
+    private SpecieList $asTree;
 
-    /**
-     * @var list<MutableSpecie>
-     */
-    private array $asTree = [];
-
-    public function __construct(
-    ) {
+    public function __construct()
+    {
+        $this->byName = StringMutableSpecieMap::mut();
+        $this->asTree = SpecieList::mut();
     }
 
     public function getByName(string $name): Specie
     {
-        return $this->byName[$name] ?? throw new SpecieException("No specie named '$name'");
+        return $this->byName->getOrDefault($name, fn () => throw new SpecieException("No specie named '$name'"));
     }
 
     public function getNames(): StringList
     {
-        return new StringList(array_keys($this->byName)); // TODO: Sort?
+        return $this->byName->getKeys()->sorted();
     }
 
     public function getVisibleNames(): StringList
     {
-        return new StringList(array_keys(array_filter($this->byName, fn (MutableSpecie $specie): bool => !$specie->hidden)));
+        return $this->byName->filterValues(fn (MutableSpecie $specie): bool => !$specie->hidden)->getKeys();
     }
 
     public function hasName(string $name): bool
     {
-        return array_key_exists($name, $this->byName);
+        return $this->byName->hasKey($name);
     }
 
-    public function getAsTree(): array
+    public function getAsTree(): SpecieList
     {
         return $this->asTree;
     }
 
-    public function getFlat(): array
+    public function getFlat(): SpecieList
     {
-        return array_values($this->byName);
+        return $this->byName->getValues();
     }
 
     public function getByNameCreatingMissing(string $name, bool $hidden): MutableSpecie
     {
-        return $this->byName[$name] ??= new MutableSpecie($name, $hidden);
+        return $this->byName->getOrSet($name, fn () => new MutableSpecie($name, $hidden));
     }
 
     public function addRootSpecie(MutableSpecie $rootSpecie): void
     {
-        $this->asTree[] = $rootSpecie;
+        $this->asTree->add($rootSpecie);
     }
 }

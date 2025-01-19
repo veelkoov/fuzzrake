@@ -9,17 +9,12 @@ interface Species
     public function getByName(string $name): Specie;
 
     public function getNames(): StringList;
+
     public function getVisibleNames(): StringList;
 
     public function hasName(string $name): bool;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getAsTree(): array;
+    public function getAsTree(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getFlat(): array;
+    public function getFlat(): SpecieList;
 }

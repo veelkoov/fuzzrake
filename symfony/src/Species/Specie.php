@@ -10,33 +10,15 @@ interface Specie
 
     public function getHidden(): bool;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getParents(): array;
+    public function getParents(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getAncestors(): array;
+    public function getAncestors(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getThisAndAncestors(): array;
+    public function getThisAndAncestors(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getChildren(): array;
+    public function getChildren(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getDescendants(): array;
+    public function getDescendants(): SpecieList;
 
-    /**
-     * @return list<Specie>
-     */
-    public function getThisAndDescendants(): array;
+    public function getThisAndDescendants(): SpecieList;
 }

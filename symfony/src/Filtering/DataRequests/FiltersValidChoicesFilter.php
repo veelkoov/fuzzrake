@@ -39,7 +39,7 @@ class FiltersValidChoicesFilter
             new StringList(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
-            $this->speciesService->validNames, Consts::FILTER_VALUE_UNKNOWN);
+            $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
 
         $openFor = self::onlyValidValues($choices->openFor,
             $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);

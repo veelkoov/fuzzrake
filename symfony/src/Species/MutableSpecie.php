@@ -9,20 +9,15 @@ use Psl\Vec;
 
 final class MutableSpecie implements Specie
 {
-    /**
-     * @var list<MutableSpecie>
-     */
-    private array $parents = [];
-
-    /**
-     * @var list<MutableSpecie>
-     */
-    private array $children = [];
+    private SpecieList $parents;
+    private SpecieList $children;
 
     public function __construct(
         readonly string $name,
         readonly bool $hidden,
     ) {
+        $this->parents = SpecieList::mut();
+        $this->children = SpecieList::mut();
     }
 
     public function addChild(MutableSpecie $child): void
@@ -31,16 +26,16 @@ final class MutableSpecie implements Specie
             throw new SpecieException("Cannot add $child->name as a child of itself");
         }
 
-        if (in_array($child, $this->getAncestors(), true)) {
+        if ($this->getAncestors()->contains($child)) {
             throw new SpecieException("Recursion when adding child $child->name to $this->name");
         }
 
-        if (!in_array($child, $this->children, true)) {
-            $this->children[] = $child;
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
         }
 
-        if (!in_array($this, $child->parents, true)) {
-            $child->parents[] = $this;
+        if (!$child->parents->contains($this)) {
+            $child->parents->add($this);
         }
     }
 
@@ -57,37 +52,37 @@ final class MutableSpecie implements Specie
     }
 
     #[Override]
-    public function getParents(): array
+    public function getParents(): SpecieList
     {
         return $this->parents;
     }
 
-    public function getAncestors(): array
+    public function getAncestors(): SpecieList
     {
-        return [...$this->parents, ...Vec\flat_map($this->parents, fn (self $specie): array => $specie->getAncestors())];
+        return new SpecieList(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndAncestors()));
     }
 
     #[Override]
-    public function getThisAndAncestors(): array
+    public function getThisAndAncestors(): SpecieList
     {
-        return [$this, ...$this->getAncestors()];
+        return $this->getAncestors()->plus($this);
     }
 
     #[Override]
-    public function getChildren(): array
+    public function getChildren(): SpecieList
     {
         return $this->getChildren();
     }
 
     #[Override]
-    public function getDescendants(): array
+    public function getDescendants(): SpecieList
     {
-        return [...$this->children, ...Vec\flat_map($this->parents, fn (self $specie): array => $specie->getDescendants())];
+        return new SpecieList(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndDescendants()));
     }
 
     #[Override]
-    public function getThisAndDescendants(): array
+    public function getThisAndDescendants(): SpecieList
     {
-        return [$this, ...$this->getDescendants()];
+        return $this->getDescendants()->plus($this);
     }
 }
