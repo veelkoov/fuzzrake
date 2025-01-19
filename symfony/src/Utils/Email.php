@@ -15,6 +15,8 @@ final class Email
     // @author Bernhard Schussek <bschussek@gmail.com>
     private const string PATTERN_HTML5_ALLOW_NO_TLD = '^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$';
 
+    private static ?Pattern $pattern = null;
+
     public static function obfuscate(string $input): string
     {
         return implode('@', array_map(function (string $input): string {
@@ -34,12 +36,8 @@ final class Email
 
     public static function isValid(string $email): bool
     {
-        static $pattern = null;
+        self::$pattern ??= Pattern::of(self::PATTERN_HTML5_ALLOW_NO_TLD);
 
-        if (null === $pattern) {
-            $pattern = Pattern::of(self::PATTERN_HTML5_ALLOW_NO_TLD);
-        }
-
-        return $pattern->test($email);
+        return self::$pattern->test($email);
     }
 }

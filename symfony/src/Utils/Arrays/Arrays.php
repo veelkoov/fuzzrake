@@ -37,25 +37,6 @@ final class Arrays
     }
 
     /**
-     * @param mixed[] $a1
-     * @param mixed[] $a2
-     *
-     * @return mixed[]
-     */
-    public static function intersect(array $a1, array $a2): array
-    {
-        $result = $a1;
-
-        foreach ($result as $key => $value) {
-            if (!in_array($value, $a2, true)) {
-                unset($result[$key]);
-            }
-        }
-
-        return array_values($result);
-    }
-
-    /**
      * @template T
      *
      * @param T[] $input

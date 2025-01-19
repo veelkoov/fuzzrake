@@ -10,8 +10,8 @@ use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
-
-use function Psl\Iter\contains;
+use Psl\Iter;
+use Symfony\Component\Panther\DomCrawler\Crawler;
 
 /**
  * @large
@@ -37,7 +37,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
                             $showToMinors = false === $nsfwWebsite
                                 && false === $nsfwSocial
-                                && (false === $doesNsfw || (null === $doesNsfw && contains([Ages::MIXED, Ages::MINORS], $ages)))
+                                && (false === $doesNsfw || (null === $doesNsfw && Iter\contains([Ages::MIXED, Ages::MINORS], $ages)))
                                 && true === $worksWithMinors;
 
                             $showAsSfw = false === $nsfwWebsite
@@ -129,7 +129,8 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
             $displayedCreatorIds = [
                 ...$displayedCreatorIds,
-                ...$crawler->filter('#creators-table-body tr')->each(fn ($node, $_) => $node->attr('id')),
+                ...$crawler->filter('#creators-table-body tr')
+                    ->each(fn (Crawler $node, $_) => $node->attr('id', '')),
             ];
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {
@@ -144,6 +145,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         }
 
         foreach ($displayedCreatorIds as $creatorId) {
+            self::assertIsString($creatorId); // Workaround lacking type hinting in crawler's each()
             self::assertArrayHasKey($creatorId, $expected, "Should not display {$creators[$creatorId]->getName()}");
         }
     }

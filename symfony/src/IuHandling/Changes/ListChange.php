@@ -65,7 +65,7 @@ readonly class ListChange implements ChangeInterface
      * @param string[] $new
      * @param string[] $old
      *
-     * @return array{string[], string[]}
+     * @return array{list<string>, list<string>}
      */
     private static function calculateAddedRemoved(array $old, array $new): array
     {
