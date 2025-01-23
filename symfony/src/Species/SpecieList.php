@@ -14,6 +14,6 @@ class SpecieList extends DList
 {
     public function getNames(): StringList
     {
-        return new StringList(array_map(fn (Specie $specie) => $specie->getName(), $this->items));
+        return StringList::mapFrom($this->items, fn (Specie $specie) => $specie->getName());
     }
 }
