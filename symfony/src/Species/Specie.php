@@ -21,4 +21,6 @@ interface Specie
     public function getDescendants(): SpecieList;
 
     public function getThisAndDescendants(): SpecieList;
+
+    public function getDepth(): int;
 }

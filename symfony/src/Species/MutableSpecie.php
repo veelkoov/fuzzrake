@@ -23,11 +23,11 @@ final class MutableSpecie implements Specie
     public function addChild(MutableSpecie $child): void
     {
         if ($this === $child) {
-            throw new SpecieException("Cannot add $child->name as a child of itself");
+            throw new SpecieException("Cannot add '$child->name' as a child of itself");
         }
 
         if ($this->getAncestors()->contains($child)) {
-            throw new SpecieException("Recursion when adding child $child->name to $this->name");
+            throw new SpecieException("Recursion when adding child '$child->name' to '$this->name'");
         }
 
         if (!$this->children->contains($child)) {
@@ -71,18 +71,28 @@ final class MutableSpecie implements Specie
     #[Override]
     public function getChildren(): SpecieList
     {
-        return $this->getChildren();
+        return $this->children;
     }
 
     #[Override]
     public function getDescendants(): SpecieList
     {
-        return new SpecieList(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndDescendants()));
+        return new SpecieList(Vec\flat_map($this->children, fn (Specie $specie) => $specie->getThisAndDescendants()));
     }
 
     #[Override]
     public function getThisAndDescendants(): SpecieList
     {
         return $this->getDescendants()->plus($this);
+    }
+
+    #[Override]
+    public function getDepth(): int
+    {
+        if ($this->parents->isEmpty()) {
+            return 0;
+        } else {
+            return $this->parents->max(fn (Specie $specie) => $specie->getDepth()) + 1;
+        }
     }
 }
