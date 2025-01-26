@@ -1,6 +1,12 @@
 {
     "type": "project",
     "license": "AGPL-3.0-only",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/veelkoov/debris"
+        }
+    ],
     "require": {
         "php": "8.3.*",
         "ext-ctype": "*",
@@ -40,7 +46,8 @@
         "symfony/yaml": "*",
         "twig/cache-extra": "^3.3",
         "twig/extra-bundle": "^3.3",
-        "twig/html-extra": "^3.12"
+        "twig/html-extra": "^3.12",
+        "veelkoov/debris": "dev-develop"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "*",
