@@ -10,17 +10,17 @@ interface Specie
 
     public function getHidden(): bool;
 
-    public function getParents(): SpecieList;
+    public function getParents(): SpecieSet;
 
-    public function getAncestors(): SpecieList;
+    public function getAncestors(): SpecieSet;
 
-    public function getThisAndAncestors(): SpecieList;
+    public function getThisAndAncestors(): SpecieSet;
 
-    public function getChildren(): SpecieList;
+    public function getChildren(): SpecieSet;
 
-    public function getDescendants(): SpecieList;
+    public function getDescendants(): SpecieSet;
 
-    public function getThisAndDescendants(): SpecieList;
+    public function getThisAndDescendants(): SpecieSet;
 
     public function getDepth(): int;
 }

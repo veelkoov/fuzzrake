@@ -12,9 +12,9 @@ use Veelkoov\Debris\StringList;
  */
 class StringMutableSpecieMap extends DScalarMap
 {
-    public function getValues(): SpecieList
+    public function getValues(): SpecieSet
     {
-        return new SpecieList($this->items);
+        return new SpecieSet($this->items);
     }
 
     public function getKeys(): StringList

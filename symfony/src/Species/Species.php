@@ -14,7 +14,7 @@ interface Species
 
     public function hasName(string $name): bool;
 
-    public function getAsTree(): SpecieList;
+    public function getAsTree(): SpecieSet;
 
-    public function getFlat(): SpecieList;
+    public function getFlat(): SpecieSet;
 }

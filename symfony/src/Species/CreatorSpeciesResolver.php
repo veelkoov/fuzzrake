@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Species;
 
 use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\StringSet;
 
-class CreatorSpeciesResolver
+final class CreatorSpeciesResolver
 {
     /**
      * @var array<string, StringList>
@@ -26,23 +27,23 @@ class CreatorSpeciesResolver
         $this->other = $this->species->getByName('Other'); // grep-species-other
     }
 
-    public function resolveDoes(StringList $speciesDoes, StringList $speciesDoesnt): StringList
+    public function resolveDoes(StringList $speciesDoes, StringList $speciesDoesnt): StringSet
     {
         $assumedSpeciesDoes = $speciesDoes->isEmpty() && $speciesDoesnt->isNotEmpty()
             ? StringList::of($this->mostSpecies->getName()) : $speciesDoes;
 
         $ordered = $this->getOrderedDoesDoesnt($assumedSpeciesDoes, $speciesDoesnt);
 
-        $result = StringList::mut();
+        $result = StringSet::mut();
 
         foreach ($ordered as $specieName => $does) {
             $descendants = $this->getVisibleSelfAndDescendants($this->species->getByName($specieName));
 
             foreach ($descendants as $descendant) {
                 if ($does) {
-                    $result->add($descendant); // TODO: Replace with SET
+                    $result->add($descendant);
                 } else {
-                    $result->minusAll([$descendant, $descendant, $descendant, $descendant, $descendant]); // TODO: Replace with SET
+                    $result->remove($descendant);
                 }
             }
         }
@@ -94,13 +95,13 @@ class CreatorSpeciesResolver
         );
     }
 
-    private function getVisibleSpecieOrParentOrOtherForUnusual(string $specieName): SpecieList
+    private function getVisibleSpecieOrParentOrOtherForUnusual(string $specieName): SpecieSet
     {
         if (!$this->species->hasName($specieName)) {
-            return SpecieList::of($this->other);
+            return SpecieSet::of($this->other);
         }
 
-        $result = SpecieList::mut();
+        $result = SpecieSet::mut();
         $unresolved = [$this->species->getByName($specieName)];
 
         while ([] !== $unresolved) {
@@ -120,12 +121,12 @@ class CreatorSpeciesResolver
         return $result->frozen();
     }
 
-    private function getVisibleSpecieOrEmptySetForUnusual(string $specieName): SpecieList
+    private function getVisibleSpecieOrEmptySetForUnusual(string $specieName): SpecieSet
     {
         if (!$this->species->hasName($specieName) || $this->species->getByName($specieName)->getHidden()) {
-            return new SpecieList();
+            return new SpecieSet();
         }
 
-        return SpecieList::of($this->species->getByName($specieName));
+        return SpecieSet::of($this->species->getByName($specieName));
     }
 }

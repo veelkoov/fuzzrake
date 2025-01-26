@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use Veelkoov\Debris\DList;
+use Veelkoov\Debris\DObjectSet;
 use Veelkoov\Debris\StringList;
 
 /**
- * @extends DList<Specie>
+ * @extends DObjectSet<Specie>
  */
-class SpecieList extends DList
+class SpecieSet extends DObjectSet
 {
     public function getNames(): StringList
     {

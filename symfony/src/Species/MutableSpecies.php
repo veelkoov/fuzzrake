@@ -9,12 +9,12 @@ use Veelkoov\Debris\StringList;
 class MutableSpecies implements Species
 {
     private StringMutableSpecieMap $byName;
-    private SpecieList $asTree;
+    private SpecieSet $asTree;
 
     public function __construct()
     {
         $this->byName = StringMutableSpecieMap::mut();
-        $this->asTree = SpecieList::mut();
+        $this->asTree = SpecieSet::mut();
     }
 
     public function getByName(string $name): Specie
@@ -37,12 +37,12 @@ class MutableSpecies implements Species
         return $this->byName->hasKey($name);
     }
 
-    public function getAsTree(): SpecieList
+    public function getAsTree(): SpecieSet
     {
         return $this->asTree;
     }
 
-    public function getFlat(): SpecieList
+    public function getFlat(): SpecieSet
     {
         return $this->byName->getValues();
     }

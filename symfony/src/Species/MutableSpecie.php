@@ -9,15 +9,15 @@ use Psl\Vec;
 
 final class MutableSpecie implements Specie
 {
-    private SpecieList $parents;
-    private SpecieList $children;
+    private SpecieSet $parents;
+    private SpecieSet $children;
 
     public function __construct(
         readonly string $name,
         readonly bool $hidden,
     ) {
-        $this->parents = SpecieList::mut();
-        $this->children = SpecieList::mut();
+        $this->parents = SpecieSet::mut();
+        $this->children = SpecieSet::mut();
     }
 
     public function addChild(MutableSpecie $child): void
@@ -52,36 +52,36 @@ final class MutableSpecie implements Specie
     }
 
     #[Override]
-    public function getParents(): SpecieList
+    public function getParents(): SpecieSet
     {
         return $this->parents;
     }
 
-    public function getAncestors(): SpecieList
+    public function getAncestors(): SpecieSet
     {
-        return new SpecieList(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndAncestors()));
+        return new SpecieSet(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndAncestors()));
     }
 
     #[Override]
-    public function getThisAndAncestors(): SpecieList
+    public function getThisAndAncestors(): SpecieSet
     {
         return $this->getAncestors()->plus($this);
     }
 
     #[Override]
-    public function getChildren(): SpecieList
+    public function getChildren(): SpecieSet
     {
         return $this->children;
     }
 
     #[Override]
-    public function getDescendants(): SpecieList
+    public function getDescendants(): SpecieSet
     {
-        return new SpecieList(Vec\flat_map($this->children, fn (Specie $specie) => $specie->getThisAndDescendants()));
+        return new SpecieSet(Vec\flat_map($this->children, fn (Specie $specie) => $specie->getThisAndDescendants()));
     }
 
     #[Override]
-    public function getThisAndDescendants(): SpecieList
+    public function getThisAndDescendants(): SpecieSet
     {
         return $this->getDescendants()->plus($this);
     }
