@@ -106,7 +106,7 @@ trait EntityManagerTrait
         string $makerId = 'TEST000',
         string $country = 'CZ',
         string $password = '',
-        ContactPermit $contactAllowed = null,
+        ?ContactPermit $contactAllowed = null,
         ?Ages $ages = null,
         ?bool $nsfwWebsite = null,
         ?bool $nsfwSocial = null,

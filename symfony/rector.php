@@ -19,7 +19,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_83,
+        LevelSetList::UP_TO_PHP_84,
 
         SymfonySetList::SYMFONY_60,
         SymfonySetList::SYMFONY_61,
@@ -55,7 +55,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
 
     $rectorConfig->skip([
-        AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
         ReadOnlyClassRector::class, // Let me decide when
 
         LiteralGetToRequestClassConstantRector::class, // SYMFONY_CODE_QUALITY. Low value, lots of changes. TODO

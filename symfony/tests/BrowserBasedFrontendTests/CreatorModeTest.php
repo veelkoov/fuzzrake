@@ -61,15 +61,15 @@ class CreatorModeTest extends PantherTestCaseWithEM
         // Expect: text search works properly even in creator mode
 
         $this->clearTypeInTextSearch('NSFW');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500);
         $this->assertMakersVisibility(['TEST001'], ['TEST002']);
 
         $this->clearTypeInTextSearch('WWM');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500);
         $this->assertMakersVisibility(['TEST002'], ['TEST001']);
 
         $this->clearTypeInTextSearch('Creator');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500);
         $this->assertMakersVisibility(['TEST001', 'TEST002'], []);
 
         // Action: click re-enable filters button
