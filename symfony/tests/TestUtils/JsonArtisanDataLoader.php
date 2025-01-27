@@ -64,7 +64,7 @@ class JsonArtisanDataLoader
             } elseif (Field::CONTACT_ALLOWED === $field) {
                 $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
-                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::nString($value));
+                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
             }
 
             if ($field->isList()) {

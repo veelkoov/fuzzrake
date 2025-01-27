@@ -22,6 +22,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
+use Psr\Log\LoggerInterface;
 
 class DataService
 {
@@ -33,6 +34,7 @@ class DataService
         private readonly EventRepository $eventRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -42,7 +44,8 @@ class DataService
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
-                } catch (UnexpectedResultException|DateTimeException) {
+                } catch (UnexpectedResultException|DateTimeException $exception) {
+                    $this->logger->error("Failed getting last CS update time: $exception");
                     $lastDataUpdateTimeUtc = null;
                 }
 

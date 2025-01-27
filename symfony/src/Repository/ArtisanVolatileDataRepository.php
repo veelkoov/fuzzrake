@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\ArtisanVolatileData;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Enforce;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\UnexpectedResultException;
@@ -32,7 +31,7 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
      * @throws DateTimeException
      * @throws UnexpectedResultException
      */
-    public function getLastCsUpdateTime(): DateTimeImmutable
+    public function getLastCsUpdateTime(): ?DateTimeImmutable
     {
         $resultData = $this
             ->createQueryBuilder('avd')
@@ -40,7 +39,7 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return UtcClock::at(Enforce::nString($resultData));
+        return null === $resultData ? null : UtcClock::at((string) $resultData);
     }
 
     /**
