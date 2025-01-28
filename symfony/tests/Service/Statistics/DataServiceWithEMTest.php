@@ -13,6 +13,7 @@ use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Psr\Log\LoggerInterface;
 
 /**
  * @medium
@@ -28,15 +29,7 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
-        $artisanRepository = self::getArtisanRepository();
-        $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
-        $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
-        $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
-        $eRepositoryMock = self::createMock(EventRepository::class);
-        $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
-
-        $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
-            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
+        $subject = $this->getDataService();
         $result = $subject->getMainPageStats();
 
         self::assertEquals(1, $result->countryCount);
@@ -51,17 +44,23 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
-        $artisanRepository = self::getArtisanRepository();
-        $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
-        $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
-        $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
-        $eRepositoryMock = self::createMock(EventRepository::class);
-        $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
-
-        $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
-            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
+        $subject = $this->getDataService();
         $result = $subject->getMainPageStats();
 
         self::assertEquals(2, $result->activeArtisansCount);
+    }
+
+    private function getDataService(): DataService
+    {
+        return new DataService(
+            self::getArtisanRepository(),
+            self::createMock(CreatorValueRepository::class),
+            self::createMock(ArtisanVolatileDataRepository::class),
+            self::createMock(CreatorOfferStatusRepository::class),
+            self::createMock(EventRepository::class),
+            self::createMock(KotlinDataRepository::class),
+            CacheUtils::getArrayBased(),
+            self::createMock(LoggerInterface::class),
+        );
     }
 }

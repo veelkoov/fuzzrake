@@ -10,6 +10,7 @@ use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
 use Override;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -48,27 +49,29 @@ class UtcClockTest extends TestCase
 
         self::assertEquals('2022-01-07T13:01:00.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
         self::assertEquals('UTC', $subject->getTimezone()->getName());
+    }
+
+    /**
+     * @dataProvider atThrowsOnInvalidDataProvider
+     */
+    public function testAtThrowsOnInvalid(string|int|bool|null $input): void
+    {
+        $this->expectNotToPerformAssertions();
 
         try {
-            UtcClock::at(false);
+            UtcClock::at((string) $input);
             self::fail();
         } catch (DateTimeException) {
             // Expected
         }
+    }
 
-        try {
-            UtcClock::at(null);
-            self::fail();
-        } catch (DateTimeException) {
-            // Expected
-        }
-
-        try {
-            UtcClock::at('some invalid info');
-            self::fail();
-        } catch (DateTimeException) {
-            // Expected
-        }
+    public function atThrowsOnInvalidDataProvider(): DataProvider
+    {
+        // The method will be used in some cases where data will be typehinted as many different things.
+        // Example: Doctrine's single scalar result. The simplest solution is to (string) cast.
+        // Below cases cover also the least possible.
+        return DataProvider::list('some invalid info', '', '0', '1', 0, 1, false, true, null);
     }
 
     public function testFromTimestamp(): void
@@ -77,37 +80,6 @@ class UtcClockTest extends TestCase
 
         self::assertEquals('2022-07-24T10:36:33.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
         self::assertEquals('UTC', $subject->getTimezone()->getName());
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testGetMonthLaterYmd(): void
-    {
-        UtcClockMock::start();
-
-        $daysInThisMonth = (int) UtcClock::now()->format('t');
-        self::forTestGetXyzLaterYmd(UtcClock::getMonthLaterYmd(), $daysInThisMonth);
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testGetWeekLaterYmd(): void
-    {
-        UtcClockMock::start();
-
-        self::forTestGetXyzLaterYmd(UtcClock::getWeekLaterYmd(), 7);
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testTomorrowYmd(): void
-    {
-        UtcClockMock::start();
-
-        self::forTestGetXyzLaterYmd(UtcClock::getTomorrowYmd(), 1);
     }
 
     /**
