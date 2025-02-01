@@ -23,6 +23,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 class DataService
@@ -116,10 +117,7 @@ class DataService
         );
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function countDistinctInActiveCreatorsHaving(Field $field): array
+    public function countDistinctInActiveCreatorsHaving(Field $field): StringIntMap
     {
         return $this->cache->get(
             function () use ($field) {

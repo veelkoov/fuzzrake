@@ -47,7 +47,7 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
         self::assertEquals([
             'AB' => 2,
             'CD' => 1,
-        ], $result);
+        ], $result->toArray());
     }
 
     public function testCountActiveCreatorsHavingAnyOf(): void

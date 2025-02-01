@@ -7,7 +7,6 @@ namespace App\Filtering\FiltersData;
 use App\Data\Definitions\Fields\Field;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Data\SpecialItemList;

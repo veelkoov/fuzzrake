@@ -9,7 +9,6 @@ use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Entity\ArtisanValue;
 use App\Filtering\DataRequests\QueryChoicesAppender;
-use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Pagination\Pagination;
@@ -26,6 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Psl\Dict;
 use Psl\Vec;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 /**
@@ -175,8 +175,7 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws UnexpectedResultException
      */
     public function getDistinctCountriesCount(): int
     {
@@ -210,27 +209,22 @@ class ArtisanRepository extends ServiceEntityRepository
         return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    /**
-     * @return string[]
-     */
-    public function getPaymentPlans(): array
+    public function getPaymentPlans(): StringList
     {
-        $resultData = $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->select('a.paymentPlans AS paymentPlans')
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
             ->getSingleColumnResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
      * @param literal-string $columnName
-     *
-     * @return array<string, int>
      */
-    public function countDistinctInActiveCreators(string $columnName): array
+    public function countDistinctInActiveCreators(string $columnName): StringIntMap
     {
         $result = $this->getEntityManager()->createQuery("
             SELECT c.$columnName AS value, COUNT(c.$columnName) AS count
@@ -242,7 +236,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getArrayResult();
 
-        return Arrays::assoc($result, 'value', 'count'); // @phpstan-ignore-line Lack of skill to fix this
+        return StringIntMap::fromRows($result, 'value', 'count');
     }
 
     /**
@@ -312,8 +306,7 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @throws UnexpectedResultException
      */
     public function countAll(): int
     {
