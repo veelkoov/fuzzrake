@@ -6,12 +6,12 @@ namespace App\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorOfferStatus;
-use App\Utils\Arrays\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 /**
@@ -96,19 +96,16 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function getDistinctWithOpenCount(): array
+    public function getDistinctWithOpenCount(): StringIntMap
     {
-        $resultData = $this->createQueryBuilder('acs')
+        $result = $this->createQueryBuilder('acs')
             ->select('acs.offer')
             ->addSelect('SUM(acs.isOpen) AS openCount')
             ->groupBy('acs.offer')
             ->getQuery()
             ->getArrayResult();
 
-        return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this
+        return StringIntMap::fromRows($result, 'offer', 'openCount');
     }
 
     public function getDistinctOpenFor(): StringList

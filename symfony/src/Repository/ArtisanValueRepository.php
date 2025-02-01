@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanValue;
-use App\Utils\Arrays\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 /**
@@ -57,10 +57,7 @@ class ArtisanValueRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function countDistinctInActiveCreatorsHaving(string $fieldName): array
+    public function countDistinctInActiveCreatorsHaving(string $fieldName): StringIntMap
     {
         $result = $this->getEntityManager()->createQuery('
             SELECT cv.value AS value, COUNT(cv.value) AS count
@@ -74,6 +71,6 @@ class ArtisanValueRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getArrayResult();
 
-        return Arrays::assoc($result, 'value', 'count'); // @phpstan-ignore-line Lack of skill to fix this
+        return StringIntMap::fromRows($result, 'value', 'count');
     }
 }

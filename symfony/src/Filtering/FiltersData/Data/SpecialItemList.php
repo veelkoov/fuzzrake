@@ -3,7 +3,7 @@
 namespace App\Filtering\FiltersData\Data;
 
 use App\Filtering\FiltersData\SpecialItem;
-use Veelkoov\Debris\DList;
+use Veelkoov\Debris\Base\DList;
 
 /**
  * @extends DList<SpecialItem>

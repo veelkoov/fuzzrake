@@ -22,6 +22,8 @@ use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
+use Psr\Log\LoggerInterface;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 class DataService
@@ -34,6 +36,7 @@ class DataService
         private readonly EventRepository $eventRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -43,7 +46,8 @@ class DataService
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
-                } catch (UnexpectedResultException|DateTimeException) {
+                } catch (UnexpectedResultException|DateTimeException $exception) {
+                    $this->logger->error("Failed getting last CS update time: $exception");
                     $lastDataUpdateTimeUtc = null;
                 }
 
@@ -113,10 +117,7 @@ class DataService
         );
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function countDistinctInActiveCreatorsHaving(Field $field): array
+    public function countDistinctInActiveCreatorsHaving(Field $field): StringIntMap
     {
         return $this->cache->get(
             function () use ($field) {
