@@ -17,6 +17,7 @@ use Psl\Str;
 use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
 use TRegx\PhpUnit\DataProviders\DataProvider;
+use Veelkoov\Debris\StringList;
 
 /**
  * @medium
@@ -42,10 +43,10 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), false, false, false, false, false, false, false, 1));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), false, false, false, false, true, false, false, 1));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
     }
 
@@ -65,10 +66,10 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), false, false, false, true, true, false, false, 1));
         self::assertEquals('M000001', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), false, false, false, true, false, false, false, 1));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToMakerIdList($result));
     }
 
@@ -111,7 +112,7 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $input = new Choices('', '', [], [], [], [], [], [], [], [], [], true, true, true, true, false, true, false, $pageRequested);
+        $input = new Choices('', '', new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), new StringList(), true, true, true, true, false, true, false, $pageRequested);
 
         $result = $subject->getCreatorsPage($input);
 

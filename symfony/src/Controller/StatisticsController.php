@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Data\Definitions\Fields\Field;
+use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
-use App\Repository\ArtisanRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
@@ -54,7 +54,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, FiltersService $filtersService, DataService $dataService): Response
+    public function statistics(Request $request, CreatorOfferStatusRepository $offerStatusRepository, FiltersService $filtersService, DataService $dataService): Response
     {
         $productionModels = $filtersService->getValuesFilterData(Field::PRODUCTION_MODELS);
         $orderTypes = $filtersService->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
@@ -111,42 +111,30 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
-    /**
-     * @param list<Item> $input
-     *
-     * @return list<Item>
-     */
-    private function getLeafItems(array $input): array
+    private function getLeafItems(ItemList $input): ItemList
     {
-        $result = [];
+        $result = ItemList::mut();
 
-        foreach ($input as $item) {
-            if ([] !== $item->subitems) {
-                $result = [...$result, ...$this->getLeafItems($item->subitems)];
+        $input->each(function (Item $item) use ($result): void {
+            if ($item->subitems->isEmpty()) {
+                $result->add($item);
             } else {
-                $result[] = $item;
+                $result->add(...$this->getLeafItems($item->subitems));
             }
-        }
+        });
 
-        return $result;
+        return $result->frozen();
     }
 
-    /**
-     * @param array<Item> $items
-     *
-     * @return array<Item>
-     */
-    private function prepareListData(array $items): array
+    private function prepareListData(ItemList $items): ItemList
     {
-        usort($items, function (Item $itemA, Item $itemB) {
+        return $items->sorted(function (Item $itemA, Item $itemB) {
             if ($itemA->count !== $itemB->count) {
                 return $itemB->count - $itemA->count;
             }
 
             return strcmp($itemA->label, $itemB->label);
         });
-
-        return $items;
     }
 
     /**

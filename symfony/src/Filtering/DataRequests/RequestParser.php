@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests;
 
 use Psl\Dict;
+use Psl\Iter;
 use Psl\Type;
 use Symfony\Component\HttpFoundation\Request;
-
-use function Psl\Iter\contains;
+use Veelkoov\Debris\StringList;
 
 class RequestParser
 {
@@ -59,21 +59,21 @@ class RequestParser
         return $this->filter->getOnlyValidChoices(new Choices(
             $strings['makerId'],
             $strings['textSearch'],
-            $strArrays['countries'],
-            $strArrays['states'],
-            $strArrays['languages'],
-            $strArrays['styles'],
-            $strArrays['features'],
-            $strArrays['orderTypes'],
-            $strArrays['productionModels'],
-            $strArrays['openFor'],
-            $strArrays['species'],
-            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
-            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
-            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
+            new StringList($strArrays['countries']),
+            new StringList($strArrays['states']),
+            new StringList($strArrays['languages']),
+            new StringList($strArrays['styles']),
+            new StringList($strArrays['features']),
+            new StringList($strArrays['orderTypes']),
+            new StringList($strArrays['productionModels']),
+            new StringList($strArrays['openFor']),
+            new StringList($strArrays['species']),
+            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
+            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans['isAdult'],
             $booleans['wantsSfw'],
-            contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
+            Iter\contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
             $booleans['creatorMode'],
             $pageNumber,
         ));
