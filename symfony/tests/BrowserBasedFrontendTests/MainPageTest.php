@@ -81,7 +81,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         // Click the last link - data outdated
         $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        $this->client->waitForVisibility('#creator-updates-modal-content', 5);
+        self::waitUntilShows('#creator-updates-modal-content');
         self::assertStringContainsString('Test artisan 3 DE', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
