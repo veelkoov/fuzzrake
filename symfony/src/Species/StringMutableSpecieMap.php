@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use Veelkoov\Debris\DScalarMap;
+use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\StringList;
 
 /**

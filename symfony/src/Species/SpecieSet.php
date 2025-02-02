@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use Veelkoov\Debris\DObjectSet;
+use Veelkoov\Debris\Base\DObjectSet;
 use Veelkoov\Debris\StringList;
 
 /**

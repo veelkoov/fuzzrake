@@ -43,7 +43,6 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
      */
     public function testFeedbackFromMakersCardCarriesMakerIdOverToTheForm(string $expectedMakerId, Artisan $artisan): void
     {
-        self::setupMockSpeciesFilterData();
         self::persistAndFlush($artisan);
         $this->clearCache();
 

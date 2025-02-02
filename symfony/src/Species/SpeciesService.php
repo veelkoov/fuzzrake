@@ -4,9 +4,18 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use App\Filtering\FiltersData\Builder\SpecialItems;
+use App\Filtering\FiltersData\Data\ItemList;
+use App\Filtering\FiltersData\Data\SpecialItemList;
+use App\Filtering\FiltersData\FilterData;
+use App\Filtering\FiltersData\Item;
+use App\Filtering\FiltersData\SpecialItem;
+use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorSpecieRepository;
 use App\Utils\Regexp\Replacements;
 use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringList;
 
 /**
@@ -25,6 +34,8 @@ class SpeciesService
     public function __construct(
         #[Autowire(param: 'species_definitions')]
         array $speciesDefinitions,
+        private readonly CreatorSpecieRepository $repository,
+        private readonly CreatorRepository $creatorRepository,
     ) {
         $species = new MutableSpecies();
         $this->species = $species;
@@ -69,5 +80,35 @@ class SpeciesService
         }
 
         return $specie;
+    }
+
+    public function getFilterData(): FilterData
+    {
+        $stats = $this->repository->getActiveCreatorsSpecieNamesToCount();
+        $items = $this->getSpeciesList($this->species->getAsTree(), $stats);
+
+        $allCount = $this->creatorRepository->countActive();
+        $knownCount = $this->repository->countActiveCreatorsHavingSpeciesDefined();
+        $unknown = SpecialItem::from(SpecialItems::newUnknown($allCount - $knownCount));
+
+        return new FilterData($items, SpecialItemList::of($unknown));
+    }
+
+    private function getSpeciesList(SpecieSet $species, StringIntMap $stats): ItemList
+    {
+        return ItemList::mapFrom(
+            $species->filter(static fn (Specie $specie) => !$specie->getHidden()),
+            fn (Specie $specie) => $this->specieToStandardItem($specie, $stats),
+        );
+    }
+
+    private function specieToStandardItem(Specie $specie, StringIntMap $stats): Item
+    {
+        return new Item(
+            $specie->getName(),
+            $specie->getName(),
+            $stats->getOrDefault($specie->getName(), 0),
+            $this->getSpeciesList($specie->getChildren(), $stats),
+        );
     }
 }
