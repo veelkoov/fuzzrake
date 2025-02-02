@@ -16,7 +16,7 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Service\Cache;
 use App\Service\CountriesDataService;
 use App\Service\DataService;
-use App\Species\SpeciesService;
+use App\Species\SpeciesFilterService;
 use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Vec;
@@ -29,7 +29,7 @@ class FiltersService
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly DataService $dataService,
-        private readonly SpeciesService $speciesService,
+        private readonly SpeciesFilterService $speciesFilterService,
         private readonly Cache $cache,
     ) {
     }
@@ -49,7 +49,7 @@ class FiltersService
             $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
             $this->getStatesFilterData(),
-            $this->speciesService->getFilterData(),
+            $this->speciesFilterService->getFilterData(),
             $this->getInactiveFilterData(),
         ), CacheTags::ARTISANS, __METHOD__);
     }
