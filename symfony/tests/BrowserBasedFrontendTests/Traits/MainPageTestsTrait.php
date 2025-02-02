@@ -93,7 +93,7 @@ trait MainPageTestsTrait
         $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
         $this->client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
-        $this->client->waitForVisibility('#creator-updates-modal-content', 5);
+        self::waitUntilShows('#creator-updates-modal-content');
     }
 
     /**
