@@ -6,6 +6,9 @@ use App\Species\MutableSpecie;
 use App\Species\SpecieException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class MutableSpecieTest extends TestCase
 {
     public function testRelationshipIsBeingSetTwoWay(): void
