@@ -68,18 +68,6 @@ class SpeciesSyncCmd : CliktCommand(
     }
 }
 
-class UpdateFiltersCmd : CliktCommand(
-    name = "update-filters",
-    help = "Update filters data",
-) {
-    override fun run() {
-        val config = ConfigLoader().locateAndLoad()
-        val task = FiltersUpdate(config)
-
-        task.execute()
-    }
-}
-
 fun main(args: Array<String>) = FuzzrakeCmd()
     .subcommands(
         TrackerCmd(),

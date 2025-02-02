@@ -16,14 +16,14 @@
                 </span>
             </span>
 
-            {% if specie.subitems %}
+            {% if specie.subitems.notEmpty %}
                 <span class="btn btn-outline-secondary toggle">
                     <i class="fas fa-caret-right"></i>
                 </span>
             {% endif %}
         </div>
 
-        {% if specie.subitems %}
+        {% if specie.subitems.notEmpty %}
             <br>
 
             <fieldset class="subspecies" data-parent-specie="{{ specie.value }}">

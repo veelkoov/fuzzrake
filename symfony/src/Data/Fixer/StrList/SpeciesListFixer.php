@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\String\GenericStringFixer;
-use App\Service\SpeciesService;
+use App\Species\SpeciesService;
 use App\Utils\Regexp\Replacements;
 use Override;
 

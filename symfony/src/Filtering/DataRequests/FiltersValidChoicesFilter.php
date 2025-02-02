@@ -9,7 +9,7 @@ use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
-use App\Service\SpeciesService;
+use App\Species\SpeciesService;
 use Veelkoov\Debris\StringList;
 
 class FiltersValidChoicesFilter
@@ -39,7 +39,7 @@ class FiltersValidChoicesFilter
             new StringList(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
-            $this->speciesService->validNames, Consts::FILTER_VALUE_UNKNOWN);
+            $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
 
         $openFor = self::onlyValidValues($choices->openFor,
             $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
