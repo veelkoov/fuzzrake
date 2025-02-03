@@ -3,7 +3,7 @@
 namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\StrListFixerInterface;
-use App\Utils\Arrays\Arrays;
+use App\Utils\Collections\Arrays;
 use App\Utils\PackedStringList;
 use Override;
 use Psl\Vec;
