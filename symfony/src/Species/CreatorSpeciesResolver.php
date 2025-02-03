@@ -14,15 +14,12 @@ final class CreatorSpeciesResolver
      */
     private array $selfAndDescendantsCache = [];
 
-    private readonly Species $species;
     private readonly Specie $mostSpecies;
     private readonly Specie $other;
 
     public function __construct(
-        SpeciesService $speciesService,
+        private readonly Species $species,
     ) {
-        $this->species = $speciesService->species;
-
         $this->mostSpecies = $this->species->getByName('Most species'); // grep-assumed-does-specie-when-artisan-has-only-doesnt
         $this->other = $this->species->getByName('Other'); // grep-species-other
     }
