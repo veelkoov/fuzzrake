@@ -10,7 +10,7 @@ use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Service\SpeciesService;
-use Veelkoov\Debris\StringList;
+use App\Utils\Collections\StringList;
 
 class FiltersValidChoicesFilter
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use App\Utils\Collections\StringList;
 use App\Utils\Pagination\Pagination;
 use Psl\Json;
-use Veelkoov\Debris\StringList;
 
 readonly class Choices
 {

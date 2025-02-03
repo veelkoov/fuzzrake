@@ -10,6 +10,7 @@ use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Collections\StringList;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
 use Psl\Iter;
@@ -17,7 +18,6 @@ use Psl\Str;
 use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
 use TRegx\PhpUnit\DataProviders\DataProvider;
-use Veelkoov\Debris\StringList;
 
 /**
  * @medium

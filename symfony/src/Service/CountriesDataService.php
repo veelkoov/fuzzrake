@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Utils\Collections\StringList;
 use App\Utils\Json;
 use JsonException;
-use Veelkoov\Debris\StringList;
 
 /**
  * @phpstan-type psCountryData array{name: string, code: string, region: string}

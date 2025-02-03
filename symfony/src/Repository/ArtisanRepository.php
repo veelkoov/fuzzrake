@@ -10,6 +10,7 @@ use App\Entity\Artisan;
 use App\Entity\ArtisanValue;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
+use App\Utils\Collections\StringList;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Pagination\Pagination;
 use App\Utils\UnbelievableRuntimeException;
@@ -26,7 +27,6 @@ use Generator;
 use Psl\Dict;
 use Psl\Vec;
 use Veelkoov\Debris\StringIntMap;
-use Veelkoov\Debris\StringList;
 
 /**
  * @extends ServiceEntityRepository<Artisan>

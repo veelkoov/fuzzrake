@@ -6,13 +6,13 @@ namespace App\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorOfferStatus;
+use App\Utils\Collections\StringList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\StringIntMap;
-use Veelkoov\Debris\StringList;
 
 /**
  * @method CreatorOfferStatus|null find($id, $lockMode = null, $lockVersion = null)

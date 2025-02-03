@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanValue;
+use App\Utils\Collections\StringList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\StringIntMap;
-use Veelkoov\Debris\StringList;
 
 /**
  * @method ArtisanValue|null find($id, $lockMode = null, $lockVersion = null)

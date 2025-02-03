@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
+use App\Utils\Collections\StringList;
 use Override;
-use Veelkoov\Debris\StringList;
 
 readonly class ListChange implements ChangeInterface
 {

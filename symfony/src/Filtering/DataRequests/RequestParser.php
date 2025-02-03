@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use App\Utils\Collections\StringList;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Type;
 use Symfony\Component\HttpFoundation\Request;
-use Veelkoov\Debris\StringList;
 
 class RequestParser
 {
