@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use App\Utils\Collections\StringList;
 use Veelkoov\Debris\Base\DObjectSet;
-use Veelkoov\Debris\StringList;
 
 /**
  * @extends DObjectSet<Specie>

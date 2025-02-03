@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
+use App\Utils\Collections\StringList;
 use InvalidArgumentException;
-use Veelkoov\Debris\StringList;
 
 class SpecialItemsExtractor
 {

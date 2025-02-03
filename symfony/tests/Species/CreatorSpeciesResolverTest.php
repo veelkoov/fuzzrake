@@ -7,9 +7,9 @@ namespace App\Tests\Species;
 use App\Species\CreatorSpeciesResolver;
 use App\Species\MutableSpecies;
 use App\Species\Species;
+use App\Utils\Collections\StringList;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
-use Veelkoov\Debris\StringList;
 
 /**
  * @small

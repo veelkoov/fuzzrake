@@ -8,8 +8,8 @@ use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Collections\StringList;
 use Exception;
-use Veelkoov\Debris\StringList;
 
 /**
  * @medium

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use App\Utils\Collections\StringList;
 use App\Utils\Regexp\Replacements;
 use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\StringList;
 
 /**
  * @phpstan-type TSpecies             array<string, TSubspecies>

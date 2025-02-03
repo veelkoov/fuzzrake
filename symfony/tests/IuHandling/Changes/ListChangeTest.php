@@ -6,8 +6,8 @@ namespace App\Tests\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Changes\ListChange;
+use App\Utils\Collections\StringList;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\StringList;
 
 /**
  * @small

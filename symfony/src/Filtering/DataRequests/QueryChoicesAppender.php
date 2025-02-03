@@ -10,7 +10,8 @@ use App\Entity\ArtisanUrl;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use App\Utils\Arrays\Arrays;
+use App\Utils\Collections\Arrays;
+use App\Utils\Collections\StringList;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
@@ -20,7 +21,6 @@ use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
 use Psl\Vec;
-use Veelkoov\Debris\StringList;
 
 class QueryChoicesAppender
 {

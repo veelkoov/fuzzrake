@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Arrays;
+namespace App\Utils\Collections;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\FieldsList;
@@ -11,7 +11,7 @@ use App\Utils\Enforce;
 use InvalidArgumentException;
 use TypeError;
 
-class SafeArrayRead
+final class SafeArrayRead
 {
     /**
      * @var array<mixed>

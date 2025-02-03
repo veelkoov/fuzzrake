@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
-use App\Utils\Arrays\Lists;
+use App\Utils\Collections\Lists;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;

@@ -11,11 +11,11 @@ use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\ArtisanRepository;
-use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Collections\Arrays;
+use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
-use App\Utils\StringList;
 use App\Utils\UnbelievableRuntimeException;
 
 use function Psl\Vec\concat;
@@ -155,7 +155,7 @@ class UpdatesService
     private function handleSpecialFieldsInEntity(Artisan $updatedArtisan, Artisan $originalArtisan): void
     {
         // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
-        if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
+        if (!StringLists::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
             $updatedArtisan->setMiniatureUrls([]); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
         }
     }

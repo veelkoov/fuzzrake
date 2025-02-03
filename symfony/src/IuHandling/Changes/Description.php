@@ -8,8 +8,8 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Collections\StringList;
 use App\Utils\Enforce;
-use Veelkoov\Debris\StringList;
 
 class Description
 {

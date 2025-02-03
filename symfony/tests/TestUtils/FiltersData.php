@@ -6,8 +6,8 @@ namespace App\Tests\TestUtils;
 
 use App\Entity\CreatorSpecie;
 use App\Entity\Specie;
-use App\Utils\Arrays\Lists;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Collections\Lists;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use Psl\Dict;

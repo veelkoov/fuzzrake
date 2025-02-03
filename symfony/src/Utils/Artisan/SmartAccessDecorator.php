@@ -16,6 +16,7 @@ use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\CreatorPrivateData;
 use App\Entity\MakerId;
+use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
@@ -24,7 +25,6 @@ use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\PackedStringList;
 use App\Utils\Parse;
-use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Validator\ObfuscableEmail;
 use App\Validator\StrListLength;
@@ -120,7 +120,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function equals(Field $field, self $other): bool // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
     {
         if ($field->isList()) {
-            return StringList::sameElements($this->getStringList($field), $other->getStringList($field));
+            return StringLists::sameElements($this->getStringList($field), $other->getStringList($field));
         } elseif ($field->isDate()) {
             return DateTimeUtils::equal($this->getDateTimeValue($field), $other->getDateTimeValue($field));
         } else {

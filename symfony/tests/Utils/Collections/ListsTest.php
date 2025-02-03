@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Arrays;
+namespace App\Tests\Utils\Collections;
 
-use App\Utils\Arrays\Lists;
+use App\Utils\Collections\Lists;
 use PHPUnit\Framework\TestCase;
 
 /**

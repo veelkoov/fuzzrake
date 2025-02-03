@@ -2,7 +2,7 @@
 
 namespace App\Species;
 
-use Veelkoov\Debris\StringList;
+use App\Utils\Collections\StringList;
 
 interface Species
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use Veelkoov\Debris\StringList;
+use App\Utils\Collections\StringList;
 
 class MutableSpecies implements Species
 {

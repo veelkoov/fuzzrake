@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
+use App\Utils\Collections\StringList;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\StringList;
 
 /**
  * @small

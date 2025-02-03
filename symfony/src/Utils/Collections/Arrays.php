@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Arrays;
+namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
