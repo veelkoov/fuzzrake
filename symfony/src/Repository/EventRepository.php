@@ -27,13 +27,13 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $types
+     * @param iterable<string> $types
      *
      * @return Event[]
      *
      * @throws DateTimeException
      */
-    public function getRecent(array $types = []): array
+    public function getRecent(iterable $types = []): array
     {
         $query = $this->createQueryBuilder('e')
             ->where('e.timestamp >= :oldest')
