@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Collections\StringLists;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 
@@ -42,7 +43,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
      */
     public static function strList(mixed $input): array
     {
-        if (!StringList::isValid($input)) {
+        if (!StringLists::isValid($input)) {
             throw new InvalidArgumentException('Expected a list of strings');
         }
 

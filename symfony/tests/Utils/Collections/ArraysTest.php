@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Arrays;
+namespace App\Tests\Utils\Collections;
 
-use App\Utils\Arrays\Arrays;
+use App\Utils\Collections\Arrays;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

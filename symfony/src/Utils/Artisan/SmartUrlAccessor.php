@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Artisan;
 
 use App\Entity\ArtisanUrl as ItemType;
-use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Collections\Arrays;
 use App\Utils\Traits\UtilityClass;
 use Psl\Vec;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;
 
-final class StringList // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
+final class StringLists // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
 {
     use UtilityClass;
 

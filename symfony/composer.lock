@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2f8cf84f3976fd2625a87c1b6722184",
+    "content-hash": "2df764fa352a348b3f6d3161e2906131",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -7274,6 +7274,72 @@
                 }
             ],
             "time": "2025-01-29T07:06:14+00:00"
+        },
+        {
+            "name": "veelkoov/debris",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/veelkoov/Debris.git",
+                "reference": "b8694e6d8daa5787e4eb6a7204464c5804086257"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/b8694e6d8daa5787e4eb6a7204464c5804086257",
+                "reference": "b8694e6d8daa5787e4eb6a7204464c5804086257",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.67",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^11.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Veelkoov\\Debris\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Veelkoov\\Debris\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "pcf": [
+                    "vendor/bin/php-cs-fixer fix --diff -vv --allow-risky=yes"
+                ],
+                "ps": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "pu": [
+                    "vendor/bin/phpunit"
+                ],
+                "pu-cov": [
+                    "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage --path-coverage"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Veelkoov",
+                    "email": "veelkoov@protonmail.com"
+                }
+            ],
+            "support": {
+                "source": "https://github.com/veelkoov/Debris/tree/develop",
+                "issues": "https://github.com/veelkoov/Debris/issues"
+            },
+            "time": "2025-02-01T12:52:08+00:00"
         }
     ],
     "packages-dev": [
@@ -10104,7 +10170,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "veelkoov/debris": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

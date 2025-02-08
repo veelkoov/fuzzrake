@@ -14,6 +14,7 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\EventRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Collections\StringList;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Json;
 use App\ValueObject\CacheTags;
@@ -23,6 +24,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
+use Veelkoov\Debris\StringIntMap;
 
 class DataService
 {
@@ -80,34 +82,22 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getCountries(): array
+    public function getCountries(): StringList
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getStates(): array
+    public function getStates(): StringList
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getOpenFor(): array
+    public function getOpenFor(): StringList
     {
         return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getLanguages(): array
+    public function getLanguages(): StringList
     {
         return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
             CacheTags::ARTISANS, __METHOD__);
@@ -127,10 +117,7 @@ class DataService
         );
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function countDistinctInActiveCreatorsHaving(Field $field): array
+    public function countDistinctInActiveCreatorsHaving(Field $field): StringIntMap
     {
         return $this->cache->get(
             function () use ($field) {

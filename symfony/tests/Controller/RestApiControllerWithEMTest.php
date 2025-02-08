@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\Arrays\ArrayReader;
+use App\Utils\Collections\ArrayReader;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
