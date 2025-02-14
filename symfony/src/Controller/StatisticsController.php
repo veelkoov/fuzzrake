@@ -11,6 +11,7 @@ use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Service\DataService;
+use App\Utils\Collections\StringList;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
+use Veelkoov\Debris\Base\DIntMap;
+use Veelkoov\Debris\StringIntMap;
 
 class StatisticsController extends AbstractController
 {
@@ -83,29 +86,25 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    /**
-     * @return array<string, int>
-     */
-    private function prepareTableData(FilterData $input): array
+    private function prepareTableData(FilterData $input): StringIntMap
     {
-        $result = [];
+        /** @var DIntMap<StringList> $countToList */
+        $countToList = new DIntMap();
 
         foreach ($this->getLeafItems($input->items) as $item) {
-            $count = $item->count;
-
-            if (!array_key_exists($count, $result)) {
-                $result[$count] = [];
-            }
-
-            $result[$count][] = $item->label;
+            $countToList
+                ->getOrSet($item->count, StringList::mut(...))
+                ->add($item->label);
         }
 
-        $result = array_flip(array_map(fn (array $items) => implode(', ', $items), $result));
+        $countToJoined = new StringIntMap($countToList
+            ->mapValues(static fn (StringList $item) => $item->join(', '))
+            ->flip());
 
-        arsort($result);
+        $result = $countToJoined->sorted(reverse: true);
 
         foreach ($input->specialItems as $item) {
-            $result[$item->label] = $item->count;
+            $result->set($item->label, $item->count);
         }
 
         return $result;
