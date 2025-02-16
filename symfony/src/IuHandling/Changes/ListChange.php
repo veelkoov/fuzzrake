@@ -54,8 +54,8 @@ readonly class ListChange implements ChangeInterface
      */
     private static function calculateAddedRemoved(StringList $old, StringList $new): array
     {
-        $added = StringList::mut();
-        $removed = StringList::mut();
+        $added = new StringList();
+        $removed = new StringList();
 
         $common = $new->intersect($old);
 
@@ -71,7 +71,7 @@ readonly class ListChange implements ChangeInterface
             }
         }
 
-        return [$added->frozen(), $removed->frozen()];
+        return [$added->freeze(), $removed->freeze()];
     }
 
     #[Override]

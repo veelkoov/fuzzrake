@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Species;
 
 use App\Utils\Collections\StringList;
+use Veelkoov\Debris\StringSet;
 
 class MutableSpecies implements Species
 {
@@ -13,8 +14,8 @@ class MutableSpecies implements Species
 
     public function __construct()
     {
-        $this->byName = StringMutableSpecieMap::mut();
-        $this->asTree = SpecieSet::mut();
+        $this->byName = new StringMutableSpecieMap();
+        $this->asTree = new SpecieSet();
     }
 
     public function getByName(string $name): Specie
@@ -22,14 +23,14 @@ class MutableSpecies implements Species
         return $this->byName->getOrDefault($name, fn () => throw new SpecieException("No specie named '$name'"));
     }
 
-    public function getNames(): StringList
+    public function getNames(): StringSet
     {
-        return $this->byName->getKeys()->sorted();
+        return $this->byName->getNames()->sorted();
     }
 
-    public function getVisibleNames(): StringList
+    public function getVisibleNames(): StringSet
     {
-        return $this->byName->filterValues(fn (MutableSpecie $specie): bool => !$specie->hidden)->getKeys();
+        return $this->byName->filterValues(fn (Specie $specie): bool => !$specie->hidden)->getNames();
     }
 
     public function hasName(string $name): bool
@@ -44,7 +45,7 @@ class MutableSpecies implements Species
 
     public function getFlat(): SpecieSet
     {
-        return $this->byName->getValues();
+        return $this->byName->getSpecieSet();
     }
 
     public function getByNameCreatingMissing(string $name, bool $hidden): MutableSpecie

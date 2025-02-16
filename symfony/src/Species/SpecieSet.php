@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Species;
 
 use App\Utils\Collections\StringList;
-use Veelkoov\Debris\Base\DObjectSet;
+use Veelkoov\Debris\Base\DSet;
 
 /**
- * @extends DObjectSet<Specie>
+ * @extends DSet<Specie>
  */
-class SpecieSet extends DObjectSet
+class SpecieSet extends DSet
 {
     public function getNames(): StringList
     {
-        return StringList::mapFrom($this->items, fn (Specie $specie) => $specie->getName());
+        return StringList::mapFrom($this->getValuesArray(), fn (Specie $specie) => $specie->getName());
     }
 }

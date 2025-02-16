@@ -59,10 +59,10 @@ class EventsController extends AbstractController
     {
         $requestedTypes = StringList::split(',', (string) $request->query->get('types', ''));
 
-        return $requestedTypes->intersect(StringList::of(
+        return $requestedTypes->intersect([
             Event::TYPE_DATA_UPDATED,
             Event::TYPE_GENERIC,
             Event::TYPE_CS_UPDATED,
-        ));
+        ]);
     }
 }

@@ -16,8 +16,8 @@ final class MutableSpecie implements Specie
         readonly string $name,
         readonly bool $hidden,
     ) {
-        $this->parents = SpecieSet::mut();
-        $this->children = SpecieSet::mut();
+        $this->parents = new SpecieSet();
+        $this->children = new SpecieSet();
     }
 
     public function addChild(MutableSpecie $child): void

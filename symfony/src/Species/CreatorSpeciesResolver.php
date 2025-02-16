@@ -31,7 +31,7 @@ final class CreatorSpeciesResolver
 
         $ordered = $this->getOrderedDoesDoesnt($assumedSpeciesDoes, $speciesDoesnt);
 
-        $result = StringSet::mut();
+        $result = new StringSet();
 
         foreach ($ordered as $specieName => $does) {
             $descendants = $this->getVisibleSelfAndDescendants($this->species->getByName($specieName));
@@ -45,7 +45,7 @@ final class CreatorSpeciesResolver
             }
         }
 
-        return $result->frozen();
+        return $result;
     }
 
     /**
@@ -98,7 +98,7 @@ final class CreatorSpeciesResolver
             return SpecieSet::of($this->other);
         }
 
-        $result = SpecieSet::mut();
+        $result = new SpecieSet();
         $unresolved = [$this->species->getByName($specieName)];
 
         while ([] !== $unresolved) {
@@ -115,7 +115,7 @@ final class CreatorSpeciesResolver
             throw new SpecieException("$specieName is hidden and does not have a single visible parent");
         }
 
-        return $result->frozen();
+        return $result;
     }
 
     private function getVisibleSpecieOrEmptySetForUnusual(string $specieName): SpecieSet

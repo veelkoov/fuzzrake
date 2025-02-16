@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use App\Utils\Collections\StringList;
-use Veelkoov\Debris\Base\DScalarMap;
+use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\StringSet;
 
 /**
- * @extends DScalarMap<string, MutableSpecie>
+ * @extends DStringMap<MutableSpecie>
  */
-class StringMutableSpecieMap extends DScalarMap
+class StringMutableSpecieMap extends DStringMap
 {
-    public function getValues(): SpecieSet
+    public function getSpecieSet(): SpecieSet
     {
-        return new SpecieSet($this->items);
+        return new SpecieSet($this->getValuesArray());
     }
 
-    public function getKeys(): StringList
+    public function getNames(): StringSet
     {
-        return new StringList(array_keys($this->items));
+        return $this->getKeys();
     }
 }
