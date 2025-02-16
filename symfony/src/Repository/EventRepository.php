@@ -10,6 +10,7 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringList;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,20 +28,18 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param iterable<string> $types
-     *
      * @return Event[]
      *
      * @throws DateTimeException
      */
-    public function getRecent(iterable $types = []): array
+    public function getRecent(?StringList $types = null): array
     {
         $query = $this->createQueryBuilder('e')
             ->where('e.timestamp >= :oldest')
             ->orderBy('e.timestamp', 'DESC')
             ->setParameter('oldest', UtcClock::at('-31 days'));
 
-        if ([] !== $types) {
+        if ($types?->isNotEmpty()) {
             $query
                 ->andWhere('e.type IN (:types)')
                 ->setParameter('types', $types);

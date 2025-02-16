@@ -26,7 +26,7 @@ class SpeciesService
      */
     private function getValidNamesFromArray(array $input): StringList
     {
-        $result = StringList::mut();
+        $result = new StringList();
 
         foreach ($input as $key => $value) {
             $result->add((string) $key);
@@ -38,7 +38,7 @@ class SpeciesService
             }
         }
 
-        return $result->unique()->frozen();
+        return $result->unique()->freeze();
     }
 
     public function getListFixerReplacements(): Replacements

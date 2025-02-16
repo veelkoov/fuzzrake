@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
 
         foreach ($this->getLeafItems($input->items) as $item) {
             $countToList
-                ->getOrSet($item->count, StringList::mut(...))
+                ->getOrSet($item->count, fn () => new StringList())
                 ->add($item->label);
         }
 
@@ -112,17 +112,17 @@ class StatisticsController extends AbstractController
 
     private function getLeafItems(ItemList $input): ItemList
     {
-        $result = ItemList::mut();
+        $result = new ItemList();
 
-        $input->each(function (Item $item) use ($result): void {
+        foreach ($input as $item) {
             if ($item->subitems->isEmpty()) {
                 $result->add($item);
             } else {
                 $result->add(...$this->getLeafItems($item->subitems));
             }
-        });
+        }
 
-        return $result->frozen();
+        return $result->freeze();
     }
 
     private function prepareListData(ItemList $items): ItemList
