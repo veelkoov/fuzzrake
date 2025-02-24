@@ -9,6 +9,7 @@ use App\Data\Tidying\FdvFactory;
 use App\Data\Tidying\Printer;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -24,6 +25,7 @@ class DataTidyCommand extends Command
 
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly FdvFactory $fdvFactory,
     ) {
         parent::__construct();
@@ -47,8 +49,8 @@ class DataTidyCommand extends Command
         $fdv = $this->fdvFactory->create(new Printer($io));
 
         $creators = $input->getOption(self::OPT_WITH_INACTIVE)
-            ? $this->creatorRepository->getAllPaged(flushAfterPage: $wantCommit)
-            : $this->creatorRepository->getActivePaged(flushAfterPage: $wantCommit);
+            ? $this->creatorRepository->getAllPaged()
+            : $this->creatorRepository->getActivePaged();
 
         foreach ($creators as $creatorE) {
             $creatorFixWip = new CreatorChanges(Creator::wrap($creatorE));
@@ -57,6 +59,7 @@ class DataTidyCommand extends Command
         }
 
         if ($wantCommit) {
+            $this->entityManager->flush();
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');

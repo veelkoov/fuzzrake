@@ -78,7 +78,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function getPaged(QueryBuilder $queryBuilder, bool $flushAfterPage): Generator
+    private function getPaged(QueryBuilder $queryBuilder): Generator
     {
         $query = $queryBuilder->getQuery();
         $first = 0;
@@ -94,34 +94,28 @@ class ArtisanRepository extends ServiceEntityRepository
             foreach ($creatorsPage as $creator) {
                 yield $creator;
             }
-
-            if ($flushAfterPage) {
-                $this->getEntityManager()->flush();
-            }
-
-            $this->getEntityManager()->clear();
         }
     }
 
     /**
      * @return Generator<Artisan>
      */
-    public function getAllPaged(bool $flushAfterPage = false): Generator
+    public function getAllPaged(): Generator
     {
-        return $this->getPaged($this->getArtisansQueryBuilder(), $flushAfterPage);
+        return $this->getPaged($this->getArtisansQueryBuilder());
     }
 
     /**
      * @return Generator<Artisan>
      */
-    public function getActivePaged(bool $flushAfterPage = false): Generator
+    public function getActivePaged(): Generator
     {
         $queryBuilder = $this->getArtisansQueryBuilder()
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
         ;
 
-        return $this->getPaged($queryBuilder, $flushAfterPage);
+        return $this->getPaged($queryBuilder);
     }
 
     /**
@@ -158,7 +152,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameters($parameters)
         ;
 
-        return $this->getPaged($queryBuilder, false);
+        return $this->getPaged($queryBuilder);
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
