@@ -38,7 +38,7 @@ final class SpeciesService
 
     public function getValidNames(): StringList
     {
-        return $this->species->getNames();
+        return new StringList($this->species->getNames()); // TODO: Should be collection type or ->toList();
     }
 
     public function getListFixerReplacements(): Replacements

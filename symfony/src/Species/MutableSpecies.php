@@ -28,9 +28,9 @@ class MutableSpecies implements Species
         return $this->byName->getNames()->sorted();
     }
 
-    public function getVisibleNames(): StringSet
+    public function getVisibleNames(): StringList
     {
-        return $this->byName->filterValues(fn (Specie $specie): bool => !$specie->hidden)->getNames();
+        return new StringList($this->byName->filterValues(fn (Specie $specie): bool => !$specie->hidden)->getNames()); // TODO: Should be collection type or ->toList();
     }
 
     public function hasName(string $name): bool

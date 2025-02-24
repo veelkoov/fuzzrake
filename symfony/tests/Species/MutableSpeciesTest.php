@@ -17,7 +17,7 @@ class MutableSpeciesTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['Root 1', 'Middle 1', 'Leaf 1A', 'Leaf 1B', 'Root 2', 'Leaf 2'],
-            $subject->getNames()->toArray(),
+            $subject->getNames()->getValuesArray(),
         );
     }
 
@@ -27,7 +27,7 @@ class MutableSpeciesTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['Root 1', 'Middle 1', 'Leaf 1A', 'Leaf 1B'],
-            $subject->getVisibleNames()->toArray(),
+            $subject->getVisibleNames()->getValuesArray(),
         );
     }
 
@@ -37,7 +37,7 @@ class MutableSpeciesTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['Root 1', 'Root 2'],
-            $subject->getAsTree()->getNames()->toArray(),
+            $subject->getAsTree()->getNames()->getValuesArray(),
         );
     }
 

@@ -43,19 +43,19 @@ class MutableSpecieTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['Top 1A', 'Top 1B'],
-            $middle1->getParents()->getNames()->toArray(),
+            $middle1->getParents()->getNames()->getValuesArray(),
         );
         self::assertEquals(
-            $middle1->getParents()->toArray(),
-            $middle1->getAncestors()->toArray(),
+            $middle1->getParents()->getValuesArray(),
+            $middle1->getAncestors()->getValuesArray(),
         );
         self::assertEqualsCanonicalizing(
             ['Top 1A', 'Top 1B', 'Top 2A', 'Top 2B', 'Middle 1', 'Middle 2'],
-            $bottom->getAncestors()->getNames()->toArray(),
+            $bottom->getAncestors()->getNames()->getValuesArray(),
         );
         self::assertEqualsCanonicalizing(
             ['Top 1A', 'Top 1B', 'Top 2A', 'Top 2B', 'Middle 1', 'Middle 2', 'Bottom'],
-            $bottom->getThisAndAncestors()->getNames()->toArray(),
+            $bottom->getThisAndAncestors()->getNames()->getValuesArray(),
         );
     }
 
@@ -80,19 +80,19 @@ class MutableSpecieTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['Bottom 1A', 'Bottom 1B'],
-            $middle1->getChildren()->getNames()->toArray(),
+            $middle1->getChildren()->getNames()->getValuesArray(),
         );
         self::assertEquals(
-            $middle1->getChildren()->toArray(),
-            $middle1->getDescendants()->toArray(),
+            $middle1->getChildren()->getValuesArray(),
+            $middle1->getDescendants()->getValuesArray(),
         );
         self::assertEqualsCanonicalizing(
             ['Middle 1', 'Middle 2', 'Bottom 1A', 'Bottom 1B', 'Bottom 2A', 'Bottom 2B'],
-            $top->getDescendants()->getNames()->toArray(),
+            $top->getDescendants()->getNames()->getValuesArray(),
         );
         self::assertEqualsCanonicalizing(
             ['Top', 'Middle 1', 'Middle 2', 'Bottom 1A', 'Bottom 1B', 'Bottom 2A', 'Bottom 2B'],
-            $top->getThisAndDescendants()->getNames()->toArray(),
+            $top->getThisAndDescendants()->getNames()->getValuesArray(),
         );
     }
 

@@ -51,7 +51,7 @@ final class SpeciesFilterService
         return new Item(
             $specie->getName(),
             $specie->getName(),
-            $stats->getOrDefault($specie->getName(), 0),
+            $stats->getOrDefault($specie->getName(), fn () => 0),
             $this->getSpeciesList($specie->getChildren(), $stats),
         );
     }

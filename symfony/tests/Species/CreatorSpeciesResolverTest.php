@@ -55,7 +55,7 @@ class CreatorSpeciesResolverTest extends TestCase
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
         $result = $subject->resolveDoes(new StringList(), StringList::of('Some unusual specie'));
-        self::assertEqualsCanonicalizing(['Most species'], $result->toArray());
+        self::assertEqualsCanonicalizing(['Most species'], $result->getValuesArray());
     }
 
     public function testHiddenSpeciesAreNotReturned(): void
@@ -203,6 +203,6 @@ class CreatorSpeciesResolverTest extends TestCase
 
         $result = $subject->resolveDoes($does, $doesnt);
 
-        self::assertEqualsCanonicalizing($expected->toArray(), $result->toArray());
+        self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
     }
 }

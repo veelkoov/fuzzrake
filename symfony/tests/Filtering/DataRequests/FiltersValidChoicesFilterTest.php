@@ -50,14 +50,14 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
 
         $result = $subject->getOnlyValidChoices($choices);
 
-        self::assertEquals(['FI', '?'], $result->countries->toArray());
-        self::assertEquals(['Liquid', '?'], $result->states->toArray());
-        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->toArray());
-        self::assertEquals(['Toony', '?', '*'], $result->styles->toArray());
-        self::assertEquals(['LED eyes', '?', '*'], $result->features->toArray());
-        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->toArray());
-        self::assertEquals(['Standard commissions', '?'], $result->productionModels->toArray());
-        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->toArray());
-        self::assertEquals(['Birds', '?'], $result->species->toArray());
+        self::assertEquals(['FI', '?'], $result->countries->getValuesArray());
+        self::assertEquals(['Liquid', '?'], $result->states->getValuesArray());
+        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->getValuesArray());
+        self::assertEquals(['Toony', '?', '*'], $result->styles->getValuesArray());
+        self::assertEquals(['LED eyes', '?', '*'], $result->features->getValuesArray());
+        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->getValuesArray());
+        self::assertEquals(['Standard commissions', '?'], $result->productionModels->getValuesArray());
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->getValuesArray());
+        self::assertEquals(['Birds', '?'], $result->species->getValuesArray());
     }
 }

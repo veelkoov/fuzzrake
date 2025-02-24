@@ -49,7 +49,7 @@ class SpeciesServiceTest extends TestCase
     {
         self::assertEqualsCanonicalizing(
             ['Most species', 'Other', 'Third root'],
-            $this->subject->getAsTree()->getNames()->toArray(),
+            $this->subject->getAsTree()->getNames()->getValuesArray(),
         );
     }
 
@@ -74,7 +74,7 @@ class SpeciesServiceTest extends TestCase
     {
         self::assertEqualsCanonicalizing(
             ['Felines', 'Panthers', 'Deer', 'Some deer specie'],
-            $this->subject->getByName('Mammals')->getDescendants()->getNames()->toArray(),
+            $this->subject->getByName('Mammals')->getDescendants()->getNames()->getValuesArray(),
         );
     }
 
@@ -82,7 +82,7 @@ class SpeciesServiceTest extends TestCase
     {
         self::assertEqualsCanonicalizing(
             ['Some deer specie', 'Other 1', 'Other 2'],
-            $this->subject->getNames()->minusAll($this->subject->getVisibleNames())->toArray(),
+            $this->subject->getNames()->minusAll($this->subject->getVisibleNames())->getValuesArray(),
         );
     }
 
