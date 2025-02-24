@@ -45,6 +45,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
             new TwigFilter('is_valid', $this->isValid(...)),
             new TwigFilter('get_comments', $this->getComment(...)),
+            new TwigFilter('bluesky_at', $this->blueskyAt(...)),
             new TwigFilter('mastodon_at', $this->mastodonAt(...)),
             new TwigFilter('tumblr_at', $this->tumblrAt(...)),
         ];
@@ -131,6 +132,13 @@ class AdminExtensions extends AbstractExtension
         } else {
             return $subject->get($field);
         }
+    }
+
+    private function blueskyAt(string $blueskyUrl): string
+    {
+        return Pattern::of('^https://[^/]+/profile/([^/#?]+).*')
+            ->replace($blueskyUrl)
+            ->withReferences('@$1');
     }
 
     private function mastodonAt(string $mastodonUrl): string

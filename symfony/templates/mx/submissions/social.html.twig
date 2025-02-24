@@ -66,7 +66,13 @@
                 Fursuit {{ maker_s }} added:<br>
 
                 {% for artisan in artisans %}
-                    - https://getfursu.it/#{{ artisan.makerId }} <br>
+                    - https://getfursu.it/#{{ artisan.makerId }}
+
+                    {% if '' != artisan.blueskyUrl %}
+                        {{ artisan.blueskyUrl|bluesky_at }}
+                    {% endif %}
+
+                    <br>
                 {% endfor %}
 
                 &nbsp;<br>

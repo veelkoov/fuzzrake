@@ -197,6 +197,27 @@ class DataService
         }, CacheTags::ARTISANS, __METHOD__);
     }
 
+    /**
+     * @return array<string, int>
+     */
+    public function getOfferStatusStats(): array
+    {
+        return $this->cache->get(function (): array {
+            $stats = $this->cosRepository->getCommissionsStats();
+
+            return [
+                'Open for anything'              => $stats['open_for_anything'],
+                'Closed for anything'            => $stats['closed_for_anything'],
+                'Status successfully tracked'    => $stats['successfully_tracked'],
+                'Partially successfully tracked' => $stats['partially_tracked'],
+                'Tracking failed completely'     => $stats['tracking_failed'],
+                'Tracking issues'                => $stats['tracking_issues'],
+                'Status tracked'                 => $stats['tracked'],
+                'Total'                          => $stats['total'],
+            ];
+        }, CacheTags::TRACKING, __METHOD__);
+    }
+
     public function getCreatorsPublicDataJsonString(): string
     {
         return $this->cache->get(function (): string {

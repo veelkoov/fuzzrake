@@ -9,13 +9,11 @@ use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
-use App\Repository\CreatorOfferStatusRepository;
 use App\Service\DataService;
 use App\Utils\Collections\StringList;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
@@ -57,7 +55,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, CreatorOfferStatusRepository $offerStatusRepository, FiltersService $filtersService, DataService $dataService): Response
+    public function statistics(FiltersService $filtersService, DataService $dataService): Response
     {
         $productionModels = $filtersService->getValuesFilterData(Field::PRODUCTION_MODELS);
         $orderTypes = $filtersService->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
@@ -67,7 +65,6 @@ class StatisticsController extends AbstractController
         $features = $filtersService->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES);
         $otherFeatures = $filtersService->getValuesFilterData(Field::OTHER_FEATURES);
         $countries = $filtersService->getCountriesFilterData();
-        $commissionsStats = $offerStatusRepository->getCommissionsStats();
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
@@ -78,11 +75,10 @@ class StatisticsController extends AbstractController
             'otherStyles'      => $this->prepareListData($otherStyles->items),
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->items),
-            'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
+            'commissionsStats' => $dataService->getOfferStatusStats(),
             'completeness'     => $dataService->getCompletenessStats(),
             'providedInfo'     => $dataService->getProvidedInfoStats(),
             'matchWords'       => self::MATCH_WORDS,
-            'showIgnored'      => filter_var($request->get('showIgnored', 0), FILTER_VALIDATE_BOOL),
         ]);
     }
 
@@ -134,24 +130,5 @@ class StatisticsController extends AbstractController
 
             return strcmp($itemA->label, $itemB->label);
         });
-    }
-
-    /**
-     * @param psArtisanStatsArray $commissionsStats
-     *
-     * @return array<string, int>
-     */
-    private function prepareCommissionsStatsTableData(array $commissionsStats): array
-    {
-        return [
-            'Open for anything'              => $commissionsStats['open_for_anything'],
-            'Closed for anything'            => $commissionsStats['closed_for_anything'],
-            'Status successfully tracked'    => $commissionsStats['successfully_tracked'],
-            'Partially successfully tracked' => $commissionsStats['partially_tracked'],
-            'Tracking failed completely'     => $commissionsStats['tracking_failed'],
-            'Tracking issues'                => $commissionsStats['tracking_issues'],
-            'Status tracked'                 => $commissionsStats['tracked'],
-            'Total'                          => $commissionsStats['total'],
-        ];
     }
 }

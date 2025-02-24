@@ -18,7 +18,7 @@ class SpecialItemsExtractorTest extends TestCase
     {
         $subject = new SpecialItemsExtractor(StringList::of('aaa', 'bbb', '111'), '111', '222');
 
-        self::assertEquals(['aaa', 'bbb'], $subject->common->toArray());
+        self::assertEquals(['aaa', 'bbb'], $subject->common->getValuesArray());
         self::assertTrue($subject->hasSpecial('111'));
         self::assertFalse($subject->hasSpecial('222'));
 
