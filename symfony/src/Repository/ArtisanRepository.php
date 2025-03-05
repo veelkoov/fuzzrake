@@ -212,7 +212,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleColumnResult();
 
-        return new StringList($result); // @phpstan-ignore-line Lack of skill to fix this
+        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
     /**
