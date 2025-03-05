@@ -33,7 +33,7 @@ final class SafeArrayRead
         private readonly SmartAccessDecorator $target,
         private readonly FieldsList $fields,
     ) {
-        $this->notCopiedYet = $fields->asArray();
+        $this->notCopiedYet = $fields->toArray();
 
         if (!is_array($source)) {
             $this->addError('Input data is not an array.');
@@ -79,7 +79,7 @@ final class SafeArrayRead
             return;
         }
 
-        if (!$this->fields->has($field)) {
+        if (!$this->fields->contains($field)) {
             return;
         }
 

@@ -29,7 +29,7 @@ class CountriesDataService
 
     public function getRegions(): StringList
     {
-        return StringList::mapFrom($this->data, fn (array $country): string => $country['region'])->unique()->sorted();
+        return StringList::mapFrom($this->data, static fn (array $country): string => $country['region'])->unique()->sorted();
     }
 
     public function getRegionFrom(string $countryCode): string

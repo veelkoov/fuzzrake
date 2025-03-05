@@ -21,9 +21,8 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Dict;
-use Psl\Vec;
 use Psr\Log\LoggerInterface;
+use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\StringIntMap;
 
 class DataService
@@ -122,9 +121,9 @@ class DataService
         return $this->cache->get(
             function () use ($field) {
                 if (Field::COUNTRY === $field || Field::STATE === $field) {
-                    return $this->creatorRepository->countDistinctInActiveCreators(strtolower($field->value));
+                    return $this->creatorRepository->countDistinctInActiveCreators(strtolower($field->value))->freeze();
                 } else {
-                    return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value);
+                    return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value)->freeze();
                 }
             },
             CacheTags::ARTISANS,
@@ -132,42 +131,34 @@ class DataService
         );
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function getCompletenessStats(): array
+    public function getCompletenessStats(): StringIntMap
     {
-        return $this->cache->get(function (): array {
-            $completeness = Vec\map($this->creatorRepository->getActivePaged(),
-                fn (CreatorE $creator) => Creator::wrap($creator)->getCompleteness());
+        return $this->cache->get(function (): StringIntMap {
+            $completeness = DList::mapFrom($this->creatorRepository->getActivePaged(),
+                static fn (CreatorE $creator) => Creator::wrap($creator)->getCompleteness());
 
             $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
+                '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0];
 
-            $result = [];
+            $result = new StringIntMap();
 
             foreach ($levels as $description => $level) {
-                $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
+                $result->set($description, $completeness->filter(static fn (int $percent) => $percent >= $level)->count());
 
-                $completeness = array_filter($completeness, fn (int $percent) => $percent < $level);
+                $completeness = $completeness->filter(static fn (int $percent) => $percent < $level);
             }
 
-            return $result;
+            return $result->freeze();
         }, CacheTags::ARTISANS, __METHOD__);
     }
 
     /**
-     * @return array<string, int>
-     *
      * @see SmartAccessDecorator::getLastMakerId()
      */
-    public function getProvidedInfoStats(): array
+    public function getProvidedInfoStats(): StringIntMap
     {
-        return $this->cache->get(function (): array {
-            $result = Dict\from_keys(
-                Vec\map(Fields::inStats(), fn (Field $field): string => $field->value),
-                fn (): int => 0,
-            );
+        return $this->cache->get(function (): StringIntMap {
+            $result = StringIntMap::fromKeys(Fields::inStats()->names(), fn () => 0);
 
             foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
                 $creator = Creator::wrap($creatorE);
@@ -186,26 +177,21 @@ class DataService
                     }
 
                     if ($field->providedIn($creator)) {
-                        ++$result[$field->value];
+                        $result->set($field->value, $result->get($field->value) + 1);
                     }
                 }
             }
 
-            arsort($result);
-
-            return $result;
+            return $result->sorted()->freeze();
         }, CacheTags::ARTISANS, __METHOD__);
     }
 
-    /**
-     * @return array<string, int>
-     */
-    public function getOfferStatusStats(): array
+    public function getOfferStatusStats(): StringIntMap
     {
-        return $this->cache->get(function (): array {
+        return $this->cache->get(function (): StringIntMap {
             $stats = $this->cosRepository->getCommissionsStats();
 
-            return [
+            return (new StringIntMap([
                 'Open for anything'              => $stats['open_for_anything'],
                 'Closed for anything'            => $stats['closed_for_anything'],
                 'Status successfully tracked'    => $stats['successfully_tracked'],
@@ -214,7 +200,7 @@ class DataService
                 'Tracking issues'                => $stats['tracking_issues'],
                 'Status tracked'                 => $stats['tracked'],
                 'Total'                          => $stats['total'],
-            ];
+            ]))->freeze();
         }, CacheTags::TRACKING, __METHOD__);
     }
 

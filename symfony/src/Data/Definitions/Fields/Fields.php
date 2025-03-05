@@ -21,46 +21,46 @@ final class Fields
 
     public static function all(): FieldsList
     {
-        return self::$all ??= new FieldsList(Field::cases());
+        return self::$all ??= FieldsList::fromValues(Field::cases(), static fn (Field $field) => $field->value)->freeze();
     }
 
     public static function persisted(): FieldsList
     {
-        return self::$persisted ??= self::all()->filtered(fn (Field $field): bool => $field->isPersisted());
+        return self::$persisted ??= self::all()->filterValues(static fn (Field $field) => $field->isPersisted())->freeze();
     }
 
     public static function public(): FieldsList
     {
-        return self::$public ??= self::all()->filtered(fn (Field $field): bool => $field->public());
+        return self::$public ??= self::all()->filterValues(static fn (Field $field) => $field->public())->freeze();
     }
 
     public static function inIuForm(): FieldsList
     {
-        return self::$inIuForm ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm());
+        return self::$inIuForm ??= self::all()->filterValues(static fn (Field $field) => $field->isInIuForm())->freeze();
     }
 
     public static function readFromSubmissionData(): FieldsList
     {
-        return self::inIuForm()->plus([Field::FORMER_MAKER_IDS]);
+        return self::inIuForm()->plus(Field::FORMER_MAKER_IDS->value, Field::FORMER_MAKER_IDS);
     }
 
     public static function iuFormAffected(): FieldsList
     {
-        return self::$iuFormAffected ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm() || $field->affectedByIuForm());
+        return self::$iuFormAffected ??= self::all()->filterValues(static fn (Field $field): bool => $field->isInIuForm() || $field->affectedByIuForm())->freeze();
     }
 
     public static function inStats(): FieldsList
     {
-        return self::$inStats ??= self::all()->filtered(fn (Field $field): bool => $field->inStats());
+        return self::$inStats ??= self::all()->filterValues(static fn (Field $field): bool => $field->inStats())->freeze();
     }
 
     public static function urls(): FieldsList
     {
-        return self::$urls ??= self::all()->filtered(fn (Field $field): bool => str_starts_with($field->value, 'URL_'));
+        return self::$urls ??= self::all()->filterValues(static fn (Field $field): bool => str_starts_with($field->value, 'URL_'))->freeze();
     }
 
     public static function nonInspectedUrls(): FieldsList
     {
-        return self::$nonInspected ??= self::all()->filtered(fn (Field $field): bool => $field->notInspectedUrl());
+        return self::$nonInspected ??= self::all()->filterValues(static fn (Field $field): bool => $field->notInspectedUrl())->freeze();
     }
 }

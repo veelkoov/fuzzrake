@@ -7280,12 +7280,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/veelkoov/Debris.git",
-                "reference": "ce0d081f0394f5bed0bbd7295404da6840c40207"
+                "reference": "688aad3ac704a74aa4f75f5333ab7bf17dc24017"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/ce0d081f0394f5bed0bbd7295404da6840c40207",
-                "reference": "ce0d081f0394f5bed0bbd7295404da6840c40207",
+                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/688aad3ac704a74aa4f75f5333ab7bf17dc24017",
+                "reference": "688aad3ac704a74aa4f75f5333ab7bf17dc24017",
                 "shasum": ""
             },
             "require": {
@@ -7338,7 +7338,7 @@
                 "source": "https://github.com/veelkoov/Debris/tree/develop",
                 "issues": "https://github.com/veelkoov/Debris/issues"
             },
-            "time": "2025-03-05T14:09:06+00:00"
+            "time": "2025-03-05T23:14:10+00:00"
         }
     ],
     "packages-dev": [
