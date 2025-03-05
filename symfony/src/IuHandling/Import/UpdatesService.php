@@ -17,6 +17,10 @@ use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\UnbelievableRuntimeException;
+use App\ValueObject\Messages\SpeciesSyncNotificationV1;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 use function Psl\Vec\concat;
 use function Psl\Vec\filter;
@@ -26,6 +30,8 @@ class UpdatesService
     public function __construct(
         private readonly ArtisanRepository $artisans,
         private readonly Fixer $fixer,
+        private readonly MessageBusInterface $messageBus,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -170,5 +176,11 @@ class UpdatesService
         }
 
         $this->artisans->add($existingEntity->getArtisan(), true);
+
+        try {
+            $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
+        } catch (ExceptionInterface $exception) {
+            $this->logger->error("Failed dispatching species sync notification: {$exception->getMessage()}");
+        }
     }
 }

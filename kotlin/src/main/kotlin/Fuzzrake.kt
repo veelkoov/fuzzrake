@@ -56,24 +56,10 @@ class MiniaturesUpdateCmd : CliktCommand(
     }
 }
 
-class SpeciesSyncCmd : CliktCommand(
-    name = "sync-species",
-    help = "Update species / creator species in the database",
-) {
-    override fun run() {
-        val config = ConfigLoader().locateAndLoad()
-        val syncTask = SpeciesSync(config)
-
-        syncTask.execute()
-    }
-}
-
 fun main(args: Array<String>) = FuzzrakeCmd()
     .subcommands(
         TrackerCmd(),
         UrlInspectionCmd(),
         MiniaturesUpdateCmd(),
-        SpeciesSyncCmd(),
-        UpdateFiltersCmd(),
     )
     .main(args)
