@@ -22,7 +22,7 @@ class SpecialItemsExtractor
             $this->special[$specialItem] = $items->contains($specialItem);
         }
 
-        $this->common = $items->minusAll($allowedSpecialItems);
+        $this->common = $items->minusAll($allowedSpecialItems)->freeze();
     }
 
     public function hasSpecial(string $item): bool
