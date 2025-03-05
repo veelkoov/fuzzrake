@@ -175,7 +175,7 @@ class AppExtensions extends AbstractExtension
     {
         $pattern = Patterns::getI($matchWord);
 
-        return $items->filter(fn (Item $item) => $pattern->test($item->label));
+        return $items->filter(static fn (Item $item) => $pattern->test($item->label));
     }
 
     /**

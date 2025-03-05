@@ -89,7 +89,7 @@ class StatisticsController extends AbstractController
 
         foreach ($this->getLeafItems($input->items) as $item) {
             $countToList
-                ->getOrSet($item->count, fn () => new StringList())
+                ->getOrSet($item->count, static fn () => new StringList())
                 ->add($item->label);
         }
 
@@ -114,7 +114,7 @@ class StatisticsController extends AbstractController
             if ($item->subitems->isEmpty()) {
                 $result->add($item);
             } else {
-                $result->add(...$this->getLeafItems($item->subitems));
+                $result->addAll($this->getLeafItems($item->subitems));
             }
         }
 
