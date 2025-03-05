@@ -112,7 +112,7 @@ class QueryChoicesAppender
     private function applyCountries(QueryBuilder $builder): void
     {
         if ($this->choices->countries->isNotEmpty()) {
-            $countries = $this->choices->countries->map(fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+            $countries = $this->choices->countries->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
         }
@@ -121,7 +121,7 @@ class QueryChoicesAppender
     private function applyStates(QueryBuilder $builder): void
     {
         if ($this->choices->states->isNotEmpty()) {
-            $states = $this->choices->states->map(fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+            $states = $this->choices->states->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
         }
@@ -231,7 +231,7 @@ class QueryChoicesAppender
 
         $conditions = [];
 
-        $items = new SpecialItemsExtractor(new StringList($this->choices->species), Consts::FILTER_VALUE_UNKNOWN);
+        $items = new SpecialItemsExtractor($this->choices->species, Consts::FILTER_VALUE_UNKNOWN);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
@@ -265,7 +265,7 @@ class QueryChoicesAppender
     {
         $conditions = [];
 
-        $items = new SpecialItemsExtractor(new StringList($this->choices->openFor),
+        $items = new SpecialItemsExtractor($this->choices->openFor,
             Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
