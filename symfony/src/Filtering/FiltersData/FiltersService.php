@@ -216,9 +216,9 @@ class FiltersService
 
         $specialItems = SpecialItemList::mapFrom($specialItems, SpecialItem::from(...));
 
-        $items = ItemList::mapWithKey(
+        $items = ItemList::mapFrom(
             $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),
-            fn (string $item, int $count): Item => new Item($item, $item, $count),
+            fn (int $count, string $item): Item => new Item($item, $item, $count),
         );
 
         return new FilterData($items, $specialItems);

@@ -14,6 +14,7 @@ use App\Entity\MakerId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @method ArtisanUrl|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,10 +49,10 @@ class ArtisanUrlRepository extends ServiceEntityRepository
         $rsm->addJoinedEntityFromClassMetadata(MakerId::class, 'mi', 'a',
             'makerIds', ['id' => 'mi_id', 'artisan_id' => 'mi_artisan_id', 'maker_id' => 'mi_maker_id']);
 
-        if ($excluded->empty()) {
+        if ($excluded->isEmpty()) {
             $whereClause = '';
         } else {
-            $whereClause = 'WHERE au.type NOT IN ('.implode(',', $this->quoted($excluded->names())).')';
+            $whereClause = 'WHERE au.type NOT IN ('.$this->quoted($excluded->names())->join(',').')';
         }
 
         $resultData = $this->getEntityManager()
@@ -94,7 +95,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->orderBy('us.lastSuccessUtc', 'ASC')
             ->addOrderBy('us.lastFailureUtc', 'ASC');
 
-        if (!$excluded->empty()) {
+        if (!$excluded->isEmpty()) {
             $builder
                 ->where('au.type NOT IN (:excluded)')
                 ->setParameter('excluded', $excluded->names());
@@ -105,15 +106,10 @@ class ArtisanUrlRepository extends ServiceEntityRepository
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    /**
-     * @param string[] $input
-     *
-     * @return string[]
-     */
-    private function quoted(array $input): array
+    private function quoted(StringSet $input): StringSet
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        return array_map(fn (string $type): string => $connection->quote($type), $input);
+        return $input->map(static fn (string $type) => $connection->quote($type));
     }
 }
