@@ -26,7 +26,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" --interactive --tty --env XDEBUG_TRIGGER="${XDEBUG_TRIGGER:-}" php "$@"
+    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" --interactive --tty php "$@"
 }
 
 function run_composer() {
