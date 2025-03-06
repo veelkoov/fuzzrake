@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData\Builder;
 
-class MutableFilterData
-{
-    public readonly MutableSet $items;
+use App\Filtering\FiltersData\Builder\Data\MutableSpecialItemList;
 
-    /**
-     * @var MutableSpecialItem[]
-     */
-    public array $specialItems;
+readonly class MutableFilterData
+{
+    public MutableSet $items;
+    public MutableSpecialItemList $specialItems;
 
     public function __construct(
         MutableSpecialItem ...$specialItems,
     ) {
         $this->items = new MutableSet();
-        $this->specialItems = $specialItems;
+        $this->specialItems = new MutableSpecialItemList($specialItems);
     }
 }

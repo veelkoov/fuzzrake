@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData\Builder;
 
+use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
 use ArrayAccess;
 use ArrayIterator;
@@ -44,12 +45,9 @@ class MutableSet implements IteratorAggregate, ArrayAccess
         return $this->items;
     }
 
-    /**
-     * @return list<Item>
-     */
-    public function getReadonlyList(): array
+    public function getReadonlyList(): ItemList
     {
-        return array_map(fn (MutableItem $item) => Item::from($item), array_values($this->items));
+        return ItemList::mapFrom($this->items, Item::from(...));
     }
 
     public function sort(): void

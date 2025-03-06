@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Utils\Arrays;
+namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;
 
-class Lists
+final class Lists
 {
     use UtilityClass;
 

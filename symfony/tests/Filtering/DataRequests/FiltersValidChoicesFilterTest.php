@@ -8,6 +8,7 @@ use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Collections\StringList;
 use Exception;
 
 /**
@@ -36,27 +37,27 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
         $choices = new Choices(
             '',
             '',
-            ['FI', '?', 'UK', '*'],
-            ['Liquid', '?', 'Solid', '*'],
-            ['Finnish', 'Czech', '?', 'English', '*'],
-            ['Toony', '?', '*', 'Yellow', '!'],
-            ['LED eyes', '?', '*', 'Oven', '!'],
-            ['Full plantigrade', '?', '*', 'Pancakes', '!'],
-            ['Standard commissions', '?', 'Waffles', '*'],
-            ['Pancakes', '!', '-', 'Kettles', '*'],
-            ['Birds', '?', 'Furniture', '*'],
+            StringList::of('FI', '?', 'UK', '*'),
+            StringList::of('Liquid', '?', 'Solid', '*'),
+            StringList::of('Finnish', 'Czech', '?', 'English', '*'),
+            StringList::of('Toony', '?', '*', 'Yellow', '!'),
+            StringList::of('LED eyes', '?', '*', 'Oven', '!'),
+            StringList::of('Full plantigrade', '?', '*', 'Pancakes', '!'),
+            StringList::of('Standard commissions', '?', 'Waffles', '*'),
+            StringList::of('Pancakes', '!', '-', 'Kettles', '*'),
+            StringList::of('Birds', '?', 'Furniture', '*'),
             false, false, false, false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
 
-        self::assertEquals(['FI', '?'], $result->countries);
-        self::assertEquals(['Liquid', '?'], $result->states);
-        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages);
-        self::assertEquals(['Toony', '?', '*'], $result->styles);
-        self::assertEquals(['LED eyes', '?', '*'], $result->features);
-        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes);
-        self::assertEquals(['Standard commissions', '?'], $result->productionModels);
-        self::assertEquals(['Pancakes', '!', '-'], $result->openFor);
-        self::assertEquals(['Birds', '?'], $result->species);
+        self::assertEquals(['FI', '?'], $result->countries->getValuesArray());
+        self::assertEquals(['Liquid', '?'], $result->states->getValuesArray());
+        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->getValuesArray());
+        self::assertEquals(['Toony', '?', '*'], $result->styles->getValuesArray());
+        self::assertEquals(['LED eyes', '?', '*'], $result->features->getValuesArray());
+        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->getValuesArray());
+        self::assertEquals(['Standard commissions', '?'], $result->productionModels->getValuesArray());
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->getValuesArray());
+        self::assertEquals(['Birds', '?'], $result->species->getValuesArray());
     }
 }

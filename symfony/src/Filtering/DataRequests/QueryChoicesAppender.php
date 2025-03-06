@@ -10,7 +10,8 @@ use App\Entity\ArtisanUrl;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use App\Utils\Arrays\Arrays;
+use App\Utils\Collections\Arrays;
+use App\Utils\Collections\StringList;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
@@ -110,9 +111,8 @@ class QueryChoicesAppender
 
     private function applyCountries(QueryBuilder $builder): void
     {
-        if ([] !== $this->choices->countries) {
-            $countries = Vec\map($this->choices->countries,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+        if ($this->choices->countries->isNotEmpty()) {
+            $countries = $this->choices->countries->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
         }
@@ -120,9 +120,8 @@ class QueryChoicesAppender
 
     private function applyStates(QueryBuilder $builder): void
     {
-        if ([] !== $this->choices->states) {
-            $states = Vec\map($this->choices->states,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+        if ($this->choices->states->isNotEmpty()) {
+            $states = $this->choices->states->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
             $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
         }
@@ -226,7 +225,7 @@ class QueryChoicesAppender
 
     private function applySpecies(QueryBuilder $builder): void
     {
-        if ([] === $this->choices->species) {
+        if ($this->choices->species->isEmpty()) {
             return;
         }
 
@@ -245,7 +244,7 @@ class QueryChoicesAppender
             ));
         }
 
-        if ([] !== $items->getCommon()) {
+        if ($items->common->isNotEmpty()) {
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorSpecie::class)
@@ -256,7 +255,7 @@ class QueryChoicesAppender
                     ->andWhere('cs2.creator = a')
             );
 
-            $builder->setParameter('specieNames', $items->getCommon());
+            $builder->setParameter('specieNames', $items->common);
         }
 
         $this->addWheres($builder, $conditions);
@@ -288,7 +287,7 @@ class QueryChoicesAppender
             $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->value);
         }
 
-        if ([] !== $items->getCommon()) {
+        if ($items->common->isNotEmpty()) {
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorOfferStatus::class)
@@ -300,7 +299,7 @@ class QueryChoicesAppender
             );
 
             $builder
-                ->setParameter('openForOffers', $items->getCommon())
+                ->setParameter('openForOffers', $items->common)
                 ->setParameter('isOpen', true, ParameterType::BOOLEAN);
         }
 
@@ -323,10 +322,7 @@ class QueryChoicesAppender
         $builder->andWhere($condition);
     }
 
-    /**
-     * @param list<string> $selectedItems
-     */
-    private function applyCreatorValuesCount(QueryBuilder $builder, array $selectedItems, Field $primaryField,
+    private function applyCreatorValuesCount(QueryBuilder $builder, StringList $selectedItems, Field $primaryField,
         ?Field $otherField = null, bool $allInsteadOfAny = false): void
     {
         $conditions = [];
@@ -366,20 +362,17 @@ class QueryChoicesAppender
                     ->andWhere("$valuesAlias.fieldName IN (:$parameterAlias)")
             ));
 
-            $builder->setParameter($parameterAlias, Vec\filter(
-                [$primaryField->value, $otherField?->value],
-                fn (?string $name): bool => null !== $name,
-            ));
+            $builder->setParameter($parameterAlias, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
         }
 
-        if ([] !== $items->getCommon()) {
+        if ($items->common->isNotEmpty()) {
             $creatorAlias = $this->getUniqueAlias();
             $valuesAlias = $this->getUniqueAlias();
             $fieldNameParamAlias = $this->getUniqueAlias();
             $valueParamAlias = $this->getUniqueAlias();
 
             $having = $allInsteadOfAny
-                ? $builder->expr()->eq("COUNT($creatorAlias)", count($items->getCommon()))
+                ? $builder->expr()->eq("COUNT($creatorAlias)", $items->common->count())
                 : $builder->expr()->gt("COUNT($creatorAlias)", 0);
 
             $conditions[] = $builder->expr()->exists(
@@ -394,7 +387,7 @@ class QueryChoicesAppender
             );
 
             $builder->setParameter($fieldNameParamAlias, $primaryField->value);
-            $builder->setParameter($valueParamAlias, $items->getCommon());
+            $builder->setParameter($valueParamAlias, $items->common);
         }
 
         $this->addWheres($builder, $conditions);

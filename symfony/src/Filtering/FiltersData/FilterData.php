@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Filtering\FiltersData\Builder\MutableFilterData;
-use Psl\Vec;
+use App\Filtering\FiltersData\Data\ItemList;
+use App\Filtering\FiltersData\Data\SpecialItemList;
 
 readonly class FilterData
 {
-    /**
-     * @param list<Item>        $items
-     * @param list<SpecialItem> $specialItems
-     */
     public function __construct(
-        public array $items,
-        public array $specialItems,
+        public ItemList $items,
+        public SpecialItemList $specialItems,
     ) {
     }
 
@@ -23,7 +20,7 @@ readonly class FilterData
     {
         return new FilterData(
             $source->items->getReadonlyList(),
-            Vec\map($source->specialItems, SpecialItem::from(...)),
+            SpecialItemList::mapFrom($source->specialItems, SpecialItem::from(...)),
         );
     }
 }

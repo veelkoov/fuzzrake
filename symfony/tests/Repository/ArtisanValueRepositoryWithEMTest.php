@@ -26,7 +26,7 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
 
         $result = $subject->getDistinctValues(Field::FEATURES->value);
 
-        self::assertEquals(['AB', 'CD', 'EF', 'GH'], $result);
+        self::assertEquals(['AB', 'CD', 'EF', 'GH'], $result->getValuesArray());
     }
 
     public function testCountDistinctInActiveCreatorsHaving(): void
@@ -47,7 +47,7 @@ class ArtisanValueRepositoryWithEMTest extends KernelTestCaseWithEM
         self::assertEquals([
             'AB' => 2,
             'CD' => 1,
-        ], $result);
+        ], $result->toArray());
     }
 
     public function testCountActiveCreatorsHavingAnyOf(): void
