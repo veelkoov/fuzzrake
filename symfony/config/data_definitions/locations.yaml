@@ -1,5 +1,5 @@
 parameters:
-  countries:
+  country_fixes:
     regex_prefix: ''
     regex_suffix: ''
     replacements:
@@ -45,7 +45,7 @@ parameters:
       '^(u\\.?s\\.?( of america)?|usa)$':                'US'
       '^south africa$':                                  'ZA'
 
-  states:
+  state_fixes:
     regex_prefix: ''
     regex_suffix: ''
     replacements:
