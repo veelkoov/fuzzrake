@@ -59,7 +59,7 @@ final class MutableSpecie implements Specie
 
     public function getAncestors(): SpecieSet
     {
-        return new SpecieSet(Vec\flat_map($this->parents, fn (Specie $specie) => $specie->getThisAndAncestors()));
+        return new SpecieSet(Vec\flat_map($this->parents, static fn (Specie $specie) => $specie->getThisAndAncestors()));
     }
 
     #[Override]
@@ -77,7 +77,7 @@ final class MutableSpecie implements Specie
     #[Override]
     public function getDescendants(): SpecieSet
     {
-        return new SpecieSet(Vec\flat_map($this->children, fn (Specie $specie) => $specie->getThisAndDescendants()));
+        return new SpecieSet(Vec\flat_map($this->children,static  fn (Specie $specie) => $specie->getThisAndDescendants()));
     }
 
     #[Override]
@@ -92,7 +92,7 @@ final class MutableSpecie implements Specie
         if ($this->parents->isEmpty()) {
             return 0;
         } else {
-            return $this->parents->max(fn (Specie $specie) => $specie->getDepth()) + 1;
+            return $this->parents->max(static fn (Specie $specie) => $specie->getDepth()) + 1;
         }
     }
 }
