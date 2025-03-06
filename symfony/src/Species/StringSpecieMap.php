@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Species;
 
 use App\Entity\Specie;
-use Veelkoov\Debris\Base\DScalarMap;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\StringSet;
 
 /**
- * @extends DScalarMap<string, Specie>
+ * @extends DStringMap<Specie>
  */
-class StringSpecieMap extends DScalarMap
+class StringSpecieMap extends DStringMap
 {
-    public function getNames(): StringList
+    public function getNames(): StringSet
     {
-        return new StringList($this->getKeysArray());
+        return $this->getKeys();
     }
 }

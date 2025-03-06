@@ -14,6 +14,6 @@ class SpecieSet extends DSet
 {
     public function getNames(): StringList
     {
-        return StringList::mapFrom($this->getValuesArray(), fn (Specie $specie) => $specie->getName());
+        return StringList::mapFrom($this->getValuesArray(), static fn (Specie $specie) => $specie->getName());
     }
 }
