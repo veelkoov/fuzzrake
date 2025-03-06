@@ -14,7 +14,7 @@ class StringMutableSpecieMap extends DStringMap
 {
     public function getSpecieSet(): SpecieSet
     {
-        return new SpecieSet($this->getValuesArray());
+        return new SpecieSet($this);
     }
 
     public function getNames(): StringSet

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Species;
 
 use App\Utils\Collections\StringList;
+use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\StringSet;
 
 final class CreatorSpeciesResolver
@@ -33,8 +35,8 @@ final class CreatorSpeciesResolver
 
         $result = new StringSet();
 
-        foreach ($ordered as $specieName => $does) {
-            $descendants = $this->getVisibleSelfAndDescendants($this->species->getByName($specieName));
+        foreach ($ordered as $specie => $does) {
+            $descendants = $this->getVisibleSelfAndDescendants($specie);
 
             foreach ($descendants as $descendant) {
                 if ($does) {
@@ -49,47 +51,42 @@ final class CreatorSpeciesResolver
     }
 
     /**
-     * @return iterable<string, bool> "Specie name" => Does?
+     * @return DMap<Specie, bool> Specie => Does?
      */
-    public function getOrderedDoesDoesnt(StringList $speciesDoes, StringList $speciesDoesnt): iterable
+    public function getOrderedDoesDoesnt(StringList $speciesDoes, StringList $speciesDoesnt): DMap
     {
-        $result = [];
+        /** @var DMap<Specie, bool> $result */
+        $result = new DMap();
 
         foreach ($speciesDoes as $specieDone) {
             foreach ($this->getVisibleSpecieOrParentOrOtherForUnusual($specieDone) as $specie) {
-                $result[] = [$specie, true];
+                $result->set($specie, true);
             }
         }
 
         foreach ($speciesDoesnt as $specieNotDone) {
             foreach ($this->getVisibleSpecieOrEmptySetForUnusual($specieNotDone) as $specie) {
-                $result[] = [$specie, false];
+                $result->set($specie, false);
             }
         }
 
-        usort($result, function (array $item1, array $item2): int {
-            $depthDiff = $item1[0]->getDepth() - $item2[0]->getDepth();
+        return $result->sorted(function (Pair $item1, Pair $item2): int {
+            $depthDiff = $item1->key->getDepth() - $item2->key->getDepth();
 
             if (0 !== $depthDiff) {
                 return $depthDiff;
-            } elseif ($item2[1]) {
+            } elseif ($item2->value) {
                 return 1;
             } else {
-                return 0 - ($item1[1] ? 1 : 0);
+                return 0 - ($item1->value ? 1 : 0);
             }
         });
-
-        foreach ($result as $pair) {
-            yield $pair[0]->getName() => $pair[1];
-        }
     }
 
     private function getVisibleSelfAndDescendants(Specie $specie): StringList
     {
-        return $this->selfAndDescendantsCache[$specie->getName()] ??= StringList::mapFrom(
-            $specie->getThisAndDescendants()->filter(fn (Specie $specie) => !$specie->getHidden()),
-            fn (Specie $specie) => $specie->getName(),
-        );
+        return $this->selfAndDescendantsCache[$specie->getName()] ??= $specie->getThisAndDescendants()
+            ->filter(static fn (Specie $specie) => !$specie->getHidden())->getNames();
     }
 
     private function getVisibleSpecieOrParentOrOtherForUnusual(string $specieName): SpecieSet

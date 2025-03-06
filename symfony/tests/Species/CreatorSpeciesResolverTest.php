@@ -6,6 +6,7 @@ namespace App\Tests\Species;
 
 use App\Species\CreatorSpeciesResolver;
 use App\Species\MutableSpecies;
+use App\Species\Specie;
 use App\Species\Species;
 use App\Utils\Collections\StringList;
 use PHPUnit\Framework\TestCase;
@@ -127,13 +128,9 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         $subject = new CreatorSpeciesResolver($this->getGetOrderedDoesDoesntSpecies());
 
-        $result = [...$subject->getOrderedDoesDoesnt($does, $doesnt)];
-
-        $strResult = implode(' ', array_map(
-            static fn (string $specie, bool $does) => ($does ? '+' : '-').$specie,
-            array_keys($result),
-            array_values($result),
-        ));
+        $result = $subject->getOrderedDoesDoesnt($does, $doesnt);
+        $strResult = StringList::mapFrom($result,
+            static fn (bool $does, Specie $specie) => ($does ? '+' : '-').$specie->getName())->join(' ');
 
         self::assertEquals($expected, $strResult);
     }
