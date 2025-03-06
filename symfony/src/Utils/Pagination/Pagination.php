@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils\Pagination;
 
 use App\Utils\Traits\UtilityClass;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Filtering\DataRequests;
 
 use App\Utils\Pagination\Pagination;
