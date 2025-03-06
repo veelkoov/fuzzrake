@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;

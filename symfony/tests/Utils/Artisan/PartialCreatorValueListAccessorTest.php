@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Utils\Artisan;
 
 use App\Data\Definitions\Fields\Field;
