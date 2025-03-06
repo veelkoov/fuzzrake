@@ -182,7 +182,7 @@ class DataService
                 }
             }
 
-            return $result->sorted()->freeze();
+            return $result->sorted(reverse: true)->freeze();
         }, CacheTags::ARTISANS, __METHOD__);
     }
 
