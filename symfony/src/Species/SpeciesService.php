@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use App\Utils\Collections\StringList;
 use App\Utils\Regexp\Replacements;
 use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @phpstan-type TSpecies             array<string, TSubspecies>
@@ -36,9 +36,9 @@ final class SpeciesService
         $this->fixerReplacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['regex_prefix'], $speciesDefinitions['regex_suffix']);
     }
 
-    public function getValidNames(): StringList
+    public function getValidNames(): StringSet
     {
-        return new StringList($this->species->getNames()); // TODO: Should be collection type or ->toList();
+        return $this->species->getNames();
     }
 
     public function getListFixerReplacements(): Replacements

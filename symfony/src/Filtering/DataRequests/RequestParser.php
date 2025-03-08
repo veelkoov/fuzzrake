@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\Utils\Collections\StringList;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Type;
 use Symfony\Component\HttpFoundation\Request;
+use Veelkoov\Debris\StringSet;
 
 class RequestParser
 {
@@ -59,15 +59,15 @@ class RequestParser
         return $this->filter->getOnlyValidChoices(new Choices(
             $strings['makerId'],
             $strings['textSearch'],
-            new StringList($strArrays['countries']),
-            new StringList($strArrays['states']),
-            new StringList($strArrays['languages']),
-            new StringList($strArrays['styles']),
-            new StringList($strArrays['features']),
-            new StringList($strArrays['orderTypes']),
-            new StringList($strArrays['productionModels']),
-            new StringList($strArrays['openFor']),
-            new StringList($strArrays['species']),
+            new StringSet($strArrays['countries']),
+            new StringSet($strArrays['states']),
+            new StringSet($strArrays['languages']),
+            new StringSet($strArrays['styles']),
+            new StringSet($strArrays['features']),
+            new StringSet($strArrays['orderTypes']),
+            new StringSet($strArrays['productionModels']),
+            new StringSet($strArrays['openFor']),
+            new StringSet($strArrays['species']),
             Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
             Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
             Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),

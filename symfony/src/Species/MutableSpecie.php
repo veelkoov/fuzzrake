@@ -77,7 +77,7 @@ final class MutableSpecie implements Specie
     #[Override]
     public function getDescendants(): SpecieSet
     {
-        return new SpecieSet(Vec\flat_map($this->children,static  fn (Specie $specie) => $specie->getThisAndDescendants()));
+        return new SpecieSet(Vec\flat_map($this->children, static fn (Specie $specie) => $specie->getThisAndDescendants()));
     }
 
     #[Override]

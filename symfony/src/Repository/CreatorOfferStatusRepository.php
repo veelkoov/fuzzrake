@@ -6,13 +6,13 @@ namespace App\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorOfferStatus;
-use App\Utils\Collections\StringList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @method CreatorOfferStatus|null find($id, $lockMode = null, $lockVersion = null)
@@ -108,7 +108,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
         return StringIntMap::fromRows($result, 'offer', 'openCount');
     }
 
-    public function getDistinctOpenFor(): StringList
+    public function getDistinctOpenFor(): StringSet
     {
         $result = $this->createQueryBuilder('acs')
             ->select('DISTINCT acs.offer')
@@ -117,6 +117,6 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleColumnResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 }

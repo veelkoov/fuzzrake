@@ -8,8 +8,8 @@ use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Collections\StringList;
 use Exception;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @medium
@@ -37,15 +37,15 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
         $choices = new Choices(
             '',
             '',
-            StringList::of('FI', '?', 'UK', '*'),
-            StringList::of('Liquid', '?', 'Solid', '*'),
-            StringList::of('Finnish', 'Czech', '?', 'English', '*'),
-            StringList::of('Toony', '?', '*', 'Yellow', '!'),
-            StringList::of('LED eyes', '?', '*', 'Oven', '!'),
-            StringList::of('Full plantigrade', '?', '*', 'Pancakes', '!'),
-            StringList::of('Standard commissions', '?', 'Waffles', '*'),
-            StringList::of('Pancakes', '!', '-', 'Kettles', '*'),
-            StringList::of('Birds', '?', 'Furniture', '*'),
+            StringSet::of('FI', '?', 'UK', '*'),
+            StringSet::of('Liquid', '?', 'Solid', '*'),
+            StringSet::of('Finnish', 'Czech', '?', 'English', '*'),
+            StringSet::of('Toony', '?', '*', 'Yellow', '!'),
+            StringSet::of('LED eyes', '?', '*', 'Oven', '!'),
+            StringSet::of('Full plantigrade', '?', '*', 'Pancakes', '!'),
+            StringSet::of('Standard commissions', '?', 'Waffles', '*'),
+            StringSet::of('Pancakes', '!', '-', 'Kettles', '*'),
+            StringSet::of('Birds', '?', 'Furniture', '*'),
             false, false, false, false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);

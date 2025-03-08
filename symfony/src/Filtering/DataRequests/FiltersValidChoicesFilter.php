@@ -10,7 +10,7 @@ use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Species\SpeciesService;
-use App\Utils\Collections\StringList;
+use Veelkoov\Debris\StringSet;
 
 class FiltersValidChoicesFilter
 {
@@ -30,13 +30,13 @@ class FiltersValidChoicesFilter
             $this->dataService->getLanguages(), Consts::FILTER_VALUE_UNKNOWN);
 
         $styles = self::onlyValidValues($choices->styles,
-            new StringList(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $features = self::onlyValidValues($choices->features,
-            new StringList(Features::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(Features::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $orderTypes = self::onlyValidValues($choices->orderTypes,
-            new StringList(OrderTypes::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(OrderTypes::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $productionModels = self::onlyValidValues($choices->productionModels,
-            new StringList(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
+            new StringSet(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
             $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
@@ -67,7 +67,7 @@ class FiltersValidChoicesFilter
         );
     }
 
-    private static function onlyValidValues(StringList $givenOptions, StringList $validOptions, string ...$additionalValidOptions): StringList
+    private static function onlyValidValues(StringSet $givenOptions, StringSet $validOptions, string ...$additionalValidOptions): StringSet
     {
         return $givenOptions->intersect($validOptions->plusAll($additionalValidOptions));
     }
