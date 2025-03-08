@@ -9,13 +9,10 @@ use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\StringSet;
 use Veelkoov\Debris\StringStringMap;
 
-/**
- * @phpstan-type psCountryData array{name: string, code: string, region: string}
- */
 class CountriesDataService
 {
     /**
-     * @var DStringMap<StringStringMap>
+     * @var DStringMap<StringStringMap> 'Region name' => ['Country code' => 'Country name', ...]
      */
     private DStringMap $regions;
 
