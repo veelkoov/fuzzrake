@@ -13,6 +13,7 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\Json;
 use Exception;
+use Psl\File;
 use UnexpectedValueException;
 
 class JsonArtisanDataLoader
@@ -33,7 +34,8 @@ class JsonArtisanDataLoader
     ];
 
     /**
-     * @param Field[] $skippedFields
+     * @param literal-string $fileName
+     * @param Field[]        $skippedFields
      *
      * @throws Exception
      */
@@ -44,7 +46,7 @@ class JsonArtisanDataLoader
         /**
          * @var array<string, list<string>|string|bool|null> $data
          */
-        $data = Json::readFile(Paths::getTestDataPath($fileName));
+        $data = Json::decode(File\read(Paths::getTestDataPath($fileName)));
 
         $result = new Artisan();
 
