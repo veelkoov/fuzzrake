@@ -12,7 +12,7 @@ final class CountryFixer extends ConfigurableStringFixer
      * @param psFixerConfig $countries
      */
     public function __construct(
-        #[Autowire(param: 'countries')] array $countries,
+        #[Autowire(param: 'country_fixes')] array $countries,
     ) {
         parent::__construct($countries);
     }

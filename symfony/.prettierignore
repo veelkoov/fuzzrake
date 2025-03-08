@@ -1,7 +1,10 @@
 # Only have Prettier control frontend/web files
 composer.json
 composer.lock
-config/
+config/*
+!config/data_definitions
+config/data_definitions/*
+!config/data_definitions/locations.yaml
 tests/
 
 # Libraries
