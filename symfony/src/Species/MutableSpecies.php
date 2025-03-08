@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use App\Utils\Collections\StringList;
+use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\StringSet;
 
 class MutableSpecies implements Species
@@ -20,7 +20,11 @@ class MutableSpecies implements Species
 
     public function getByName(string $name): Specie
     {
-        return $this->byName->getOrDefault($name, fn () => throw new SpecieException("No specie named '$name'"));
+        try {
+            return $this->byName->get($name);
+        } catch (MissingKeyException $exception) {
+            throw new SpecieException("No specie named '$name'", previous: $exception);
+        }
     }
 
     public function getNames(): StringSet
@@ -28,9 +32,9 @@ class MutableSpecies implements Species
         return $this->byName->getNames()->sorted();
     }
 
-    public function getVisibleNames(): StringList
+    public function getVisibleNames(): StringSet
     {
-        return new StringList($this->byName->filterValues(fn (Specie $specie): bool => !$specie->hidden)->getNames()); // TODO: Should be collection type or ->toList();
+        return $this->byName->filterValues(static fn (Specie $specie): bool => !$specie->hidden)->getNames();
     }
 
     public function hasName(string $name): bool
@@ -50,7 +54,7 @@ class MutableSpecies implements Species
 
     public function getByNameCreatingMissing(string $name, bool $hidden): MutableSpecie
     {
-        return $this->byName->getOrSet($name, fn () => new MutableSpecie($name, $hidden));
+        return $this->byName->getOrSet($name, static fn () => new MutableSpecie($name, $hidden));
     }
 
     public function addRootSpecie(MutableSpecie $rootSpecie): void

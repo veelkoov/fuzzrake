@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use App\Utils\Collections\StringList;
 use Veelkoov\Debris\StringSet;
 
 interface Species
@@ -13,7 +12,7 @@ interface Species
 
     public function getNames(): StringSet;
 
-    public function getVisibleNames(): StringList;
+    public function getVisibleNames(): StringSet;
 
     public function hasName(string $name): bool;
 
