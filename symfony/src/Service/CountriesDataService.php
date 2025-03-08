@@ -4,60 +4,44 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Utils\Collections\StringList;
-use App\Utils\Json;
-use JsonException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\StringStringMap;
 
-/**
- * @phpstan-type psCountryData array{name: string, code: string, region: string}
- */
 class CountriesDataService
 {
     /**
-     * @var array<string, psCountryData>
+     * @var DStringMap<StringStringMap> 'Region name' => ['Country code' => 'Country name', ...]
      */
-    private array $data;
+    private DStringMap $regions;
 
     /**
-     * @throws JsonException
+     * @param array<string, array<string, string>> $regions
      */
     public function __construct(
-        string $projectDir,
+        #[Autowire(param: 'regions')] array $regions,
     ) {
-        $this->loadCountriesData($projectDir);
+        $this->regions = DStringMap::mapFrom($regions,
+            static fn (array $countries, string $region) => [$region, new StringStringMap($countries)]);
     }
 
-    public function getRegions(): StringList
+    public function getRegions(): StringSet
     {
-        return StringList::mapFrom($this->data, static fn (array $country): string => $country['region'])->unique()->sorted();
+        return $this->regions->getKeys();
     }
 
     public function getRegionFrom(string $countryCode): string
     {
-        return $this->data[$countryCode]['region'];
+        return $this->regions
+            ->filterValues(static fn (StringStringMap $countries) => $countries->hasKey($countryCode))
+            ->singleKey();
     }
 
     public function getNameFor(string $countryCode): string
     {
-        return $this->data[$countryCode]['name'];
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function loadCountriesData(string $projectDir): void
-    {
-        /**
-         * @var array<psCountryData> $dataNumberIndexes
-         */
-        $dataNumberIndexes = Json::readFile($projectDir.'/assets/countries.json');
-
-        $dataCodeIndexes = [];
-
-        foreach ($dataNumberIndexes as $country) {
-            $dataCodeIndexes[$country['code']] = $country;
-        }
-
-        $this->data = $dataCodeIndexes;
+        return $this->regions
+            ->filterValues(static fn (StringStringMap $countries) => $countries->hasKey($countryCode))
+            ->singleValue()->get($countryCode);
     }
 }

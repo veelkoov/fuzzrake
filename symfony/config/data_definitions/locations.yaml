@@ -1,112 +1,161 @@
 parameters:
-  countries:
-    regex_prefix: ''
-    regex_suffix: ''
+  country_fixes:
+    regex_prefix: ""
+    regex_suffix: ""
     replacements:
-      '^argentina$':                                     'AR'
-      '^australia$':                                     'AU'
-      '^austria$':                                       'AT'
-      '^belgium$':                                       'BE'
-      '^brazil$':                                        'BR'
-      '^canada$':                                        'CA'
-      '^chile$':                                         'CL'
-      '^china$':                                         'CN'
-      '^costa rica$':                                    'CR'
-      '^croatia$':                                       'HR'
-      '^(czech( republic)?|czechia)$':                   'CZ'
-      '^d[ea]nmark$':                                    'DK'
-      '^(germany|Deutschland)$':                         'DE'
-      '^estonia$':                                       'EE'
-      '^European Union$':                                'EU'
-      '^finland$':                                       'FI'
-      '^france$':                                        'FR'
-      '^(uk|england|united kingdom|Great Britain)$':     'GB'
-      '^hungary$':                                       'HU'
-      '^ireland$':                                       'IE'
-      '^(italia|italy)$':                                'IT'
-      '^japan$':                                         'JP'
-      '^kyrgyzstan$':                                    'KG'
-      '^latvia$':                                        'LV'
-      '^lithuania$':                                     'LT'
-      '^mexico$':                                        'MX'
-      '^(the )?netherlands$':                            'NL'
-      '^new zealand$':                                   'NZ'
-      '^norway$':                                        'NO'
-      '^peru$':                                          'PE'
-      '^poland$':                                        'PL'
-      '^portugal$':                                      'PT'
-      '^russia$':                                        'RU'
-      '^slovakia$':                                      'SK'
-      '^spain$':                                         'ES'
-      '^sweden$':                                        'SE'
-      '^switzerland$':                                   'CH'
-      '^ukraine$':                                       'UA'
-      '^united states( of america)?$':                   'US'
-      '^(u\\.?s\\.?( of america)?|usa)$':                'US'
-      '^south africa$':                                  'ZA'
+      "^argentina$": "AR"
+      "^australia$": "AU"
+      "^austria$": "AT"
+      "^belgium$": "BE"
+      "^brazil$": "BR"
+      "^canada$": "CA"
+      "^chile$": "CL"
+      "^china$": "CN"
+      "^costa rica$": "CR"
+      "^croatia$": "HR"
+      "^(czech( republic)?|czechia)$": "CZ"
+      "^d[ea]nmark$": "DK"
+      "^(germany|Deutschland)$": "DE"
+      "^estonia$": "EE"
+      "^European Union$": "EU"
+      "^finland$": "FI"
+      "^france$": "FR"
+      "^(uk|england|united kingdom|Great Britain)$": "GB"
+      "^hungary$": "HU"
+      "^ireland$": "IE"
+      "^(italia|italy)$": "IT"
+      "^japan$": "JP"
+      "^kyrgyzstan$": "KG"
+      "^latvia$": "LV"
+      "^lithuania$": "LT"
+      "^mexico$": "MX"
+      "^(the )?netherlands$": "NL"
+      "^new zealand$": "NZ"
+      "^norway$": "NO"
+      "^peru$": "PE"
+      "^poland$": "PL"
+      "^portugal$": "PT"
+      "^russia$": "RU"
+      "^slovakia$": "SK"
+      "^spain$": "ES"
+      "^sweden$": "SE"
+      "^switzerland$": "CH"
+      "^ukraine$": "UA"
+      "^united states( of america)?$": "US"
+      '^(u\\.?s\\.?( of america)?|usa)$': "US"
+      "^south africa$": "ZA"
 
-  states:
-    regex_prefix: ''
-    regex_suffix: ''
+  state_fixes:
+    regex_prefix: ""
+    regex_suffix: ""
     replacements:
-      '^(AK|Alaska)$':                    'Alaska'
-      '^(AL|Alabama)$':                   'Alabama'
-      '^(AR|Arkansas)$':                  'Arkansas'
-      '^(AZ|Arizona)$':                   'Arizona'
-      '^(CA|California)$':                'California'
-      '^(CO|Colorado)$':                  'Colorado'
-      '^(CT|Connecticut)$':               'Connecticut'
-      '^(DE|Delaware)$':                  'Delaware'
-      '^(FL|Florida)$':                   'Florida'
-      '^(GA|Georgia)$':                   'Georgia'
-      '^(HI|Hawaii)$':                    'Hawaii'
-      '^(IA|Iowa)$':                      'Iowa'
-      '^(ID|Idaho)$':                     'Idaho'
-      '^(IL|Illinois)$':                  'Illinois'
-      '^(IN|Indiana)$':                   'Indiana'
-      '^(KS|Kansas)$':                    'Kansas'
-      '^(KY|Kentucky)$':                  'Kentucky'
-      '^(LA|Louisiana)$':                 'Louisiana'
-      '^(MA|Massachusetts)$':             'Massachusetts'
-      '^(MD|Maryland)$':                  'Maryland'
-      '^(ME|Maine)$':                     'Maine'
-      '^(MI|Michigan)$':                  'Michigan'
-      '^(MN|Minnesota)$':                 'Minnesota'
-      '^(MO|Missouri)$':                  'Missouri'
-      '^(MS|Mississippi)$':               'Mississippi'
-      '^(MT|Montana)$':                   'Montana'
-      '^(NC|North Carolina)$':            'North Carolina'
-      '^(ND|North Dakota)$':              'North Dakota'
-      '^(NE|Nebraska)$':                  'Nebraska'
-      '^(NH|New Hampshire)$':             'New Hampshire'
-      '^(NJ|New Jersey)$':                'New Jersey'
-      '^(NM|New Mexico)$':                'New Mexico'
-      '^(NV|Nevada)$':                    'Nevada'
-      '^(NY|New York)$':                  'New York'
-      '^(OH|Ohio)$':                      'Ohio'
-      '^(OK|Oklahoma)$':                  'Oklahoma'
-      '^(OR|Oregon)$':                    'Oregon'
-      '^(PA|Pennsylvania)$':              'Pennsylvania'
-      '^(RI|Rhode Island)$':              'Rhode Island'
-      '^(SC|South Carolina)$':            'South Carolina'
-      '^(SD|South Dakota)$':              'South Dakota'
-      '^(TN|Tennessee)$':                 'Tennessee'
-      '^(TX|Texas)$':                     'Texas'
-      '^(UT|Utah)$':                      'Utah'
-      '^(VA|Virginia)$':                  'Virginia'
-      '^(VT|Vermont)$':                   'Vermont'
-      '^(WA|Washington)$':                'Washington'
-      '^(WI|Wisconsin)$':                 'Wisconsin'
-      '^(WV|West Virginia)$':             'West Virginia'
-      '^(WY|Wyoming)$':                   'Wyoming'
+      "^(AK|Alaska)$": "Alaska"
+      "^(AL|Alabama)$": "Alabama"
+      "^(AR|Arkansas)$": "Arkansas"
+      "^(AZ|Arizona)$": "Arizona"
+      "^(CA|California)$": "California"
+      "^(CO|Colorado)$": "Colorado"
+      "^(CT|Connecticut)$": "Connecticut"
+      "^(DE|Delaware)$": "Delaware"
+      "^(FL|Florida)$": "Florida"
+      "^(GA|Georgia)$": "Georgia"
+      "^(HI|Hawaii)$": "Hawaii"
+      "^(IA|Iowa)$": "Iowa"
+      "^(ID|Idaho)$": "Idaho"
+      "^(IL|Illinois)$": "Illinois"
+      "^(IN|Indiana)$": "Indiana"
+      "^(KS|Kansas)$": "Kansas"
+      "^(KY|Kentucky)$": "Kentucky"
+      "^(LA|Louisiana)$": "Louisiana"
+      "^(MA|Massachusetts)$": "Massachusetts"
+      "^(MD|Maryland)$": "Maryland"
+      "^(ME|Maine)$": "Maine"
+      "^(MI|Michigan)$": "Michigan"
+      "^(MN|Minnesota)$": "Minnesota"
+      "^(MO|Missouri)$": "Missouri"
+      "^(MS|Mississippi)$": "Mississippi"
+      "^(MT|Montana)$": "Montana"
+      "^(NC|North Carolina)$": "North Carolina"
+      "^(ND|North Dakota)$": "North Dakota"
+      "^(NE|Nebraska)$": "Nebraska"
+      "^(NH|New Hampshire)$": "New Hampshire"
+      "^(NJ|New Jersey)$": "New Jersey"
+      "^(NM|New Mexico)$": "New Mexico"
+      "^(NV|Nevada)$": "Nevada"
+      "^(NY|New York)$": "New York"
+      "^(OH|Ohio)$": "Ohio"
+      "^(OK|Oklahoma)$": "Oklahoma"
+      "^(OR|Oregon)$": "Oregon"
+      "^(PA|Pennsylvania)$": "Pennsylvania"
+      "^(RI|Rhode Island)$": "Rhode Island"
+      "^(SC|South Carolina)$": "South Carolina"
+      "^(SD|South Dakota)$": "South Dakota"
+      "^(TN|Tennessee)$": "Tennessee"
+      "^(TX|Texas)$": "Texas"
+      "^(UT|Utah)$": "Utah"
+      "^(VA|Virginia)$": "Virginia"
+      "^(VT|Vermont)$": "Vermont"
+      "^(WA|Washington)$": "Washington"
+      "^(WI|Wisconsin)$": "Wisconsin"
+      "^(WV|West Virginia)$": "West Virginia"
+      "^(WY|Wyoming)$": "Wyoming"
 
-      '^(AB|Alberta)$':                   'Alberta'
-      '^(BC|British Columbia)$':          'British Columbia'
-      '^(MB|Manitoba)$':                  'Manitoba'
-      '^(NB|New Brunswick)$':             'New Brunswick'
-      '^(NL|Newfoundland and Labrador)$': 'Newfoundland and Labrador'
-      '^(NS|Nova Scotia)$':               'Nova Scotia'
-      '^(ON|Ontario)$':                   'Ontario'
-      '^(PE|Prince Edward Island)$':      'Prince Edward Island'
-      '^(QC|Qu[eé]bec)$':                 'Quebec'
-      '^(SK|Saskatchewan)$':              'Saskatchewan'
+      "^(AB|Alberta)$": "Alberta"
+      "^(BC|British Columbia)$": "British Columbia"
+      "^(MB|Manitoba)$": "Manitoba"
+      "^(NB|New Brunswick)$": "New Brunswick"
+      "^(NL|Newfoundland and Labrador)$": "Newfoundland and Labrador"
+      "^(NS|Nova Scotia)$": "Nova Scotia"
+      "^(ON|Ontario)$": "Ontario"
+      "^(PE|Prince Edward Island)$": "Prince Edward Island"
+      "^(QC|Qu[eé]bec)$": "Quebec"
+      "^(SK|Saskatchewan)$": "Saskatchewan"
+
+  regions:
+    Africa & Asia:
+      CN: China
+      JP: Japan
+      KG: Kyrgyzstan
+      TW: Taiwan
+      ZA: South Africa
+    Americas:
+      AR: Argentina
+      BR: Brazil
+      CA: Canada
+      CL: Chile
+      CR: Costa Rica
+      MX: Mexico
+      PE: Peru
+      US: United States
+    Europe:
+      AT: Austria
+      BE: Belgium
+      CH: Switzerland
+      CZ: Czechia
+      DE: Germany
+      DK: Denmark
+      EE: Estonia
+      ES: Spain
+      EU: EU (unspecified) # grep-country-eu
+      FI: Finland
+      FR: France
+      GB: United Kingdom
+      GE: Georgia
+      HR: Croatia
+      HU: Hungary
+      IE: Ireland
+      IT: Italy
+      LT: Lithuania
+      LV: Latvia
+      NL: Netherlands
+      NO: Norway
+      PL: Poland
+      PT: Portugal
+      SE: Sweden
+      SK: Slovakia
+      UA: Ukraine
+    Oceania:
+      AU: Australia
+      NZ: New Zealand
+    other:
+      RU: Russia

@@ -16,7 +16,7 @@ final class StateFixerConfigurable implements StringFixerInterface
      * @param psFixerConfig $states
      */
     public function __construct(
-        #[Autowire(param: 'states')] array $states,
+        #[Autowire(param: 'state_fixes')] array $states,
         private readonly GenericStringFixer $genericStringFixer,
     ) {
         $this->fixer = new ConfigurableStringFixer($states);
