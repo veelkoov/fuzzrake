@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Psl\Iter;
 use Psl\Vec;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -37,7 +38,9 @@ final class UrlRemovalService
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire(env: 'WEBSITE_SHORT_NAME')]
         private readonly string $websiteShortName,
+        #[Autowire(env: 'PRIMARY_BASE_URL')]
         private readonly string $primaryBaseUrl,
         private readonly RouterInterface $router,
         private readonly MessageBusInterface $messageBus,

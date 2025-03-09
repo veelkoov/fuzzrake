@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Utils\Email as EmailUtils;
 use App\ValueObject\Messages\EmailNotificationV1;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -14,6 +15,7 @@ use Symfony\Component\Mime\Email;
 final class EmailService
 {
     public function __construct(
+        #[Autowire(env: 'CONTACT_EMAIL')]
         private readonly string $contactEmail,
         private readonly MailerInterface $mailer,
     ) {

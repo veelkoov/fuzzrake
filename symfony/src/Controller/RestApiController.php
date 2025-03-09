@@ -8,6 +8,7 @@ use App\Service\Captcha;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,8 @@ class RestApiController extends AbstractController
     public function __construct(
         private readonly Captcha $captcha,
         private readonly DataService $dataService,
+        #[Autowire(env: 'CONTACT_EMAIL')]
+        private readonly string $contactEmail,
     ) {
     }
 
@@ -31,12 +34,12 @@ class RestApiController extends AbstractController
 
     #[Route(path: '/api/contact/email-part.html')]
     #[Cache(maxage: 0, public: false)]
-    public function contactEmailHtml(Request $request, string $contactEmail): Response
+    public function contactEmailHtml(Request $request): Response
     {
         $ok = $this->captcha->isValid($request, 'info_emailHtml');
 
         if ($ok) {
-            $contactEmail = htmlspecialchars($contactEmail);
+            $contactEmail = htmlspecialchars($this->contactEmail);
 
             return new Response("<a href=\"mailto:$contactEmail\" class=\"btn btn-primary my-1 btn-sm\"><i class=\"fas fa-envelope\"></i> $contactEmail</a>");
         } else {
