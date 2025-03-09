@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanValue;
-use App\Utils\Collections\StringList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @method ArtisanValue|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,7 +25,7 @@ class ArtisanValueRepository extends ServiceEntityRepository
         parent::__construct($registry, ArtisanValue::class);
     }
 
-    public function getDistinctValues(string $fieldName): StringList
+    public function getDistinctValues(string $fieldName): StringSet
     {
         $result = $this->getEntityManager()->createQuery('
             SELECT DISTINCT cv.value
@@ -35,7 +35,7 @@ class ArtisanValueRepository extends ServiceEntityRepository
             ->setParameter('fieldName', $fieldName)
             ->getSingleColumnResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
     /**

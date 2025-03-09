@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\Utils\Collections\StringList;
 use App\Utils\Pagination\Pagination;
 use Psl\Json;
+use Veelkoov\Debris\StringSet;
 
 readonly class Choices
 {
     public function __construct(
         public string $makerId,
         public string $textSearch,
-        public StringList $countries,
-        public StringList $states,
-        public StringList $languages,
-        public StringList $styles,
-        public StringList $features,
-        public StringList $orderTypes,
-        public StringList $productionModels,
-        public StringList $openFor,
-        public StringList $species,
+        public StringSet $countries,
+        public StringSet $states,
+        public StringSet $languages,
+        public StringSet $styles,
+        public StringSet $features,
+        public StringSet $orderTypes,
+        public StringSet $productionModels,
+        public StringSet $openFor,
+        public StringSet $species,
         public bool $wantsUnknownPaymentPlans,
         public bool $wantsAnyPaymentPlans,
         public bool $wantsNoPaymentPlans,

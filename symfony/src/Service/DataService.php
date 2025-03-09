@@ -14,7 +14,6 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\EventRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
-use App\Utils\Collections\StringList;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Json;
 use App\ValueObject\CacheTags;
@@ -24,6 +23,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\StringSet;
 
 class DataService
 {
@@ -81,22 +81,22 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    public function getCountries(): StringList
+    public function getCountries(): StringSet
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    public function getStates(): StringList
+    public function getStates(): StringSet
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
     }
 
-    public function getOpenFor(): StringList
+    public function getOpenFor(): StringSet
     {
         return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
     }
 
-    public function getLanguages(): StringList
+    public function getLanguages(): StringSet
     {
         return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
             CacheTags::ARTISANS, __METHOD__);
