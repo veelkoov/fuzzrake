@@ -94,3 +94,9 @@
     dest:   '/etc/logrotate.d/httpd'
     mode:   '0644'
     backup: true
+
+- name: 'Setup certbot renew cronjob'
+  ansible.builtin.cron:
+    job:          '{ date; certbot renew; } >> /var/log/certbot_renew.log'
+    name:         'certbot renew'
+    special_time: 'weekly'
