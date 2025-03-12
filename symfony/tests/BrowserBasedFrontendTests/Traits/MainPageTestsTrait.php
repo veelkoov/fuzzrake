@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests\Traits;
 
-use App\Tests\TestUtils\FiltersData;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -103,11 +102,6 @@ trait MainPageTestsTrait
     {
         $this->client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
         $this->client->waitForInvisibility('#creator-updates-modal-content', 5);
-    }
-
-    private static function setupMockSpeciesFilterData(): void
-    {
-        self::persistAndFlush(FiltersData::getMockSpecies());
     }
 
     /**

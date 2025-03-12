@@ -18,6 +18,8 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 use Psl\Vec;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * @small
@@ -303,6 +305,9 @@ class UpdatesServiceTest extends TestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnCallback(fn (object $input) => clone $input);
 
-        return new UpdatesService($artisanRepoMock, $fixerMock);
+        $messageBusStub = $this->createStub(MessageBusInterface::class);
+        $loggerStub = $this->createStub(LoggerInterface::class);
+
+        return new UpdatesService($artisanRepoMock, $fixerMock, $messageBusStub, $loggerStub);
     }
 }

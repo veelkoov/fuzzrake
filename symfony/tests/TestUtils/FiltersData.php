@@ -5,36 +5,26 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use App\Entity\CreatorSpecie;
-use App\Entity\KotlinData;
 use App\Entity\Specie;
-use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Collections\Lists;
-use App\Utils\Json;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
-use JsonException;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Vec;
-use RuntimeException;
 
 class FiltersData
 {
     use UtilityClass;
 
-    public static function getMockSpecies(): KotlinData
-    {
-        return self::getSpeciesFilterKotlinData([]);
-    }
-
     /**
-     * Species, specie <-> creator relationships, and species filter data is generated in Kotlin.
+     * Species and specie <-> creator relationships is generated in Kotlin.
      * Given test creator entities, this will return all entities required for specie-based filtering to work in tests.
      *
      * @param list<Creator> $creators
      *
-     * @return list<Specie|CreatorSpecie|KotlinData>
+     * @return list<Specie|CreatorSpecie>
      */
     public static function entitiesFrom(array $creators): array
     {
@@ -55,9 +45,7 @@ class FiltersData
             )];
         }
 
-        $speciesFilterKotlinData = self::getSpeciesFilterKotlinData(Vec\keys($species));
-
-        return Vec\values([...$species, ...$creatorSpecies, $speciesFilterKotlinData]);
+        return Vec\values([...$species, ...$creatorSpecies]);
     }
 
     /**
@@ -82,49 +70,5 @@ class FiltersData
     private static function getSpecieNamesFrom(array $creators): array
     {
         return Lists::unique(array_merge(...Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes())));
-    }
-
-    /**
-     * @param list<string> $specieNames
-     */
-    private static function getSpeciesFilterKotlinData(array $specieNames): KotlinData
-    {
-        $subItems = [];
-
-        foreach ($specieNames as $specieName) {
-            $subItems[] = [
-                'label' => $specieName,
-                'value' => $specieName,
-                'count' => 0, // Does not matter in tests
-                'subItems' => [],
-            ];
-        }
-
-        try {
-            $data = Json::encode([
-                'items' => [
-                    [
-                        'label' => 'Most species',
-                        'value' => 'Most species',
-                        'count' => 0, // Does not matter in tests
-                        'subItems' => $subItems,
-                    ],
-                ],
-                'specialItems' => [
-                    [
-                        'label' => 'Unknown',
-                        'value' => '?',
-                        'count' => 0, // Does not matter in tests
-                        'type' => 'unknown',
-                    ],
-                ],
-            ]);
-        } catch (JsonException $exception) {
-            throw new RuntimeException(previous: $exception);
-        }
-
-        return (new KotlinData())
-            ->setName(KotlinDataRepository::SPECIES_FILTER)
-            ->setData($data);
     }
 }

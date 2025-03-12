@@ -12,10 +12,6 @@ object Yaml {
         mapper.registerModule(KotlinModule.Builder().build())
     }
 
-    fun <T> readFrom(filePath: String, valueType: Class<T>): T {
-        return readFrom(File(filePath), valueType)
-    }
-
     fun <T> readFrom(file: File, valueType: Class<T>): T {
         return mapper.readValue(file, valueType)
     }
