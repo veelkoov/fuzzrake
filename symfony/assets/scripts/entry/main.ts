@@ -10,7 +10,7 @@ import { requireJQ, toggle } from "../jQueryUtils";
 import "htmx.org";
 
 // @ts-expect-error I am incompetent and I don't care to learn frontend
-global.jQuery = require("jquery");
+global.jQuery = jQuery;
 
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
@@ -67,7 +67,6 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
       .parents(".subspecies")
       .prevAll(".specie");
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     $allParentSpecieDivs.each((_, div) => {
       const $subspeciesInputs = jQuery(div)
         .next("br")
@@ -102,7 +101,6 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
 
       const $inputs = $link.parents("fieldset").find("input:not(.special)");
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       $inputs.each((_, element) => {
         if (element instanceof HTMLInputElement) {
           element.checked = changeFunction(element.checked);

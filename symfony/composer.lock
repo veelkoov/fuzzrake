@@ -7663,16 +7663,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.72.0",
+            "version": "v3.73.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "900389362c43d116fee1ffc51f7878145fa61b57"
+                "reference": "ffcb8200a42045e65049af7910cfd022f631b064"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/900389362c43d116fee1ffc51f7878145fa61b57",
-                "reference": "900389362c43d116fee1ffc51f7878145fa61b57",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/ffcb8200a42045e65049af7910cfd022f631b064",
+                "reference": "ffcb8200a42045e65049af7910cfd022f631b064",
                 "shasum": ""
             },
             "require": {
@@ -7680,6 +7680,7 @@
                 "composer/semver": "^3.4",
                 "composer/xdebug-handler": "^3.0.3",
                 "ext-filter": "*",
+                "ext-hash": "*",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
                 "fidry/cpu-core-counter": "^1.2",
@@ -7754,7 +7755,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.72.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.73.1"
             },
             "funding": [
                 {
@@ -7762,7 +7763,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-13T11:25:37+00:00"
+            "time": "2025-03-19T23:42:16+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -8407,16 +8408,16 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "65f02c7e585f3c7372e42e14d3d87da034031553"
+                "reference": "8f0edc7ea5a8769cdef8aa67b7eeec4a8a9f3746"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/65f02c7e585f3c7372e42e14d3d87da034031553",
-                "reference": "65f02c7e585f3c7372e42e14d3d87da034031553",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/8f0edc7ea5a8769cdef8aa67b7eeec4a8a9f3746",
+                "reference": "8f0edc7ea5a8769cdef8aa67b7eeec4a8a9f3746",
                 "shasum": ""
             },
             "require": {
@@ -8472,9 +8473,9 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.2"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.3"
             },
-            "time": "2025-01-21T18:57:07+00:00"
+            "time": "2025-03-19T12:40:41+00:00"
         },
         {
             "name": "rawr/phpunit-data-provider",
