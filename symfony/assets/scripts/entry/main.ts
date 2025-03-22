@@ -9,9 +9,6 @@ import { requireJQ, toggle } from "../jQueryUtils";
 
 import "htmx.org";
 
-// @ts-expect-error I am incompetent and I don't care to learn frontend
-global.jQuery = jQuery;
-
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
     AgeAndSfwConfig.getInstance().getMakerMode() ||

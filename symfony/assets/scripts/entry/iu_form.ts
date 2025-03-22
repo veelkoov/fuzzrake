@@ -7,6 +7,7 @@ import { ADULTS, NO, NO_CONTACT_ALLOWED } from "../consts";
 import { toggle } from "../jQueryUtils";
 
 import "../../styles/iu_form.scss";
+import LocalFormState from "../class/LocalFormState";
 
 jQuery(() => {
   const caption = jQuery('form[name="iu_form"] input[type="submit"]').val();
@@ -121,6 +122,8 @@ function setup_start_page(): void {
 function setup_data_page(): void {
   setup_date_field_automation();
   setup_age_section_automation();
+
+  LocalFormState.setup("iu_form");
 }
 
 function setup_password_and_contact_page(): void {
