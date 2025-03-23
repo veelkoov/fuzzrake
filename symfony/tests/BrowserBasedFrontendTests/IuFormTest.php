@@ -153,17 +153,6 @@ class IuFormTest extends PantherTestCaseWithEM
 
         self::waitUntilShows('#rulesAndContinueButton');
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
-
-        $this->client->waitForVisibility('#iu_form_name', 5);
-        $this->client->submitForm('Continue', [
-            'iu_form[name]'            => 'Testing',
-            'iu_form[makerId]'         => 'MAKERID',
-            'iu_form[country]'         => 'FI',
-            'iu_form[ages]'            => 'MIXED',
-            'iu_form[nsfwWebsite]'     => 'YES',
-            'iu_form[nsfwSocial]'      => 'NO',
-        ]);
-
         $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
     }
 }

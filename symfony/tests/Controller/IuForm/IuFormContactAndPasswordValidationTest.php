@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\IuForm;
 
-use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
@@ -156,18 +155,21 @@ class IuFormContactAndPasswordValidationTest extends WebTestCaseWithEM
                 makerId: 'MAKERID',
                 password: 'previous-password',
                 contactAllowed: $previousContactPermit,
-                ages: Ages::MIXED,
-                nsfwWebsite: false,
-                nsfwSocial: false,
-                worksWithMinors: true,
             ));
         }
 
         $client->request('GET', $iuFormStartUri);
         self::skipRulesAndCaptcha($client);
-        self::skipData($client, !$itIsAnUpdate);
 
-        $formData = [];
+        $formData = [
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[name]'            => 'Test name',
+            'iu_form[country]'         => 'Test country',
+            'iu_form[ages]'            => 'MIXED',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+        ];
 
         if (null !== $password) {
             $formData['iu_form[password]'] = $password;

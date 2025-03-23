@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
@@ -38,11 +39,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form();
-        self::submitInvalid($client, $form);
-
-        self::skipData($client, true);
-
         $form = $client->getCrawler()->selectButton('Submit')->form();
         self::submitInvalid($client, $form);
     }
@@ -54,7 +50,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form();
+        $form = $client->getCrawler()->selectButton('Submit')->form();
         self::submitInvalid($client, $form);
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback',
@@ -82,7 +78,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextContains('#form_errors_top li:nth-child(6)',
             '"Maker ID" - This value should not be blank.');
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[ages]'        => 'MINORS',
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
@@ -94,7 +90,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
             'Do you accept commissions from minors or people under 18? - You must answer this question.');
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[ages]'        => 'ADULTS',
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
@@ -106,7 +102,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
             'Do you offer fursuit features intended for adult use?');
 
-        self::skipData($client, true);
+        // self::skipData($client, true); // TODO: Add/merge contact & password? Idk
     }
 
     /**
@@ -121,13 +117,15 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
-            'iu_form[name]'        => 'test-maker-555',
-            'iu_form[country]'     => 'Finland',
-            'iu_form[makerId]'     => 'MAKERID',
-            'iu_form[ages]'        => $ages,
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[name]' => 'test-maker-555',
+            'iu_form[country]' => 'Finland',
+            'iu_form[makerId]' => 'MAKERID',
+            'iu_form[ages]' => $ages,
             'iu_form[nsfwWebsite]' => $nsfwWebsite,
-            'iu_form[nsfwSocial]'  => $nsfwSocial,
+            'iu_form[nsfwSocial]' => $nsfwSocial,
+            'iu_form[contactAllowed]' => 'NO',
+            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
 
         if (null !== $doesNsfw) {
@@ -140,10 +138,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
 
         if ([] === $expectedErrors) {
             self::submitValid($client, $form);
-            self::assertSelectorTextContains('h2', 'Contact');
         } else {
             self::submitInvalid($client, $form);
-            self::assertSelectorTextContains('h2', 'Few instructions and tips');
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);
@@ -209,6 +205,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testCannotSkipUnfinishedSteps(string $step, string $slashedMakerId): void
     {
+        // TODO: This test made sense while we had two pages with data. Remove.
         $client = static::createClient();
         $client->followRedirects(true);
 
@@ -227,10 +224,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     public function cannotSkipUnfinishedStepsDataProvider(): array
     {
         return [
-            'New maker, pass+cont'      => ['contact_and_password', ''],
-            'New maker, data'           => ['data', ''],
-            'Existing maker, pass+cont' => ['contact_and_password', '/REDIREC'],
-            'Existing maker, data'      => ['data', '/REDIREC'],
+            'New maker, data'      => ['data', ''],
+            'Existing maker, data' => ['data', '/REDIREC'],
         ];
     }
 
@@ -265,22 +260,24 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush(
             self::getArtisan(makerId: 'OTHERID'),
-            self::getArtisan(makerId: 'MAKERID', ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false,
-                doesNsfw: false, worksWithMinors: false),
+            self::getArtisan(makerId: 'MAKERID', password: 'aBcDeFgH1324', contactAllowed: ContactPermit::NO,
+                ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
         );
 
         $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'OTHERID',
+            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitInvalid($client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'ANOTHER',
+            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($client, $form);
     }
@@ -296,7 +293,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]'         => 'OTHERID',
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
@@ -304,13 +301,16 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'iu_form[nsfwWebsite]'     => 'NO',
             'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[contactAllowed]'  => 'NO',
+            'iu_form[password]'        => 'aBcDeFgH1324',
         ]);
         self::submitInvalid($client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
-        $form = $client->getCrawler()->selectButton('Continue')->form([
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'ANOTHER',
+            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($client, $form);
     }

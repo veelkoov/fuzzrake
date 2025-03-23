@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
+use App\Controller\IuForm\Utils\IuState;
+use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\Data;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Collections\ArrayReader;
+use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
+use App\ValueObject\Texts;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -34,6 +38,7 @@ class IuFormDataController extends AbstractIuFormController
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && $state->artisan->hasData(Field::URL_PHOTOS),
             'router'                      => $this->router,
         ]);
+        $this->validatePassword($form, $state);
         $this->validatePhotosCopyright($form, $state->artisan);
         $this->validateMakerId($form, $state->artisan);
 
@@ -46,11 +51,24 @@ class IuFormDataController extends AbstractIuFormController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $submittedPasswordOk = $this->handlePassword($state);
+
+            $isContactAllowed = ContactPermit::NO !== $state->artisan->getContactAllowed();
+
             $state->save();
 
-            $state->markDataDone();
+            if ($this->iuFormService->submit($state->artisan)) {
+                $state->reset();
 
-            return $this->redirectToStep(RouteName::IU_FORM_CONTACT_AND_PASSWORD, $state);
+                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
+                    'isNew'          => $state->isNew() ? 'yes' : 'no',
+                    'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
+                    'contactAllowed' => $isContactAllowed ? ($state->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    // TODO 'submissionId'   =>
+                ]);
+            } else {
+                $form->addError(new FormError('There was an error while trying to submit the form. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
+            }
         }
 
         return $this->render('iu_form/data.html.twig', [
@@ -59,6 +77,7 @@ class IuFormDataController extends AbstractIuFormController
             'noindex'            => true,
             'submitted'          => $form->isSubmitted(),
             'is_update'          => !$state->isNew(),
+            'was_contact_allowed' => $state->wasContactAllowed,
             'session_start_time' => $state->getStarted(),
             'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
@@ -86,6 +105,49 @@ class IuFormDataController extends AbstractIuFormController
             }
         } catch (NoResultException) {
             // Unused ID = OK
+        }
+    }
+
+    private function validatePassword(FormInterface $form, IuState $state): void
+    {
+        if (!$form->isSubmitted() || $state->isNew()) {
+            return;
+        }
+
+        $verificationAcknowledgmentField = $form->get(Data::FLD_VERIFICATION_ACKNOWLEDGEMENT);
+
+        $wantsPasswordChange = $form->get(Data::FLD_CHANGE_PASSWORD)->getData() ?? false;
+        $contactAllowed = ContactPermit::NO !== $form->get(Data::FLD_CONTACT_ALLOWED)->getData();
+        $verificationAcknowledgment = $verificationAcknowledgmentField->getData() ?? false;
+
+        if ($wantsPasswordChange && (!$contactAllowed || !$state->wasContactAllowed) && !$verificationAcknowledgment) {
+            $errorMessage = 'Your action is required; your submission will be rejected otherwise.';
+            $verificationAcknowledgmentField->addError(new FormError($errorMessage));
+        }
+
+        if (!$wantsPasswordChange && !Password::verify($state->artisan, $state->previousPassword)) {
+            $errorMessage = 'Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.';
+            $form->get(Data::FLD_PASSWORD)->addError(new FormError($errorMessage));
+        }
+    }
+
+    /**
+     * @return bool If the I/U submission requires confirmation (password didn't match previous one)
+     */
+    private function handlePassword(IuState $data): bool
+    {
+        if ($data->isNew()) {
+            Password::encryptOn($data->artisan);
+
+            return true;
+        } elseif (Password::verify($data->artisan, $data->previousPassword)) {
+            $data->artisan->setPassword($data->previousPassword); // Was already hashed; use old hash - must not appear changed
+
+            return true;
+        } else {
+            Password::encryptOn($data->artisan); // Will become new password if confirmed with maintainer
+
+            return false;
         }
     }
 }

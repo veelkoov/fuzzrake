@@ -94,7 +94,6 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     {
         $this->client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
         self::skipRulesAndCaptcha($this->client);
-        self::skipData($this->client, false);
     }
 
     /**

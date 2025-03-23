@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class IuState
 {
     private const string CAPTCHA_DONE = 'captcha_done';
-    private const string DATA_DONE = 'data_done';
 
     public readonly string $previousPassword;
     public readonly bool $wasContactAllowed;
@@ -47,19 +46,9 @@ class IuState
         return $this->session->isDone(self::CAPTCHA_DONE);
     }
 
-    public function dataDone(): bool
-    {
-        return $this->session->isDone(self::DATA_DONE);
-    }
-
     public function markCaptchaDone(): void
     {
         $this->session->markDone(self::CAPTCHA_DONE);
-    }
-
-    public function markDataDone(): void
-    {
-        $this->session->markDone(self::DATA_DONE);
     }
 
     public function reset(): void

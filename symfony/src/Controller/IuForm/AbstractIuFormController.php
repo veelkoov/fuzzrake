@@ -57,10 +57,6 @@ abstract class AbstractIuFormController extends AbstractController
             return $this->redirectToStep(RouteName::IU_FORM_START, $state);
         }
 
-        if (!$state->dataDone() && !in_array($currentRoute, [RouteName::IU_FORM_START, RouteName::IU_FORM_DATA])) {
-            return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);
-        }
-
         return null;
     }
 

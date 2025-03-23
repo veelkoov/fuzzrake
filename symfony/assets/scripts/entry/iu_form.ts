@@ -17,12 +17,8 @@ jQuery(() => {
       setup_start_page();
       break;
 
-    case "Continue":
-      setup_data_page();
-      break;
-
     case "Submit":
-      setup_password_and_contact_page();
+      setup_data_page();
       break;
 
     default:
@@ -122,11 +118,12 @@ function setup_start_page(): void {
 function setup_data_page(): void {
   setup_date_field_automation();
   setup_age_section_automation();
+  setup_password_and_contact_automation();
 
   LocalFormState.setup("iu_form");
 }
 
-function setup_password_and_contact_page(): void {
+function setup_password_and_contact_automation(): void {
   const $forgottenPassHint = jQuery("#forgotten_password_instructions");
   const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
   const $validationAcknowledgement = jQuery("#verification_acknowledgement");
