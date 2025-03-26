@@ -1,21 +1,14 @@
 import { unique } from "../arrayUtils";
 import DarnIt from "../DarnIt";
-import Storage from "./Storage";
-
-type FieldPartState = { value: string; checked: boolean | null };
-type FieldPartsStates = Array<FieldPartState>;
-type FieldsStates = { [key: string]: FieldPartsStates };
+import LocalFormStateStorage from "./LocalFormStateStorage";
+import { FieldPartsStates, FieldsStates } from "./LocalFormStateTypes";
 
 export default class LocalFormState {
   private readonly fields: Map<string, JQuery> = new Map();
-  private readonly storagePrefix: string;
+  private readonly storage: LocalFormStateStorage;
 
-  static setup(formName: string) {
-    new this(formName);
-  }
-
-  constructor(private readonly formName: string) {
-    this.storagePrefix = `savedFormStates/${this.formName}`; // TODO: Record time of save
+  constructor(formName: string, instanceId: string) {
+    this.storage = new LocalFormStateStorage(formName, instanceId);
 
     const allFields = LocalFormState.getTrackedFields(formName);
 
@@ -34,6 +27,14 @@ export default class LocalFormState {
     this.restoreFieldsState();
 
     allFields.on("change", () => this.saveState());
+  }
+
+  public getSaveDateTime(): string {
+    return this.storage.getSaveDateTime();
+  }
+
+  public reset(): void {
+    this.storage.reset();
   }
 
   private saveState(): void {
@@ -68,13 +69,12 @@ export default class LocalFormState {
       data[fieldName] = fieldPartsStates;
     });
 
-    Storage.saveString(this.storagePrefix, JSON.stringify(data));
+    this.storage.saveState(data);
   }
 
+  // TODO: There were some issues while handling the information you entered. It is possible that once submitted, some of it may be lost. Try to finish sending the form, but even if you succeed, please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!
   private restoreFieldsState(): void {
-    const data: FieldsStates = JSON.parse(
-      Storage.getString(this.storagePrefix, "{}"),
-    );
+    const data: FieldsStates = this.storage.getSavedState();
 
     for (const fieldName in data) {
       const field = this.fields.get(fieldName);

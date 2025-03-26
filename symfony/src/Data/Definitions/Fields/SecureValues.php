@@ -20,16 +20,6 @@ final class SecureValues
     /**
      * @param array<string, psFieldValue> $where
      */
-    public static function forLogs(array &$where): void
-    {
-        self::replace(Field::PASSWORD, '[redacted]', $where);
-        self::replace(Field::EMAIL_ADDRESS, '[redacted]', $where);
-        self::replace(Field::EMAIL_ADDRESS_OBFUSCATED, '[redacted]', $where);
-    }
-
-    /**
-     * @param array<string, psFieldValue> $where
-     */
     public static function forSessionStorage(array &$where): void
     {
         self::replace(Field::PASSWORD, '', $where);

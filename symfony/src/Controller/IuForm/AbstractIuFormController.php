@@ -40,15 +40,10 @@ abstract class AbstractIuFormController extends AbstractController
     protected function prepareState(?string $makerId, Request $request): IuState
     {
         $creator = null === $makerId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($makerId);
-        $state = new IuState($this->logger, $request->getSession(), $makerId, $creator);
+        $state = new IuState($request->getSession(), $makerId, $creator);
         SecureValues::forIuForm($state->artisan);
 
         return $state;
-    }
-
-    protected function getRestoreFailedMessage(IuState $state): string
-    {
-        return $state->hasRestoreErrors() ? 'There were some issues while handling the information you entered. It is possible that once submitted, some of it may be lost. Try to finish sending the form, but even if you succeed, please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!' : '';
     }
 
     protected function redirectToUnfinishedStep(string $currentRoute, IuState $state): ?RedirectResponse

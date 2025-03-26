@@ -15,13 +15,26 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ block('title')|capitalize }}</h1>
+    <h1 id="data-creator-id" data-creator-id="{{ creator_id }}">{{ block('title')|capitalize }}</h1>
 
     {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
-    {{ include('iu_form/shared_parts/session_info.html.twig') }}
+    <div class="card border-dark mb-3">
+        <div class="card-body">
+            <p class="card-text p-0 m-0 float-start">
+                This is {% if is_update %}an update request for an existing maker{% else %}a request to add new maker{% endif %}.
+                The data has been changed last on <span id="iu-form-start-time"></span>.
+            </p>
+
+            <p class="card-text text-end p-0 m-0 float-end">
+                <button type="button" id="iu-form-reset-button" class="btn btn-sm btn-outline btn-outline-danger btn">
+                    Start over or withdraw
+                </button>
+            </p>
+        </div>
+    </div>
 
     {{ include('iu_form/shared_parts/form_errors_top.html.twig') }}
 

@@ -7,7 +7,6 @@ namespace App\Controller\IuForm;
 use App\Controller\IuForm\Utils\IuState;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
-use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\Data;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Collections\ArrayReader;
@@ -42,10 +41,6 @@ class IuFormDataController extends AbstractIuFormController
         $this->validatePhotosCopyright($form, $state->artisan);
         $this->validateMakerId($form, $state->artisan);
 
-        if (self::clicked($form, BaseForm::BTN_RESET)) {
-            $state->reset();
-        }
-
         if (null !== ($redirection = $this->redirectToUnfinishedStep(RouteName::IU_FORM_DATA, $state))) {
             return $redirection;
         }
@@ -55,10 +50,8 @@ class IuFormDataController extends AbstractIuFormController
 
             $isContactAllowed = ContactPermit::NO !== $state->artisan->getContactAllowed();
 
-            $state->save();
-
             if ($this->iuFormService->submit($state->artisan)) {
-                $state->reset();
+                // $state->reset(); TODO: Clear local storage
 
                 return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
                     'isNew'          => $state->isNew() ? 'yes' : 'no',
@@ -77,9 +70,8 @@ class IuFormDataController extends AbstractIuFormController
             'noindex'            => true,
             'submitted'          => $form->isSubmitted(),
             'is_update'          => !$state->isNew(),
+            'creator_id'         => $state->makerId ?? '(new)',
             'was_contact_allowed' => $state->wasContactAllowed,
-            'session_start_time' => $state->getStarted(),
-            'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
     }
 

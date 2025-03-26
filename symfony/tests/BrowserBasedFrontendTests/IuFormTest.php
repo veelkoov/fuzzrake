@@ -155,4 +155,27 @@ class IuFormTest extends PantherTestCaseWithEM
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
         $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
     }
+
+    // TODO: State gets reset after submitting
+
+    // public function testAbortWorksOnDataPage(): void TODO: Redo this
+    // {
+    //     $this->client->request('GET', '/iu_form/start');
+    //     self::skipRulesAndCaptcha($this->client);
+    //
+    //     $this::submitInvalidForm($this->client, 'Submit', [
+    //         'iu_form[name]' => 'Some name',
+    //         'iu_form[ages]' => 'ADULTS',
+    //     ]);
+    //
+    //     self::assertInputValueSame('iu_form[name]', 'Some name', "Partial data hasn't been saved");
+    //
+    //     $this::submitValidForm($this->client, 'Start over or withdraw', []);
+    //
+    //     self::assertSelectorTextContains('h1', 'Inclusion/update request', "Haven't been redirected back");
+    //
+    //     self::skipRulesAndCaptcha($this->client);
+    //
+    //     self::assertInputValueSame('iu_form[name]', '', 'Previously set "name" value got preserved');
+    // }
 }
