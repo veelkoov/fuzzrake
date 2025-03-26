@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
-use App\Controller\IuForm\Utils\IuState;
+use App\Controller\IuForm\Utils\IuSubject;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\IuHandling\Submission\SubmissionService;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
@@ -21,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 class IuFormDataController extends AbstractIuFormController
 {
@@ -29,34 +31,34 @@ class IuFormDataController extends AbstractIuFormController
      */
     #[Route(path: '/iu_form/data/{makerId}', name: RouteName::IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
-    public function iuFormData(Request $request, ?string $makerId = null): Response
+    public function iuFormData(Request $request, RouterInterface $router, SubmissionService $submissionService, ?string $makerId = null): Response
     {
-        $state = $this->prepareState($makerId, $request);
-
-        $form = $this->handleForm($request, $state, Data::class, [
-            Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && $state->artisan->hasData(Field::URL_PHOTOS),
-            'router'                      => $this->router,
-        ]);
-        $this->validatePassword($form, $state);
-        $this->validatePhotosCopyright($form, $state->artisan);
-        $this->validateMakerId($form, $state->artisan);
-
-        if (null !== ($redirection = $this->redirectToUnfinishedStep(RouteName::IU_FORM_DATA, $state))) {
-            return $redirection;
+        if (!$this->isCaptchaDone($request->getSession())) {
+            return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $makerId]);
         }
 
+        $subject = $this->getSubject($makerId);
+
+        $form = $this->handleForm($request, $subject, Data::class, [
+            Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
+            'router'                      => $router,
+        ]);
+        $this->validatePassword($form, $subject);
+        $this->validatePhotosCopyright($form, $subject->creator);
+        $this->validateMakerId($form, $subject->creator);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $submittedPasswordOk = $this->handlePassword($state);
+            $submittedPasswordOk = $this->handlePassword($subject);
 
-            $isContactAllowed = ContactPermit::NO !== $state->artisan->getContactAllowed();
+            $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();
 
-            if ($this->iuFormService->submit($state->artisan)) {
+            if ($submissionService->submit($subject->creator)) {
                 // $state->reset(); TODO: Clear local storage
 
                 return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
-                    'isNew'          => $state->isNew() ? 'yes' : 'no',
+                    'isNew'          => $subject->isNew ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
-                    'contactAllowed' => $isContactAllowed ? ($state->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
                     // TODO 'submissionId'   =>
                 ]);
             } else {
@@ -65,33 +67,33 @@ class IuFormDataController extends AbstractIuFormController
         }
 
         return $this->render('iu_form/data.html.twig', [
-            'form'               => $form,
-            'errors'             => $form->getErrors(true),
-            'noindex'            => true,
-            'submitted'          => $form->isSubmitted(),
-            'is_update'          => !$state->isNew(),
-            'creator_id'         => $state->makerId ?? '(new)',
-            'was_contact_allowed' => $state->wasContactAllowed,
+            'form'                => $form,
+            'errors'              => $form->getErrors(true),
+            'noindex'             => true,
+            'submitted'           => $form->isSubmitted(),
+            'is_new'              => $subject->isNew,
+            'creator_id'          => $subject->makerId ?? '(new)',
+            'was_contact_allowed' => $subject->wasContactAllowed,
         ]);
     }
 
-    private function validatePhotosCopyright(FormInterface $form, Artisan $artisan): void
+    private function validatePhotosCopyright(FormInterface $form, Creator $creator): void
     {
         $field = $form->get(Data::FLD_PHOTOS_COPYRIGHT);
 
         $isOK = 'OK' === ArrayReader::of($field->getData())->getOrDefault('[0]', null);
 
-        if ($artisan->hasData(Field::URL_PHOTOS) && !$isOK) {
+        if ($creator->hasData(Field::URL_PHOTOS) && !$isOK) {
             $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
         }
     }
 
-    private function validateMakerId(FormInterface $form, Artisan $artisan): void
+    private function validateMakerId(FormInterface $form, Creator $creator): void
     {
         try {
-            $makerIdOwner = $this->creatorRepository->findByMakerId($artisan->getMakerId());
+            $creatorIdOwner = $this->creatorRepository->findByMakerId($creator->getMakerId());
 
-            if ($makerIdOwner->getId() !== $artisan->getId()) {
+            if ($creatorIdOwner->getId() !== $creator->getId()) {
                 $form->get(Data::FLD_MAKER_ID)
                     ->addError(new FormError('This maker ID has been already used by another maker.'));
             }
@@ -100,9 +102,9 @@ class IuFormDataController extends AbstractIuFormController
         }
     }
 
-    private function validatePassword(FormInterface $form, IuState $state): void
+    private function validatePassword(FormInterface $form, IuSubject $subject): void
     {
-        if (!$form->isSubmitted() || $state->isNew()) {
+        if (!$form->isSubmitted() || $subject->isNew) {
             return;
         }
 
@@ -112,12 +114,12 @@ class IuFormDataController extends AbstractIuFormController
         $contactAllowed = ContactPermit::NO !== $form->get(Data::FLD_CONTACT_ALLOWED)->getData();
         $verificationAcknowledgment = $verificationAcknowledgmentField->getData() ?? false;
 
-        if ($wantsPasswordChange && (!$contactAllowed || !$state->wasContactAllowed) && !$verificationAcknowledgment) {
+        if ($wantsPasswordChange && (!$contactAllowed || !$subject->wasContactAllowed) && !$verificationAcknowledgment) {
             $errorMessage = 'Your action is required; your submission will be rejected otherwise.';
             $verificationAcknowledgmentField->addError(new FormError($errorMessage));
         }
 
-        if (!$wantsPasswordChange && !Password::verify($state->artisan, $state->previousPassword)) {
+        if (!$wantsPasswordChange && !Password::verify($subject->creator, $subject->previousPassword)) {
             $errorMessage = 'Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.';
             $form->get(Data::FLD_PASSWORD)->addError(new FormError($errorMessage));
         }
@@ -126,18 +128,18 @@ class IuFormDataController extends AbstractIuFormController
     /**
      * @return bool If the I/U submission requires confirmation (password didn't match previous one)
      */
-    private function handlePassword(IuState $data): bool
+    private function handlePassword(IuSubject $subject): bool
     {
-        if ($data->isNew()) {
-            Password::encryptOn($data->artisan);
+        if ($subject->isNew) {
+            Password::encryptOn($subject->creator);
 
             return true;
-        } elseif (Password::verify($data->artisan, $data->previousPassword)) {
-            $data->artisan->setPassword($data->previousPassword); // Was already hashed; use old hash - must not appear changed
+        } elseif (Password::verify($subject->creator, $subject->previousPassword)) {
+            $subject->creator->setPassword($subject->previousPassword); // Was already hashed; use old hash - must not appear changed
 
             return true;
         } else {
-            Password::encryptOn($data->artisan); // Will become new password if confirmed with maintainer
+            Password::encryptOn($subject->creator); // Will become new password if confirmed with maintainer
 
             return false;
         }

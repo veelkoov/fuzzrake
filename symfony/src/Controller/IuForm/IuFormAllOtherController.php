@@ -6,12 +6,13 @@ namespace App\Controller\IuForm;
 
 use App\Utils\DateTime\UtcClock;
 use App\ValueObject\Routing\RouteName;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 
-class IuFormAllOtherController extends AbstractIuFormController
+class IuFormAllOtherController extends AbstractController
 {
     #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]
