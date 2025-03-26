@@ -1,4 +1,3 @@
-import Storage from "../class/Storage";
 import Captcha from "../class/Captcha";
 import Checkbox from "../class/Checkbox";
 import DynamicFields from "../class/fields/DynamicFields";
@@ -6,7 +5,6 @@ import DynamicRadio from "../class/fields/DynamicRadio";
 import Radio from "../class/fields/Radio";
 import { ADULTS, NO, NO_CONTACT_ALLOWED } from "../consts";
 import { toggle } from "../jQueryUtils";
-import * as moment from "moment";
 
 import "../../styles/iu_form.scss";
 import LocalFormState from "../class/LocalFormState";
@@ -125,7 +123,8 @@ function setup_data_page(): void {
   const creatorId = jQuery("#data-creator-id").data("creator-id");
   const state = new LocalFormState("iu_form", creatorId);
   jQuery("#iu-form-start-time").html(state.getSaveDateTime());
-  jQuery("#iu-form-reset-button").on("click", () => { // TODO: Tests
+  jQuery("#iu-form-reset-button").on("click", () => {
+    // TODO: Tests
     if (confirm("Are you sure you want to discard all your changes?")) {
       state.reset();
       location.reload();
