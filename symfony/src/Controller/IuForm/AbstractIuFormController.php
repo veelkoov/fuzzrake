@@ -23,6 +23,16 @@ abstract class AbstractIuFormController extends AbstractController
     ) {
     }
 
+    protected function getSubject(?string $makerId): IuSubject
+    {
+        $creator = null === $makerId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($makerId);
+
+        $state = new IuSubject($makerId, $creator);
+        SecureValues::forIuForm($state->creator);
+
+        return $state;
+    }
+
     protected function markCaptchaDone(SessionInterface $session): void
     {
         $session->set('iu_form_captcha_done', true);
@@ -33,15 +43,5 @@ abstract class AbstractIuFormController extends AbstractController
         $result = $session->get('iu_form_captcha_done', false);
 
         return is_bool($result) ? $result : false;
-    }
-
-    protected function getSubject(?string $makerId): IuSubject
-    {
-        $creator = null === $makerId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($makerId);
-
-        $state = new IuSubject($makerId, $creator);
-        SecureValues::forIuForm($state->creator);
-
-        return $state;
     }
 }
