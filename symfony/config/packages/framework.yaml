@@ -8,7 +8,7 @@ framework:
         cookie_secure: true # Auto doesn't seem to work in our config
         cookie_samesite: strict
         storage_factory_id: session.storage.factory.native
-        cookie_lifetime: 86400 # grep-session-lifetime
+        cookie_lifetime: 1440
         gc_probability: null
 
     #esi: true
