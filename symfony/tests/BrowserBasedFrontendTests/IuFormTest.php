@@ -190,13 +190,12 @@ class IuFormTest extends PantherTestCaseWithEM
         ]);
         self::getPantherClient()->waitFor('#iu-form-data[data-step="confirmation"]');
 
-        // Go back to the new creator I/U data page, make sure B matches, submit
+        // Go back to the new creator I/U data page, make sure B matches, reset
         $this->goToTheDataPage();
         self::assertInputValueSame('iu_form[name]', 'New creator - MODIFIED');
-        $this->client->submit($this->client->getCrawler()->selectButton('Submit')->form(), [
-            'iu_form[password]' => 'test-password',
-        ]);
-        self::getPantherClient()->waitFor('#iu-form-data[data-step="confirmation"]');
+        $this->client->findElement(WebDriverBy::id('iu-form-reset-button'))->click();
+        $this->client->getWebDriver()->switchTo()->alert()->accept();
+        self::getPantherClient()->waitFor('#iu-form-data[data-step="data"]');
 
         // Go back to the 1st creator I/U data page, make sure it's clean
         $this->goToTheDataPage('CRTR001');

@@ -137,7 +137,6 @@ function setup_data_page(creatorId: string): void {
   const state = new LocalFormState("iu_form", creatorId);
   jQuery("#iu-form-start-time").html(state.getSaveDateTime());
   jQuery("#iu-form-reset-button").on("click", () => {
-    // TODO: Tests
     if (confirm("Are you sure you want to discard all your changes?")) {
       state.reset();
       location.reload();
