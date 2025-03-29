@@ -18,9 +18,11 @@ use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
 use Override;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -32,7 +34,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class Data extends BaseForm
+/**
+ * @extends AbstractType<Creator>
+ */
+class Data extends AbstractType
 {
     use RouterDependentTrait;
 
@@ -445,6 +450,13 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('notes', TextareaType::class, [
+                'label'      => 'Anything else? ("notes")',
+                'help'       => '<strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments/requests for getfursu.it maintainer or some additional information which might be added to the website in the future.',
+                'help_html'  => true,
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
                 'required'   => true,
@@ -503,6 +515,12 @@ class Data extends BaseForm
     }
 
     #[Override]
+    public function getBlockPrefix(): string
+    {
+        return 'iu_form';
+    }
+
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
@@ -518,6 +536,7 @@ class Data extends BaseForm
             'error_mapping' => [
                 'privateData.password' => 'password',
             ],
+            'data_class' => Creator::class,
         ]);
     }
 

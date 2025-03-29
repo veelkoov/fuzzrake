@@ -5,20 +5,15 @@ declare(strict_types=1);
 namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuSubject;
-use App\Controller\Traits\ButtonClickedTrait;
 use App\Controller\Traits\CreatorByCreatorIdTrait;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Form\InclusionUpdate\BaseForm;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractIuFormController extends AbstractController
 {
-    use ButtonClickedTrait;
     use CreatorByCreatorIdTrait;
 
     protected const string NEW_CREATOR_ID_PLACEHOLDER = '(new)';
@@ -48,16 +43,5 @@ abstract class AbstractIuFormController extends AbstractController
         SecureValues::forIuForm($state->creator);
 
         return $state;
-    }
-
-    /**
-     * @param class-string<BaseForm> $type
-     * @param array<string, mixed>   $options
-     */
-    protected function handleForm(Request $request, IuSubject $state, string $type, array $options): FormInterface // @phpstan-ignore missingType.generics
-    {
-        return $this
-            ->createForm($type, $state->creator, $options)
-            ->handleRequest($request);
     }
 }

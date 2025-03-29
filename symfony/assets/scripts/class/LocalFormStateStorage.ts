@@ -20,7 +20,10 @@ export default class LocalFormStateStorage {
 
   public saveState(data: FieldsStates): void {
     Storage.saveString(this.dataKey, JSON.stringify(data));
-    Storage.saveString(this.dateTimeKey, this.getCurrentDateTime());
+
+    if (!Storage.has(this.dateTimeKey)) {
+      Storage.saveString(this.dateTimeKey, this.getCurrentDateTime());
+    }
   }
 
   public getSaveDateTime(): string {

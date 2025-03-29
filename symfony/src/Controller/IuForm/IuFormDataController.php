@@ -39,10 +39,11 @@ class IuFormDataController extends AbstractIuFormController
 
         $subject = $this->getSubject($makerId);
 
-        $form = $this->handleForm($request, $subject, Data::class, [
+        $form = $this->createForm(Data::class, $subject->creator, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
-            'router'                      => $router,
-        ]);
+            'router' => $router,
+        ])
+            ->handleRequest($request);
         $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);
         $this->validateMakerId($form, $subject->creator);
