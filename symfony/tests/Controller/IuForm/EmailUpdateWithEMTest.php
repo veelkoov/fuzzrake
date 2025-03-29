@@ -31,42 +31,42 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     public function testEmailNotRequiredWhenNoContactAllowed(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::NO, '');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([]);
     }
 
     public function testGarbageEmailIgnoredWhenNoContactAllowed(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::NO, 'garbage');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([]);
     }
 
     public function testEmptyEmailRejected(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, '');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->failsSubmittingAfterSetting([]);
     }
 
     public function testGarbageEmailRejected(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->failsSubmittingAfterSetting([]);
     }
 
     public function testOldUnchangedValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'contact@example.com');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([]);
     }
 
     public function testNewValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, '');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([
             'emailAddressObfuscated' => 'contact@example.com',
         ]);
@@ -75,7 +75,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     public function testFixedValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
-        $this->skipToTheLastIuFormPage();
+        $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([
             'emailAddressObfuscated' => 'contact@example.com',
         ]);
@@ -90,7 +90,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
         );
     }
 
-    private function skipToTheLastIuFormPage(): void
+    private function skipToTheDataIuFormPage(): void
     {
         $this->client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
         self::skipRulesAndCaptcha($this->client);
