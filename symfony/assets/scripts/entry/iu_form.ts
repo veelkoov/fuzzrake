@@ -13,8 +13,9 @@ import DarnIt from "../DarnIt";
 jQuery(() => {
   const dataHolder = jQuery("#iu-form-data");
   const creatorId = dataHolder.data("creator-id");
+  const step = dataHolder.data("step");
 
-  switch (dataHolder.data("step")) {
+  switch (step) {
     case "start":
       setup_start_page();
       break;
@@ -28,11 +29,7 @@ jQuery(() => {
       break;
 
     default:
-      DarnIt.report(
-        "The page did not initialize correctly.",
-        `Failed to detect I/U form submission stage: '${dataHolder}'`,
-        true,
-      );
+      DarnIt.report("Page setup failed.", `Unknown step: '${step}'`, true);
   }
 });
 
