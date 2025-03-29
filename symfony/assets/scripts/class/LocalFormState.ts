@@ -1,5 +1,4 @@
 import { unique } from "../arrayUtils";
-import DarnIt from "../DarnIt";
 import LocalFormStateStorage from "./LocalFormStateStorage";
 import { FieldPartsStates, FieldsStates } from "./LocalFormStateTypes";
 
@@ -43,6 +42,7 @@ export default class LocalFormState {
     this.storage.reset();
   }
 
+  // TODO: Handle exceptions
   private saveState(): void {
     const data: FieldsStates = {};
 
@@ -54,12 +54,7 @@ export default class LocalFormState {
 
         const value = fieldPart.val();
         if ("string" !== typeof value) {
-          DarnIt.report(
-            "Failed to preserve form state: " + typeof value,
-            null,
-            true,
-          ); // TODO: Better message
-          return;
+          throw new TypeError(`Value of '${fieldName}' is not string.`);
         }
 
         const checkedAny = fieldPart
@@ -78,7 +73,7 @@ export default class LocalFormState {
     this.storage.saveState(data);
   }
 
-  // TODO: There were some issues while handling the information you entered. It is possible that once submitted, some of it may be lost. Try to finish sending the form, but even if you succeed, please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!
+  // TODO: Handle exceptions
   private restoreFieldsState(): void {
     const data: FieldsStates = this.storage.getSavedState();
 
@@ -86,8 +81,7 @@ export default class LocalFormState {
       const field = this.fields.get(fieldName);
 
       if (!field) {
-        DarnIt.report("Failed to restore form state: " + fieldName, null, true); // TODO: Better message
-        return;
+        throw new TypeError(`Field '${fieldName}' does not exist.`);
       }
 
       const fieldPartStates: FieldPartsStates = data[fieldName];
@@ -95,12 +89,7 @@ export default class LocalFormState {
       fieldPartStates.forEach((fieldPartState) => {
         if (null === fieldPartState.checked) {
           if (fieldPartStates.length !== 1) {
-            DarnIt.report(
-              "Failed to restore form state: " + JSON.stringify(fieldPartState),
-              null,
-              true,
-            ); // TODO: Better message
-            return;
+            throw new TypeError(`Field '${fieldName}' had multiple values.`);
           }
 
           field.val(fieldPartState.value).trigger("change");
@@ -110,12 +99,9 @@ export default class LocalFormState {
           );
 
           if (fieldPart.length !== 1) {
-            DarnIt.report(
-              "Failed to restore form state: " + JSON.stringify(fieldPartState),
-              null,
-              true,
-            ); // TODO: Better message
-            return;
+            throw new TypeError(
+              `${fieldPart.length} field '${fieldName}' parts matched value: '{fieldPartState.value}'.`,
+            );
           }
 
           fieldPart.prop("checked", fieldPartState.checked).trigger("change");
