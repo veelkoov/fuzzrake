@@ -8,23 +8,37 @@ import { toggle } from "../jQueryUtils";
 
 import "../../styles/iu_form.scss";
 import LocalFormState from "../class/LocalFormState";
+import DarnIt from "../DarnIt";
 
 jQuery(() => {
-  const caption = jQuery('form[name="iu_form"] input[type="submit"]').val();
+  const dataHolder = jQuery("#iu-form-data");
+  const creatorId = dataHolder.data("creator-id");
 
-  switch (caption) {
-    case "Agree and continue":
+  switch (dataHolder.data("step")) {
+    case "start":
       setup_start_page();
       break;
 
-    case "Submit":
-      setup_data_page();
+    case "data":
+      setup_data_page(creatorId);
+      break;
+
+    case "confirmation":
+      cleanup(creatorId);
       break;
 
     default:
-      console.error(`Failed to detect I/U form submission stage: '${caption}'`);
+      DarnIt.report(
+        "The page did not initialize correctly.",
+        `Failed to detect I/U form submission stage: '${dataHolder}'`,
+        true,
+      );
   }
 });
+
+function cleanup(creatorId: string): void {
+  LocalFormState.cleanup("iu_form", creatorId);
+}
 
 function setup_start_page(): void {
   Captcha.setupOnForm('form[name="iu_form"]');
@@ -115,12 +129,11 @@ function setup_start_page(): void {
   refresh_page();
 }
 
-function setup_data_page(): void {
+function setup_data_page(creatorId: string): void {
   setup_date_field_automation();
   setup_age_section_automation();
   setup_password_and_contact_automation();
 
-  const creatorId = jQuery("#data-creator-id").data("creator-id");
   const state = new LocalFormState("iu_form", creatorId);
   jQuery("#iu-form-start-time").html(state.getSaveDateTime());
   jQuery("#iu-form-reset-button").on("click", () => {

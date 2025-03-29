@@ -53,12 +53,11 @@ class IuFormDataController extends AbstractIuFormController
             $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();
 
             if ($submissionService->submit($subject->creator)) {
-                // $state->reset(); TODO: Clear local storage
-
                 return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
                     'isNew'          => $subject->isNew ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    'makerId'        => $makerId,
                     // TODO 'submissionId'   =>
                 ]);
             } else {
@@ -72,7 +71,7 @@ class IuFormDataController extends AbstractIuFormController
             'noindex'             => true,
             'submitted'           => $form->isSubmitted(),
             'is_new'              => $subject->isNew,
-            'creator_id'          => $subject->makerId ?? '(new)',
+            'creator_id'          => $makerId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
             'was_contact_allowed' => $subject->wasContactAllowed,
         ]);
     }

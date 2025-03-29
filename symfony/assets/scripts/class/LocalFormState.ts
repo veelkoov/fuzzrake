@@ -8,8 +8,7 @@ export default class LocalFormState {
   private readonly storage: LocalFormStateStorage;
 
   constructor(formName: string, instanceId: string) {
-    this.storage = new LocalFormStateStorage(formName, instanceId);
-
+    this.storage = LocalFormState.getStorage(formName, instanceId);
     const allFields = LocalFormState.getTrackedFields(formName);
 
     unique(
@@ -27,6 +26,13 @@ export default class LocalFormState {
     this.restoreFieldsState();
 
     allFields.on("change", () => this.saveState());
+  }
+
+  private static getStorage(
+    formName: string,
+    instanceId: string,
+  ): LocalFormStateStorage {
+    return new LocalFormStateStorage(formName, instanceId);
   }
 
   public getSaveDateTime(): string {
@@ -126,5 +132,9 @@ export default class LocalFormState {
           jQuery(htmlElement).attr("type")?.toLowerCase() ?? "",
         );
       });
+  }
+
+  public static cleanup(formName: string, instanceId: string): void {
+    this.getStorage(formName, instanceId).reset();
   }
 }

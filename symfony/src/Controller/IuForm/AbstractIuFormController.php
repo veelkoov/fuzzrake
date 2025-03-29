@@ -21,6 +21,8 @@ abstract class AbstractIuFormController extends AbstractController
     use ButtonClickedTrait;
     use CreatorByCreatorIdTrait;
 
+    protected const string NEW_CREATOR_ID_PLACEHOLDER = '(new)';
+
     public function __construct(
         protected readonly CreatorRepository $creatorRepository,
     ) {
