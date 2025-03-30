@@ -19,8 +19,6 @@
 
     {{ include('shared_parts/big_scary_error.html.twig') }}
 
-    {{ form_start(form) }}
-
     <div class="card border-dark mb-3">
         <div class="card-body">
             <p class="card-text p-0 m-0 float-start">
@@ -40,6 +38,8 @@
             </p>
         </div>
     </div>
+
+    {{ form_start(form) }}
 
     {% if errors is not empty %}
         <div class="alert alert-danger" role="alert" id="form_errors_top">

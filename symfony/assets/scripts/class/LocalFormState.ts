@@ -1,12 +1,16 @@
 import { unique } from "../arrayUtils";
 import LocalFormStateStorage from "./LocalFormStateStorage";
 import { FieldPartsStates, FieldsStates } from "./LocalFormStateTypes";
+import error from "../ErrorMessage";
 
 export default class LocalFormState {
   private readonly fields: Map<string, JQuery> = new Map();
   private readonly storage: LocalFormStateStorage;
 
-  constructor(formName: string, instanceId: string) {
+  constructor(
+    private readonly formName: string,
+    instanceId: string,
+  ) {
     this.storage = LocalFormState.getStorage(formName, instanceId);
     const allFields = LocalFormState.getTrackedFields(formName);
 
@@ -22,9 +26,45 @@ export default class LocalFormState {
       ),
     );
 
-    this.restoreFieldsState();
+    this.tryRestoringState();
 
-    allFields.on("change", () => this.saveState());
+    allFields.on("change", () => {
+      this.trySavingState();
+    });
+  }
+
+  private tryRestoringState(): void {
+    try {
+      this.restoreFieldsState();
+    } catch (exception) {
+      const form = jQuery(`form[name="${this.formName}"]`);
+
+      // Hide the form to avoid the save data being overwritten.
+      form.html("");
+
+      error("ERROR: Failed to restore previously saved draft changes.")
+        .skipGenericMessagePrefix()
+        .withConsoleDetails(exception)
+        .reportOnce();
+
+      // Try displaying the raw saved data.
+      form.append(
+        `<p><strong>If you don't want to lose the changes drafted previously, please save any and all information shown below (there could be a lot), and contact the website maintainer.</strong></p><pre>${this.storage.getRawSavedState()}</pre>`,
+      );
+    }
+  }
+
+  private trySavingState(): void {
+    try {
+      this.saveState();
+    } catch (exception) {
+      error(
+        "Failed to backup your changes. Recommendation: DO NOT CONTINUE FILLING THE FORM in this browser or device. Please save your changes anywhere outside this webpage. If you decide to continue here, you may lose all your changes in case of an error.",
+      )
+        .skipGenericMessagePrefix()
+        .withConsoleDetails(exception)
+        .reportOnce();
+    }
   }
 
   private static getStorage(
@@ -42,7 +82,6 @@ export default class LocalFormState {
     this.storage.reset();
   }
 
-  // TODO: Handle exceptions
   private saveState(): void {
     const data: FieldsStates = {};
 
@@ -60,11 +99,9 @@ export default class LocalFormState {
         const checkedAny = fieldPart
           .filter('input[type="radio"], input[type="checkbox"]')
           .prop("checked");
+        const checked = "boolean" === typeof checkedAny ? checkedAny : null;
 
-        fieldPartsStates.push({
-          value: value,
-          checked: "boolean" === typeof checkedAny ? checkedAny : null,
-        });
+        fieldPartsStates.push({ value: value, checked: checked });
       });
 
       data[fieldName] = fieldPartsStates;
@@ -73,7 +110,6 @@ export default class LocalFormState {
     this.storage.saveState(data);
   }
 
-  // TODO: Handle exceptions
   private restoreFieldsState(): void {
     const data: FieldsStates = this.storage.getSavedState();
 

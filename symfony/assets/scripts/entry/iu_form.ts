@@ -8,7 +8,7 @@ import { toggle } from "../jQueryUtils";
 
 import "../../styles/iu_form.scss";
 import LocalFormState from "../class/LocalFormState";
-import DarnIt from "../DarnIt";
+import error from "../ErrorMessage";
 
 jQuery(() => {
   const dataHolder = jQuery("#iu-form-data");
@@ -29,7 +29,9 @@ jQuery(() => {
       break;
 
     default:
-      DarnIt.report("Page setup failed.", `Unknown step: '${step}'`, true);
+      error("Page setup failed.")
+        .withConsoleDetails(`Unknown step: '${step}'.`)
+        .reportOnce();
   }
 });
 
