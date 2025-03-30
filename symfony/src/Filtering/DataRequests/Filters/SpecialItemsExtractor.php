@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
-use App\Utils\Collections\StringList;
 use InvalidArgumentException;
+use Veelkoov\Debris\StringSet;
 
 class SpecialItemsExtractor
 {
@@ -14,9 +14,9 @@ class SpecialItemsExtractor
      */
     private array $special = [];
 
-    public readonly StringList $common;
+    public readonly StringSet $common;
 
-    public function __construct(StringList $items, string ...$allowedSpecialItems)
+    public function __construct(StringSet $items, string ...$allowedSpecialItems)
     {
         foreach ($allowedSpecialItems as $specialItem) {
             $this->special[$specialItem] = $items->contains($specialItem);
