@@ -22,6 +22,8 @@ class IuFormAllOtherController extends AbstractIuFormController
             'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
             'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
             'submission_id'          => $request->get('submissionId', UtcClock::now()->format(DATE_RFC3339)),
+            'creator_id'             => $request->get('makerId', self::NEW_CREATOR_ID_PLACEHOLDER),
+            'is_new'                 => null !== $request->get('makerId'),
         ]);
     }
 

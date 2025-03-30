@@ -70,12 +70,6 @@ class ExtendedTest extends AbstractTestWithEM
         Field::WORKS_WITH_MINORS,
     ];
 
-    private const array SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
-        Field::PASSWORD,
-        Field::CONTACT_ALLOWED,
-        Field::EMAIL_ADDRESS_OBFUSCATED,
-    ];
-
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
@@ -173,17 +167,10 @@ class ExtendedTest extends AbstractTestWithEM
         self::skipRulesAndCaptcha($this->client);
 
         self::assertNotFalse($this->client->getResponse()->getContent());
-        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent(), false);
-
-        $form = $this->client->getCrawler()->selectButton('Continue')->form();
-        self::setValuesInForm($form, $newData, false);
-        self::submitValid($this->client, $form);
-
-        self::assertNotFalse($this->client->getResponse()->getContent());
-        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent(), true);
+        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent());
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form();
-        self::setValuesInForm($form, $newData, true);
+        self::setValuesInForm($form, $newData);
         self::submitValid($this->client, $form);
 
         self::assertIuSubmittedAnyResult($this->client);
@@ -194,15 +181,15 @@ class ExtendedTest extends AbstractTestWithEM
         return '/iu_form/start'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
-    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody, bool $secondPage): void
+    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody): void
     {
-        foreach (Fields::all() as $field) {
-            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
-                continue;
-            }
+        self::assertStringContainsStringIgnoringCase(self::fieldToFormFieldName(Field::NAME), $htmlBody,
+            'Sanity check - checking field presence on page - failed.');
 
+        foreach (Fields::all() as $field) {
             if (in_array($field, self::NOT_IN_FORM)) {
-                self::assertFieldIsNotPresentInForm($field, $htmlBody);
+                self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
+                    "$field->value should not be present on the page.");
                 self::assertFalse($field->isInIuForm());
                 continue;
             }
@@ -350,13 +337,9 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function setValuesInForm(Form $form, Artisan $data, bool $secondPage): void
+    private static function setValuesInForm(Form $form, Artisan $data): void
     {
         foreach (Fields::all() as $field) {
-            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
-                continue;
-            }
-
             if (in_array($field, self::NOT_IN_FORM)) {
                 continue;
             }
@@ -389,13 +372,10 @@ class ExtendedTest extends AbstractTestWithEM
             }
         }
 
-        if ($secondPage) {
-            // Select them both always "just in case"
-            self::selectCheckbox($form['iu_form[changePassword]']);
-            self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
-        } else {
-            self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
-        }
+        // Select them both always "just in case"
+        self::selectCheckbox($form['iu_form[changePassword]']);
+        self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
+        self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
     }
 
     /**
@@ -452,9 +432,9 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function assertFieldIsNotPresentInForm(Field $field, string $htmlBody): void
+    private static function fieldToFormFieldName(Field $field): string
     {
-        self::assertStringNotContainsStringIgnoringCase($field->modelName(), $htmlBody);
+        return "iu_form[{$field->modelName()}]";
     }
 
     /**

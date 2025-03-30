@@ -7,27 +7,37 @@ import { ADULTS, NO, NO_CONTACT_ALLOWED } from "../consts";
 import { toggle } from "../jQueryUtils";
 
 import "../../styles/iu_form.scss";
+import LocalFormState from "../class/LocalFormState";
+import error from "../ErrorMessage";
 
 jQuery(() => {
-  const caption = jQuery('form[name="iu_form"] input[type="submit"]').val();
+  const dataHolder = jQuery("#iu-form-data");
+  const creatorId = dataHolder.data("creator-id");
+  const step = dataHolder.data("step");
 
-  switch (caption) {
-    case "Agree and continue":
+  switch (step) {
+    case "start":
       setup_start_page();
       break;
 
-    case "Continue":
-      setup_data_page();
+    case "data":
+      setup_data_page(creatorId);
       break;
 
-    case "Submit":
-      setup_password_and_contact_page();
+    case "confirmation":
+      cleanup(creatorId);
       break;
 
     default:
-      console.error(`Failed to detect I/U form submission stage: '${caption}'`);
+      error("Page setup failed.")
+        .withConsoleDetails(`Unknown step: '${step}'.`)
+        .reportOnce();
   }
 });
+
+function cleanup(creatorId: string): void {
+  LocalFormState.cleanup("iu_form", creatorId);
+}
 
 function setup_start_page(): void {
   Captcha.setupOnForm('form[name="iu_form"]');
@@ -118,12 +128,22 @@ function setup_start_page(): void {
   refresh_page();
 }
 
-function setup_data_page(): void {
+function setup_data_page(creatorId: string): void {
   setup_date_field_automation();
   setup_age_section_automation();
+  setup_password_and_contact_automation();
+
+  const state = new LocalFormState("iu_form", creatorId);
+  jQuery("#iu-form-start-time").html(state.getSaveDateTime());
+  jQuery("#iu-form-reset-button").on("click", () => {
+    if (confirm("Are you sure you want to discard all your changes?")) {
+      state.reset();
+      location.reload();
+    }
+  });
 }
 
-function setup_password_and_contact_page(): void {
+function setup_password_and_contact_automation(): void {
   const $forgottenPassHint = jQuery("#forgotten_password_instructions");
   const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
   const $validationAcknowledgement = jQuery("#verification_acknowledgement");
