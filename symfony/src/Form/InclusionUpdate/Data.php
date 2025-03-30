@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\InclusionUpdate;
 
 use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\Validation;
 use App\Data\Definitions\OrderTypes;
@@ -13,13 +14,19 @@ use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
+use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
+use App\ValueObject\Texts;
 use Override;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -27,13 +34,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class Data extends BaseForm
+/**
+ * @extends AbstractType<Creator>
+ */
+class Data extends AbstractType
 {
     use RouterDependentTrait;
 
     final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
     final public const string FLD_MAKER_ID = 'makerId';
+    final public const string FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
+    final public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
+    final public const string FLD_PASSWORD = 'password';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -45,6 +59,7 @@ class Data extends BaseForm
         $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
         $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
+        $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
 
         $builder
             ->add('name', TextType::class, [
@@ -435,6 +450,47 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('notes', TextareaType::class, [
+                'label'      => 'Anything else? ("notes")',
+                'help'       => '<strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments/requests for getfursu.it maintainer or some additional information which might be added to the website in the future.',
+                'help_html'  => true,
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
+                'label'      => 'When is contact allowed?',
+                'required'   => true,
+                'choices'    => ContactPermit::getChoices(false),
+                'expanded'   => true,
+            ])
+            ->add('emailAddressObfuscated', TextType::class, [
+                'label'     => 'Your e-mail address',
+                'help'      => 'If you are updating your data, and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
+                'help_html' => true,
+                'required'   => true,
+                'empty_data' => '',
+            ])
+            ->add(self::FLD_PASSWORD, PasswordType::class, [
+                'label'      => Texts::UPDATES_PASSWORD,
+                'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
+                'help_html'  => true,
+                'required'   => true,
+                'empty_data' => '',
+                'attr'       => [
+                    'autocomplete' => 'section-iuform current-password',
+                ],
+            ])
+            ->add(self::FLD_CHANGE_PASSWORD, CheckboxType::class, [
+                'label'     => Texts::WANT_TO_CHANGE_PASSWORD,
+                'required'  => false,
+                'mapped'    => false,
+            ])
+            ->add(self::FLD_VERIFICATION_ACKNOWLEDGEMENT, CheckboxType::class, [
+                'label'      => 'I acknowledge that I am required to <a href="'.$contactPath.'" target="_blank">contact the maintainer</a> to confirm the submission. I realize that not doing so will result in the submission being rejected.',
+                'required'   => false,
+                'mapped'     => false,
+                'label_html' => true,
+            ])
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
@@ -451,10 +507,17 @@ class Data extends BaseForm
 
         $builder->get('since')->addModelTransformer(new SinceTransformer());
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
+        $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
 
         foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
             $builder->get($field)->addModelTransformer(new BooleanTransformer());
         }
+    }
+
+    #[Override]
+    public function getBlockPrefix(): string
+    {
+        return 'iu_form';
     }
 
     #[Override]
@@ -466,10 +529,15 @@ class Data extends BaseForm
         $resolver
             ->define(self::OPT_PHOTOS_COPYRIGHT_OK)
             ->allowedTypes('boolean')
-            ->required()
-        ;
+            ->required();
 
-        $resolver->setDefault('validation_groups', ['Default', Validation::GRP_DATA]);
+        $resolver->setDefaults([
+            'validation_groups' => ['Default', Validation::GRP_DATA, Validation::GRP_CONTACT_AND_PASSWORD],
+            'error_mapping' => [
+                'privateData.password' => 'password',
+            ],
+            'data_class' => Creator::class,
+        ]);
     }
 
     /**

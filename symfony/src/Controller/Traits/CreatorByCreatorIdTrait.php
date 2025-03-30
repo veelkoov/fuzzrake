@@ -9,7 +9,7 @@ use Doctrine\ORM\UnexpectedResultException;
 
 trait CreatorByCreatorIdTrait
 {
-    private function getCreatorByCreatorIdOrThrow404(string $creatorId): Creator
+    protected function getCreatorByCreatorIdOrThrow404(string $creatorId): Creator
     {
         try {
             return Creator::wrap($this->creatorRepository->findByMakerId($creatorId));

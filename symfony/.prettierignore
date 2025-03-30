@@ -3,6 +3,7 @@ composer.json
 composer.lock
 config/*
 !config/data_definitions
+package.json
 tests/
 
 # Libraries

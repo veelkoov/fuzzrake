@@ -7,6 +7,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../class/navbar/Navbar";
 
+// @ts-expect-error I am incompetent and I don't care to learn frontend
+global.jQuery = jQuery;
+
 jQuery(() => {
   jQuery("span.utc_datetime").each((index, element) => {
     const $span = jQuery(element);

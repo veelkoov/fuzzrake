@@ -1,4 +1,5 @@
-import DarnIt from "../DarnIt";
+import { requireJQ } from "../jQueryUtils";
+import error from "../ErrorMessage";
 
 declare global {
   interface Window {
@@ -8,11 +9,7 @@ declare global {
 
 export default class Captcha {
   public static setupOnForm(formSelector: string): void {
-    const $form = jQuery(formSelector);
-
-    if (1 !== $form.length) {
-      console.error(`Failed to match form selector: '${formSelector}'`);
-    }
+    const $form = requireJQ(formSelector);
 
     this.setupValidationCallback($form);
 
@@ -29,29 +26,13 @@ export default class Captcha {
 
     window["formRecaptchaValidationCallback"] = function (token: string): void {
       try {
-        const $tokenField = jQuery("#form_recaptcha_token");
-
-        if (1 !== $tokenField.length) {
-          DarnIt.report("Token field has not been found.", null, false);
-          return;
-        }
-
-        $tokenField.val(token);
-
-        const $form = $tokenField.parents("form");
-
-        if (1 !== $form.length) {
-          DarnIt.report("Token field's form has not been found.", null, false);
-          return;
-        }
+        requireJQ("#form_recaptcha_token").val(token);
 
         $_form.trigger("submit", [true]);
       } catch (exception) {
-        DarnIt.report(
-          "Automatic captcha failed for unknown reason.",
-          exception,
-          false,
-        );
+        error("Automatic captcha failed for unknown reason.")
+          .withConsoleDetails(exception)
+          .reportEachTime();
       }
     };
   }

@@ -114,6 +114,7 @@ parameters:
   regions:
     Africa & Asia:
       CN: China
+      HK: Hong Kong
       JP: Japan
       KG: Kyrgyzstan
       TW: Taiwan

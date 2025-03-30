@@ -6,7 +6,9 @@ namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\StartData;
 use App\Form\InclusionUpdate\Start;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Service\Captcha;
+use App\Service\DataService;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,43 +23,43 @@ class IuFormStartController extends AbstractIuFormController
      */
     #[Route(path: '/iu_form/start/{makerId}', name: RouteName::IU_FORM_START)]
     #[Cache(maxage: 0, public: false)]
-    public function iuFormStart(Request $request, ?string $makerId = null): Response
+    public function iuFormStart(Request $request, Captcha $captcha, DataService $dataService, ?string $makerId = null): Response
     {
-        $state = $this->prepareState($makerId, $request);
+        $subject = $this->getSubject($makerId);
 
         $form = $this->createForm(Start::class, new StartData(), [
-            Start::OPT_STUDIO_NAME => $this->getMakerDesc($state->artisan),
+            Start::OPT_STUDIO_NAME => $this->getCreatorDescription($subject->creator),
         ])->handleRequest($request);
 
-        $bigErrorMessage = '';
-
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->captcha->isValid($request, 'iu_form_captcha')) {
-                $state->markCaptchaDone();
+            if ($captcha->isValid($request, 'iu_form_captcha')) {
+                $this->markCaptchaDone($request->getSession());
 
-                return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);
-            } else {
-                $bigErrorMessage = 'Automatic captcha failed. Please try again. If it fails once more, try different browser, different device or different network.';
+                return $this->redirectToRoute(RouteName::IU_FORM_DATA, ['makerId' => $makerId]);
             }
+
+            $bigErrorMessage = 'Automatic captcha failed. Please try again. If it fails once more, try different browser, different device or different network.';
+        } else {
+            $bigErrorMessage = '';
         }
 
         return $this->render('iu_form/start.html.twig', [
-            'do_not_track'      => true,
-            'is_new'            => null === $state->artisan->getId(),
+            'is_new'            => $subject->isNew,
+            'noindex'           => true,
             'form'              => $form->createView(),
             'big_error_message' => $bigErrorMessage,
-            'ooo_notice'        => $this->dataService->getOooNotice(),
+            'ooo_notice'        => $dataService->getOooNotice(),
         ]);
     }
 
-    private function getMakerDesc(Artisan $artisan): ?string
+    private function getCreatorDescription(Creator $creator): ?string
     {
-        if (null === $artisan->getId()) {
+        if (null === $creator->getId()) {
             return null;
         }
 
-        $makerId = '' !== $artisan->getMakerId() ? ' ('.$artisan->getMakerId().')' : '';
+        $makerId = '' !== $creator->getMakerId() ? ' ('.$creator->getMakerId().')' : '';
 
-        return $artisan->getName().$makerId;
+        return $creator->getName().$makerId;
     }
 }

@@ -45,6 +45,10 @@ export default class Storage {
     }
   }
 
+  public static has(key: string): boolean {
+    return this.get(key) !== null;
+  }
+
   protected static get(key: string): string | null {
     try {
       if (this.removeExpired(key)) {

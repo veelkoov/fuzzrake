@@ -21,13 +21,13 @@ parameters:
     -
       message: '#^Method App\\Controller\\[^ ]+ has parameter \$form with generic interface Symfony\\Component\\Form\\FormInterface but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 9
+      count: 8
       path: src/Controller/*
 
     -
       message: '#^Class App\\Form\\[^ ]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 8
+      count: 7
       path: src/Form/*
 
     -
