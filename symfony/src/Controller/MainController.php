@@ -10,6 +10,7 @@ use App\Filtering\DataRequests\RequestParser;
 use App\Filtering\FiltersData\FiltersService;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\DataService;
+use App\Service\FurryCaptcha;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Creator\CreatorId;
 use App\ValueObject\Routing\RouteName;
@@ -100,5 +101,13 @@ class MainController extends AbstractController
 
             return throw new BadRequestException();
         }
+    }
+
+    #[Route(path: '/test-captcha')]
+    public function testCaptcha(Request $request, FurryCaptcha $captcha): Response
+    {
+        return $this->render('captcha_test.html.twig', [
+            'captcha' => $captcha->getCurrentChallenge($request->getSession()),
+        ]);
     }
 }

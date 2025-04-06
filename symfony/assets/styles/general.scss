@@ -55,3 +55,11 @@ span.utc_datetime {
 .references :target {
   background-color: #ffec00;
 }
+
+.captcha {
+  .question {
+    label {
+      font-size: 48px;
+    }
+  }
+}
