@@ -19,7 +19,7 @@ final class DbSpeciesService
      *
      * @var DStringMap<Specie>|null
      */
-    private ?DStringMap $nameToSpecieE = null;
+    private ?DStringMap $nameToSpecie = null;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -31,9 +31,9 @@ final class DbSpeciesService
     /**
      * @return DStringMap<Specie>
      */
-    private function getNameToSpecieE(): DStringMap
+    private function getNameToSpecie(): DStringMap
     {
-        return $this->nameToSpecieE ??= DStringMap::fromValues(
+        return $this->nameToSpecie ??= DStringMap::fromValues(
             $this->speciesRepository->findAll(),
             static fn (Specie $specie) => $specie->getName(),
         );
@@ -41,7 +41,7 @@ final class DbSpeciesService
 
     public function assureSpeciesWithGivenNamesExist(StringSet $specieNames): void
     {
-        $missingSpecieNames = $specieNames->minusAll($this->getNameToSpecieE()->getKeys());
+        $missingSpecieNames = $specieNames->minusAll($this->getNameToSpecie()->getKeys());
         $this->logger->info('Creating missing species in the DB.', ['missingSpecieNames' => $missingSpecieNames]);
 
         foreach ($missingSpecieNames as $specieName) {
@@ -50,26 +50,26 @@ final class DbSpeciesService
             $specieEntity = (new Specie())->setName($specieName);
             $this->entityManager->persist($specieEntity);
 
-            $this->getNameToSpecieE()->set($specieName, $specieEntity);
+            $this->getNameToSpecie()->set($specieName, $specieEntity);
         }
     }
 
     public function removeSpeciesExceptForGivenNames(StringSet $specieNames): void
     {
-        $obsoleteSpecieNames = $this->getNameToSpecieE()->getKeys()->minusAll($specieNames);
+        $obsoleteSpecieNames = $this->getNameToSpecie()->getKeys()->minusAll($specieNames);
         $this->logger->info('Removing obsolete species from the DB.', ['missingSpecieNames' => $obsoleteSpecieNames]);
 
         foreach ($obsoleteSpecieNames as $obsoleteSpecieName) {
             $this->logger->info("Removing '$obsoleteSpecieName' specie...");
 
-            $this->entityManager->remove($this->getNameToSpecieE()->get($obsoleteSpecieName));
+            $this->entityManager->remove($this->getNameToSpecie()->get($obsoleteSpecieName));
         }
     }
 
     public function getSpecieByName(string $specieName): Specie
     {
         try {
-            return $this->getNameToSpecieE()->get($specieName);
+            return $this->getNameToSpecie()->get($specieName);
         } catch (MissingKeyException) {
             throw new SpecieException("Specie '$specieName' does not exist in the database.");
         }
