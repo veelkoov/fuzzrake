@@ -266,11 +266,10 @@ function action() {
         'get-submissions') action_get_submissions ;;
 
         'gradle')       run_gradle "$@" ;;
-        'species')      run_gradle run --args sync-species "$@" ;;
         'miniatures')   run_gradle run --args update-miniatures "$@" ;;
 
         # Ugly but hopefully truly temporary
-        'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake sync-species && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
+        'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
 
         *) error "Unknown action: '$action'" ;;
     esac
