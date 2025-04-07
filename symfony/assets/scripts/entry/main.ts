@@ -1,4 +1,3 @@
-import "../../3rd-party/flag-icon-css/css/flag-icon.css";
 import "../../styles/main.scss";
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checklist from "../main/Checklist";

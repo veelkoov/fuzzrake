@@ -9,7 +9,7 @@
             'matched-maker-id': creator.hasMakerId(searched_creator_id),
         }) }}">
         <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
-            <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>&nbsp;
+            <span class="fi fi-{{ creator.country|lower }}"></span>&nbsp;
 
             {{- creator.name -}}
 
