@@ -11,6 +11,7 @@ use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @small
@@ -196,5 +197,25 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
     }
 
-    // TODO: Test 2nd level resolve
+    public function resolveForFiltersDataProvider(): DataProvider
+    {
+        return DataProvider::tuples(
+            [new StringSet(), new StringSet()],
+            [StringSet::of('Deers'),        StringSet::of('Deers', 'With antlers', 'Most species', 'Mammals')],
+            [StringSet::of('With antlers'), StringSet::of('With antlers', 'Most species')],
+            [StringSet::of('Other'),        StringSet::of('Other')],
+        );
+    }
+
+    /**
+     * @dataProvider resolveForFiltersDataProvider
+     */
+    public function testResolveForFilters(StringSet $speciesNames, StringSet $expected): void
+    {
+        $subject = new CreatorSpeciesResolver($this->getResolveDoesSpecies());
+
+        $result = $subject->resolveForFilters($speciesNames);
+
+        self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
+    }
 }
