@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Species\Hierarchy;
 
 use App\Species\SpecieException;
+use Override;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\StringSet;
 
@@ -19,6 +20,7 @@ class MutableSpecies implements Species
         $this->asTree = new SpecieSet();
     }
 
+    #[Override]
     public function getByName(string $name): Specie
     {
         try {
@@ -28,26 +30,31 @@ class MutableSpecies implements Species
         }
     }
 
+    #[Override]
     public function getNames(): StringSet
     {
         return $this->byName->getNames()->sorted();
     }
 
+    #[Override]
     public function getVisibleNames(): StringSet
     {
         return $this->byName->filterValues(static fn (Specie $specie): bool => !$specie->hidden)->getNames();
     }
 
+    #[Override]
     public function hasName(string $name): bool
     {
         return $this->byName->hasKey($name);
     }
 
+    #[Override]
     public function getAsTree(): SpecieSet
     {
         return $this->asTree;
     }
 
+    #[Override]
     public function getFlat(): SpecieSet
     {
         return $this->byName->getSpecieSet();
