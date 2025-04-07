@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use App\Species\Hierarchy\Specie;
+use App\Species\Hierarchy\Species;
+use App\Species\Hierarchy\SpecieSet;
 use App\Utils\Collections\StringList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Pair;

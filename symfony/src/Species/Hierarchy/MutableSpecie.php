@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Species;
+namespace App\Species\Hierarchy;
 
+use App\Species\SpecieException;
 use Override;
 use Psl\Vec;
 

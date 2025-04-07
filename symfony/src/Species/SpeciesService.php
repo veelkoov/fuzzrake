@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Species;
 
+use App\Species\Hierarchy\MutableSpecie;
+use App\Species\Hierarchy\MutableSpecies;
+use App\Species\Hierarchy\Species;
 use App\Utils\Regexp\Replacements;
 use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

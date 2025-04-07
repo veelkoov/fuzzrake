@@ -12,6 +12,9 @@ use App\Filtering\FiltersData\Item;
 use App\Filtering\FiltersData\SpecialItem;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Repository\CreatorSpecieRepository;
+use App\Species\Hierarchy\Specie;
+use App\Species\Hierarchy\Species;
+use App\Species\Hierarchy\SpecieSet;
 use Veelkoov\Debris\StringIntMap;
 
 final class SpeciesFilterService

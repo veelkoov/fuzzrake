@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Species;
+namespace App\Species\Hierarchy;
 
 use Veelkoov\Debris\StringSet;
 

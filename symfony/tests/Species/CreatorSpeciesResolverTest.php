@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Species;
 
 use App\Species\CreatorSpeciesResolver;
-use App\Species\MutableSpecies;
-use App\Species\Specie;
-use App\Species\Species;
+use App\Species\Hierarchy\MutableSpecies;
+use App\Species\Hierarchy\Specie;
+use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;

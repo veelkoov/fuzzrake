@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Species;
+namespace App\Tests\Species\Hierarchy;
 
-use App\Species\MutableSpecie;
+use App\Species\Hierarchy\MutableSpecie;
 use App\Species\SpecieException;
 use PHPUnit\Framework\TestCase;
 

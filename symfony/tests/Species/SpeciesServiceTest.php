@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Species;
 
+use App\Species\Hierarchy\Species;
 use App\Species\SpecieException;
-use App\Species\Species;
 use App\Species\SpeciesService;
 use App\Tests\TestUtils\DataDefinitions;
 use PHPUnit\Framework\TestCase;

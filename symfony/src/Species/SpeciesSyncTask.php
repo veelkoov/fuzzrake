@@ -9,6 +9,7 @@ use App\Entity\CreatorSpecie;
 use App\Entity\Specie as SpecieE;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Repository\SpecieRepository;
+use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,7 +51,7 @@ final class SpeciesSyncTask // TODO: Tests
         $this->entityManager->flush();
     }
 
-    private function syncCreatorSpecies(Creator $creator, StringSpecieMap $dbSpecies): void
+    private function syncCreatorSpecies(Creator $creator, StringDbSpecieMap $dbSpecies): void
     {
         $desiredSpecieNames = $this->getResolvedDoes($creator);
 
@@ -80,7 +81,7 @@ final class SpeciesSyncTask // TODO: Tests
         }
     }
 
-    private function createMissingSpeciesAddingToMap(StringSpecieMap $dbSpecies): void
+    private function createMissingSpeciesAddingToMap(StringDbSpecieMap $dbSpecies): void
     {
         $missingNames = $this->species->getVisibleNames()->minusAll($dbSpecies->getNames());
 
@@ -94,7 +95,7 @@ final class SpeciesSyncTask // TODO: Tests
         }
     }
 
-    private function removeObsoleteSpecies(StringSpecieMap $dbSpecies): void
+    private function removeObsoleteSpecies(StringDbSpecieMap $dbSpecies): void
     {
         foreach ($dbSpecies->getNames()->minusAll($this->species->getVisibleNames()) as $unnededSpecieName) {
             $this->logger->info("Removing '$unnededSpecieName' specie...");
@@ -103,9 +104,9 @@ final class SpeciesSyncTask // TODO: Tests
         }
     }
 
-    private function getSpeciesFromDatabase(): StringSpecieMap
+    private function getSpeciesFromDatabase(): StringDbSpecieMap
     {
-        return StringSpecieMap::fromValues(
+        return StringDbSpecieMap::fromValues(
             $this->speciesRepository->findAll(),
             static fn (SpecieE $specie) => $specie->getName(),
         );
