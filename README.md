@@ -32,8 +32,6 @@ To make tests in `@small` group work:
 
 To make tests in `@medium` group work:
 * All the above setup
-* `git submodule init`
-* `git submodule update`
 * `./toolbox yarn install`
 * `./toolbox yep`
 * `./toolbox pum`
