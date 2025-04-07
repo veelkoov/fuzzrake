@@ -31,6 +31,7 @@
     "@types/jquery": "^3.5.32",
     "bootstrap": "^5.3.3",
     "core-js": "^3.38.0",
+    "flag-icons": "^7.3.2",
     "htmx.org": "^2.0.1",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
