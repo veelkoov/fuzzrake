@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Species\Hierarchy;
 
-use App\Utils\Collections\StringList;
 use Veelkoov\Debris\Base\DSet;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @extends DSet<Specie>
  */
 class SpecieSet extends DSet
 {
-    public function getNames(): StringList
+    public function getNames(): StringSet
     {
-        return StringList::mapFrom($this, static fn (Specie $specie) => $specie->getName());
+        return StringSet::mapFrom($this, static fn (Specie $specie) => $specie->getName());
     }
 }

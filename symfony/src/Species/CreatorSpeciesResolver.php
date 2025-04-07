@@ -15,7 +15,7 @@ use Veelkoov\Debris\StringSet;
 final class CreatorSpeciesResolver
 {
     /**
-     * @var array<string, StringList>
+     * @var array<string, StringSet>
      */
     private array $selfAndDescendantsCache = [];
 
@@ -29,6 +29,27 @@ final class CreatorSpeciesResolver
         $this->other = $this->species->getByName('Other'); // grep-species-other
     }
 
+    /**
+     * Based on the list of names of all the species done by the creator, return list of names
+     * of all the species available in the filters, which should match the creator.
+     */
+    public function resolveForFilters(StringSet $speciesNames): StringSet
+    {
+        return $this->species->getFlat()->filter(function (Specie $specie) use ($speciesNames) {
+            if ($specie->getHidden()) {
+                return false;
+            }
+
+            $thisAndDescendantsNames = $specie->getThisAndDescendants()->getNames();
+
+            return $speciesNames->any(static fn (string $specieName) => $thisAndDescendantsNames->contains($specieName));
+        })->getNames();
+    }
+
+    /**
+     * Based on the list of species done by the creator and the exceptions ("doesn't"),
+     * calculate a list of names of all the species actually done.
+     */
     public function resolveDoes(StringList $speciesDoes, StringList $speciesDoesnt): StringSet
     {
         $assumedSpeciesDoes = $speciesDoes->isEmpty() && $speciesDoesnt->isNotEmpty()
@@ -86,7 +107,7 @@ final class CreatorSpeciesResolver
         });
     }
 
-    private function getVisibleSelfAndDescendants(Specie $specie): StringList
+    private function getVisibleSelfAndDescendants(Specie $specie): StringSet
     {
         return $this->selfAndDescendantsCache[$specie->getName()] ??= $specie->getThisAndDescendants()
             ->filter(static fn (Specie $specie) => !$specie->getHidden())->getNames();

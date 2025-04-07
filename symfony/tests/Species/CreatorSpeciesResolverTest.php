@@ -17,13 +17,6 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
  */
 class CreatorSpeciesResolverTest extends TestCase
 {
-    // A test case
-    //    data class TC<T>(
-    //        $does: Collection<String>,
-    //        $doesnt: Collection<String>,
-    //        $expected: T,
-    //    )
-
     /**
      * - Most species
      *   - Hidden
@@ -202,4 +195,6 @@ class CreatorSpeciesResolverTest extends TestCase
 
         self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
     }
+
+    // TODO: Test 2nd level resolve
 }

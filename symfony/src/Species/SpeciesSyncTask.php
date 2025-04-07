@@ -7,15 +7,15 @@ namespace App\Species;
 use App\Entity\Artisan as Creator;
 use App\Entity\CreatorSpecie;
 use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Veelkoov\Debris\StringSet;
 
-final class SpeciesSyncTask // TODO: Tests
+final class SpeciesSyncTask
 {
     private readonly Species $species;
     private readonly CreatorSpeciesResolver $resolver;
@@ -72,21 +72,13 @@ final class SpeciesSyncTask // TODO: Tests
         }
     }
 
-    private function resolveSpecies(Creator $creator): StringList
+    public function resolveSpecies(Creator $creator): StringSet
     {
         $doneSpecies = $this->resolver->resolveDoes(
             StringList::unpack($creator->getSpeciesDoes()),
             StringList::unpack($creator->getSpeciesDoesnt()),
         );
 
-        return $this->species->getFlat()->filter(function (Specie $specie) use ($doneSpecies) {
-            if ($specie->getHidden()) {
-                return false;
-            }
-
-            $thisAndDescendantsNames = $specie->getThisAndDescendants()->getNames();
-
-            return $doneSpecies->any(static fn (string $specieName) => $thisAndDescendantsNames->contains($specieName));
-        })->getNames();
+        return $this->resolver->resolveForFilters($doneSpecies);
     }
 }
