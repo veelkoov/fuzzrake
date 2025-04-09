@@ -13,11 +13,10 @@ use App\Filtering\FiltersData\Data\SpecialItemList;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
-use App\Repository\KotlinDataRepository;
 use App\Service\Cache;
 use App\Service\CountriesDataService;
 use App\Service\DataService;
-use App\Utils\Enforce;
+use App\Species\SpeciesFilterService;
 use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Vec;
@@ -29,8 +28,8 @@ class FiltersService
         private readonly CreatorOfferStatusRepository $offerStatusRepository,
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
-        private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly DataService $dataService,
+        private readonly SpeciesFilterService $speciesFilterService,
         private readonly Cache $cache,
     ) {
     }
@@ -50,7 +49,7 @@ class FiltersService
             $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
             $this->getStatesFilterData(),
-            $this->getSpeciesFilterData(),
+            $this->speciesFilterService->getFilterData(),
             $this->getInactiveFilterData(),
         ), CacheTags::ARTISANS, __METHOD__);
     }
@@ -103,54 +102,6 @@ class FiltersService
         }
 
         return FilterData::from($result);
-    }
-
-    private function getSpeciesFilterData(): FilterData
-    {
-        $rawFilterData = $this->kotlinDataRepository->getArray(KotlinDataRepository::SPECIES_FILTER);
-
-        return $this->rawToFilterData($rawFilterData);
-    }
-
-    /**
-     * @param array<mixed> $rawFilterData
-     */
-    private function rawToFilterData(array $rawFilterData): FilterData
-    {
-        $specialItems = SpecialItemList::mapFrom(
-            Enforce::array($rawFilterData['specialItems'] ?? []),
-            function (mixed $rawSpecialItem): SpecialItem {
-                $rawSpecialItem = Enforce::array($rawSpecialItem);
-
-                $value = Enforce::string($rawSpecialItem['value'] ?? '');
-                $label = Enforce::string($rawSpecialItem['label'] ?? '');
-                $count = Enforce::int($rawSpecialItem['count'] ?? 0);
-
-                return new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
-            },
-        );
-
-        $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
-
-        return new FilterData($items, $specialItems);
-    }
-
-    /**
-     * @param array<mixed> $rawItems
-     */
-    private function rawToItems(array $rawItems): ItemList
-    {
-        return ItemList::mapFrom($rawItems, function (mixed $rawItem): Item {
-            $rawItem = Enforce::array($rawItem);
-
-            return new Item(
-                Enforce::string($rawItem['value'] ?? ''),
-                Enforce::string($rawItem['label'] ?? ''),
-                Enforce::int($rawItem['count'] ?? 0),
-                $this->rawToItems(Enforce::array($rawItem['subItems'] ?? [])),
-            );
-        },
-        );
     }
 
     /**

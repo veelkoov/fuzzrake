@@ -60,8 +60,6 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
      */
     public function testAgeAndSfwFilters(bool $userIsMinor, ?bool $userWantsSfw): void
     {
-        self::setupMockSpeciesFilterData();
-
         self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
 
         $creators = [];

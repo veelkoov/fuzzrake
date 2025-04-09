@@ -21,7 +21,7 @@ class CreatorSpecie
     #[ORM\JoinColumn('specie_id', nullable: false)]
     private Specie $specie;
 
-    #[ORM\ManyToOne(Artisan::class)]
+    #[ORM\ManyToOne(Artisan::class, inversedBy: 'species')]
     #[ORM\JoinColumn('artisan_id', nullable: false)]
     private Artisan $creator;
 

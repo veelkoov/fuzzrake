@@ -11,7 +11,6 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Utils\Collections\Arrays;
-use App\Utils\Collections\StringList;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
@@ -21,6 +20,7 @@ use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
 use Psl\Vec;
+use Veelkoov\Debris\StringSet;
 
 class QueryChoicesAppender
 {
@@ -322,7 +322,7 @@ class QueryChoicesAppender
         $builder->andWhere($condition);
     }
 
-    private function applyCreatorValuesCount(QueryBuilder $builder, StringList $selectedItems, Field $primaryField,
+    private function applyCreatorValuesCount(QueryBuilder $builder, StringSet $selectedItems, Field $primaryField,
         ?Field $otherField = null, bool $allInsteadOfAny = false): void
     {
         $conditions = [];

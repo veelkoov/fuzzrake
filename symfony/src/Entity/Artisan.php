@@ -122,12 +122,19 @@ class Artisan implements Stringable
     #[ORM\OneToMany(targetEntity: ArtisanValue::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $values;
 
+    /**
+     * @var Collection<int, CreatorSpecie>
+     */
+    #[ORM\OneToMany(targetEntity: CreatorSpecie::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $species;
+
     public function __construct()
     {
         $this->urls = new ArrayCollection();
         $this->commissions = new ArrayCollection();
         $this->makerIds = new ArrayCollection();
         $this->values = new ArrayCollection();
+        $this->species = new ArrayCollection();
     }
 
     public function __clone()
@@ -166,6 +173,13 @@ class Artisan implements Stringable
 
         foreach ($valuesToClone as $value) {
             $this->addValue(clone $value);
+        }
+
+        $speciesToClone = $this->species;
+        $this->species = new ArrayCollection();
+
+        foreach ($speciesToClone as $specie) {
+            $this->addSpecie(clone $specie);
         }
     }
 
@@ -568,6 +582,31 @@ class Artisan implements Stringable
     public function removeValue(ArtisanValue $value): self
     {
         $this->values->removeElement($value);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CreatorSpecie>
+     */
+    public function getSpecies(): Collection
+    {
+        return $this->species;
+    }
+
+    public function addSpecie(CreatorSpecie $specie): self
+    {
+        if (!$this->species->contains($specie)) {
+            $this->species[] = $specie;
+            $specie->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecie(CreatorSpecie $specie): self
+    {
+        $this->species->removeElement($specie);
 
         return $this;
     }

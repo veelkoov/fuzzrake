@@ -27,6 +27,7 @@ use Generator;
 use Psl\Dict;
 use Psl\Vec;
 use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @extends ServiceEntityRepository<Artisan>
@@ -183,24 +184,24 @@ class ArtisanRepository extends ServiceEntityRepository
         return (int) $resultData;
     }
 
-    public function getDistinctCountries(): StringList
+    public function getDistinctCountries(): StringSet
     {
         $result = $this->createQueryBuilder('a')
             ->select('DISTINCT a.country')
             ->getQuery()
             ->getSingleColumnResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    public function getDistinctStates(): StringList
+    public function getDistinctStates(): StringSet
     {
         $result = $this->createQueryBuilder('a')
             ->select('DISTINCT a.state')
             ->getQuery()
             ->getSingleColumnResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
     public function getPaymentPlans(): StringList
