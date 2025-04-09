@@ -19,8 +19,8 @@ class FiltersData
     use UtilityClass;
 
     /**
-     * Species and specie <-> creator relationships is generated in Kotlin.
-     * Given test creator entities, this will return all entities required for specie-based filtering to work in tests.
+     * Species and specie <-> creator relationships are created in a complex process. To mock the data for tests,
+     * given test creator entities, this will return all entities required for specie-based filtering to "work".
      *
      * @param list<Creator> $creators
      *
@@ -49,16 +49,12 @@ class FiltersData
     }
 
     /**
-     * Resolving species done by a creator is now being done by Kotlin. This class supports only simple test cases.
-     * Throw an exception if SPECIES_DOESNT got used - it should not have been.
-     *
      * @param list<Creator> $creators
      */
     private static function makeSureNoCreatorUsesSpeciesDoesnt(array $creators): void
     {
         if (Iter\any($creators, fn (Creator $creator) => [] !== $creator->getSpeciesDoesnt())) {
-            // Since resolving species takes place on Kotlin side, we can only test simple cases
-            throw new InvalidArgumentException('Cannot test the "species doesn\'t"');
+            throw new InvalidArgumentException(__CLASS__.' does not support resolving species. Creators cannot have "species doesn\'t" specified.');
         }
     }
 

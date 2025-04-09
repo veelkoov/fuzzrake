@@ -48,7 +48,6 @@ class IuFormStartController extends AbstractIuFormController
             'noindex'           => true,
             'form'              => $form->createView(),
             'big_error_message' => $bigErrorMessage,
-            'ooo_notice'        => $dataService->getOooNotice(),
         ]);
     }
 

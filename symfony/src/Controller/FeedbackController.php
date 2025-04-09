@@ -23,7 +23,6 @@ class FeedbackController extends AbstractController
     public function __construct(
         private readonly RouterInterface $router,
         private readonly MessageBusInterface $messageBus,
-        private readonly DataService $dataService,
         private readonly Captcha $captcha,
     ) {
     }
@@ -60,7 +59,6 @@ class FeedbackController extends AbstractController
         return $this->render('feedback/feedback.html.twig', [
             'form'              => $form,
             'big_error_message' => $big_error_message,
-            'ooo_notice'        => $this->dataService->getOooNotice(),
         ]);
     }
 

@@ -8,7 +8,6 @@ use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\EventRepository;
-use App\Repository\KotlinDataRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
@@ -58,7 +57,6 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
             self::createMock(ArtisanVolatileDataRepository::class),
             self::createMock(CreatorOfferStatusRepository::class),
             self::createMock(EventRepository::class),
-            self::createMock(KotlinDataRepository::class),
             CacheUtils::getArrayBased(),
             self::createMock(LoggerInterface::class),
         );

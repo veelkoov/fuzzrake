@@ -12,7 +12,6 @@ use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\EventRepository;
-use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Json;
@@ -33,7 +32,6 @@ class DataService
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly EventRepository $eventRepository,
-        private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
@@ -100,11 +98,6 @@ class DataService
     {
         return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
             CacheTags::ARTISANS, __METHOD__);
-    }
-
-    public function getOooNotice(): string
-    {
-        return $this->kotlinDataRepository->getString(KotlinDataRepository::OOO_NOTICE);
     }
 
     public function countActiveCreatorsHavingAnyOf(Field ...$fields): int
