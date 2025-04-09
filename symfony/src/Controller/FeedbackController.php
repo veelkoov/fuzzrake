@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Form\FeedbackType;
 use App\Service\Captcha;
-use App\Service\DataService;
 use App\ValueObject\Feedback;
 use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;

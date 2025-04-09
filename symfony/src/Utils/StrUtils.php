@@ -36,11 +36,6 @@ final class StrUtils
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
-    public static function ucfirst(string $input): string
-    {
-        return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
-    }
-
     /**
      * @param psFieldValue $value
      */

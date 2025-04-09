@@ -6,7 +6,6 @@ namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\String\ConfigurableStringFixer;
 use App\Data\Fixer\String\GenericStringFixer;
-use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -51,7 +50,7 @@ final class LanguagesFixer extends AbstractListFixer
                 throw new UnbelievableRuntimeException($e);
             } // @codeCoverageIgnoreEnd
 
-            $language = StrUtils::ucfirst($language);
+            $language = mb_ucfirst($language);
 
             return $language.($limited ? ' (limited)' : '');
         });
