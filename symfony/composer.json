@@ -18,6 +18,7 @@
         "azjezz/psl": "^2.3.0",
         "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "*",
         "google/recaptcha": "^1.2",
         "nette/utils": "^3.2",
