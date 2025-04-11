@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Utils\Traits\UtilityClass;
 use TRegx\CleanRegex\Pattern;
+use Veelkoov\Debris\StringList;
 
 final class Email
 {
@@ -19,19 +20,19 @@ final class Email
 
     public static function obfuscate(string $input): string
     {
-        return implode('@', array_map(function (string $input): string {
-            $len = mb_strlen($input);
+        return StringList::split('@', $input)
+            ->map(function (string $input): string {
+                $len = mb_strlen($input);
 
-            if ($len >= 3) {
-                $pLen = max(1, (int) ($len / 4));
-
-                return mb_substr($input, 0, $pLen).str_repeat('*', $len - 2 * $pLen).mb_substr($input, -$pLen);
-            } elseif (2 == $len) {
-                return mb_substr($input, 0, 1).'*';
-            } else {
-                return $input;
-            }
-        }, explode('@', $input)));
+                if ($len <= 1) {
+                    return $input;
+                } elseif (2 == $len) {
+                    return mb_substr($input, 0, 1).'*';
+                } else {
+                    return mb_substr($input, 0, 1).str_repeat('*', $len - 2).mb_substr($input, -1);
+                }
+            })
+            ->join('@');
     }
 
     public static function isValid(string $email): bool
