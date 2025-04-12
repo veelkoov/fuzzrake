@@ -133,15 +133,8 @@ class UpdatesService
 
     private function handleSpecialFieldsInInput(Artisan $submission, Artisan $original): void
     {
-        $submittedContact = $submission->getEmailAddressObfuscated();
-
         if (ContactPermit::NO === $submission->getContactAllowed()) {
             $submission->setEmailAddress('');
-            $submission->setEmailAddressObfuscated('');
-        } elseif (null !== $original->getId() && $submittedContact === $original->getEmailAddressObfuscated()) {
-            $submission->updateEmailAddress($original->getEmailAddress());
-        } else {
-            $submission->updateEmailAddress($submittedContact);
         }
 
         if (null === $original->getId()) {

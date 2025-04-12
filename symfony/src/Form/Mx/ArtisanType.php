@@ -333,12 +333,6 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('emailAddressObfuscated', TextType::class, [
-                'label'      => 'Obfuscated email address',
-                'required'   => false,
-                'empty_data' => '',
-                'help'       => 'Leave unchanged for automated updates of email fields based on the "original". Introduce any change to suppress automation and customize email fields content.',
-            ])
             ->add('notes', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',

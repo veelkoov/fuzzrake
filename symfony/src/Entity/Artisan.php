@@ -89,9 +89,6 @@ class Artisan implements Stringable
     #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
     private ?ContactPermit $contactAllowed = null;
 
-    #[ORM\Column(name: 'contact_info_obfuscated', type: Types::TEXT)] // TODO: Rename
-    private string $emailAddressObfuscated = '';
-
     #[ORM\OneToOne(targetEntity: ArtisanVolatileData::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanVolatileData $volatileData = null;
 
@@ -442,18 +439,6 @@ class Artisan implements Stringable
     public function setContactAllowed(?ContactPermit $contactAllowed): self
     {
         $this->contactAllowed = $contactAllowed;
-
-        return $this;
-    }
-
-    public function getEmailAddressObfuscated(): string
-    {
-        return $this->emailAddressObfuscated;
-    }
-
-    public function setEmailAddressObfuscated(string $emailAddressObfuscated): self
-    {
-        $this->emailAddressObfuscated = $emailAddressObfuscated;
 
         return $this;
     }

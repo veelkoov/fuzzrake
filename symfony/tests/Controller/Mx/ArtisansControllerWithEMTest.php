@@ -8,6 +8,7 @@ use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
@@ -122,89 +123,36 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
-     * @param string[] $data
-     *
      * @dataProvider contactUpdatesDataProvider
      */
-    public function testContactUpdates(array $data): void
+    public function testContactUpdates(string $was, string $set, string $check): void
     {
         $artisan = self::getArtisan();
-        $artisan
-            ->setEmailAddress($data['init_original'])
-            ->setEmailAddressObfuscated($data['init_obfuscated']);
+        $artisan->setEmailAddress($was);
         self::persistAndFlush($artisan);
 
         $this->client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
 
         self::submitValidForm($this->client, 'Save', [
-            'artisan[emailAddressObfuscated]' => $data['set_obfuscated'],
-            'artisan[emailAddress]'           => $data['set_original'],
+            'artisan[emailAddress]' => $set,
         ]);
 
         unset($artisan);
         self::clear();
 
         $artisan = self::findArtisanByMakerId('TEST000');
-        self::assertEquals($data['check_original'], $artisan->getEmailAddress(), 'Original email differs');
-        self::assertEquals($data['check_obfuscated'], $artisan->getEmailAddressObfuscated(), 'Obfuscated email differs');
+        self::assertEquals($check, $artisan->getEmailAddress());
     }
 
-    /**
-     * @return list<array{array{init_original: string, init_obfuscated: string, set_original: string, set_obfuscated: string, check_original: string, check_obfuscated: string}}>
-     */
-    public function contactUpdatesDataProvider(): array
+    public function contactUpdatesDataProvider(): DataProvider
     {
-        return [
-            [[
-                'init_original'   => '',
-                'init_obfuscated' => '',
-
-                'set_original'    => 'some-email@somedomain.fi',
-                'set_obfuscated'  => '',
-
-                'check_original'   => 'some-email@somedomain.fi',
-                'check_obfuscated' => 'so******il@som*******.fi',
-            ]],
-            [[
-                'init_original'   => '',
-                'init_obfuscated' => '',
-
-                'set_original'    => '',
-                'set_obfuscated'  => 'some-email@somedomain.fi',
-
-                'check_original'   => '',
-                'check_obfuscated' => 'some-email@somedomain.fi',
-            ]],
-            [[
-                'init_original'   => 'some-email@somedomain.fi',
-                'init_obfuscated' => 'so******il@som*******.fi',
-
-                'set_original'    => 'updated-email@example.com',
-                'set_obfuscated'  => 'so******il@som*******.fi',
-
-                'check_original'   => 'updated-email@example.com',
-                'check_obfuscated' => 'upd*******ail@ex*******om',
-            ]],
-            [[
-                'init_original'   => 'some-email@somedomain.fi',
-                'init_obfuscated' => 'so******il@som*******.fi',
-
-                'set_original'    => 'some-email@somedomain.fi',
-                'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-
-                'check_original'   => 'some-email@somedomain.fi',
-                'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-            ]],
-            [[
-                'init_original'   => 'some-email@somedomain.fi',
-                'init_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-
-                'set_original'    => 'some-email@somedomain.fi',
-                'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-
-                'check_original'   => 'some-email@somedomain.fi',
-                'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-            ]],
-        ];
+        return DataProvider::tuples(
+            ['',                         '',                          ''],
+            ['garbage',                  'garbage',                   'garbage'],
+            ['garbage',                  'some-email@somedomain.fi',  'some-email@somedomain.fi'],
+            ['',                         'some-email@somedomain.fi',  'some-email@somedomain.fi'],
+            ['some-email@somedomain.fi', 'updated-email@example.com', 'updated-email@example.com'],
+            ['some-email@somedomain.fi', 'some-email@somedomain.fi',  'some-email@somedomain.fi'],
+        );
     }
 }

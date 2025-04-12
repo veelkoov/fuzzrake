@@ -31,5 +31,4 @@ object Creators : IntIdTable("artisans") {
     val notes = text("notes", eagerLoading = true).default("")
 
     val contactAllowed = varchar("contact_allowed", 16).nullable() // TODO: Enum
-    val emailAddressObfuscated = varchar("contact_info_obfuscated", 128).default("") // TODO: Rename
 }

@@ -54,7 +54,7 @@ trait IuFormTrait
 
     private static function assertFieldErrorValidEmailAddressRequired(): void
     {
-        self::assertSelectorTextContains('#iu_form_emailAddressObfuscated + .help-text + .invalid-feedback', 'A valid email address is required.');
+        self::assertSelectorTextContains('#iu_form_emailAddress + .help-text + .invalid-feedback', 'A valid email address is required.');
     }
 
     private static function assertFieldErrorPasswordIsRequired(): void

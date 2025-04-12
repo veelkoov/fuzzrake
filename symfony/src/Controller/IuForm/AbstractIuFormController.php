@@ -27,10 +27,10 @@ abstract class AbstractIuFormController extends AbstractController
     {
         $creator = null === $makerId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($makerId);
 
-        $state = new IuSubject($makerId, $creator);
-        SecureValues::forIuForm($state->creator);
+        $subject = new IuSubject($makerId, $creator);
+        SecureValues::forIuForm($subject->creator);
 
-        return $state;
+        return $subject;
     }
 
     protected function markCaptchaDone(SessionInterface $session): void
