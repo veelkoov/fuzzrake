@@ -7,6 +7,10 @@
   ansible.builtin.import_tasks: 'setup_docker_container.yaml'
   tags: 'docker'
 
+- name: 'Migrate DB schema'
+  ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
+  tags: 'migrate'
+
 - name: 'Setup Apache virtual host'
   ansible.builtin.import_tasks: 'setup_apache_vhost.yaml'
   tags: 'vhost'
