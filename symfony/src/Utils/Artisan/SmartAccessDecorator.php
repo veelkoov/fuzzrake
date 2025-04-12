@@ -20,14 +20,13 @@ use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Email;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\PackedStringList;
 use App\Utils\Parse;
 use App\Utils\StrUtils;
-use App\Validator\ObfuscableEmail;
 use App\Validator\StrListLength;
+use App\Validator\UpdateableEmail;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -44,7 +43,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-#[ObfuscableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
+// FIXME: Valid email should be required also in MX forms
+#[UpdateableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
     private ArtisanE $artisan;
@@ -366,17 +366,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return '' !== $this->getInactiveReason();
     }
 
-    public function updateEmailAddress(string $newEmailAddress): self
-    {
-        $obfuscated = Email::obfuscate($newEmailAddress);
-
-        $this->setEmailAddressObfuscated($obfuscated)
-            ->getPrivateData()
-            ->setEmailAddress($newEmailAddress);
-
-        return $this;
-    }
-
     /**
      * Even though we serve only "safe" version of the NSFW-related fields,
      * these internal ("unsafe") values needs to be fixed even in the database,
@@ -491,9 +480,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== PRIVATE DATA GETTERS AND SETTERS =====
     //
 
-    /**
-     * Validated by obfuscated contact info.
-     */
+    #[Length(max: 128)]
     public function getEmailAddress(): string
     {
         return $this->getPrivateData()->getEmailAddress();
@@ -1435,19 +1422,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setContactAllowed(?ContactPermit $contactAllowed): self
     {
         $this->artisan->setContactAllowed($contactAllowed);
-
-        return $this;
-    }
-
-    #[Length(max: 128)]
-    public function getEmailAddressObfuscated(): string
-    {
-        return $this->artisan->getEmailAddressObfuscated();
-    }
-
-    public function setEmailAddressObfuscated(string $emailAddressObfuscated): self
-    {
-        $this->artisan->setEmailAddressObfuscated($emailAddressObfuscated);
 
         return $this;
     }

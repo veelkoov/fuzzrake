@@ -60,6 +60,7 @@ class Data extends AbstractType
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
         $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
         $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
+        $currentEmailAddress = htmlspecialchars('TODO'); // TODO
 
         $builder
             ->add('name', TextType::class, [
@@ -463,10 +464,10 @@ class Data extends AbstractType
                 'choices'    => ContactPermit::getChoices(false),
                 'expanded'   => true,
             ])
-            ->add('emailAddressObfuscated', TextType::class, [
-                'label'     => 'Your e-mail address',
-                'help'      => 'If you are updating your data, and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
-                'help_html' => true,
+            ->add('emailAddress', TextType::class, [
+                'label'      => 'Email address',
+                'help'       => 'Your current email address is '.$currentEmailAddress.'. To change, provide a new one in this field. To keep the old one, leave this field empty. <span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
+                'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',
             ])

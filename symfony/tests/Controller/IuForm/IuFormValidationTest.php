@@ -335,7 +335,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
         }
 
         if (null !== $email) {
-            $formData['iu_form[emailAddressObfuscated]'] = $email;
+            $formData['iu_form[emailAddress]'] = $email;
         }
 
         if ($selectChangePassword) {

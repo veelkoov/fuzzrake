@@ -46,7 +46,6 @@ class ExtendedTest extends AbstractTestWithEM
 
         Field::FORMER_MAKER_IDS,
         Field::URL_MINIATURES,
-        Field::EMAIL_ADDRESS,
         Field::INACTIVE_REASON,
         Field::DATE_ADDED,
         Field::DATE_UPDATED,
@@ -333,7 +332,9 @@ class ExtendedTest extends AbstractTestWithEM
                 self::assertFalse(pattern("\$$algorithm\$")->test($htmlBody));
             }
         } else {
-            self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
+            if ('' !== $value) {
+                self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
+            }
         }
     }
 

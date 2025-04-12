@@ -8,9 +8,8 @@
     ],
     "PASSWORD": "",
 
-    "CONTACT_ALLOWED": null,
-    "EMAIL_ADDRESS_OBFUSCATED": "",
     "EMAIL_ADDRESS": "",
+    "CONTACT_ALLOWED": null,
 
     "INTRO": "",
     "SINCE": "",

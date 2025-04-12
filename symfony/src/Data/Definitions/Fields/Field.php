@@ -233,10 +233,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('contactAllowed', inStats: false, freeForm: false)]
     case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
 
-    #[Props('emailAddressObfuscated', inStats: false, freeForm: false)]
-    case EMAIL_ADDRESS_OBFUSCATED = 'EMAIL_ADDRESS_OBFUSCATED';
-
-    #[Props('emailAddress', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
+    #[Props('emailAddress', public: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case EMAIL_ADDRESS = 'EMAIL_ADDRESS';
 
     public function getData(): FieldData

@@ -34,9 +34,6 @@ class ArtisansController extends FuzzrakeAbstractController
     {
         $artisan = $this->getCreatorByCreatorIdOrNew($makerId);
 
-        $prevObfuscated = $artisan->getEmailAddressObfuscated();
-        $prevOriginal = $artisan->getEmailAddress();
-
         $form = $this->createForm(ArtisanType::class, $artisan, [
             AbstractTypeWithDelete::OPT_DELETABLE => null !== $artisan->getId(),
         ]);
@@ -44,7 +41,7 @@ class ArtisansController extends FuzzrakeAbstractController
 
         $artisan->assureNsfwSafety();
 
-        if ($form->isSubmitted() && $this->success($artisan, $form, $prevObfuscated, $prevOriginal)) {
+        if ($form->isSubmitted() && $this->success($artisan, $form)) {
             return $this->redirectToRoute(RouteName::MAIN, ['_fragment' => $artisan->getLastMakerId()]);
         }
 
@@ -54,7 +51,7 @@ class ArtisansController extends FuzzrakeAbstractController
         ]);
     }
 
-    private function success(Artisan $artisan, FormInterface $form, string $prevObfuscated, string $prevOriginal): bool
+    private function success(Artisan $artisan, FormInterface $form): bool
     {
         if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
             $this->creatorRepository->remove($artisan, true);
@@ -63,21 +60,12 @@ class ArtisansController extends FuzzrakeAbstractController
         }
 
         if ($form->isValid()) {
-            $this->updateContactUnlessObfuscatedGotCustomized($artisan, $prevObfuscated, $prevOriginal);
-
             $this->creatorRepository->add($artisan, true);
 
             return true;
         }
 
         return false;
-    }
-
-    private function updateContactUnlessObfuscatedGotCustomized(Artisan $artisan, string $prevObfuscated, string $prevOriginal): void
-    {
-        if ($artisan->getEmailAddressObfuscated() === $prevObfuscated && $artisan->getEmailAddress() !== $prevOriginal) {
-            $artisan->updateEmailAddress($artisan->getEmailAddress());
-        }
     }
 
     private function getCreatorByCreatorIdOrNew(?string $creatorId): Artisan

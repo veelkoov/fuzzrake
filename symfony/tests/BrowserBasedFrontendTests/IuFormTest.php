@@ -39,7 +39,7 @@ class IuFormTest extends PantherTestCaseWithEM
         $isUpdate = null !== $previousContactPermitIfUpdate;
 
         $this->setupIuTestGoToTheDataPage($previousContactPermitIfUpdate);
-        self::waitUntilHides($isUpdate ? '#forgotten_password_instructions' : '#contact_info');
+        self::waitUntilHides($isUpdate ? '#forgotten_password_instructions' : '#email-address');
 
         $this->client->getCrawler()->selectButton('Submit')->form()->setValues([
             'iu_form[contactAllowed]' => $contactPermit->value,
@@ -69,20 +69,20 @@ class IuFormTest extends PantherTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
-        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
+        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
 
-        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
-        self::assertSelectorIsVisible('#iu_form_emailAddressObfuscated');
-        self::assertSelectorExists('#iu_form_emailAddressObfuscated[required]');
+        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
+        self::assertSelectorIsVisible('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress[required]');
 
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
-        $this->client->waitForInvisibility('#iu_form_emailAddressObfuscated', 5);
+        $this->client->waitForInvisibility('#iu_form_emailAddress', 5);
 
-        $this->client->waitForInvisibility('#iu_form_emailAddressObfuscated', 5);
-        self::assertSelectorIsNotVisible('#iu_form_emailAddressObfuscated');
-        self::assertSelectorExists('#iu_form_emailAddressObfuscated:not([required])');
+        $this->client->waitForInvisibility('#iu_form_emailAddress', 5);
+        self::assertSelectorIsNotVisible('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress:not([required])');
     }
 
     /**
@@ -238,6 +238,6 @@ class IuFormTest extends PantherTestCaseWithEM
 
         self::waitUntilShows('#rulesAndContinueButton');
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
-        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
+        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
     }
 }

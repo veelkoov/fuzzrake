@@ -156,8 +156,8 @@ function setup_password_and_contact_automation(): void {
   const $contactLevelProsCons = jQuery(".pros-cons-contact-options");
   const contactAllowed = new Radio("iu_form[contactAllowed]", refresh);
   const emailAddressField = new DynamicFields(
-    "#iu_form_emailAddressObfuscated",
-    "#contact_info",
+    "#iu_form_emailAddress",
+    "#email-address",
     true,
   );
 

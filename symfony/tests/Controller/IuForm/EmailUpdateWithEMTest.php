@@ -63,12 +63,21 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
         $this->succeedsSubmittingAfterSetting([]);
     }
 
+    public function testOldUnchangedGarbageEmailRejected(): void
+    {
+        $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
+        $this->skipToTheDataIuFormPage();
+        $this->failsSubmittingAfterSetting([
+            'emailAddress' => 'garbage',
+        ]);
+    }
+
     public function testNewValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, '');
         $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([
-            'emailAddressObfuscated' => 'contact@example.com',
+            'emailAddress' => 'contact@example.com',
         ]);
     }
 
@@ -77,7 +86,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
         $this->skipToTheDataIuFormPage();
         $this->succeedsSubmittingAfterSetting([
-            'emailAddressObfuscated' => 'contact@example.com',
+            'emailAddress' => 'contact@example.com',
         ]);
     }
 
@@ -86,7 +95,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(
             self::getArtisan(makerId: self::CREATOR_ID, contactAllowed: $contactPermit, ages: Ages::ADULTS,
                 nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false)
-                ->updateEmailAddress($email)
+                ->setEmailAddress($email)
         );
     }
 
