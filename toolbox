@@ -10,7 +10,7 @@ SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-p
 SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
 DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
 DB_DUMP_DIR_REL_PATH='db_dump'
-DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_REL_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
+DB_DUMP_COPY_DIR_REL_PATH="$DB_DUMP_DIR_REL_PATH/$(date -u '+%Y-%m-%d_%H-%M-%S')"
 
 PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
 BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
@@ -69,10 +69,6 @@ function action_run_setup() {  # TODO: Ansible this
     assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 }
 
-function backup_private_data() {
-    run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
-}
-
 function action_release_prod() {
     run_command git checkout main
     run_command git merge --no-edit develop
@@ -116,8 +112,6 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-    backup_private_data
-
     run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$DATABASE_REL_PATH"
     run_command chmod a+w "$DATABASE_REL_PATH"
 }
@@ -138,10 +132,11 @@ function action_dbdump() {
     # shellcheck disable=SC2207 # Yes, split by whitespace
     TABLE_NAMES=($(sqlite3 "$DATABASE_REL_PATH" .tables))
 
-    backup_private_data
+    mkdir "$DB_DUMP_COPY_DIR_REL_PATH"
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
-        local SQL_DUMP_PATH="$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql"
+        local SQL_DUMP_PATH="$DB_DUMP_COPY_DIR_REL_PATH/$TABLE_NAME.sql"
+        local JSON_DUMP_PATH="$DB_DUMP_COPY_DIR_REL_PATH/$TABLE_NAME.json"
 
         run_command sqlite3 "$DATABASE_REL_PATH" ".output $SQL_DUMP_PATH" ".dump $TABLE_NAME"
 
@@ -157,8 +152,11 @@ function action_dbdump() {
             order_by='ORDER BY id'
         fi
 
-        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
+        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME $order_by" | jq > "$JSON_DUMP_PATH"
     done
+
+    rm -f "$DB_DUMP_DIR_REL_PATH"/*.{json,sql}
+    cp "$DB_DUMP_COPY_DIR_REL_PATH"/*.{json,sql} "$DB_DUMP_DIR_REL_PATH"
 }
 
 function error() {
