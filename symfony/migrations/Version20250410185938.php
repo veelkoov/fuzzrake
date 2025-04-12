@@ -11,7 +11,7 @@ final class Version20250410185938 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Remove obsolete table "kotlin_data". Sync private data table.';
     }
 
     public function up(Schema $schema): void
