@@ -11,13 +11,13 @@
   ansible.builtin.import_tasks: 'build.yaml'
   tags: 'build'
 
-- name: 'Migrate DB schema'
-  ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
-  tags: 'migrate'
-
 - name: 'Clear cache'
   ansible.builtin.import_tasks: 'clear_cache.yaml'
   tags: 'cache'
+
+- name: 'Migrate DB schema'
+  ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
+  tags: 'migrate'
 
 - name: 'Setup backend'
   ansible.builtin.import_tasks: 'setup_backend.yaml'
