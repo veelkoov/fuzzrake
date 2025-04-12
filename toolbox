@@ -141,17 +141,23 @@ function action_dbdump() {
     backup_private_data
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
-        run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+        local SQL_DUMP_PATH="$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql"
+
+        run_command sqlite3 "$DATABASE_REL_PATH" ".output $SQL_DUMP_PATH" ".dump $TABLE_NAME"
 
         echo 'Dumping to JSON...'
 
-        if grep 'CREATE TABLE' "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
-            order_by='artisan_id'
+        if grep -q 'CREATE TABLE artisans_urls (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY artisan_id, type, url'
+        elif grep -q 'CREATE TABLE artisans_values (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY artisan_id, field_name, value'
+        elif grep -q 'CREATE TABLE doctrine_migration_versions (' "$SQL_DUMP_PATH"; then
+            order_by=''
         else
-            order_by='id'
+            order_by='ORDER BY id'
         fi
 
-        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
+        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
     done
 }
 
