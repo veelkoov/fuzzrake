@@ -38,10 +38,8 @@ class UpdateableEmailValidator extends ConstraintValidator
             return; // No contact permit. Ignore any leftover value. Do not clear - not the responsibility of this class.
         }
 
-        if ('' === $value->getEmailAddress()) {
-            if (Email::isValid($this->getOldEmailAddressOrEmpty($value))) {
-                return;
-            }
+        if ('' === $value->getEmailAddress() && Email::isValid($this->getOldEmailAddressOrEmpty($value))) {
+            return; // No new email given, but an old valid one is present
         }
 
         if (Email::isValid($value->getEmailAddress())) {
