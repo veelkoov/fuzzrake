@@ -10,6 +10,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Creator;
 final readonly class IuSubject
 {
     public string $previousPassword;
+    public string $previousEmailAddress;
     public bool $wasContactAllowed;
     public bool $isNew;
 
@@ -18,6 +19,7 @@ final readonly class IuSubject
         public Creator $creator,
     ) {
         $this->previousPassword = $creator->getPassword();
+        $this->previousEmailAddress = $this->creator->getEmailAddress();
         $this->wasContactAllowed = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
         $this->isNew = null === $this->makerId;
     }
