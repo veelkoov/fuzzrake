@@ -7,19 +7,15 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-final class Version20250412091232 extends AbstractMigration // FIXME: LATER!
+final class Version20250413103551 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Removed contact_info_obfuscated (obfuscated email address).';
+        return 'Remove columnt "contact_info_obfuscated" from "artisans" table.';
     }
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
             CREATE TEMPORARY TABLE __temp__artisans AS SELECT id, maker_id, name, formerly, intro, since, country, state, city, payment_plans, species_does, species_doesnt, notes, contact_allowed, inactive_reason, production_models_comment, styles_comment, order_types_comment, features_comment, payment_methods, currencies_accepted, species_comment FROM artisans
         SQL);
