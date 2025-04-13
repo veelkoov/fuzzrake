@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-// FIXME: Valid email should be required also in MX forms
+// FIXME: Valid email should be required also in MX forms https://github.com/veelkoov/fuzzrake/issues/284
 #[UpdateableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
