@@ -9,7 +9,7 @@ use Override;
 use Symfony\Component\Validator\Constraint;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class ObfuscableEmail extends Constraint
+class UpdateableEmail extends Constraint
 {
     #[Override]
     public function getTargets(): string

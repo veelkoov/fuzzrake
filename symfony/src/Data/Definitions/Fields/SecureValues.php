@@ -14,6 +14,7 @@ final class SecureValues
     public static function forIuForm(Artisan $artisan): void
     {
         $artisan->setPassword('');
+        $artisan->setEmailAddress('');
     }
 
     public static function hideOnAdminScreen(Field $field): bool

@@ -41,6 +41,7 @@ class IuFormDataController extends AbstractIuFormController
 
         $form = $this->createForm(Data::class, $subject->creator, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
+            Data::OPT_CURRENT_EMAIL_ADDRESS => $subject->previousEmailAddress,
             'router' => $router,
         ])
             ->handleRequest($request);

@@ -112,6 +112,7 @@ trait EntityManagerTrait
         ?bool $nsfwSocial = null,
         ?bool $doesNsfw = null,
         ?bool $worksWithMinors = null,
+        ?string $emailAddress = null,
     ): Artisan {
         $result = (new Artisan())
             ->setName($name)
@@ -126,6 +127,10 @@ trait EntityManagerTrait
         if ('' !== $password) {
             $result->setPassword($password);
             Password::encryptOn($result);
+        }
+
+        if (null !== $emailAddress) {
+            $result->setEmailAddress($emailAddress);
         }
 
         $result->setContactAllowed($contactAllowed);

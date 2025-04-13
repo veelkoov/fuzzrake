@@ -31,17 +31,15 @@ class UpdatesServiceTest extends TestCase
         $submissionData = Submissions::from((new Artisan())
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setEmailAddressObfuscated('getfursu.it@localhost.localdomain')
+            ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], []]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('', $result->originalArtisan->getEmailAddressObfuscated());
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
-        self::assertEquals('ge*******it@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
     public function testUpdateHandlesEmailChangeProperly(): void
@@ -49,23 +47,20 @@ class UpdatesServiceTest extends TestCase
         $existing = $this->getPersistedArtisanMock()
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->updateEmailAddress('getfursu.it@localhost.localdomain')
+            ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
         $submissionData = Submissions::from((new Artisan())
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setEmailAddressObfuscated('an-update.2@localhost.localdomain')
+            ->setEmailAddress('an-update.2@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$existing]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
-
         self::assertEquals('an-update.2@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
-        self::assertEquals('an*******.2@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
     public function testUpdateHandlesUnchangedEmailProperly(): void
@@ -73,23 +68,20 @@ class UpdatesServiceTest extends TestCase
         $artisan = $this->getPersistedArtisanMock()
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->updateEmailAddress('getfursu.it@localhost.localdomain')
+            ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
         $submissionData = Submissions::from((new Artisan())
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setEmailAddressObfuscated('ge*******it@local***********omain')
+            ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$artisan]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
-
         self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
-        self::assertEquals('ge*******it@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
     public function testUpdateHandlesRevokedContactPermitProperly(): void
@@ -97,13 +89,13 @@ class UpdatesServiceTest extends TestCase
         $existing = $this->getPersistedArtisanMock()
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->updateEmailAddress('getfursu.it@localhost.localdomain')
+            ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
         $submissionData = Submissions::from((new Artisan())
             ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setEmailAddressObfuscated('ge*******it@local***********omain') // Should be ignored
+            ->setEmailAddress('an-update.2@localhost.localdomain') // Should be ignored
             ->setContactAllowed(ContactPermit::NO)
         );
 
@@ -111,10 +103,7 @@ class UpdatesServiceTest extends TestCase
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
-
         self::assertEquals('', $result->updatedArtisan->getEmailAddress());
-        self::assertEquals('', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
     public function testAddedDateIsHandledProperly(): void

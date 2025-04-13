@@ -16,7 +16,7 @@ use stdClass;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class ObfuscableEmailValidator extends ConstraintValidator
+class UpdateableEmailValidator extends ConstraintValidator
 {
     private const string ERROR_MESSAGE = 'A valid email address is required.'
         .' This field should not contain anything else, just the.email@address.'
@@ -35,28 +35,20 @@ class ObfuscableEmailValidator extends ConstraintValidator
         }
 
         if (ContactPermit::NO === $value->getContactAllowed()) {
-            return; // No contact permit. Ignore any leftover value. Do not clear - not our responsibility.
+            return; // No contact permit. Ignore any leftover value. Do not clear - not the responsibility of this class.
         }
 
-        if ($value->getEmailAddressObfuscated() === $this->getOldEmailAddressObfuscatedOrEmpty($value)) {
-            if (Email::isValid($this->getOldEmailAddressOrEmpty($value))) {
-                return; // The obfuscated email was not changed and the plaintext is still valid
-            }
+        if ('' === $value->getEmailAddress() && Email::isValid($this->getOldEmailAddressOrEmpty($value))) {
+            return; // No new email given, but an old valid one is present
         }
 
-        if (Email::isValid($value->getEmailAddressObfuscated())) {
+        if (Email::isValid($value->getEmailAddress())) {
             return; // New provided email address is OK
         }
 
         $this->context->buildViolation(self::ERROR_MESSAGE)
-            ->atPath(Field::EMAIL_ADDRESS_OBFUSCATED->modelName())
+            ->atPath(Field::EMAIL_ADDRESS->modelName())
             ->addViolation();
-    }
-
-    private function getOldEmailAddressObfuscatedOrEmpty(Creator $creator): string
-    {
-        return Enforce::string($this->entityManager->getUnitOfWork()
-            ->getOriginalEntityData($creator->getArtisan())[Field::EMAIL_ADDRESS_OBFUSCATED->modelName()] ?? '');
     }
 
     private function getOldEmailAddressOrEmpty(Creator $creator): string
