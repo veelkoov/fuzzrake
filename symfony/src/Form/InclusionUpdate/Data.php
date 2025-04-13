@@ -19,6 +19,8 @@ use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Email;
+use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
 use Override;
@@ -42,6 +44,7 @@ class Data extends AbstractType
     use RouterDependentTrait;
 
     final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
+    final public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
     final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
     final public const string FLD_MAKER_ID = 'makerId';
     final public const string FLD_CHANGE_PASSWORD = 'changePassword';
@@ -60,7 +63,7 @@ class Data extends AbstractType
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
         $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
         $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
-        $currentEmailAddress = htmlspecialchars('TODO'); // TODO
+        $currentEmailAddressHtmlHelp = $this->getCurrentEmailAddressHtmlHelp($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
 
         $builder
             ->add('name', TextType::class, [
@@ -466,7 +469,7 @@ class Data extends AbstractType
             ])
             ->add('emailAddress', TextType::class, [
                 'label'      => 'Email address',
-                'help'       => 'Your current email address is '.$currentEmailAddress.'. To change, provide a new one in this field. To keep the old one, leave this field empty. <span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
+                'help'       => $currentEmailAddressHtmlHelp.'<span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
                 'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',
@@ -524,12 +527,16 @@ class Data extends AbstractType
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
         self::configureRouterOption($resolver);
 
         $resolver
             ->define(self::OPT_PHOTOS_COPYRIGHT_OK)
             ->allowedTypes('boolean')
+            ->required();
+
+        $resolver
+            ->define(self::OPT_CURRENT_EMAIL_ADDRESS)
+            ->allowedTypes('string')
             ->required();
 
         $resolver->setDefaults([
@@ -554,5 +561,20 @@ class Data extends AbstractType
         } while (--$year >= 1990);
 
         return $result;
+    }
+
+    private function getCurrentEmailAddressHtmlHelp(mixed $inputFromOptions): string
+    {
+        $currentEmailAddress = Enforce::string($inputFromOptions);
+
+        // LEGACY: Should just check if email address !== '' (displaying form for a new creator),
+        // but the email field was previously "contact method" and it allowed non-emails.
+        if (!Email::isValid($currentEmailAddress)) {
+            return '';
+        }
+
+        return 'Your current email address is '
+            .htmlspecialchars(Email::obfuscate($currentEmailAddress))
+            .'. To change, provide a new one in this field. To keep the old one, leave this field empty. ';
     }
 }
