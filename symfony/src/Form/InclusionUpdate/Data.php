@@ -567,7 +567,8 @@ class Data extends AbstractType
     {
         $currentEmailAddress = Enforce::string($inputFromOptions);
 
-        // LEGACY: Should just check if email address !== '' (displaying form for a new creator),
+        // LEGACY: grep-code-invalid-email-addresses
+        // Should just check if email address !== '' (displaying form for a new creator),
         // but the email field was previously "contact method" and it allowed non-emails.
         if (!Email::isValid($currentEmailAddress)) {
             return '';
