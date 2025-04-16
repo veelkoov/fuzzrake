@@ -4,7 +4,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('feedback') }}
 {% endblock %}
 
@@ -15,8 +14,6 @@
 
 {% block body %}
     <h1>Feedback form</h1>
-
-    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
@@ -29,16 +26,10 @@
 
         <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
         {{ form_row(form.details) }}
+
+        {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
+
         {{ form_rest(form) }}
-
-        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
-
-        <div class="d-none g-recaptcha"
-             data-sitekey="{{ google_recaptcha_site_key }}"
-             data-callback="formRecaptchaValidationCallback"
-             data-action="feedback_form_captcha"
-             data-size="invisible"
-        ></div>
 
         <input type="submit" class="btn btn-primary btn-lg" value="Send" />
     </div>

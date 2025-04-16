@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Captcha\CaptchaService;
 use App\Form\FeedbackType;
-use App\Service\Captcha;
 use App\ValueObject\Feedback;
 use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,12 +25,13 @@ class FeedbackController extends AbstractController
     public function __construct(
         private readonly RouterInterface $router,
         private readonly MessageBusInterface $messageBus,
-        private readonly Captcha $captcha,
+        private readonly CaptchaService $captcha,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     #[Route('/feedback', RouteName::FEEDBACK_FORM)]
-    public function feedback(Request $request): Response
+    public function feedback(Request $request, Session $session): Response
     {
         $feedback = new Feedback();
 
@@ -39,25 +43,23 @@ class FeedbackController extends AbstractController
             'router' => $this->router,
         ]);
 
-        $big_error_message = '';
+        $captcha = $this->captcha->getSessionCaptcha($session);
 
-        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
-            if (!$this->captcha->isValid($request, 'feedback_form_captcha')) {
-                $big_error_message = "Captcha failed. Please retry submitting. If this doesn't help, try another browser or other network connection.";
-            } else {
-                try {
-                    $this->sendFeedback($feedback);
+        if ($form->handleRequest($request)->isSubmitted() && $form->isValid() && $captcha->hasBeenSolved($request, $form)) {
+            try {
+                $this->sendFeedback($feedback);
 
-                    return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
-                } catch (ExceptionInterface) {
-                    $big_error_message = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
-                }
+                return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
+            } catch (ExceptionInterface $exception) {
+                $this->logger->error('Exception while sending feedback.', ['exception' => $exception]);
+
+                $errorMessage = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
+                $form->get(FeedbackType::FLD_DETAILS)->addError(new FormError($errorMessage));
             }
         }
 
         return $this->render('feedback/feedback.html.twig', [
-            'form'              => $form,
-            'big_error_message' => $big_error_message,
+            'form' => $form,
         ]);
     }
 

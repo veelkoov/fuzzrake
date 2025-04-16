@@ -1,0 +1,19 @@
+<div class="captcha">
+    {{ form_label(form) }}
+    {{ form_errors(form) }}
+
+    {% for question in challenge.questions %}
+        <div class="question mb-4">
+            <p>Select all animals that {{ question.question }}:</p>
+
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                {% for option in question.options %}
+                    <input type="checkbox" class="btn-check" name="{{ option.id }}" id="{{ option.id }}"
+                           autocomplete="off">
+
+                    <label class="btn btn-outline-info" for="{{ option.id }}">{{ option.emoticon }}</label>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

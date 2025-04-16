@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Captcha;
 
+use App\Captcha\Challenge\Challenge;
+use App\Captcha\Challenge\Question;
+use App\Captcha\Challenge\QuestionOption;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\StringBoolMap;
 
-class FurryCaptcha
+class CaptchaService implements ChallengeProvider
 {
-    private const array ANIMALS = [ // @phpstan-ignore classConstant.unused (FIXME)
+    private const int QUESTIONS_PER_CHALLENGE = 2;
+    private const int OPTIONS_PER_QUESTION = 4;
+
+    private const array ANIMALS = [
         'wolf' => '🐺',
         'dog' => '🐶',
         'cat' => '🐱',
@@ -82,31 +89,35 @@ class FurryCaptcha
         ],
     ];
 
-    public function getCurrentChallenge(SessionInterface $session): CaptchaChallenge
+    public function getSessionCaptcha(SessionInterface $session): SessionCaptcha
     {
-        // Pick two random questions
-        $rawQuestions = $this->getQuestionsData()->shuffle()->slice(0, 2);
+        return new SessionCaptcha($session, $this);
+    }
+
+    public function getNewChallenge(): Challenge
+    {
+        // Pick X random questions
+        $rawQuestions = $this->getQuestionsData()->shuffle()->slice(0, self::QUESTIONS_PER_CHALLENGE);
         $questions = [];
 
         foreach ($rawQuestions as $rawQuestion => $answers) {
-            $firstTrueAnswer = (string) $answers->filterValues(fn (bool $value) => $value === true)->shuffle()->slice(0, 1)->single()->key; // FIXME: Implement random
+            $firstTrueAnswer = (string) $answers->filterValues(static fn (bool $value) => true === $value)
+                ->shuffle()->slice(0, 1)->single()->key; // FIXME: Implement random
 
-            $selectedAnswers = $answers->filterKeys(fn (string $key) => $key !== $firstTrueAnswer)->shuffle()->slice(0, 3);
+            $selectedAnswers = $answers->filterKeys(static fn (string $key) => $key !== $firstTrueAnswer)
+                ->shuffle()->slice(0, self::OPTIONS_PER_QUESTION - 1);
             $selectedAnswers->set($firstTrueAnswer, true);
             $selectedAnswers = $selectedAnswers->shuffle();
 
-            $answers = CaptchaChallengeAnswerSet::mapFrom(
+            $options = DList::mapFrom(
                 $selectedAnswers,
-                fn (bool $value, string $key) => new CaptchaChallengeAnswer($key, self::ANIMALS[$key], $value),
-            );
+                fn (bool $value, string $key) => new QuestionOption($key, self::ANIMALS[$key], $value),
+            )->getValuesArray();
 
-            $questions[] = new CaptchaChallengeQuestion(
-                $rawQuestion,
-                $answers->freeze(),
-            );
+            $questions[] = new Question($rawQuestion, $options);
         }
 
-        return new CaptchaChallenge($questions);
+        return new Challenge($questions);
     }
 
     /**

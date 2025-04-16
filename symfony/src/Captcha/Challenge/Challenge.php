@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Captcha\Challenge;
 
-final readonly class CaptchaChallenge
+final readonly class Challenge
 {
     /**
-     * @param list<CaptchaChallengeQuestion> $questions
+     * @param list<Question> $questions
      */
     public function __construct(
         public array $questions,
