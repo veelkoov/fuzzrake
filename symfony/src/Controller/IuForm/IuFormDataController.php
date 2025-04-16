@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
+use App\Captcha\CaptchaService;
 use App\Controller\IuForm\Utils\IuSubject;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,12 +33,14 @@ class IuFormDataController extends AbstractIuFormController
      */
     #[Route(path: '/iu_form/data/{makerId}', name: RouteName::IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
-    public function iuFormData(Request $request, RouterInterface $router, SubmissionService $submissionService, ?string $makerId = null): Response
-    {
-        if (!$this->isCaptchaDone($request->getSession())) {
-            return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $makerId]);
-        }
-
+    public function iuFormData(
+        Request $request,
+        SessionInterface $session,
+        CaptchaService $captchaService,
+        RouterInterface $router,
+        SubmissionService $submissionService,
+        ?string $makerId = null,
+    ): Response {
         $subject = $this->getSubject($makerId);
 
         $form = $this->createForm(Data::class, $subject->creator, [
@@ -45,11 +49,14 @@ class IuFormDataController extends AbstractIuFormController
             'router' => $router,
         ])
             ->handleRequest($request);
+
+        $captcha = $captchaService->getSessionCaptcha($session);
+
         $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);
         $this->validateMakerId($form, $subject->creator);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $captcha->hasBeenSolved($request, $form)) {
             $submittedPasswordOk = $this->handlePassword($subject);
 
             $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();

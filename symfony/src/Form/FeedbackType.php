@@ -24,7 +24,7 @@ class FeedbackType extends AbstractType
 {
     use RouterDependentTrait;
 
-    const string FLD_DETAILS = 'details';
+    public const string FLD_DETAILS = 'details';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void

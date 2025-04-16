@@ -28,7 +28,7 @@ parameters:
     -
       message: '#^Class App\\Form\\[^ ]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 6
+      count: 5
       path: src/Form/*
 
     -

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
+use App\Captcha\CaptchaType;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
@@ -495,6 +496,7 @@ class Data extends AbstractType
                 'mapped'     => false,
                 'label_html' => true,
             ])
+            ->add('captcha', CaptchaType::class)
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {

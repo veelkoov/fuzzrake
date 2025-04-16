@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<StartData>
+ */
 class Start extends AbstractType
 {
     final public const string OPT_STUDIO_NAME = 'studio_name';
