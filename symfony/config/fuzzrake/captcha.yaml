@@ -1,0 +1,77 @@
+---
+parameters:
+  captcha:
+    questions_per_challenge: 2
+    options_per_question: 4
+
+    animals:
+      wolf: "🐺"
+      dog: "🐶"
+      cat: "🐱"
+      tiger: "🐅"
+      mouse: "🐭"
+      hedgehog: "🦔"
+      penguin: "🐧"
+      zebra: "🦓"
+      fish: "🐟"
+      otter: "🦦"
+      beaver: "🦫"
+      hawk: "🦅"
+      sloth: "🦥"
+      swan: "🦢"
+      duck: "🦆"
+
+    questions:
+      can fly:
+        duck: true
+        hawk: true
+        swan: true
+
+        beaver: false
+        cat: false
+        dog: false
+        fish: false
+        hedgehog: false
+        mouse: false
+        otter: false
+        penguin: false
+        sloth: false
+        tiger: false
+        wolf: false
+        zebra: false
+
+      are a bird:
+        duck: true
+        hawk: true
+        penguin: true
+        swan: true
+
+        beaver: false
+        cat: false
+        dog: false
+        fish: false
+        hedgehog: false
+        mouse: false
+        otter: false
+        sloth: false
+        tiger: false
+        wolf: false
+        zebra: false
+
+      have striped fur:
+        tiger: true
+        zebra: true
+
+        beaver: false
+        cat: false
+        dog: false
+        duck: false
+        fish: false
+        hawk: false
+        hedgehog: false
+        mouse: false
+        otter: false
+        penguin: false
+        sloth: false
+        swan: false
+        wolf: false

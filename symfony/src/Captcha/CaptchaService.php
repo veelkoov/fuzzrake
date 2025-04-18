@@ -9,93 +9,42 @@ use App\Captcha\Challenge\Question;
 use App\Captcha\Challenge\QuestionOption;
 use App\Captcha\Form\StandaloneCaptchaType;
 use Override;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\StringBoolMap;
+use Veelkoov\Debris\StringStringMap;
 
 class CaptchaService implements CaptchaProvider
 {
-    private const int QUESTIONS_PER_CHALLENGE = 2;
-    private const int OPTIONS_PER_QUESTION = 4;
+    private readonly int $questionsPerChallenge;
+    private readonly int $optionsPerQuestion;
+    private readonly StringStringMap $animals;
+    /**
+     * @var DMap<covariant string, StringBoolMap>
+     */
+    private readonly DMap $questions;
 
-    private const array ANIMALS = [ // TODO: To YAML
-        'wolf' => '🐺',
-        'dog' => '🐶',
-        'cat' => '🐱',
-        'tiger' => '🐅',
-        'mouse' => '🐭',
-        'hedgehog' => '🦔',
-        'penguin' => '🐧',
-        'zebra' => '🦓',
-        'fish' => '🐟',
-        'otter' => '🦦',
-        'beaver' => '🦫',
-        'hawk' => '🦅',
-        'sloth' => '🦥',
-        'swan' => '🦢',
-        'duck' => '🦆',
-    ];
-
-    private const array QUESTIONS = [ // TODO: To YAML
-        'can fly' => [
-            'wolf' => false,
-            'dog' => false,
-            'cat' => false,
-            'tiger' => false,
-            'mouse' => false,
-            'hedgehog' => false,
-            'penguin' => false,
-            'zebra' => false,
-            'fish' => false,
-            'otter' => false,
-            'beaver' => false,
-            'hawk' => true,
-            'sloth' => false,
-            'swan' => true,
-            'duck' => true,
-        ],
-        'are a bird' => [
-            'wolf' => false,
-            'dog' => false,
-            'cat' => false,
-            'tiger' => false,
-            'mouse' => false,
-            'hedgehog' => false,
-            'penguin' => true,
-            'zebra' => false,
-            'fish' => false,
-            'otter' => false,
-            'beaver' => false,
-            'hawk' => true,
-            'sloth' => false,
-            'swan' => true,
-            'duck' => true,
-        ],
-        'have striped fur' => [
-            'wolf' => false,
-            'dog' => false,
-            'cat' => false,
-            'tiger' => true,
-            'mouse' => false,
-            'hedgehog' => false,
-            'penguin' => false,
-            'zebra' => true,
-            'fish' => false,
-            'otter' => false,
-            'beaver' => false,
-            'hawk' => false,
-            'sloth' => false,
-            'swan' => false,
-            'duck' => false,
-        ],
-    ];
-
+    /**
+     * @param array{
+     *     questions_per_challenge: positive-int,
+     *     options_per_question: positive-int,
+     *     animals: array<string, string>,
+     *     questions: array<string, array<string, bool>>,
+     *   } $parameters
+     */
     public function __construct(
+        #[Autowire(param: 'captcha')] array $parameters,
         private readonly FormFactoryInterface $formFactory,
     ) {
+        $this->questionsPerChallenge = $parameters['questions_per_challenge'];
+        $this->optionsPerQuestion = $parameters['options_per_question'];
+        $this->animals = new StringStringMap($parameters['animals'], frozen: true);
+        $this->questions = DMap::mapFrom($parameters['questions'],
+            static fn ($value, string $key): array => [$key, new StringBoolMap($value, frozen: true)])->freeze();
     }
 
     public function getCaptcha(SessionInterface $session): Captcha
@@ -114,37 +63,28 @@ class CaptchaService implements CaptchaProvider
     #[Override]
     public function getNewChallenge(): Challenge
     {
-        // Pick X random questions
-        $rawQuestions = $this->getQuestionsData()->shuffle()->slice(0, self::QUESTIONS_PER_CHALLENGE);
+        $rawQuestions = $this->questions->shuffle()->slice(0, $this->questionsPerChallenge);
+
         $questions = [];
 
         foreach ($rawQuestions as $rawQuestion => $answers) {
-            $firstTrueAnswer = (string) $answers->filterValues(static fn (bool $value) => true === $value)
-                ->shuffle()->slice(0, 1)->single()->key; // FIXME: Implement random
+            $firstTrueAnswer = $answers->filterValues(static fn (bool $value) => true === $value)->randomKey();
+            $firstFalseAnswer = $answers->filterValues(static fn (bool $value) => false === $value)->randomKey();
 
-            // FIXME: Should have first false answer as well
-
-            $selectedAnswers = $answers->filterKeys(static fn (string $key) => $key !== $firstTrueAnswer)
-                ->shuffle()->slice(0, self::OPTIONS_PER_QUESTION - 1);
+            $selectedAnswers = $answers->minusKey($firstTrueAnswer, $firstFalseAnswer)
+                ->shuffle()->slice(0, $this->optionsPerQuestion - 2);
             $selectedAnswers->set($firstTrueAnswer, true);
+            $selectedAnswers->set($firstFalseAnswer, false);
             $selectedAnswers = $selectedAnswers->shuffle();
 
             $options = DList::mapFrom(
                 $selectedAnswers,
-                fn (bool $value, string $key) => new QuestionOption($key, self::ANIMALS[$key], $value),
+                fn (bool $value, string $key) => new QuestionOption($key, $this->animals->get($key), $value),
             )->getValuesArray();
 
             $questions[] = new Question($rawQuestion, $options);
         }
 
         return new Challenge($questions);
-    }
-
-    /**
-     * @return DMap<covariant string, StringBoolMap>
-     */
-    private function getQuestionsData(): DMap
-    {
-        return DMap::mapFrom(self::QUESTIONS, fn ($value, string $key): array => [$key, new StringBoolMap($value)]);
     }
 }
