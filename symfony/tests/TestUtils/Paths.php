@@ -42,7 +42,7 @@ final class Paths
      */
     public static function getDataDefinitionsPath(string $fileName): string
     {
-        return __DIR__."/../../config/data_definitions/$fileName";
+        return __DIR__."/../../config/fuzzrake/$fileName";
     }
 
     /**

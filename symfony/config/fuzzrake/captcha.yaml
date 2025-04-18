@@ -22,6 +22,76 @@ parameters:
       duck: "🦆"
 
     questions:
+      live in or around water:
+        beaver: true
+        duck: true
+        fish: true
+        otter: true
+        swan: true
+
+        cat: false
+        dog: false
+        hawk: false
+        hedgehog: false
+        mouse: false
+        sloth: false
+        tiger: false
+        wolf: false
+        zebra: false
+
+      have feathers:
+        duck: true
+        hawk: true
+        swan: true
+
+        beaver: false
+        cat: false
+        dog: false
+        fish: false
+        hedgehog: false
+        mouse: false
+        otter: false
+        sloth: false
+        tiger: false
+        wolf: false
+        zebra: false
+
+      have spikes:
+        hedgehog: true
+
+        beaver: false
+        cat: false
+        dog: false
+        duck: false
+        fish: false
+        hawk: false
+        mouse: false
+        otter: false
+        penguin: false
+        sloth: false
+        swan: false
+        tiger: false
+        wolf: false
+        zebra: false
+
+      are very slow:
+        sloth: true
+
+        beaver: false
+        cat: false
+        dog: false
+        duck: false
+        fish: false
+        hawk: false
+        hedgehog: false
+        mouse: false
+        otter: false
+        penguin: false
+        swan: false
+        tiger: false
+        wolf: false
+        zebra: false
+
       can fly:
         duck: true
         hawk: true
@@ -63,7 +133,6 @@ parameters:
         zebra: true
 
         beaver: false
-        cat: false
         dog: false
         duck: false
         fish: false
@@ -75,3 +144,17 @@ parameters:
         sloth: false
         swan: false
         wolf: false
+
+      are four-legged:
+        duck: false
+        hawk: false
+        penguin: false
+        swan: false
+        fish: false
+
+        cat: true
+        dog: true
+        hedgehog: true
+        tiger: true
+        wolf: true
+        zebra: true
