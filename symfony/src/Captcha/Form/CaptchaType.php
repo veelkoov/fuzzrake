@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Captcha;
+namespace App\Captcha\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

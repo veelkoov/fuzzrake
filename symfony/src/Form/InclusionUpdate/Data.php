@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\Captcha\CaptchaType;
+use App\Captcha\Form\CaptchaType;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;

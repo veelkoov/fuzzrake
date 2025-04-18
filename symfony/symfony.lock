@@ -93,18 +93,6 @@
             ".php-cs-fixer.dist.php"
         ]
     },
-    "google/recaptcha": {
-        "version": "1.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.1",
-            "ref": "e5a4aa21f2e98d7440ae9aab6b56e307f99dd084"
-        },
-        "files": [
-            "config/packages/google_recaptcha.yaml"
-        ]
-    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },

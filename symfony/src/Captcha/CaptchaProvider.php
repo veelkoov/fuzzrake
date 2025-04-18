@@ -6,7 +6,7 @@ namespace App\Captcha;
 
 use App\Captcha\Challenge\Challenge;
 
-interface ChallengeProvider
+interface CaptchaProvider
 {
     public function getNewChallenge(): Challenge;
 }

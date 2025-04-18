@@ -50,7 +50,7 @@ class IuFormDataController extends AbstractIuFormController
         ])
             ->handleRequest($request);
 
-        $captcha = $captchaService->getSessionCaptcha($session);
+        $captcha = $captchaService->getCaptcha($session);
 
         $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);

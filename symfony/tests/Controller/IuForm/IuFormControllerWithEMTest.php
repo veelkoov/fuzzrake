@@ -50,7 +50,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::submitInvalid($this->client, $form);
     }
 
-    public function testCannotSkipCaptcha(): void
+    public function testCannotSkipCaptcha(): void // FIXME
     {
         $this->client->followRedirects(true);
 

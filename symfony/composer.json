@@ -20,7 +20,6 @@
         "doctrine/doctrine-bundle": "*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "*",
-        "google/recaptcha": "^1.2",
         "nette/utils": "^3.2",
         "phpoffice/phpspreadsheet": "^3.7.0",
         "rawr/t-regx": "0.41.*",

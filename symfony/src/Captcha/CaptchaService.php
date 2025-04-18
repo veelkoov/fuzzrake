@@ -7,17 +7,21 @@ namespace App\Captcha;
 use App\Captcha\Challenge\Challenge;
 use App\Captcha\Challenge\Question;
 use App\Captcha\Challenge\QuestionOption;
+use App\Captcha\Form\StandaloneCaptchaType;
+use Override;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\StringBoolMap;
 
-class CaptchaService implements ChallengeProvider
+class CaptchaService implements CaptchaProvider
 {
     private const int QUESTIONS_PER_CHALLENGE = 2;
     private const int OPTIONS_PER_QUESTION = 4;
 
-    private const array ANIMALS = [
+    private const array ANIMALS = [ // TODO: To YAML
         'wolf' => '🐺',
         'dog' => '🐶',
         'cat' => '🐱',
@@ -35,7 +39,7 @@ class CaptchaService implements ChallengeProvider
         'duck' => '🦆',
     ];
 
-    private const array QUESTIONS = [
+    private const array QUESTIONS = [ // TODO: To YAML
         'can fly' => [
             'wolf' => false,
             'dog' => false,
@@ -89,11 +93,25 @@ class CaptchaService implements ChallengeProvider
         ],
     ];
 
-    public function getSessionCaptcha(SessionInterface $session): SessionCaptcha
-    {
-        return new SessionCaptcha($session, $this);
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+    ) {
     }
 
+    public function getCaptcha(SessionInterface $session): Captcha
+    {
+        return new Captcha($session, $this);
+    }
+
+    /**
+     * @return FormInterface<covariant mixed>
+     */
+    public function getStandaloneForm(): FormInterface
+    {
+        return $this->formFactory->create(StandaloneCaptchaType::class);
+    }
+
+    #[Override]
     public function getNewChallenge(): Challenge
     {
         // Pick X random questions
@@ -103,6 +121,8 @@ class CaptchaService implements ChallengeProvider
         foreach ($rawQuestions as $rawQuestion => $answers) {
             $firstTrueAnswer = (string) $answers->filterValues(static fn (bool $value) => true === $value)
                 ->shuffle()->slice(0, 1)->single()->key; // FIXME: Implement random
+
+            // FIXME: Should have first false answer as well
 
             $selectedAnswers = $answers->filterKeys(static fn (string $key) => $key !== $firstTrueAnswer)
                 ->shuffle()->slice(0, self::OPTIONS_PER_QUESTION - 1);

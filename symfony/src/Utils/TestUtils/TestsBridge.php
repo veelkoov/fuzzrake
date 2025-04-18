@@ -54,7 +54,7 @@ final class TestsBridge
         self::writeBridgeFileInt(self::MARK_SKIP_SINGLE_CAPTCHA_PATH, time());
     }
 
-    public static function shouldSkipSingleCaptcha(): bool
+    public static function shouldSkipSingleCaptcha(): bool // FIXME
     {
         if (!self::isTest()) {
             return false;

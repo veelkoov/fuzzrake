@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Captcha\CaptchaType;
+use App\Captcha\Form\CaptchaType;
 use App\Form\Transformers\NullToEmptyStringTransformer;
 use App\ValueObject\Feedback;
 use App\ValueObject\Routing\RouteName;

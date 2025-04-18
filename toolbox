@@ -50,25 +50,6 @@ function run_gradle() {
     run_command "$KOTLIN_DIR_REL_PATH/gradlew" -p "$KOTLIN_DIR_REL_PATH" "$@"
 }
 
-function assure_line_in_file() {
-    local filepath="$1"
-    local pattern="$2"
-    local default="$3"
-
-    grep -q "$pattern" "$filepath" || {
-        echo "Appending '$default' to '$filepath'"
-        echo "$default" >> "$filepath"
-    }
-}
-
-function action_run_setup() {  # TODO: Ansible this
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
-
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
-}
-
 function action_release_prod() {
     run_command git checkout main
     run_command git merge --no-edit develop

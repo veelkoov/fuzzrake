@@ -43,7 +43,7 @@ class FeedbackController extends AbstractController
             'router' => $this->router,
         ]);
 
-        $captcha = $this->captcha->getSessionCaptcha($session);
+        $captcha = $this->captcha->getCaptcha($session);
 
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid() && $captcha->hasBeenSolved($request, $form)) {
             try {

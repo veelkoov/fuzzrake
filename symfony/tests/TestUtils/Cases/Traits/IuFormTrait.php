@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait IuFormTrait
 {
-    private static function skipRulesAndCaptcha(KernelBrowser $client): void
+    private static function skipRulesAndCaptcha(KernelBrowser $client): void // FIXME: Name
     {
         TestsBridge::setSkipSingleCaptcha();
 

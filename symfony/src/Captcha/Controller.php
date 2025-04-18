@@ -14,7 +14,8 @@ class Controller extends AbstractController
     public function challenge(CaptchaService $service, SessionInterface $session, FormView $form): Response
     {
         $form->setRendered();
-        $captcha = $service->getSessionCaptcha($session);
+
+        $captcha = $service->getCaptcha($session);
 
         if ($captcha->isSolved()) {
             return new Response(status: Response::HTTP_NO_CONTENT);
