@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <p class="text-center overflow-x-auto">
+    <p class="text-center">
         <a class="btn btn-primary my-1 btn-sm" href="https://www.tumblr.com/getfursuit">
             <i class="fa-brands fa-tumblr"></i> Tumblr
         </a>
@@ -47,11 +47,13 @@
                     <i class="fas fa-envelope"></i> {{ contact_email }}
                 </a>
             </span>
-        {% else %}
-            {{ form_start(form) }}
-            {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
-            <input type="submit" class="btn btn-primary my-1 btn-sm" value="Reveal">
-            {{ form_end(form) }}
         {% endif %}
     </p>
+
+    {% if not is_solved %}
+        {{ form_start(form) }}
+        {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
+        <input type="submit" class="btn btn-primary my-1 btn-sm" value="Reveal email address">
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}

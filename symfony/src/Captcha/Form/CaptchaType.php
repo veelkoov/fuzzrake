@@ -16,7 +16,7 @@ class CaptchaType extends AbstractType
     {
         $resolver->setDefaults([
             'error_bubbling' => false,
-            'label' => 'Captcha!',
+            'label' => 'Captcha',
             'mapped' => false,
         ]);
     }
