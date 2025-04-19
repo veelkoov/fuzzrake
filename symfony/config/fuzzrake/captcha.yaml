@@ -158,3 +158,18 @@ parameters:
         tiger: true
         wolf: true
         zebra: true
+
+when@test:
+  parameters:
+    captcha:
+      questions_per_challenge: 1
+      options_per_question: 2
+
+      animals:
+        right: 'right'
+        wrong: 'wrong'
+
+      questions:
+        testing:
+          right: true
+          wrong: false

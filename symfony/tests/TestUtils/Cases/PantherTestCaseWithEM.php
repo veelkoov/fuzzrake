@@ -9,6 +9,8 @@ use App\Tests\TestUtils\Cases\Traits\UtilsTrait;
 use App\Utils\TestUtils\TestsBridge;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 use LogicException;
 use Override;
@@ -121,5 +123,29 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         }
 
         self::assertNull($exception, $message ?? "Element '$locator' is visible.");
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    protected function selectRightCaptchaSolution(): void
+    {
+        $this->client->findElement(WebDriverBy::xpath('//label[text()="right"]'))->click();
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    protected function selectWrongCaptchaSolution(): void
+    {
+        $this->client->findElement(WebDriverBy::xpath('//label[text()="wrong"]'))->click();
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    protected function waitUntilCaptchaWithErrorFeedbackIsVisible(): void
+    {
+        $this->client->waitForVisibility('div.captcha.border-danger', 5);
     }
 }

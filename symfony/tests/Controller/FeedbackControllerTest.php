@@ -25,9 +25,9 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->captchaRightSolutionFieldName() => true,
         ]);
 
-        TestsBridge::setSkipSingleCaptcha();
         $client->submit($form);
         self::assertResponseStatusCodeIs($client, 302);
         $client->followRedirect();

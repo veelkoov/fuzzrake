@@ -11,7 +11,7 @@
                 <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                     {% for option in question.options %}
                         <input type="checkbox" class="btn-check" name="{{ option.id }}" id="{{ option.id }}"
-                               autocomplete="off">
+                               autocomplete="off" value="{{ option.emoticon }}">
 
                         <label class="btn btn-outline-info" for="{{ option.id }}">{{ option.emoticon }}</label>
                     {% endfor %}

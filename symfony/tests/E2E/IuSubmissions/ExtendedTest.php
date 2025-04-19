@@ -116,7 +116,7 @@ class ExtendedTest extends AbstractTestWithEM
         $oldData1 = $loader->getArtisanData('a1.1-persisted');
         $newData1 = $loader->getArtisanData('a1.2-send', self::NOT_IN_FORM);
         $makerId1 = $oldData1->getMakerId();
-        self::validateIuFormOldDataSubmitNew($makerId1, $oldData1, $newData1);
+        self::validateIuFormOldDataSubmitNew($makerId1, $oldData1, $newData1, true);
 
         $oldData2 = new Artisan();
         $newData2 = $loader->getArtisanData('a2.2-send', self::NOT_IN_FORM);
@@ -159,17 +159,17 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private function validateIuFormOldDataSubmitNew(string $urlMakerId, Artisan $oldData, Artisan $newData): void
+    private function validateIuFormOldDataSubmitNew(string $urlMakerId, Artisan $oldData, Artisan $newData, bool $solveCaptcha = false): void
     {
         $this->client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
         self::assertResponseStatusCodeIs($this->client, 200);
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         self::assertNotFalse($this->client->getResponse()->getContent());
         self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent());
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form();
-        self::setValuesInForm($form, $newData);
+        $this->setValuesInForm($form, $newData, $solveCaptcha);
         self::submitValid($this->client, $form);
 
         self::assertIuSubmittedAnyResult($this->client);
@@ -338,7 +338,7 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function setValuesInForm(Form $form, Artisan $data): void
+    private function setValuesInForm(Form $form, Artisan $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
             if (in_array($field, self::NOT_IN_FORM)) {
@@ -377,6 +377,10 @@ class ExtendedTest extends AbstractTestWithEM
         self::selectCheckbox($form['iu_form[changePassword]']);
         self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
         self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
+
+        if ($solveCaptcha) {
+            $form[$this->captchaRightSolutionFieldName()] = true;
+        }
     }
 
     /**
