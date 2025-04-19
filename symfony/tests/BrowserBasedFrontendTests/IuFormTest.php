@@ -185,6 +185,7 @@ class IuFormTest extends PantherTestCaseWithEM
         // Go back to 1st creator I/U data page, make sure A matches, submit
         $this->goToTheDataPage('CRTR001');
         self::assertInputValueSame('iu_form[name]', 'Creator 001 - MODIFIED');
+        $this->selectRightCaptchaSolution();
         $this->client->submit($this->client->getCrawler()->selectButton('Submit')->form(), [
             'iu_form[password]' => 'test-password',
         ]);

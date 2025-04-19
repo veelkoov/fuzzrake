@@ -18,7 +18,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
     public function testNewMakerPasswordIsHashed(): void
     {
         $this->client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'TESTMID',
@@ -30,6 +30,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[contactAllowed]' => 'NO',
             'iu_form[password]' => 'some-password',
+            self::captchaRightSolutionFieldName() => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
@@ -59,11 +60,12 @@ class PasswordHandlingTest extends AbstractTestWithEM
         unset($artisan);
 
         $this->client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
             'iu_form[password]' => 'known-password',
+            self::captchaRightSolutionFieldName() => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
@@ -94,13 +96,14 @@ class PasswordHandlingTest extends AbstractTestWithEM
         unset($artisan);
 
         $this->client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
+            self::captchaRightSolutionFieldName()  => true,
         ]);
         $this::submitValid($this->client, $form);
 
@@ -132,13 +135,14 @@ class PasswordHandlingTest extends AbstractTestWithEM
         unset($artisan);
 
         $this->client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
+            self::captchaRightSolutionFieldName()  => true,
         ]);
         $this::submitValid($this->client, $form);
 

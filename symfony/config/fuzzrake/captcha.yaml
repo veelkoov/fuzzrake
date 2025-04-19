@@ -166,8 +166,8 @@ when@test:
       options_per_question: 2
 
       animals:
-        right: 'right'
-        wrong: 'wrong'
+        right: right
+        wrong: wrong
 
       questions:
         testing:

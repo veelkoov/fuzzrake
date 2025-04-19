@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCase;
-use App\Utils\TestUtils\TestsBridge;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
@@ -51,10 +50,9 @@ class FeedbackControllerTest extends WebTestCase
         ]);
 
         $client->submit($form);
-        self::assertResponseStatusCodeIs($client, 200);
-
+        self::assertResponseStatusCodeIs($client, 422);
         self::assertSelectorTextSame('h1', 'Feedback form');
-        self::assertSelectorTextContains('div.alert', 'Captcha failed. Please retry submitting.');
+        self::assertCaptchaSolutionRejected();
     }
 
     public function testSimpleValidationErrors(): void
@@ -88,11 +86,9 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => $optionToSelect,
             'feedback[noContactBack]' => true,
+            self::captchaRightSolutionFieldName() => 'right',
         ]);
 
-        if (!$shouldBlock) {
-            TestsBridge::setSkipSingleCaptcha();
-        }
         $client->submit($form);
 
         self::assertResponseStatusCodeIs($client, $shouldBlock ? 422 : 302);

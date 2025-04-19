@@ -36,4 +36,9 @@ abstract class WebTestCase extends SymfonyWebTestCase
         return $crawler->attr('name')
             ?? throw new LogicException('The "right" element is missing the name attribute.');
     }
+
+    protected static function assertCaptchaSolutionRejected(): void
+    {
+        self::assertSelectorExists('div.captcha.border-danger');
+    }
 }

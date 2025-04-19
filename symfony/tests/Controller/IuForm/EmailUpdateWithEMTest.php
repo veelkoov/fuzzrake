@@ -102,7 +102,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     private function skipToTheDataIuFormPage(): void
     {
         $this->client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
     }
 
     /**
@@ -136,6 +136,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
                 'iu_form[password]' => 'abcd1234',
                 'iu_form[changePassword]' => '1', // Just allow the submission
                 'iu_form[verificationAcknowledgement]' => '1', // Whatever the contact permit is
+                self::captchaRightSolutionFieldName() => 'right',
             ],
         );
     }
