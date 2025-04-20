@@ -25,7 +25,6 @@ TODO: Kotlin stuff
 To make tests in `@small` group work:
 
 * Clone
-* `./toolbox setup`
 * `./toolbox docker-up`
 * `./toolbox composer install`
 * `./toolbox pus`

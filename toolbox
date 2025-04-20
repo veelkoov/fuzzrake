@@ -156,7 +156,6 @@ Usage:
 
 Available actions:
 
-    setup        Symfony: setup and/or fix required filesystem items and/or settings
     branch       Symfony:
                      composer install
                      yarn install
@@ -200,7 +199,6 @@ function action() {
     shift
 
     case $action in
-        'setup')        action_run_setup ;;
         'branch')
             action docker-up
             run_composer install
