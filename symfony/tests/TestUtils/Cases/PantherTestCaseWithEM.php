@@ -132,20 +132,4 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     {
         $this->client->findElement(WebDriverBy::xpath('//label[text()="right"]'))->click();
     }
-
-    /**
-     * @throws NoSuchElementException
-     */
-    protected function selectWrongCaptchaSolution(): void
-    {
-        $this->client->findElement(WebDriverBy::xpath('//label[text()="wrong"]'))->click();
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    protected function waitUntilCaptchaWithErrorFeedbackIsVisible(): void
-    {
-        $this->client->waitForVisibility('div.captcha.border-danger', 5);
-    }
 }
