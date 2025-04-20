@@ -2,7 +2,7 @@
 composer.json
 composer.lock
 config/*
-!config/data_definitions
+!config/fuzzrake
 package.json
 tests/
 

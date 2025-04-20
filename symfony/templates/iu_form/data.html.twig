@@ -17,8 +17,6 @@
 {% block body %}
     <h1 id="iu-form-data" data-step="data" data-creator-id="{{ creator_id }}">{{ block('title')|capitalize }}</h1>
 
-    {{ include('shared_parts/big_scary_error.html.twig') }}
-
     <div class="card border-dark mb-3">
         <div class="card-body">
             <p class="card-text p-0 m-0 float-start">
@@ -564,6 +562,8 @@
             {{ form_row(form.verificationAcknowledgement) }}
         </div>
     </div>
+
+    {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
 
     {{ form_rest(form) }}
 

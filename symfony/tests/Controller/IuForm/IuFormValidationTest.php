@@ -21,10 +21,12 @@ class IuFormValidationTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
+        self::skipRules($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
         self::submitInvalid($client, $form);
+
+        self::assertCaptchaSolutionRejected();
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback',
             'This value should not be blank.');
@@ -86,7 +88,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
+        self::skipRules($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'test-maker-555',
@@ -97,6 +99,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
             'iu_form[nsfwSocial]' => $nsfwSocial,
             'iu_form[contactAllowed]' => 'NO',
             'iu_form[password]' => 'aBcDeFgH1324',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
         if (null !== $doesNsfw) {
@@ -314,7 +317,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
         }
 
         $client->request('GET', $iuFormStartUri);
-        self::skipRulesAndCaptcha($client);
+        self::skipRules($client);
 
         $formData = [
             'iu_form[makerId]'         => 'MAKERID',
@@ -324,6 +327,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
             'iu_form[nsfwWebsite]'     => 'NO',
             'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
+            $this->getCaptchaFieldName('right') => 'right',
         ];
 
         if (null !== $password) {

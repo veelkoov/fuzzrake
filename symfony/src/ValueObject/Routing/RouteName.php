@@ -10,7 +10,6 @@ final class RouteName
 {
     use UtilityClass;
 
-    final public const string API = 'api';
     final public const string API_ARTISANS = 'api_artisans';
     final public const string CONTACT = 'contact';
     final public const string DONATE = 'donate';
@@ -24,7 +23,6 @@ final class RouteName
     final public const string INFO = 'info';
     final public const string IU_FORM_START = 'iu_form_step_start';
     final public const string IU_FORM_DATA = 'iu_form_step_data';
-    final public const string IU_FORM_CONTACT_AND_PASSWORD = 'iu_form_step_contact_and_password';
     final public const string IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
     final public const string MAIN = 'main';
     final public const string MAKER_IDS = 'maker_ids';

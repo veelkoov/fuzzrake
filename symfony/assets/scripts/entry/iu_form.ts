@@ -1,4 +1,3 @@
-import Captcha from "../class/Captcha";
 import Checkbox from "../class/Checkbox";
 import DynamicFields from "../class/fields/DynamicFields";
 import DynamicRadio from "../class/fields/DynamicRadio";
@@ -40,8 +39,6 @@ function cleanup(creatorId: string): void {
 }
 
 function setup_start_page(): void {
-  Captcha.setupOnForm('form[name="iu_form"]');
-
   const confirmAddingANewOne = new Radio(
     "iu_form[confirmAddingANewOne]",
     refresh_page,

@@ -4,7 +4,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('iu_form') }}
 {% endblock %}
 
@@ -22,8 +21,6 @@
             Temporarily disable all the filters and <strong>open the main page</strong>
         </a>
     </p>
-
-    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
@@ -79,15 +76,6 @@
 
     <div id="rulesAndContinueButton">
         {{ include('shared_parts/guidelines.html.twig') }}
-
-        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
-
-        <div class="d-none g-recaptcha"
-             data-sitekey="{{ google_recaptcha_site_key }}"
-             data-callback="formRecaptchaValidationCallback"
-             data-action="iu_form_captcha"
-             data-size="invisible"
-        ></div>
 
         <input type="submit" class="btn btn-primary btn-lg" value="Agree and continue" />
     </div>

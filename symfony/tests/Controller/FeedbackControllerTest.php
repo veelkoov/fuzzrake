@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCase;
-use App\Utils\TestUtils\TestsBridge;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
@@ -25,9 +24,9 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
-        TestsBridge::setSkipSingleCaptcha();
         $client->submit($form);
         self::assertResponseStatusCodeIs($client, 302);
         $client->followRedirect();
@@ -36,7 +35,7 @@ class FeedbackControllerTest extends WebTestCase
         self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
-    public function testCaptchaFailure(): void
+    public function testCaptchaWorksBySimpleSubmission(): void
     {
         $client = $this->createClient();
         $client->request('GET', '/feedback');
@@ -48,13 +47,25 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('wrong') => 'wrong',
         ]);
+        self::submitInvalid($client, $form);
+        self::assertCaptchaSolutionRejected();
 
-        $client->submit($form);
-        self::assertResponseStatusCodeIs($client, 200);
+        $form = $client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => '', // To cause 422 and see if the captcha does not show again
+            $this->getCaptchaFieldName('right') => 'right',
+        ]);
+        self::submitInvalid($client, $form);
 
-        self::assertSelectorTextSame('h1', 'Feedback form');
-        self::assertSelectorTextContains('div.alert', 'Captcha failed. Please retry submitting.');
+        $form = $client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => 'Testing details',
+            // Captcha solved previously, not needed again
+        ]);
+        self::submitValid($client, $form);
+
+        self::assertSelectorTextSame('h1', 'Feedback submitted');
+        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
     public function testSimpleValidationErrors(): void
@@ -88,11 +99,9 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => $optionToSelect,
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
-        if (!$shouldBlock) {
-            TestsBridge::setSkipSingleCaptcha();
-        }
         $client->submit($form);
 
         self::assertResponseStatusCodeIs($client, $shouldBlock ? 422 : 302);

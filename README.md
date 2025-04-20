@@ -25,7 +25,6 @@ TODO: Kotlin stuff
 To make tests in `@small` group work:
 
 * Clone
-* `./toolbox setup`
 * `./toolbox docker-up`
 * `./toolbox composer install`
 * `./toolbox pus`
@@ -39,7 +38,6 @@ To make tests in `@medium` group work:
 To make the local development environment and tests in `@large` group work:
 * All the above setup
 * `./toolbox console doctrine:schema:create`
-* Setup reCaptcha (required for some functionalities; `grep -R __TODO_PROVIDE_THIS__ ./symfony`)
 * `./toolbox pul`
 * http://localhost:8080/ should now respond
 

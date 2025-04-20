@@ -24,7 +24,6 @@ Encore
   .addEntry("events", "./assets/scripts/entry/events.ts")
   .addEntry("feedback", "./assets/scripts/entry/feedback.ts")
   .addEntry("general", "./assets/scripts/entry/general.ts")
-  .addEntry("contact", "./assets/scripts/entry/contact.ts")
   .addEntry("iu_form", "./assets/scripts/entry/iu_form.ts")
   .addEntry("main", "./assets/scripts/entry/main.ts")
   .addEntry("toc", "./assets/scripts/entry/toc.ts")

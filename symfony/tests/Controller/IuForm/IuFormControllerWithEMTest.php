@@ -44,21 +44,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     public function testSubmittingEmptyDoesnt500(): void
     {
         $this->client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form();
         self::submitInvalid($this->client, $form);
-    }
-
-    public function testCannotSkipCaptcha(): void
-    {
-        $this->client->followRedirects(true);
-
-        $crawler = $this->client->request('GET', '/iu_form/data');
-        $uri = $crawler->getUri();
-
-        self::assertNotNull($uri);
-        self::assertMatchesRegularExpression('#/iu_form/start$#', $uri);
     }
 
     /**
@@ -69,7 +58,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
         $this->client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
         $crawler = $this->client->getCrawler();
 
         foreach ($choices as $choice) {
@@ -93,11 +82,12 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         );
 
         $this->client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'OTHERID',
             'iu_form[password]' => 'aBcDeFgH1324',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
@@ -117,7 +107,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         );
 
         $this->client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]'         => 'OTHERID',
@@ -129,6 +119,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[contactAllowed]'  => 'NO',
             'iu_form[password]'        => 'aBcDeFgH1324',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
@@ -144,7 +135,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     public function testEmailAddressNotShownForNewCreator(): void
     {
         $this->client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
@@ -155,7 +146,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     {
         self::persistAndFlush(self::getArtisan(makerId: 'CREATOR', emailAddress: 'garbage'));
         $this->client->request('GET', '/iu_form/start/CREATOR');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
@@ -163,7 +154,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     {
         self::persistAndFlush(self::getArtisan(makerId: 'CREATOR', emailAddress: 'valid@example.com'));
         $this->client->request('GET', '/iu_form/start/CREATOR');
-        self::skipRulesAndCaptcha($this->client);
+        self::skipRules($this->client);
         self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
     }
 }

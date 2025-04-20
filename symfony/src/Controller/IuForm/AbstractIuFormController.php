@@ -10,7 +10,6 @@ use App\Data\Definitions\Fields\SecureValues;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractIuFormController extends AbstractController
 {
@@ -31,17 +30,5 @@ abstract class AbstractIuFormController extends AbstractController
         SecureValues::forIuForm($subject->creator);
 
         return $subject;
-    }
-
-    protected function markCaptchaDone(SessionInterface $session): void
-    {
-        $session->set('iu_form_captcha_done', true);
-    }
-
-    protected function isCaptchaDone(SessionInterface $session): bool
-    {
-        $result = $session->get('iu_form_captcha_done', false);
-
-        return is_bool($result) ? $result : false;
     }
 }
