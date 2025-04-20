@@ -87,7 +87,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'OTHERID',
             'iu_form[password]' => 'aBcDeFgH1324',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
@@ -119,7 +119,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[contactAllowed]'  => 'NO',
             'iu_form[password]'        => 'aBcDeFgH1324',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
         self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',

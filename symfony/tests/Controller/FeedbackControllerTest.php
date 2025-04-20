@@ -24,7 +24,7 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
-            $this->captchaRightSolutionFieldName() => true,
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
         $client->submit($form);
@@ -35,7 +35,7 @@ class FeedbackControllerTest extends WebTestCase
         self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
-    public function testCaptchaFailure(): void
+    public function testCaptchaWorksBySimpleSubmission(): void
     {
         $client = $this->createClient();
         $client->request('GET', '/feedback');
@@ -47,12 +47,25 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('wrong') => 'wrong',
         ]);
-
-        $client->submit($form);
-        self::assertResponseStatusCodeIs($client, 422);
-        self::assertSelectorTextSame('h1', 'Feedback form');
+        self::submitInvalid($client, $form);
         self::assertCaptchaSolutionRejected();
+
+        $form = $client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => '', // To cause 422 and see if the captcha does not show again
+            $this->getCaptchaFieldName('right') => 'right',
+        ]);
+        self::submitInvalid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => 'Testing details',
+            // Captcha solved previously, not needed again
+        ]);
+        self::submitValid($client, $form);
+
+        self::assertSelectorTextSame('h1', 'Feedback submitted');
+        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
     public function testSimpleValidationErrors(): void
@@ -86,7 +99,7 @@ class FeedbackControllerTest extends WebTestCase
             'feedback[maker]'         => 'MAKERID',
             'feedback[subject]'       => $optionToSelect,
             'feedback[noContactBack]' => true,
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
         $client->submit($form);

@@ -39,14 +39,12 @@
             <i class="fab fa-twitter"></i> Twitter
         </a>
 
-        <br>
-
         {% if is_solved %}
-            <span id="protected-contact-info"> {# TODO: Reeaval necessity of having the span #}
-                <a href="mailto:{{ contact_email }}" class="btn btn-primary my-1 btn-sm">
-                    <i class="fas fa-envelope"></i> {{ contact_email }}
-                </a>
-            </span>
+            <br>
+
+            <a href="mailto:{{ contact_email }}" class="btn btn-primary my-1 btn-sm">
+                <i class="fas fa-envelope"></i> {{ contact_email }}
+            </a>
         {% endif %}
     </p>
 

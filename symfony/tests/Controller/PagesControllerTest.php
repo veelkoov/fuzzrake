@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCase;
 
 /**
  * @medium
@@ -22,7 +22,7 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', $uri);
 
-        self::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs($client, 200);
 
         foreach ($texts as $selector => $text) {
             self::assertSelectorTextContains($selector, $text);
@@ -64,5 +64,23 @@ class PagesControllerTest extends WebTestCase
                 'h1' => 'What you should know',
             ]],
         ];
+    }
+
+    public function testCaptchaWorksAndEmailAddressAppears(): void
+    {
+        $client = self::createClient();
+        $client->request('GET', '/contact');
+
+        // E-mail address link is not visible by default
+        self::assertSelectorNotExists('a[href^="mailto:"]');
+
+        // Solve the captcha
+        $form = $client->getCrawler()->selectButton('Reveal email address')->form([
+            $this->getCaptchaFieldName('right') => 'right',
+        ]);
+        $client->submit($form);
+
+        // The link should now contain the e-mail address
+        self::assertSelectorExists('a[href^="mailto:"]');
     }
 }

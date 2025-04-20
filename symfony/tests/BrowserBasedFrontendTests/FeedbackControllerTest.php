@@ -121,29 +121,4 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
     }
-
-    /**
-     * @throws WebDriverException
-     */
-    public function testCaptchaWorksBySimpleSubmission(): void
-    {
-        $this->client->request('GET', '/index.php/feedback');
-        $this->client->waitForVisibility('h1', 5);
-
-        $this->client->getCrawler()->selectButton('Send')->form([
-            'feedback[details]'       => 'Testing details',
-            'feedback[subject]'       => 'Other (please provide adequate details and context)',
-            'feedback[noContactBack]' => true,
-        ]);
-        $this->selectWrongCaptchaSolution();
-        $this->client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
-        $this->waitUntilCaptchaWithErrorFeedbackIsVisible();
-
-        $this->selectRightCaptchaSolution();
-        $this->client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
-        $this->client->waitForVisibility('div.alert', 5);
-
-        self::assertSelectorTextSame('h1', 'Feedback submitted');
-        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
-    }
 }

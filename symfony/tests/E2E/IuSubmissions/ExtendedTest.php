@@ -379,7 +379,7 @@ class ExtendedTest extends AbstractTestWithEM
         self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
 
         if ($solveCaptcha) {
-            $form[$this->captchaRightSolutionFieldName()] = 'right';
+            $form[$this->getCaptchaFieldName('right')] = 'right';
         }
     }
 

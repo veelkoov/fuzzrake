@@ -99,7 +99,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
             'iu_form[nsfwSocial]' => $nsfwSocial,
             'iu_form[contactAllowed]' => 'NO',
             'iu_form[password]' => 'aBcDeFgH1324',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
         if (null !== $doesNsfw) {
@@ -327,7 +327,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
             'iu_form[nsfwWebsite]'     => 'NO',
             'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ];
 
         if (null !== $password) {

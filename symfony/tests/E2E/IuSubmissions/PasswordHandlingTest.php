@@ -30,7 +30,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[contactAllowed]' => 'NO',
             'iu_form[password]' => 'some-password',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
@@ -65,7 +65,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
             'iu_form[password]' => 'known-password',
-            self::captchaRightSolutionFieldName() => 'right',
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
@@ -103,7 +103,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
-            self::captchaRightSolutionFieldName()  => true,
+            $this->getCaptchaFieldName('right')    => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
@@ -142,7 +142,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
-            self::captchaRightSolutionFieldName()  => true,
+            $this->getCaptchaFieldName('right')    => 'right',
         ]);
         $this::submitValid($this->client, $form);
 
