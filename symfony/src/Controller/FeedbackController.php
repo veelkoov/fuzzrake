@@ -41,11 +41,10 @@ class FeedbackController extends AbstractController
 
         $form = $this->createForm(FeedbackType::class, $feedback, [
             'router' => $this->router,
-        ]);
+        ])->handleRequest($request);
+        $captcha = $this->captcha->getCaptcha($session)->handleRequest($request, $form);
 
-        $captcha = $this->captcha->getCaptcha($session);
-
-        if ($form->handleRequest($request)->isSubmitted() && $form->isValid() && $captcha->hasBeenSolved($request, $form)) {
+        if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             try {
                 $this->sendFeedback($feedback);
 

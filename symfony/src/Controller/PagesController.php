@@ -29,8 +29,7 @@ class PagesController extends AbstractController
         #[Autowire(env: 'CONTACT_EMAIL')] string $contactEmail): Response
     {
         $form = $captchaService->getStandaloneForm();
-        $captcha = $captchaService->getCaptcha($session);
-        $captcha->hasBeenSolved($request, $form);
+        $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
         return $this->render('pages/contact.html.twig', [
             'form' => $form,

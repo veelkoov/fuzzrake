@@ -96,7 +96,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'ANOTHER',
             'iu_form[password]' => 'aBcDeFgH1324',
-            self::captchaRightSolutionFieldName() => 'right', // FIXME: I need to understand why this is needed
         ]);
         self::submitValid($this->client, $form);
     }
@@ -129,7 +128,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[makerId]' => 'ANOTHER',
             'iu_form[password]' => 'aBcDeFgH1324',
-            self::captchaRightSolutionFieldName() => 'right', // FIXME: I need to understand why this is needed
         ]);
         self::submitValid($this->client, $form);
     }

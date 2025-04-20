@@ -47,16 +47,14 @@ class IuFormDataController extends AbstractIuFormController
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
             Data::OPT_CURRENT_EMAIL_ADDRESS => $subject->previousEmailAddress,
             'router' => $router,
-        ])
-            ->handleRequest($request);
-
-        $captcha = $captchaService->getCaptcha($session);
+        ])->handleRequest($request);
+        $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
         $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);
         $this->validateMakerId($form, $subject->creator);
 
-        if ($form->isSubmitted() && $form->isValid() && $captcha->hasBeenSolved($request, $form)) {
+        if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             $submittedPasswordOk = $this->handlePassword($subject);
 
             $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();

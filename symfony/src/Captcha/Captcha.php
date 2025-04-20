@@ -39,14 +39,10 @@ class Captcha
     /**
      * @param FormInterface<covariant mixed> $form
      */
-    public function hasBeenSolved(Request $request, FormInterface $form): bool
+    public function handleRequest(Request $request, FormInterface $form): self
     {
-        if ($this->isSolved) {
-            return true;
-        }
-
-        if (!$request->isMethod(Request::METHOD_POST)) {
-            return false;
+        if ($this->isSolved || !$request->isMethod(Request::METHOD_POST)) {
+            return $this;
         }
 
         if (self::solvedInRequest($this->challenge, $request)) {
@@ -58,7 +54,7 @@ class Captcha
             $this->setNewChallenge();
         }
 
-        return $this->isSolved;
+        return $this;
     }
 
     private function setNewChallenge(): void
