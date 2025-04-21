@@ -10,7 +10,7 @@ use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -65,9 +65,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testAdditionIsProperlyRendered(): void
     {
-        $submission = (new Artisan())
+        $submission = (new Creator())
             // NOT fixed
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
 
             // Fixed
             ->setCountry('Finland')
@@ -87,8 +87,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $this->client->request('GET', "/mx/submission/$id");
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
-        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'MAKERID');
-        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'TEST001');
         self::assertSelectorExists('tr.MAKER_ID.submitted-different.not-fixed.changing');
 
         self::assertSelectorNotExists('tr.COUNTRY.before');
@@ -117,9 +117,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testUpdateIsProperlyRendered(): void
     {
-        $entity = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Some testing maker')
+        $entity = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Some testing creator')
             ->setCountry('FI')
             ->setFeatures([Features::FOLLOW_ME_EYES, Features::MOVABLE_JAW])
             ->setOtherFeatures(['Hidden pocket', 'Squeaker in nose'])
@@ -130,15 +130,15 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($entity);
 
-        $submission = (new Artisan())
+        $submission = (new Creator())
             // Submitted the same, NOT fixed, NOT changed
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
 
             // Submitted different, NOT fixed, changed
             ->setName('Changed name')
 
             // Submitted different, NOT fixed, changed / not tested
-            ->setFormerly(['Some testing maker'])
+            ->setFormerly(['Some testing creator'])
 
             // Submitted different, fixed, NOT changed
             ->setCountry('Finland')
@@ -166,12 +166,12 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->client->request('GET', "/mx/submission/$id");
 
-        self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'MAKERID');
-        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'MAKERID');
-        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'TEST001');
         self::assertSelectorExists('tr.MAKER_ID.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.NAME.before td+td', 'Some testing maker');
+        self::assertSelectorTextSame('tr.NAME.before td+td', 'Some testing creator');
         self::assertSelectorTextSame('tr.NAME.submitted td+td', 'Changed name');
         self::assertSelectorTextSame('tr.NAME.after td+td', 'Changed name');
         self::assertSelectorExists('tr.NAME.submitted-different.not-fixed.changing');
@@ -215,31 +215,31 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
-    public function testSubmissionMatchingMultipleMakers(): void
+    public function testSubmissionMatchingMultipleCreators(): void
     {
-        $entity1 = Artisan::new()->setMakerId('MAKERID')->setName('Some testing maker')->setCity('Kuopio');
-        $entity2 = Artisan::new()->setMakerId('MAKERI2')->setName('Testing maker');
+        $entity1 = Creator::new()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
+        $entity2 = Creator::new()->setCreatorId('TEST002')->setName('Testing creator');
 
         self::persistAndFlush($entity1, $entity2);
 
-        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setName('Testing maker')->setCity('Oulu'));
+        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu'));
 
         $this->client->request('GET', "/mx/submission/$id");
 
-        self::assertSelectorTextSame('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
-        self::assertSelectorTextSame('.invalid-feedback', 'Single maker must get selected.');
+        self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
+        self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
 
-        // With multiple makers matched, will be displayed as a new maker
+        // With multiple creators matched, will be displayed as a new creator
         self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
 
         $this->client->submitForm('Import', [
-            'submission[directives]' => 'match-maker-id MAKERID',
+            'submission[directives]' => 'match-maker-id TEST001',
         ]);
 
         self::assertResponseStatusCodeIs($this->client, 200);
         self::assertSelectorNotExists('.invalid-feedback');
 
-        // With a single maker selected, display actual difference
+        // With a single creator selected, display actual difference
         self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
     }
 
@@ -248,9 +248,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testUpdatingExistingSubmissionWithoutImport(): void
     {
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
         ;
 
         $id = Submissions::submit($submissionData);
@@ -265,7 +265,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->client->request('GET', "/mx/submission/$id");
 
-        self::assertSelectorTextSame('p', 'Creating a new maker.');
+        self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_directives', 'Old directives');
@@ -280,7 +280,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         // Reload to make sure saved is OK
         $this->client->request('GET', "/mx/submission/$id");
 
-        self::assertSelectorTextSame('p', 'Creating a new maker.');
+        self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
         self::assertSelectorTextSame('#submission_directives', 'New directives');
     }
@@ -290,9 +290,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testCreatingSubmission(): void
     {
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
         ;
 
         $id = Submissions::submit($submissionData);
@@ -321,9 +321,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testDirectivesWork(): void
     {
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
@@ -354,9 +354,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testDirectivesUpdateIsImmediate(): void
     {
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
@@ -384,9 +384,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testInvalidDirectivesDontBreakPage(): void
     {
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
         ;
 
         $id = Submissions::submit($submissionData);
@@ -411,16 +411,16 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
         if (!$new) {
-            $entity = (new Artisan())
-                ->setMakerId('MAKERID')
+            $entity = (new Creator())
+                ->setCreatorId('TEST001')
                 ->setPassword('password')
             ;
 
             self::persistAndFlush($entity);
         }
 
-        $submissionData = (new Artisan())
-            ->setMakerId('MAKERID')
+        $submissionData = (new Creator())
+            ->setCreatorId('TEST001')
             ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
         ;
 
@@ -445,8 +445,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function passwordHandlingAndAcceptingWorksDataProvider(): array
     {
         return [
-            'New artisan, not accepted'                => [true,  true,  false],
-            'New artisan, accepted'                    => [true,  true,  true],
+            'New creator, not accepted'                => [true,  true,  false],
+            'New creator, accepted'                    => [true,  true,  true],
             'Updating, wrong password, not accepted'   => [false, false, false],
             'Updating, wrong password, accepted'       => [false, false, true],
             'Updating, correct password, not accepted' => [false, true,  false],
@@ -459,8 +459,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testChangesDescriptionShowUp(): void
     {
-        self::persistAndFlush(Artisan::new()->setMakerId('MAKERID')->setName('Old name'));
-        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setName('New name'));
+        self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
+        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('New name'));
 
         $this->client->request('GET', "/mx/submission/$id");
 
@@ -477,12 +477,12 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $address = 'getfursu.it@example.com';
         $permit = $allowed ? ContactPermit::FEEDBACK : ContactPermit::NO;
 
-        self::persistAndFlush(Artisan::new()->setMakerId('MAKERID')
+        self::persistAndFlush(Creator::new()->setCreatorId('TEST001')
             ->setName('Old name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
-        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')
+        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')
             ->setName('New name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
@@ -512,7 +512,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testInvalidIdDoesntCauseError500(): void
     {
-        Submissions::submit(Artisan::new()); // Only to have the submissions directory existing
+        Submissions::submit(Creator::new()); // Only to have the submissions directory existing
         $this->client->request('GET', '/mx/submission/wrongId');
 
         self::assertResponseStatusCodeIs($this->client, 404);
@@ -526,17 +526,17 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
     {
         if (!$isNew) {
-            $entity = Artisan::new()->setMakerId('MAKERID')->setPassword('password___1234');
+            $entity = Creator::new()->setCreatorId('TEST001')->setPassword('password___1234');
 
             self::persistAndFlush($entity);
         }
 
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
-        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setPassword($submittedPassword));
+        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
 
         $this->client->request('GET', "/mx/submission/$id");
 
-        self::assertSelectorTextSame('tr.MAKER_ID td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID td+td', 'TEST001');
         self::assertSelectorTextNotContains('body', 'password___');
 
         if (!$isNew) {
@@ -552,9 +552,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function passwordIsRedactedDataProvider(): array
     {
         return [
-            'New maker'                          => [true, false],
-            'Updated maker, no password change'  => [true, false],
-            'Updated maker, password is changed' => [true, true],
+            'New creator'                          => [true, false],
+            'Updated creator, no password change'  => [true, false],
+            'Updated creator, password is changed' => [true, true],
         ];
     }
 
@@ -564,19 +564,19 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     private function generateRandomFakeSubmissions(int $count): void
     {
         while (--$count >= 0) {
-            $artisan = new Artisan();
-            $artisan->setName(Uuid::v4()->toRfc4122());
+            $creator = new Creator();
+            $creator->setName(Uuid::v4()->toRfc4122());
 
-            Submissions::submit($artisan);
+            Submissions::submit($creator);
         }
     }
 
     /**
      * @throws JsonException
      */
-    public function testHiddenMarker(): void
+    public function testHiddenCreator(): void
     {
-        $entity = Artisan::new()->setMakerId('MAKERID')->setInactiveReason('Dunno');
+        $entity = Creator::new()->setCreatorId('TEST001')->setInactiveReason('Dunno');
         self::persistAndFlush($entity);
 
         $id = Submissions::submit($entity); // No need to modify
@@ -589,7 +589,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $entity->setInactiveReason('');
         self::flush();
 
-        $this->client->request('GET', '/mx/submission/MAKERID');
+        $this->client->request('GET', '/mx/submission/TEST001');
 
         self::assertSelectorNotExists('#creator-hidden-warning');
     }

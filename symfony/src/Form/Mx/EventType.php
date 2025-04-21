@@ -38,11 +38,11 @@ class EventType extends AbstractTypeWithDelete
                 ],
                 'expanded' => true,
             ])
-            ->add('newMakersCount', NumberType::class, [
+            ->add('newCreatorsCount', NumberType::class, [
             ])
-            ->add('updatedMakersCount', NumberType::class, [
+            ->add('updatedCreatorsCount', NumberType::class, [
             ])
-            ->add('reportedUpdatedMakersCount', NumberType::class, [
+            ->add('reportedUpdatedCreatorsCount', NumberType::class, [
             ])
             ->add('gitCommits', TextareaType::class, [
                 'required'   => false,

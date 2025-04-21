@@ -6,7 +6,7 @@ namespace App\Utils;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 
@@ -14,16 +14,16 @@ final class StrUtils
 {
     use UtilityClass;
 
-    public static function artisanNamesSafeForCli(Artisan ...$artisans): string
+    public static function creatorNamesSafeForCli(Creator ...$creators): string
     {
-        $names = $makerIds = [];
+        $names = $creatorIds = [];
 
-        foreach ($artisans as /* @var Artisan $artisan */ $artisan) {
-            $names = array_merge($artisan->getAllNames(), $names);
-            $makerIds = array_merge($artisan->getAllMakerIds(), $makerIds);
+        foreach ($creators as $creator) {
+            $names = array_merge($creator->getAllNames(), $names);
+            $creatorIds = array_merge($creator->getAllCreatorIds(), $creatorIds);
         }
 
-        return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($makerIds))]));
+        return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($creatorIds))]));
     }
 
     public static function strSafeForCli(string $input): string

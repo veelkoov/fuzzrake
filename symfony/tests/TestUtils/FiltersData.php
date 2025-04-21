@@ -6,8 +6,8 @@ namespace App\Tests\TestUtils;
 
 use App\Entity\CreatorSpecie;
 use App\Entity\Specie;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Collections\Lists;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use Psl\Dict;
@@ -41,7 +41,7 @@ class FiltersData
             $creatorSpecies = [...$creatorSpecies, ...Vec\map($creator->getSpeciesDoes(),
                 fn (string $name) => (new CreatorSpecie())
                     ->setSpecie($species[$name])
-                    ->setCreator($creator->getArtisan()),
+                    ->setCreator($creator->getCreator()),
             )];
         }
 

@@ -19,7 +19,7 @@ class CreatorUrlsRemovalType extends AbstractType
     {
         $builder
             ->add('hide', CheckboxType::class, [
-                'label'    => 'Hide the maker',
+                'label'    => 'Hide the creator',
                 'required' => false,
             ])
             ->add('sendEmail', CheckboxType::class, [

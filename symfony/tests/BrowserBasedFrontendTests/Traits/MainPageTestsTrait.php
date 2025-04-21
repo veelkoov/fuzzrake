@@ -13,13 +13,13 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function skipCheckListAdultAllowNsfw(int $numberOfArtisans, bool $expectFilled = false): void
+    private function skipCheckListAdultAllowNsfw(int $numberOfCreators, bool $expectFilled = false): void
     {
-        $infoText = "Currently $numberOfArtisans makers from $numberOfArtisans countries are listed here.";
+        $infoText = "Currently $numberOfCreators makers from $numberOfCreators countries are listed here.";
         $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
         $this->fillChecklist(true, false, $expectFilled);
-        $this->waitExpectLoadedCreatorsTable($numberOfArtisans, $numberOfArtisans); // Assumes no paging happening
+        $this->waitExpectLoadedCreatorsTable($numberOfCreators, $numberOfCreators); // Assumes no paging happening
     }
 
     /**
@@ -76,18 +76,18 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function openMakerCardByClickingOnTheirNameInTheTable(string $makerName): void
+    private function openCreatorCardByClickingOnTheirNameInTheTable(string $creatorName): void
     {
-        $this->client->findElement(WebDriverBy::xpath('//td[contains(., "'.$makerName.'")]'))->click();
+        $this->client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
 
-        self::waitUntilShows('#artisanName');
-        self::assertSelectorTextSame('#artisanName', $makerName);
+        self::waitUntilShows('#creator-name');
+        self::assertSelectorTextSame('#creator-name', $creatorName);
     }
 
     /**
      * @throws WebDriverException
      */
-    private function openDataOutdatedPopupFromTheMakerCard(): void
+    private function openDataOutdatedPopupFromTheCreatorCard(): void
     {
         $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
@@ -108,7 +108,7 @@ trait MainPageTestsTrait
      * @param list<string> $visibleCreatorIds
      * @param list<string> $hiddenCreatorIds
      */
-    private function assertMakersVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
+    private function assertCreatorsVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
     {
         foreach ($visibleCreatorIds as $creatorId) {
             self::assertSelectorIsVisible("#$creatorId");

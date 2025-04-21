@@ -7,7 +7,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Psl\Iter;
@@ -82,7 +82,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
             $creators[$creatorId] = (new Creator())
-                ->setMakerId($creatorId)
+                ->setCreatorId($creatorId)
                 ->setName($name)
                 ->setAges($ages)
                 ->setNsfwWebsite($nsfwWebsite)
@@ -139,7 +139,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         }
 
         foreach ($expected as $creator) {
-            self::assertContains($creator->getMakerId(), $displayedCreatorIds, "Should display {$creator->getName()}");
+            self::assertContains($creator->getCreatorId(), $displayedCreatorIds, "Should display {$creator->getName()}");
         }
 
         foreach ($displayedCreatorIds as $creatorId) {

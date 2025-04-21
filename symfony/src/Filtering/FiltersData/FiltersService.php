@@ -10,9 +10,9 @@ use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Data\SpecialItemList;
-use App\Repository\ArtisanRepository;
-use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
+use App\Repository\CreatorRepository;
+use App\Repository\CreatorVolatileDataRepository;
 use App\Service\Cache;
 use App\Service\CountriesDataService;
 use App\Service\DataService;
@@ -24,9 +24,9 @@ use Psl\Vec;
 class FiltersService
 {
     public function __construct(
-        private readonly ArtisanRepository $artisanRepository,
+        private readonly CreatorRepository $creatorRepository,
         private readonly CreatorOfferStatusRepository $offerStatusRepository,
-        private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
+        private readonly CreatorVolatileDataRepository $creatorVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly DataService $dataService,
         private readonly SpeciesFilterService $speciesFilterService,
@@ -51,7 +51,7 @@ class FiltersService
             $this->getStatesFilterData(),
             $this->speciesFilterService->getFilterData(),
             $this->getInactiveFilterData(),
-        ), CacheTags::ARTISANS, __METHOD__);
+        ), CacheTags::CREATORS, __METHOD__);
     }
 
     public function getCountriesFilterData(): FilterData
@@ -109,8 +109,8 @@ class FiltersService
      */
     private function getOpenFor(): FilterData
     {
-        $trackedCount = $this->artisanRepository->getCsTrackedCount();
-        $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
+        $trackedCount = $this->creatorRepository->getCsTrackedCount();
+        $issuesCount = $this->creatorVolatileDataRepository->getCsTrackingIssuesCount();
         $activeCount = $this->dataService->countActiveCreators();
         $nonTrackedCount = $activeCount - $trackedCount;
 
@@ -130,7 +130,7 @@ class FiltersService
         $unknown = SpecialItems::newUnknown();
         $result = new MutableFilterData($unknown);
 
-        foreach ($this->artisanRepository->getPaymentPlans() as $paymentPlan) {
+        foreach ($this->creatorRepository->getPaymentPlans() as $paymentPlan) {
             if (Consts::DATA_VALUE_UNKNOWN === $paymentPlan) {
                 $unknown->incCount();
             } elseif (Consts::DATA_PAYPLANS_NONE === $paymentPlan) {
@@ -148,7 +148,7 @@ class FiltersService
      */
     private function getInactiveFilterData(): FilterData
     {
-        $inactiveCount = $this->artisanRepository->countAll() - $this->dataService->countActiveCreators();
+        $inactiveCount = $this->creatorRepository->countAll() - $this->dataService->countActiveCreators();
 
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }

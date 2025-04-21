@@ -24,7 +24,7 @@ class QueryControllerWithEMTest extends WebTestCaseWithEM
         ]);
     }
 
-    public function testNewArtisan(): void
+    public function testNewCreator(): void
     {
         $this->client->request('GET', '/mx/query/');
 

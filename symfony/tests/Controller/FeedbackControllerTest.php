@@ -21,7 +21,7 @@ class FeedbackControllerTest extends WebTestCase
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
             $this->getCaptchaFieldName('right') => 'right',
@@ -44,7 +44,7 @@ class FeedbackControllerTest extends WebTestCase
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
             $this->getCaptchaFieldName('wrong') => 'wrong',
@@ -96,7 +96,7 @@ class FeedbackControllerTest extends WebTestCase
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => $optionToSelect,
             'feedback[noContactBack]' => true,
             $this->getCaptchaFieldName('right') => 'right',

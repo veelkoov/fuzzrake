@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Species;
 
-use App\Entity\Artisan as Creator;
+use App\Entity\Creator;
 use App\Entity\CreatorSpecie;
-use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorRepository;
 use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;

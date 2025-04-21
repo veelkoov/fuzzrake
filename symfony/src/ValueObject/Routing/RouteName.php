@@ -10,7 +10,7 @@ final class RouteName
 {
     use UtilityClass;
 
-    final public const string API_ARTISANS = 'api_artisans';
+    final public const string API_CREATORS = 'api_creators';
     final public const string CONTACT = 'contact';
     final public const string DONATE = 'donate';
     final public const string EVENTS = 'events';
@@ -25,10 +25,10 @@ final class RouteName
     final public const string IU_FORM_DATA = 'iu_form_step_data';
     final public const string IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
     final public const string MAIN = 'main';
-    final public const string MAKER_IDS = 'maker_ids';
-    final public const string MX_ARTISAN_EDIT = 'mx_artisan_edit';
-    final public const string MX_ARTISAN_NEW = 'mx_artisan_new';
-    final public const string MX_ARTISANS_URLS = 'mx_artisans_urls';
+    final public const string CREATOR_IDS = 'creator_ids';
+    final public const string MX_CREATOR_EDIT = 'mx_creator_edit';
+    final public const string MX_CREATOR_NEW = 'mx_creator_new';
+    final public const string MX_CREATORS_URLS = 'mx_creators_urls';
     final public const string MX_CREATOR_URLS_SELECTION = 'mx_creator_urls_selection';
     final public const string MX_CREATOR_URLS_REMOVAL = 'mx_creator_urls_removal';
     final public const string MX_EVENT_EDIT = 'mx_event_edit';
@@ -37,7 +37,7 @@ final class RouteName
     final public const string MX_SUBMISSIONS = 'mx_submissions';
     final public const string MX_SUBMISSIONS_SOCIAL = 'mx_submissions_social';
     final public const string MX_QUERY = 'mx_query';
-    final public const string NEW_ARTISANS = 'new_artisans';
+    final public const string NEW_CREATORS = 'new_creators';
     final public const string GUIDELINES = 'guidelines';
     final public const string SITEMAP = 'sitemap';
     final public const string SHOULD_KNOW = 'should_know';

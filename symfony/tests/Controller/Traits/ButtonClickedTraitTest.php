@@ -21,7 +21,7 @@ class ButtonClickedTraitTest extends WebTestCaseWithEM
 
         $editUrl = '/mx/events/'.$event->getId().'/edit';
 
-        $invalidData = ['event[newMakersCount]' => '-1'];
+        $invalidData = ['event[newCreatorsCount]' => '-1'];
         $invalidCsrf = ['event[_token]' => 'invalid'];
         $validData = [];
 

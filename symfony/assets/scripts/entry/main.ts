@@ -3,15 +3,15 @@ import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checklist from "../main/Checklist";
 import ColumnsManager from "../main/ColumnsManager";
 import FiltersManager from "../main/FiltersManager";
-import { makerIdHashRegexp } from "../consts";
+import { creatorIdHashRegexp } from "../consts";
 import { requireJQ, toggle } from "../jQueryUtils";
 
 import "htmx.org";
 
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
-    AgeAndSfwConfig.getInstance().getMakerMode() ||
-    !window.location.hash.match(makerIdHashRegexp)
+    AgeAndSfwConfig.getInstance().getCreatorMode() ||
+    !window.location.hash.match(creatorIdHashRegexp)
   ) {
     return;
   }
@@ -38,7 +38,7 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   requireJQ("#open-creator-card-given-creator-id-anchor").trigger("click");
 });
 
-if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
   jQuery(() => {
     requireJQ("#creator-mode-banner").removeClass("d-none");
     requireJQ("#main-page-intro").addClass("d-none");

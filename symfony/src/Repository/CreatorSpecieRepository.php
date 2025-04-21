@@ -27,12 +27,12 @@ class CreatorSpecieRepository extends ServiceEntityRepository
     public function getActiveCreatorsSpecieNamesToCount(): StringIntMap
     {
         $result = $this->getEntityManager()->createQuery('
-                SELECT s.name AS name
-                    , COUNT(cs) AS count
-                FROM App\Entity\CreatorSpecie AS cs
-                JOIN cs.creator AS c
-                JOIN cs.specie AS s
-                WHERE c.inactiveReason = :empty
+                SELECT d_s.name AS name
+                    , COUNT(d_cs) AS count
+                FROM App\Entity\CreatorSpecie AS d_cs
+                JOIN d_cs.creator AS d_c
+                JOIN d_cs.specie AS d_s
+                WHERE d_c.inactiveReason = :empty
                 GROUP BY name
             ')
             ->setParameter('empty', '')
@@ -44,10 +44,10 @@ class CreatorSpecieRepository extends ServiceEntityRepository
     public function countActiveCreatorsHavingSpeciesDefined(): int
     {
         $result = $this->getEntityManager()->createQuery('
-                SELECT COUNT (DISTINCT c)
-                FROM App\Entity\CreatorSpecie cs
-                JOIN cs.creator AS c
-                WHERE c.inactiveReason = :empty
+                SELECT COUNT (DISTINCT d_c)
+                FROM App\Entity\CreatorSpecie d_cs
+                JOIN d_cs.creator AS d_c
+                WHERE d_c.inactiveReason = :empty
             ')
             ->setParameter('empty', '')
             ->getSingleScalarResult();

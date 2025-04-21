@@ -6,7 +6,7 @@ namespace App\Tests\Management;
 
 use App\Data\Definitions\ContactPermit;
 use App\Management\UrlRemovalService;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Mx\GroupedUrl;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

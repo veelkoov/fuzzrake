@@ -60,7 +60,7 @@
 
     <h2 class="mt-4">General info</h2>
 
-    {{ macros.help_modal('sinceForMultipleMakers', 'What if my studio has multiple makers?', "
+    {{ macros.help_modal('sinceForMultipleCreators', 'What if my studio has multiple makers?', "
         <p>
             Since it's not possible to provide this information more than once, you will need to decide what information to provide to be fair to your clients.
         </p>
@@ -82,13 +82,13 @@
 
         <div class="col-lg-5">
             <div class="mandatory">
-                {{ form_row(form.makerId) }}
+                {{ form_row(form.creatorId) }}
             </div>
             <div class="recommended">
                 {{ form_row(form.since) }}
 
                 <p class="form-text help-text form-help-pull-up">
-                    {{ macros.help_link('sinceForMultipleMakers', 'text-decoration-none fw-light', 'What if my studio has multiple makers?') }}
+                    {{ macros.help_link('sinceForMultipleCreators', 'text-decoration-none fw-light', 'What if my studio has multiple makers?') }}
                 </p>
             </div>
         </div>

@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RestApiController extends AbstractController
 {
-    #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
+    #[Route(path: '/api/artisans.json', name: RouteName::API_CREATORS)]
     #[Cache(maxage: 3600, public: true)]
     public function creators(DataService $dataService): JsonResponse
     {

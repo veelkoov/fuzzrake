@@ -10,9 +10,9 @@ use App\Form\Mx\SubmissionType;
 use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
-use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorRepository;
 use App\Service\Cache as CacheService;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\ValueObject\CacheTags;
@@ -63,11 +63,11 @@ class SubmissionsController extends FuzzrakeAbstractController
     {
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
-        $artisans = array_filter(Artisan::wrapAll($this->creatorRepository->getNewWithLimit()),
-            fn (Artisan $artisan) => ($artisan->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
+        $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
+            fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('mx/submissions/social.html.twig', [
-            'artisans' => $artisans,
+            'creators' => $creators,
         ]);
     }
 
@@ -94,7 +94,7 @@ class SubmissionsController extends FuzzrakeAbstractController
         if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
                 && $form->isValid() && $update->isAccepted) {
             $this->updates->import($update);
-            $this->cache->invalidate(CacheTags::ARTISANS);
+            $this->cache->invalidate(CacheTags::CREATORS);
 
             return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
         }

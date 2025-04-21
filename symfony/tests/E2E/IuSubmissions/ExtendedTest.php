@@ -7,8 +7,8 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\JsonArtisanDataLoader;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Tests\TestUtils\JsonCreatorDataLoader;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
 use App\Utils\TestUtils\UtcClockMock;
@@ -76,12 +76,12 @@ class ExtendedTest extends AbstractTestWithEM
      * - no newly added field gets overseen in the I/U form,
      * - all data submitted in the form is saved in the submission.
      *
-     * Tested artisans with the following scenarios:
-     * 1. Updated maker with full info, changes in all possible fields,
-     * 2. New maker with full info,
-     * 3. Updated maker with minimal starting info, full info after update,
-     * 4. New maker with minimal info,
-     * 5. Updated maker where the only identification mean is the former maker ID.
+     * Tested creators with the following scenarios:
+     * 1. Updated creator with full info, changes in all possible fields,
+     * 2. New creator with full info,
+     * 3. Updated creator with minimal starting info, full info after update,
+     * 4. New creator with minimal info,
+     * 5. Updated creator where the only identification mean is the former creator ID.
      *
      * @throws Exception
      */
@@ -91,60 +91,60 @@ class ExtendedTest extends AbstractTestWithEM
 
         self::sanityChecks();
 
-        $repo = self::getArtisanRepository();
-        $loader = new JsonArtisanDataLoader('extended_test');
+        $repo = self::getCreatorRepository();
+        $loader = new JsonCreatorDataLoader('extended_test');
 
-        $initialArtisans = [
-            $loader->getArtisanData('a1.1-persisted'),
-            $loader->getArtisanData('a3.1-persisted'),
-            $loader->getArtisanData('a5.1-persisted'),
+        $initialCreators = [
+            $loader->getCreatorData('a1.1-persisted'),
+            $loader->getCreatorData('a3.1-persisted'),
+            $loader->getCreatorData('a5.1-persisted'),
         ];
-        $initialCount = count($initialArtisans);
+        $initialCount = count($initialCreators);
 
-        $expectedArtisans = [
-            $loader->getArtisanData('a1.3-check'),
-            $loader->getArtisanData('a2.3-check'),
-            $loader->getArtisanData('a3.3-check'),
-            $loader->getArtisanData('a4.3-check'),
-            $loader->getArtisanData('a5.3-check'),
+        $expectedCreators = [
+            $loader->getCreatorData('a1.3-check'),
+            $loader->getCreatorData('a2.3-check'),
+            $loader->getCreatorData('a3.3-check'),
+            $loader->getCreatorData('a4.3-check'),
+            $loader->getCreatorData('a5.3-check'),
         ];
-        $finalCount = count($expectedArtisans);
+        $finalCount = count($expectedCreators);
 
-        self::persistAndFlush(...$initialArtisans);
-        self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount artisans in the DB before import");
+        self::persistAndFlush(...$initialCreators);
+        self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount creators in the DB before import");
 
-        $oldData1 = $loader->getArtisanData('a1.1-persisted');
-        $newData1 = $loader->getArtisanData('a1.2-send', self::NOT_IN_FORM);
-        $makerId1 = $oldData1->getMakerId();
-        self::validateIuFormOldDataSubmitNew($makerId1, $oldData1, $newData1, true);
+        $oldData1 = $loader->getCreatorData('a1.1-persisted');
+        $newData1 = $loader->getCreatorData('a1.2-send', self::NOT_IN_FORM);
+        $creatorId1 = $oldData1->getCreatorId();
+        self::validateIuFormOldDataSubmitNew($creatorId1, $oldData1, $newData1, true);
 
-        $oldData2 = new Artisan();
-        $newData2 = $loader->getArtisanData('a2.2-send', self::NOT_IN_FORM);
-        $makerId2 = '';
-        self::validateIuFormOldDataSubmitNew($makerId2, $oldData2, $newData2);
+        $oldData2 = new Creator();
+        $newData2 = $loader->getCreatorData('a2.2-send', self::NOT_IN_FORM);
+        $creatorId2 = '';
+        self::validateIuFormOldDataSubmitNew($creatorId2, $oldData2, $newData2);
 
-        $oldData3 = $loader->getArtisanData('a3.1-persisted');
-        $newData3 = $loader->getArtisanData('a3.2-send', self::NOT_IN_FORM);
-        $makerId3 = $oldData3->getLastMakerId();
-        self::validateIuFormOldDataSubmitNew($makerId3, $oldData3, $newData3);
+        $oldData3 = $loader->getCreatorData('a3.1-persisted');
+        $newData3 = $loader->getCreatorData('a3.2-send', self::NOT_IN_FORM);
+        $creatorId3 = $oldData3->getLastCreatorId();
+        self::validateIuFormOldDataSubmitNew($creatorId3, $oldData3, $newData3);
 
-        $oldData4 = new Artisan();
-        $newData4 = $loader->getArtisanData('a4.2-send', self::NOT_IN_FORM);
-        $makerId4 = '';
-        self::validateIuFormOldDataSubmitNew($makerId4, $oldData4, $newData4);
+        $oldData4 = new Creator();
+        $newData4 = $loader->getCreatorData('a4.2-send', self::NOT_IN_FORM);
+        $creatorId4 = '';
+        self::validateIuFormOldDataSubmitNew($creatorId4, $oldData4, $newData4);
 
-        $oldData5 = $loader->getArtisanData('a5.1-persisted');
-        $newData5 = $loader->getArtisanData('a5.2-send', self::NOT_IN_FORM);
-        $makerId5 = $oldData5->getLastMakerId();
-        self::validateIuFormOldDataSubmitNew($makerId5, $oldData5, $newData5);
+        $oldData5 = $loader->getCreatorData('a5.1-persisted');
+        $newData5 = $loader->getCreatorData('a5.2-send', self::NOT_IN_FORM);
+        $creatorId5 = $oldData5->getLastCreatorId();
+        self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
 
         $this->performImport($this->client, true, $finalCount);
 
         self::flush();
-        self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount artisans in the DB after import");
+        self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount creators in the DB after import");
 
-        foreach ($expectedArtisans as $expectedArtisan) {
-            self::validateArtisanAfterImport($expectedArtisan);
+        foreach ($expectedCreators as $expectedCreator) {
+            self::validateCreatorAfterImport($expectedCreator);
         }
     }
 
@@ -159,9 +159,9 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private function validateIuFormOldDataSubmitNew(string $urlMakerId, Artisan $oldData, Artisan $newData, bool $solveCaptcha = false): void
+    private function validateIuFormOldDataSubmitNew(string $urlCreatorId, Creator $oldData, Creator $newData, bool $solveCaptcha = false): void
     {
-        $this->client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
+        $this->client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
         self::assertResponseStatusCodeIs($this->client, 200);
         self::skipRules($this->client);
 
@@ -175,12 +175,12 @@ class ExtendedTest extends AbstractTestWithEM
         self::assertIuSubmittedAnyResult($this->client);
     }
 
-    private static function getIuFormUrlForMakerId(string $urlMakerId): string
+    private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
     {
-        return '/iu_form/start'.($urlMakerId ? '/'.$urlMakerId : '');
+        return '/iu_form/start'.($urlCreatorId ? '/'.$urlCreatorId : '');
     }
 
-    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody): void
+    private static function verifyGeneratedIuFormFilledWithData(Creator $oldData, string $htmlBody): void
     {
         self::assertStringContainsStringIgnoringCase(self::fieldToFormFieldName(Field::NAME), $htmlBody,
             'Sanity check - checking field presence on page - failed.');
@@ -338,7 +338,7 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private function setValuesInForm(Form $form, Artisan $data, bool $solveCaptcha = false): void
+    private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
             if (in_array($field, self::NOT_IN_FORM)) {
@@ -422,17 +422,17 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function validateArtisanAfterImport(Artisan $expected): void
+    private static function validateCreatorAfterImport(Creator $expected): void
     {
-        $actual = self::findArtisanByMakerId($expected->getMakerId());
+        $actual = self::findCreatorByCreatorId($expected->getCreatorId());
 
         foreach (Fields::all() as $fieldName => $field) {
             if (Field::PASSWORD === $field) {
                 self::assertTrue(password_verify($expected->getString($field), $actual->getString($field)), 'Password differs.');
             } elseif ($field->isList()) {
-                self::assertEqualsCanonicalizing($expected->getStringList($field), $actual->getStringList($field), "Field $fieldName differs for {$expected->getMakerId()}.");
+                self::assertEqualsCanonicalizing($expected->getStringList($field), $actual->getStringList($field), "Field $fieldName differs for {$expected->getCreatorId()}.");
             } else {
-                self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getMakerId()}.");
+                self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getCreatorId()}.");
             }
         }
     }

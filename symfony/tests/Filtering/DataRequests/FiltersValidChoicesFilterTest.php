@@ -7,7 +7,7 @@ namespace App\Tests\Filtering\DataRequests;
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Veelkoov\Debris\StringSet;
 
@@ -23,13 +23,13 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
-        $artisan = Artisan::new()
+        $creator = Creator::new()
             ->setLanguages(['Czech', 'Finnish'])
             ->setOpenFor(['Pancakes', 'Waffles'])
             ->setCountry('FI')
             ->setState('Liquid');
 
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
 
         $subject = self::getContainer()->get(FiltersValidChoicesFilter::class);
         self::assertInstanceOf(FiltersValidChoicesFilter::class, $subject);

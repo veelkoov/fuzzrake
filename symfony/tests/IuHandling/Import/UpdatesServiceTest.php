@@ -10,10 +10,10 @@ use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\UpdateInput;
 use App\IuHandling\Import\UpdatesService;
-use App\Repository\ArtisanRepository;
+use App\Repository\CreatorRepository;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
@@ -28,105 +28,105 @@ class UpdatesServiceTest extends TestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void
     {
-        $submissionData = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Creator())
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], []]]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], []]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('', $result->originalArtisan->getEmailAddress());
+        self::assertEquals('', $result->originalCreator->getEmailAddress());
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesEmailChangeProperly(): void
     {
-        $existing = $this->getPersistedArtisanMock()
+        $existing = $this->getPersistedCreatorMock()
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Creator())
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$existing]]]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('an-update.2@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertEquals('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesUnchangedEmailProperly(): void
     {
-        $artisan = $this->getPersistedArtisanMock()
+        $creator = $this->getPersistedCreatorMock()
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Creator())
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$artisan]]]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesRevokedContactPermitProperly(): void
     {
-        $existing = $this->getPersistedArtisanMock()
+        $existing = $this->getPersistedCreatorMock()
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Creator())
             ->setName('A creator')
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain') // Should be ignored
             ->setContactAllowed(ContactPermit::NO)
         );
 
-        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$existing]]]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
-        self::assertEquals('', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertEquals('', $result->updatedCreator->getEmailAddress());
     }
 
     public function testAddedDateIsHandledProperly(): void
     {
         UtcClockMock::start();
 
-        $submissionData = Submissions::from((new Artisan())
-            ->setMakerId('MAKERID')
+        $submissionData = Submissions::from((new Creator())
+            ->setCreatorId('TEST001')
         );
 
         $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], []],
+            [[''], ['TEST001'], []],
         ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals(null, $result->originalArtisan->getDateAdded());
-        self::assertEquals(null, $result->originalArtisan->getDateUpdated());
+        self::assertEquals(null, $result->originalCreator->getDateAdded());
+        self::assertEquals(null, $result->originalCreator->getDateUpdated());
 
         self::assertEquals(UtcClock::now(), $result->originalInput->getDateAdded());
         self::assertEquals(null, $result->originalInput->getDateUpdated());
 
-        self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateAdded());
-        self::assertEquals(null, $result->updatedArtisan->getDateUpdated());
+        self::assertEquals(UtcClock::now(), $result->updatedCreator->getDateAdded());
+        self::assertEquals(null, $result->updatedCreator->getDateUpdated());
     }
 
     /**
@@ -138,28 +138,28 @@ class UpdatesServiceTest extends TestCase
 
         $dateAdded = UtcClock::at('2022-09-09 09:09:09');
 
-        $artisan = $this->getPersistedArtisanMock()
-            ->setMakerId('MAKERID')
+        $creator = $this->getPersistedCreatorMock()
+            ->setCreatorId('TEST001')
             ->setDateAdded($dateAdded)
         ;
 
-        $submissionData = Submissions::from((new Artisan())
-            ->setMakerId('MAKERID')
+        $submissionData = Submissions::from((new Creator())
+            ->setCreatorId('TEST001')
         );
 
         $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], [$artisan]],
+            [[''], ['TEST001'], [$creator]],
         ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals($dateAdded, $result->originalArtisan->getDateAdded());
-        self::assertEquals(null, $result->originalArtisan->getDateUpdated());
+        self::assertEquals($dateAdded, $result->originalCreator->getDateAdded());
+        self::assertEquals(null, $result->originalCreator->getDateUpdated());
 
         self::assertEquals($dateAdded, $result->originalInput->getDateAdded());
         self::assertEquals(UtcClock::now(), $result->originalInput->getDateUpdated());
 
-        self::assertEquals($dateAdded, $result->updatedArtisan->getDateAdded());
-        self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateUpdated());
+        self::assertEquals($dateAdded, $result->updatedCreator->getDateAdded());
+        self::assertEquals(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
     /**
@@ -172,23 +172,23 @@ class UpdatesServiceTest extends TestCase
      */
     public function testUpdateHandlesImagesUpdateProperly(array $initialUrlPhotos, array $initialMiniatures, array $newUrlPhotos, array $expectedMiniatures): void
     {
-        $artisan = $this->getPersistedArtisanMock()
-            ->setMakerId('MAKERID')
+        $creator = $this->getPersistedCreatorMock()
+            ->setCreatorId('TEST001')
             ->setPhotoUrls($initialUrlPhotos)
             ->setMiniatureUrls($initialMiniatures)
         ;
 
-        $submissionData = Submissions::from((new Artisan())
-            ->setMakerId('MAKERID')
+        $submissionData = Submissions::from((new Creator())
+            ->setCreatorId('TEST001')
             ->setPhotoUrls($newUrlPhotos)
         );
 
         $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], [$artisan]],
+            [[''], ['TEST001'], [$creator]],
         ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals($expectedMiniatures, $result->updatedArtisan->getMiniatureUrls());
+        self::assertEquals($expectedMiniatures, $result->updatedCreator->getMiniatureUrls());
     }
 
     /**
@@ -205,86 +205,86 @@ class UpdatesServiceTest extends TestCase
         ];
     }
 
-    public function testResolvingMultipleMatchedByMakerId(): void
+    public function testResolvingMultipleMatchedByCreatorId(): void
     {
-        $artisan1 = $this->getPersistedArtisanMock()
-            ->setMakerId('MAKER01')
+        $creator1 = $this->getPersistedCreatorMock()
+            ->setCreatorId('TEST0A1')
             ->setName('Common name')
         ;
 
-        $artisan2 = $this->getPersistedArtisanMock()
-            ->setMakerId('MAKER02')
+        $creator2 = $this->getPersistedCreatorMock()
+            ->setCreatorId('TEST0B1')
             ->setName('Common part')
         ;
 
-        $submissionData = Submissions::from((new Artisan())
-            ->setMakerId('MAKERID')
+        $submissionData = Submissions::from((new Creator())
+            ->setCreatorId('TEST0A2')
             ->setName('Common')
         );
 
         $subject = $this->getSetUpUpdatesService([
-            [['Common'], ['MAKERID'], [$artisan1, $artisan2]],
-            [[], ['MAKER01'], [$artisan1]],
+            [['Common'], ['TEST0A2'], [$creator1, $creator2]],
+            [[], ['TEST0A1'], [$creator1]],
         ]);
 
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
-        self::assertEquals([$artisan1, $artisan2], $result->matchedArtisans);
+        self::assertEquals([$creator1, $creator2], $result->matchedCreators);
 
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id MAKER01')));
-        self::assertEquals([$artisan1], $result->matchedArtisans);
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id TEST0A1')));
+        self::assertEquals([$creator1], $result->matchedCreators);
     }
 
-    public function testUpdateHandlesMakerIdChangeProperly(): void
+    public function testUpdateHandlesCreatorIdChangeProperly(): void
     {
-        $artisan = $this->getPersistedArtisanMock()
-            ->setMakerId('MAKERID')
-            ->setFormerMakerIds(['MAKER00'])
-            ->setName('The old maker name')
+        $creator = $this->getPersistedCreatorMock()
+            ->setCreatorId('TEST001')
+            ->setFormerCreatorIds(['TEST002'])
+            ->setName('The old creator name')
         ;
 
         // Changing
-        $submissionData1 = Submissions::from(Artisan::new()
-            ->setMakerId('MAKER22')
-            ->setName('The new maker name')
-            ->setFormerly(['The old maker name'])
+        $submissionData1 = Submissions::from(Creator::new()
+            ->setCreatorId('TEST003')
+            ->setName('The new creator name')
+            ->setFormerly(['The old creator name'])
         );
 
         $result1 = $this->getSetUpUpdatesService([
-            [['The new maker name', 'The old maker name'], ['MAKER22'], [$artisan]],
+            [['The new creator name', 'The old creator name'], ['TEST003'], [$creator]],
         ])->getUpdateFor(new UpdateInput($submissionData1, new Submission()));
 
-        self::assertEquals('The new maker name', $result1->updatedArtisan->getName());
-        self::assertEquals(['The old maker name'], $result1->updatedArtisan->getFormerly());
-        self::assertEquals('MAKER22', $result1->updatedArtisan->getMakerId());
-        self::assertEquals(['MAKERID', 'MAKER00'], $result1->updatedArtisan->getFormerMakerIds());
+        self::assertEquals('The new creator name', $result1->updatedCreator->getName());
+        self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
+        self::assertEquals('TEST003', $result1->updatedCreator->getCreatorId());
+        self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
-        $submissionData2 = Submissions::from(Artisan::new()
-            ->setMakerId('MAKERID')
-            ->setName('The new maker name')
-            ->setFormerly(['The old maker name'])
+        $submissionData2 = Submissions::from(Creator::new()
+            ->setCreatorId('TEST001')
+            ->setName('The new creator name')
+            ->setFormerly(['The old creator name'])
         );
 
         $result2 = $this->getSetUpUpdatesService([
-            [['The new maker name', 'The old maker name'], ['MAKERID'], [$artisan]],
+            [['The new creator name', 'The old creator name'], ['TEST001'], [$creator]],
         ])->getUpdateFor(new UpdateInput($submissionData2, new Submission()));
 
-        self::assertEquals('The new maker name', $result2->updatedArtisan->getName());
-        self::assertEquals(['The old maker name'], $result2->updatedArtisan->getFormerly());
-        self::assertEquals('MAKERID', $result2->updatedArtisan->getMakerId());
-        self::assertEquals(['MAKER00'], $result2->updatedArtisan->getFormerMakerIds());
+        self::assertEquals('The new creator name', $result2->updatedCreator->getName());
+        self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());
+        self::assertEquals('TEST001', $result2->updatedCreator->getCreatorId());
+        self::assertEquals(['TEST002'], $result2->updatedCreator->getFormerCreatorIds());
     }
 
     /**
-     * @param list<array{list<string>, list<string>, list<Artisan>}> $calls
+     * @param list<array{list<string>, list<string>, list<Creator>}> $calls
      */
     private function getSetUpUpdatesService(array $calls): UpdatesService
     {
-        $artisanRepoMock = $this->createMock(ArtisanRepository::class);
-        $artisanRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $makerIds) use ($calls) {
+        $creatorRepoMock = $this->createMock(CreatorRepository::class);
+        $creatorRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $creatorIds) use ($calls) {
             foreach ($calls as $call) {
-                if ($call[0] === $names && $call[1] === $makerIds) {
-                    return Vec\map($call[2], fn ($artisan) => $artisan->getArtisan());
+                if ($call[0] === $names && $call[1] === $creatorIds) {
+                    return Vec\map($call[2], static fn (Creator $creator) => $creator->getCreator());
                 }
             }
 
@@ -297,6 +297,6 @@ class UpdatesServiceTest extends TestCase
         $messageBusStub = $this->createStub(MessageBusInterface::class);
         $loggerStub = $this->createStub(LoggerInterface::class);
 
-        return new UpdatesService($artisanRepoMock, $fixerMock, $messageBusStub, $loggerStub);
+        return new UpdatesService($creatorRepoMock, $fixerMock, $messageBusStub, $loggerStub);
     }
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Data\Tidying\ArtisanChanges as CreatorChanges;
+use App\Data\Tidying\CreatorChanges;
 use App\Data\Tidying\FdvFactory;
 use App\Data\Tidying\Printer;
-use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;

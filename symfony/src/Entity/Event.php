@@ -46,7 +46,7 @@ class Event
     private bool $trackingIssues = false;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $artisanName = '';
+    private string $creatorName = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $checkedUrls = '';
@@ -54,17 +54,17 @@ class Event
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $newMakersCount = 0;
+    private int $newCreatorsCount = 0;
 
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $updatedMakersCount = 0;
+    private int $updatedCreatorsCount = 0;
 
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $reportedUpdatedMakersCount = 0;
+    private int $reportedUpdatedCreatorsCount = 0;
 
     #[Length(max: 256)]
     #[ORM\Column(type: Types::TEXT)]
@@ -175,14 +175,14 @@ class Event
         return $this;
     }
 
-    public function getArtisanName(): string
+    public function getCreatorName(): string
     {
-        return $this->artisanName;
+        return $this->creatorName;
     }
 
-    public function setArtisanName(string $artisanName): self
+    public function setCreatorName(string $creatorName): self
     {
-        $this->artisanName = $artisanName;
+        $this->creatorName = $creatorName;
 
         return $this;
     }
@@ -207,38 +207,38 @@ class Event
         return $this;
     }
 
-    public function getNewMakersCount(): int
+    public function getNewCreatorsCount(): int
     {
-        return $this->newMakersCount;
+        return $this->newCreatorsCount;
     }
 
-    public function setNewMakersCount(int $newMakersCount): self
+    public function setNewCreatorsCount(int $newCreatorsCount): self
     {
-        $this->newMakersCount = $newMakersCount;
+        $this->newCreatorsCount = $newCreatorsCount;
 
         return $this;
     }
 
-    public function getUpdatedMakersCount(): int
+    public function getUpdatedCreatorsCount(): int
     {
-        return $this->updatedMakersCount;
+        return $this->updatedCreatorsCount;
     }
 
-    public function setUpdatedMakersCount(int $updatedMakersCount): self
+    public function setUpdatedCreatorsCount(int $updatedCreatorsCount): self
     {
-        $this->updatedMakersCount = $updatedMakersCount;
+        $this->updatedCreatorsCount = $updatedCreatorsCount;
 
         return $this;
     }
 
-    public function getReportedUpdatedMakersCount(): int
+    public function getReportedUpdatedCreatorsCount(): int
     {
-        return $this->reportedUpdatedMakersCount;
+        return $this->reportedUpdatedCreatorsCount;
     }
 
-    public function setReportedUpdatedMakersCount(int $reportedUpdatedMakersCount): self
+    public function setReportedUpdatedCreatorsCount(int $reportedUpdatedCreatorsCount): self
     {
-        $this->reportedUpdatedMakersCount = $reportedUpdatedMakersCount;
+        $this->reportedUpdatedCreatorsCount = $reportedUpdatedCreatorsCount;
 
         return $this;
     }

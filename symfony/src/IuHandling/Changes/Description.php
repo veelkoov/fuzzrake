@@ -7,8 +7,8 @@ namespace App\IuHandling\Changes;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Collections\StringList;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 
 class Description
@@ -18,7 +18,7 @@ class Description
      */
     private array $changes = [];
 
-    public function __construct(Artisan $old, Artisan $new)
+    public function __construct(Creator $old, Creator $new)
     {
         foreach (Fields::persisted() as $field) {
             if (!SecureValues::hideInChangesDescription($field)) {
@@ -43,7 +43,7 @@ class Description
     /**
      * @return array{0: Field, 1: psFieldValue, 2: psFieldValue}
      */
-    private function getField(Field $field, Artisan $old, Artisan $new): array
+    private function getField(Field $field, Creator $old, Creator $new): array
     {
         return [$field, $old->get($field), $new->get($field)];
     }

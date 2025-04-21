@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block body %}
-    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_artisans') }}">See all recently added makers</a></p>
+    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_creators') }}">See all recently added makers</a></p>
 
     <p class="small">All times are UTC</p>
 
@@ -47,7 +47,7 @@
 
                         {% elseif event.typeCsUpdated %}
 
-                            <strong>{{ event.artisanName }}</strong> commissions status changed.
+                            <strong>{{ event.creatorName }}</strong> commissions status changed.
 
                             {% if event.noLongerOpenFor %}
                                 No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.

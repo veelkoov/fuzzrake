@@ -1,10 +1,10 @@
 {
-    "MAKER_ID": "MKRID04",
+    "MAKER_ID": "TESTD01",
 
-    "NAME": "Maker name 4",
+    "NAME": "Creator name 4",
     "FORMERLY": [
     ],
-    "PASSWORD": "Maker 4 password",
+    "PASSWORD": "Creator 4 password",
 
     "EMAIL_ADDRESS": "",
     "CONTACT_ALLOWED": "NO",

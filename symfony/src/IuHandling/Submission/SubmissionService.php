@@ -7,7 +7,7 @@ namespace App\IuHandling\Submission;
 use App\IuHandling\SchemaFixer;
 use App\IuHandling\Storage\LocalStorageService;
 use App\IuHandling\Submission\NotificationsGenerator as Generator;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use Exception;
 use JsonException;
@@ -24,7 +24,7 @@ class SubmissionService
     ) {
     }
 
-    public function submit(Artisan $submission): bool
+    public function submit(Creator $submission): bool
     {
         try {
             $jsonData = self::asJson($submission);
@@ -45,7 +45,7 @@ class SubmissionService
     /**
      * @throws JsonException
      */
-    public static function asJson(Artisan $submission): string
+    public static function asJson(Creator $submission): string
     {
         return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
     }

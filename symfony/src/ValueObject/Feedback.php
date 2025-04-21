@@ -37,7 +37,7 @@ final class Feedback
     public string $subject = '';
 
     #[Length(max: 100)]
-    public string $maker = '';
+    public string $creator = '';
 
     #[NotBlank(message: 'This is required.')]
     public string $details = '';

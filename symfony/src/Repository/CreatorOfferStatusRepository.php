@@ -30,11 +30,11 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return psArtisanStatsArray
+     * @return psCreatorStatsArray
      *
      * @throws UnexpectedResultException
      */
-    public function getCommissionsStats(): array
+    public function getOfferStatusStats(): array
     {
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('open_for_anything', 'open_for_anything', 'integer');
@@ -52,10 +52,10 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
 
     SELECT SUM(open_for_anything)                                                              AS open_for_anything
          , SUM(closed_for_anything)                                                            AS closed_for_anything
-         , SUM(is_tracked_0_or_1 * tracker_found_anything_0_or_1 * (1 - avd_cs_tracker_issue)) AS successfully_tracked
-         , SUM(is_tracked_0_or_1 * tracker_found_anything_0_or_1 * avd_cs_tracker_issue)       AS partially_tracked
-         , SUM(is_tracked_0_or_1 * (1 - tracker_found_anything_0_or_1) * avd_cs_tracker_issue) AS tracking_failed
-         , SUM(avd_cs_tracker_issue)                                                           AS tracking_issues
+         , SUM(is_tracked_0_or_1 * tracker_found_anything_0_or_1 * (1 - cvd_cs_tracker_issue)) AS successfully_tracked
+         , SUM(is_tracked_0_or_1 * tracker_found_anything_0_or_1 * cvd_cs_tracker_issue)       AS partially_tracked
+         , SUM(is_tracked_0_or_1 * (1 - tracker_found_anything_0_or_1) * cvd_cs_tracker_issue) AS tracking_failed
+         , SUM(cvd_cs_tracker_issue)                                                           AS tracking_issues
          , SUM(is_tracked_0_or_1)                                                              AS tracked
          , SUM(1)                                                                              AS total
     FROM (
@@ -63,26 +63,26 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
               , COUNT(nullif(closed_offers_count, 0)) AS closed_for_anything
               , min(1, max(COUNT(nullif(open_offers_count, 0)), COUNT(nullif(closed_offers_count, 0)), 0))
                                                       AS tracker_found_anything_0_or_1
-              , avd_cs_tracker_issue
+              , cvd_cs_tracker_issue
               , COUNT(tracking_url_or_null)           AS is_tracked_0_or_1
-              , a_id
+              , s_c_id
          FROM (
-              SELECT COUNT(nullif(acs.is_open, :false))       AS open_offers_count
-                   , COUNT(nullif(acs.is_open, :true))        AS closed_offers_count
-                   , avd.cs_tracker_issue                     AS avd_cs_tracker_issue
-                   , nullif(COALESCE(au_cst.url, \'\'), \'\') AS tracking_url_or_null
-                   , a.id                                     AS a_id
-              FROM artisans AS a
-                       LEFT JOIN artisans_volatile_data AS avd
-                                 ON a.id = avd.artisan_id
-                       LEFT JOIN artisans_urls AS au_cst
-                                 ON a.id = au_cst.artisan_id AND au_cst.type = :url_type
-                       LEFT JOIN artisans_commissions_statuses AS acs
-                                 ON a.id = acs.artisan_id
-              WHERE a.inactive_reason = \'\'
-              GROUP BY a.id
+              SELECT COUNT(nullif(s_cos.is_open, :false))   AS open_offers_count
+                   , COUNT(nullif(s_cos.is_open, :true))    AS closed_offers_count
+                   , s_cvd.cs_tracker_issue                 AS cvd_cs_tracker_issue
+                   , nullif(COALESCE(s_cu.url, \'\'), \'\') AS tracking_url_or_null
+                   , s_c.id                                 AS s_c_id
+              FROM creators AS s_c
+                       LEFT JOIN creators_volatile_data AS s_cvd
+                                 ON s_c.id = s_cvd.creator_id
+                       LEFT JOIN creators_urls AS s_cu
+                                 ON s_c.id = s_cu.creator_id AND s_cu.type = :url_type
+                       LEFT JOIN creators_offers_statuses AS s_cos
+                                 ON s_c.id = s_cos.creator_id
+              WHERE s_c.inactive_reason = \'\'
+              GROUP BY s_c.id
         )
-        GROUP BY a_id
+        GROUP BY s_c_id
     )
 
             ', $rsm)
@@ -98,10 +98,10 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
 
     public function getDistinctWithOpenCount(): StringIntMap
     {
-        $result = $this->createQueryBuilder('acs')
-            ->select('acs.offer')
-            ->addSelect('SUM(acs.isOpen) AS openCount')
-            ->groupBy('acs.offer')
+        $result = $this->createQueryBuilder('d_cos')
+            ->select('d_cos.offer')
+            ->addSelect('SUM(d_cos.isOpen) AS openCount')
+            ->groupBy('d_cos.offer')
             ->getQuery()
             ->getArrayResult();
 
@@ -110,9 +110,9 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
 
     public function getDistinctOpenFor(): StringSet
     {
-        $result = $this->createQueryBuilder('acs')
-            ->select('DISTINCT acs.offer')
-            ->where('acs.isOpen = :true')
+        $result = $this->createQueryBuilder('d_cos')
+            ->select('DISTINCT d_cos.offer')
+            ->where('d_cos.isOpen = :true')
             ->setParameter('true', true)
             ->getQuery()
             ->getSingleColumnResult();

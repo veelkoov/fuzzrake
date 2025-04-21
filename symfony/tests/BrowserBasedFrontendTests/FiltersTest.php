@@ -8,7 +8,7 @@ use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use JsonException;
@@ -24,15 +24,15 @@ class FiltersTest extends PantherTestCaseWithEM
     /**
      * @dataProvider filterChoicesDataProvider
      *
-     * @param list<Artisan>                    $artisans
+     * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
-     * @param list<string>                     $expectedMakerIds
+     * @param list<string>                     $expectedCreatorIds
      *
      * @throws WebDriverException|JsonException
      */
-    public function testFiltersInBrowser(array $artisans, array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersInBrowser(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
+        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
@@ -66,10 +66,10 @@ class FiltersTest extends PantherTestCaseWithEM
         self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
-        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedMakerIds).' out of');
+        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedCreatorIds).' out of');
 
-        foreach ($expectedMakerIds as $makerId) {
-            self::assertSelectorIsVisible("tr#$makerId");
+        foreach ($expectedCreatorIds as $creatorId) {
+            self::assertSelectorIsVisible("tr#$creatorId");
         }
     }
 

@@ -10,8 +10,8 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
 use App\IuHandling\Submission\SubmissionService;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Collections\ArrayReader;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
@@ -31,7 +31,7 @@ class IuFormDataController extends AbstractIuFormController
     /**
      * @throws NotFoundHttpException
      */
-    #[Route(path: '/iu_form/data/{makerId}', name: RouteName::IU_FORM_DATA)]
+    #[Route(path: '/iu_form/data/{creatorId}', name: RouteName::IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormData(
         Request $request,
@@ -39,9 +39,9 @@ class IuFormDataController extends AbstractIuFormController
         CaptchaService $captchaService,
         RouterInterface $router,
         SubmissionService $submissionService,
-        ?string $makerId = null,
+        ?string $creatorId = null,
     ): Response {
-        $subject = $this->getSubject($makerId);
+        $subject = $this->getSubject($creatorId);
 
         $form = $this->createForm(Data::class, $subject->creator, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
@@ -52,7 +52,7 @@ class IuFormDataController extends AbstractIuFormController
 
         $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);
-        $this->validateMakerId($form, $subject->creator);
+        $this->validateCreatorId($form, $subject->creator);
 
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             $submittedPasswordOk = $this->handlePassword($subject);
@@ -64,7 +64,7 @@ class IuFormDataController extends AbstractIuFormController
                     'isNew'          => $subject->isNew ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
-                    'makerId'        => $makerId,
+                    'creatorId'      => $creatorId,
                     // TODO 'submissionId'   =>
                 ]);
             } else {
@@ -78,7 +78,7 @@ class IuFormDataController extends AbstractIuFormController
             'noindex'             => true,
             'submitted'           => $form->isSubmitted(),
             'is_new'              => $subject->isNew,
-            'creator_id'          => $makerId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
+            'creator_id'          => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
             'was_contact_allowed' => $subject->wasContactAllowed,
         ]);
     }
@@ -94,13 +94,13 @@ class IuFormDataController extends AbstractIuFormController
         }
     }
 
-    private function validateMakerId(FormInterface $form, Creator $creator): void
+    private function validateCreatorId(FormInterface $form, Creator $creator): void
     {
         try {
-            $creatorIdOwner = $this->creatorRepository->findByMakerId($creator->getMakerId());
+            $creatorIdOwner = $this->creatorRepository->findByCreatorId($creator->getCreatorId());
 
             if ($creatorIdOwner->getId() !== $creator->getId()) {
-                $form->get(Data::FLD_MAKER_ID)
+                $form->get(Data::FLD_CREATOR_ID)
                     ->addError(new FormError('This maker ID has been already used by another maker.'));
             }
         } catch (NoResultException) {

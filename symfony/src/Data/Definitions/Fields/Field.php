@@ -14,10 +14,10 @@ use TRegx\CleanRegex\Pattern;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
-    #[Props('makerId', validationRegex: CreatorId::VALID_REGEX)]
+    #[Props('creatorId', validationRegex: CreatorId::VALID_REGEX)]
     case MAKER_ID = 'MAKER_ID';
 
-    #[Props('formerMakerIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, affectedByIuForm: true)]
+    #[Props('formerCreatorIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_CREATOR_IDS, affectedByIuForm: true)]
     case FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
 
     #[Props('name', validationRegex: V::NON_EMPTY)]

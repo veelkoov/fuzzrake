@@ -6,7 +6,7 @@ namespace App\Data\Tidying;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\PackedStringList;
 use App\Utils\StrUtils;
 
@@ -17,7 +17,7 @@ class Differ
     ) {
     }
 
-    public function showDiff(Field $field, Artisan $old, Artisan $new): void
+    public function showDiff(Field $field, Creator $old, Creator $new): void
     {
         $newVal = StrUtils::asStr($new->get($field) ?? '');
         $oldVal = StrUtils::asStr($old->get($field) ?? '');

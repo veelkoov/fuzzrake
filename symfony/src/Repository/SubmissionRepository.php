@@ -40,8 +40,8 @@ class SubmissionRepository extends ServiceEntityRepository
     public function findByStrId(string $strId): ?Submission
     {
         try {
-            $result = $this->createQueryBuilder('s')
-                ->where('s.strId = :strId')
+            $result = $this->createQueryBuilder('d_s')
+                ->where('d_s.strId = :strId')
                 ->setParameter('strId', $strId)
                 ->getQuery()
                 ->getSingleResult();

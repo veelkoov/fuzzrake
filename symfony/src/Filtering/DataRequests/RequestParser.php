@@ -34,7 +34,7 @@ class RequestParser
 
     private const array STRINGS = [
         'textSearch',
-        'makerId',
+        'creatorId',
     ];
 
     public function __construct(
@@ -57,7 +57,7 @@ class RequestParser
         $pageNumber = $dataShape->coerce($request->get('page', 1));
 
         return $this->filter->getOnlyValidChoices(new Choices(
-            $strings['makerId'],
+            $strings['creatorId'],
             $strings['textSearch'],
             new StringSet($strArrays['countries']),
             new StringSet($strArrays['states']),

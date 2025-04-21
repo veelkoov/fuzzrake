@@ -6,10 +6,10 @@ namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
-use App\Entity\Artisan as ArtisanE;
+use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,26 +68,26 @@ trait EntityManagerTrait
         $schemaTool->updateSchema($metadata);
     }
 
-    protected static function getArtisanRepository(): ArtisanRepository
+    protected static function getCreatorRepository(): CreatorRepository
     {
-        return self::getEM()->getRepository(ArtisanE::class);
+        return self::getEM()->getRepository(CreatorE::class);
     }
 
-    protected static function findArtisanByMakerId(string $makerId): Artisan
+    protected static function findCreatorByCreatorId(string $creatorId): Creator
     {
-        $artisan = self::getArtisanRepository()->findOneBy(['makerId' => $makerId]);
-        self::assertNotNull($artisan);
+        $creator = self::getCreatorRepository()->findOneBy(['creatorId' => $creatorId]);
+        self::assertNotNull($creator);
 
-        return Artisan::wrap($artisan);
+        return Creator::wrap($creator);
     }
 
-    protected static function addSimpleArtisan(): Artisan
+    protected static function addSimpleCreator(): Creator
     {
-        $artisan = self::getArtisan();
+        $creator = self::getCreator();
 
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
 
-        return $artisan;
+        return $creator;
     }
 
     protected static function addSimpleGenericEvent(): Event
@@ -101,9 +101,9 @@ trait EntityManagerTrait
         return $event;
     }
 
-    protected static function getArtisan(
-        string $name = 'Test artisan',
-        string $makerId = 'TEST000',
+    protected static function getCreator(
+        string $name = 'Test creator',
+        string $creatorId = 'TEST000',
         string $country = 'CZ',
         string $password = '',
         ContactPermit $contactAllowed = null,
@@ -113,10 +113,10 @@ trait EntityManagerTrait
         ?bool $doesNsfw = null,
         ?bool $worksWithMinors = null,
         ?string $emailAddress = null,
-    ): Artisan {
-        $result = (new Artisan())
+    ): Creator {
+        $result = (new Creator())
             ->setName($name)
-            ->setMakerId($makerId)
+            ->setCreatorId($creatorId)
             ->setCountry($country);
 
         $result

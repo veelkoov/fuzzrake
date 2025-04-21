@@ -6,13 +6,13 @@ namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Entity\Artisan as CreatorE;
-use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Repository\ArtisanValueRepository as CreatorValueRepository;
-use App\Repository\ArtisanVolatileDataRepository;
+use App\Entity\Creator as CreatorE;
 use App\Repository\CreatorOfferStatusRepository;
+use App\Repository\CreatorRepository;
+use App\Repository\CreatorValueRepository;
+use App\Repository\CreatorVolatileDataRepository;
 use App\Repository\EventRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Json;
 use App\ValueObject\CacheTags;
@@ -29,7 +29,7 @@ class DataService
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
         private readonly CreatorValueRepository $creatorValueRepository,
-        private readonly ArtisanVolatileDataRepository $avdRepository,
+        private readonly CreatorVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly EventRepository $eventRepository,
         private readonly Cache $cache,
@@ -48,7 +48,7 @@ class DataService
                     $lastDataUpdateTimeUtc = null;
                 }
 
-                $activeArtisansCount = $this->countActiveCreators();
+                $activeCreatorsCount = $this->countActiveCreators();
 
                 try {
                     $countryCount = $this->creatorRepository->getDistinctCountriesCount();
@@ -57,47 +57,47 @@ class DataService
                 }
 
                 return new MainPageStats(
-                    $activeArtisansCount,
+                    $activeCreatorsCount,
                     $countryCount,
                     $lastDataUpdateTimeUtc,
                 );
             },
-            [CacheTags::ARTISANS, CacheTags::TRACKING],
+            [CacheTags::CREATORS, CacheTags::TRACKING],
             __METHOD__,
         );
     }
 
     public function countActiveCreators(): int
     {
-        return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::ARTISANS, __METHOD__);
+        return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::CREATORS, __METHOD__);
     }
 
     public function getCountries(): StringSet
     {
-        return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::ARTISANS, __METHOD__);
+        return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::CREATORS, __METHOD__);
     }
 
     public function getStates(): StringSet
     {
-        return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
+        return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::CREATORS, __METHOD__);
     }
 
     public function getOpenFor(): StringSet
     {
-        return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
+        return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__);
     }
 
     public function getLanguages(): StringSet
     {
         return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
-            CacheTags::ARTISANS, __METHOD__);
+            CacheTags::CREATORS, __METHOD__);
     }
 
     public function countActiveCreatorsHavingAnyOf(Field ...$fields): int
     {
         return $this->cache->get(
             fn () => $this->creatorValueRepository->countActiveCreatorsHavingAnyOf(Field::strings($fields)),
-            CacheTags::ARTISANS,
+            CacheTags::CREATORS,
             [__METHOD__, ...$fields],
         );
     }
@@ -112,7 +112,7 @@ class DataService
                     return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value)->freeze();
                 }
             },
-            CacheTags::ARTISANS,
+            CacheTags::CREATORS,
             [__METHOD__, $field],
         );
     }
@@ -135,11 +135,11 @@ class DataService
             }
 
             return $result->freeze();
-        }, CacheTags::ARTISANS, __METHOD__);
+        }, CacheTags::CREATORS, __METHOD__);
     }
 
     /**
-     * @see SmartAccessDecorator::getLastMakerId()
+     * @see SmartAccessDecorator::getLastCreatorId()
      */
     public function getProvidedInfoStats(): StringIntMap
     {
@@ -151,14 +151,14 @@ class DataService
 
                 foreach (Fields::inStats() as $field) {
                     if (Field::FORMER_MAKER_IDS === $field) {
-                        /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
-                         * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
-                         * where the digits is zero-padded artisan database ID. */
+                        /* Some creators were added before introduction of the creators IDs. They were assigned
+                         * fake ("mock") former IDs, so we can rely on SmartAccessDecorator::getLastCreatorId() etc.
+                         * Those IDs are "M000000", part where the digits is zero-padded creator database ID. */
 
                         $placeholder = sprintf('M%06d', $creator->getId());
 
                         if ($creator->get($field) === [$placeholder]) {
-                            continue; // Fake former maker ID - don't add to the result
+                            continue; // Fake former creator ID - don't add to the result
                         }
                     }
 
@@ -169,13 +169,13 @@ class DataService
             }
 
             return $result->sorted(reverse: true)->freeze();
-        }, CacheTags::ARTISANS, __METHOD__);
+        }, CacheTags::CREATORS, __METHOD__);
     }
 
     public function getOfferStatusStats(): StringIntMap
     {
         return $this->cache->get(function (): StringIntMap {
-            $stats = $this->cosRepository->getCommissionsStats();
+            $stats = $this->cosRepository->getOfferStatusStats();
 
             return (new StringIntMap([
                 'Open for anything'              => $stats['open_for_anything'],
@@ -209,12 +209,12 @@ class DataService
             $result .= ']';
 
             return $result;
-        }, CacheTags::ARTISANS, __METHOD__);
+        }, CacheTags::CREATORS, __METHOD__);
     }
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
         return $this->cache->get(fn () => $this->eventRepository->getLatestEventTimestamp(),
-            [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__); // TODO: https://github.com/veelkoov/fuzzrake/issues/251);
+            [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__); // TODO: https://github.com/veelkoov/fuzzrake/issues/251);
     }
 }

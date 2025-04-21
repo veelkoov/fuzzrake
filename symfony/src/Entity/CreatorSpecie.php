@@ -21,9 +21,9 @@ class CreatorSpecie
     #[ORM\JoinColumn('specie_id', nullable: false)]
     private Specie $specie;
 
-    #[ORM\ManyToOne(Artisan::class, inversedBy: 'species')]
-    #[ORM\JoinColumn('artisan_id', nullable: false)]
-    private Artisan $creator;
+    #[ORM\ManyToOne(Creator::class, inversedBy: 'species')]
+    #[ORM\JoinColumn('creator_id', nullable: false)]
+    private Creator $creator;
 
     public function getId(): ?int
     {
@@ -42,12 +42,12 @@ class CreatorSpecie
         return $this;
     }
 
-    public function getCreator(): Artisan
+    public function getCreator(): Creator
     {
         return $this->creator;
     }
 
-    public function setCreator(Artisan $creator): self
+    public function setCreator(Creator $creator): self
     {
         $this->creator = $creator;
 

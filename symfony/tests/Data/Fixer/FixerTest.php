@@ -6,7 +6,7 @@ namespace App\Tests\Data\Fixer;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Fixer\Fixer;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -46,7 +46,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
         return DataProvider::tuples(
             [Field::NAME, ' The name ', 'The name'],
 
-            // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated makers
+            // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated creators
             [Field::FORMERLY, ['N/A'], []],
             [Field::FORMERLY, ['n/a'], []],
 

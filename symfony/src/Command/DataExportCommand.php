@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
 use Override;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataExportCommand extends Command
 {
     public function __construct(
-        private readonly ArtisanRepository $artisans,
+        private readonly CreatorRepository $creatorRepository,
     ) {
         parent::__construct();
     }
@@ -46,12 +46,12 @@ class DataExportCommand extends Command
 
         $row = 2;
 
-        foreach ($this->artisans->getActivePaged() as $artisanE) {
-            $artisan = Artisan::wrap($artisanE);
+        foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
+            $creator = Creator::wrap($creatorE);
             $col = 1;
 
             foreach (Fields::public() as $field) {
-                $value = $artisan->get($field);
+                $value = $creator->get($field);
 
                 $sheet->getCell([$col++, $row])
                     ->setValue(StrUtils::asStr($value));

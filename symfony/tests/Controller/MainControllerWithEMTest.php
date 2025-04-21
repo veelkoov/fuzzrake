@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
@@ -18,7 +18,7 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
     public function testMainPageLoads(): void
     {
         $client = static::createClient();
-        self::addSimpleArtisan();
+        self::addSimpleCreator();
 
         $client->request('GET', '/');
 
@@ -34,23 +34,23 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
         UtcClockMock::start();
 
-        $maker1 = Artisan::new()->setMakerId('MAKER01')->setName('Older maker')->setDateAdded(UtcClock::at('-43 days'));
-        $maker2 = Artisan::new()->setMakerId('MAKER02')->setName('Newer maker 1')->setDateAdded(UtcClock::at('-41 days'));
-        $maker3 = Artisan::new()
-            ->setMakerId('MAKER03')
-            ->setName('Newer maker 2')
+        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setDateAdded(UtcClock::at('-43 days'));
+        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setDateAdded(UtcClock::at('-41 days'));
+        $creator3 = Creator::new()
+            ->setCreatorId('TEST003')
+            ->setName('Newer creator 2')
             ->setFormerly(['Formerly 2a', 'Formerly 2b'])
             ->setDateAdded(UtcClock::at('-40 days'));
 
-        self::persistAndFlush($maker1, $maker2, $maker3);
+        self::persistAndFlush($creator1, $creator2, $creator3);
         $this->clearCache();
 
         $crawler = $client->request('GET', '/new');
         self::assertResponseStatusCodeIs($client, 200);
 
-        self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older maker"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer maker 1"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer maker 2"]'));
+        self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older creator"]'));
+        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 1"]'));
+        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 2"]'));
         self::assertNotEmpty($crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 2a / Formerly 2b"]'));
     }
 }

@@ -7,7 +7,7 @@ namespace App\Management;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
@@ -122,9 +122,9 @@ final class UrlRemovalService
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
-            ['_fragment' => $creator->getLastMakerId()], UrlGeneratorInterface::ABSOLUTE_PATH);
+            ['_fragment' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::IU_FORM_START,
-            ['makerId' => $creator->getLastMakerId()], UrlGeneratorInterface::ABSOLUTE_PATH);
+            ['creatorId' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
             [], UrlGeneratorInterface::ABSOLUTE_PATH);
 
