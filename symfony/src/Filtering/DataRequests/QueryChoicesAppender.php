@@ -24,7 +24,7 @@ use Veelkoov\Debris\StringSet;
 
 class QueryChoicesAppender
 {
-    private int $uniqueAliasIndex = 1;
+    private int $uniqueIdIndex = 1;
 
     public function __construct(
         private readonly Choices $choices,
@@ -71,14 +71,18 @@ class QueryChoicesAppender
     private function applyMakerId(QueryBuilder $builder): void // TODO: Test https://github.com/veelkoov/fuzzrake/issues/183
     {
         if ('' !== $this->choices->makerId) {
+            $creator = $this->getUniqueId();
+            $creatorId = $this->getUniqueId();
+            $creatorIdValue = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a4')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a4.makerIds', 'a4mi')
-                    ->where('a4.id = a.id')
-                    ->andWhere('a4mi.makerId = :makerId')
+                    ->join("$creator.makerIds", $creatorId)
+                    ->where("$creator.id = a.id")
+                    ->andWhere("$creatorId.makerId = :$creatorIdValue")
             ))
-                ->setParameter('makerId', $this->choices->makerId);
+                ->setParameter($creatorIdValue, $this->choices->makerId);
         }
     }
 
@@ -95,18 +99,22 @@ class QueryChoicesAppender
 
         $searchedText = '%'.mb_strtoupper($searchedText).'%';
 
+        $searchedTextValue = $this->getUniqueId();
+        $creator = $this->getUniqueId();
+        $creatorId = $this->getUniqueId();
+
         $builder->andWhere($builder->expr()->orX(
-            'UPPER(a.name) LIKE :searchedText',
-            'UPPER(a.formerly) LIKE :searchedText',
+            "UPPER(a.name) LIKE :$searchedTextValue",
+            "UPPER(a.formerly) LIKE :$searchedTextValue",
             $builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a5')
+                $this->createSubqueryBuilder($builder, $creator)
                 ->select('1')
-                ->join('a5.makerIds', 'a5mi1')
-                ->where('a5.id = a.id')
-                ->andWhere('a5mi1.makerId LIKE :searchedText')
+                ->join("$creator.makerIds", $creatorId)
+                ->where("$creator.id = a.id")
+                ->andWhere("$creatorId.makerId LIKE :$searchedTextValue")
             ),
         ))
-            ->setParameter('searchedText', $searchedText);
+            ->setParameter($searchedTextValue, $searchedText);
     }
 
     private function applyCountries(QueryBuilder $builder): void
@@ -114,7 +122,9 @@ class QueryChoicesAppender
         if ($this->choices->countries->isNotEmpty()) {
             $countries = $this->choices->countries->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
-            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
+            $countriesValue = $this->getUniqueId();
+
+            $builder->andWhere("a.country IN (:$countriesValue)")->setParameter($countriesValue, $countries);
         }
     }
 
@@ -123,48 +133,64 @@ class QueryChoicesAppender
         if ($this->choices->states->isNotEmpty()) {
             $states = $this->choices->states->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
-            $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
+            $statesValue = $this->getUniqueId();
+
+            $builder->andWhere("a.state IN (:$statesValue)")->setParameter($statesValue, $states);
         }
     }
 
     private function applyWantsSfw(QueryBuilder $builder): void
     {
         if (true !== $this->choices->isAdult || false !== $this->choices->wantsSfw) {
+            $creator = $this->getUniqueId();
+            $creatorValue1 = $this->getUniqueId();
+            $creatorValue2 = $this->getUniqueId();
+            $cvFieldName1 = $this->getUniqueId();
+            $cvFieldName2 = $this->getUniqueId();
+            $cvValueFalse = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a3')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a3.values', 'a3v1')
-                    ->join('a3.values', 'a3v2')
-                    ->where('a3.id = a.id')
-                    ->andWhere('a3v1.fieldName = :nsfwWebsite')
-                    ->andWhere('a3v1.value = :a3vFalse')
-                    ->andWhere('a3v2.fieldName = :nsfwSocial')
-                    ->andWhere('a3v2.value = :a3vFalse')
+                    ->join("$creator.values", $creatorValue1)
+                    ->join("$creator.values", $creatorValue2)
+                    ->where("$creator.id = a.id")
+                    ->andWhere("$creatorValue1.fieldName = :$cvFieldName1")
+                    ->andWhere("$creatorValue1.value = :$cvValueFalse")
+                    ->andWhere("$creatorValue2.fieldName = :$cvFieldName2")
+                    ->andWhere("$creatorValue2.value = :$cvValueFalse")
             ))
-                ->setParameter('nsfwWebsite', Field::NSFW_WEBSITE->value)
-                ->setParameter('nsfwSocial', Field::NSFW_SOCIAL->value)
-                ->setParameter('a3vFalse', StrUtils::asStr(false));
+                ->setParameter($cvFieldName1, Field::NSFW_WEBSITE->value)
+                ->setParameter($cvFieldName2, Field::NSFW_SOCIAL->value)
+                ->setParameter($cvValueFalse, StrUtils::asStr(false));
         }
     }
 
     private function applyWorksWithMinors(QueryBuilder $builder): void
     {
         if (true !== $this->choices->isAdult) {
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldName = $this->getUniqueId();
+            $cvValueTrue = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a2')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a2.values', 'a2v')
-                    ->where('a2.id = a.id')
-                    ->andWhere('a2v.fieldName = :wwmFieldName')
-                    ->andWhere('a2v.value = :a2vTrue')
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = a.id")
+                    ->andWhere("$creatorValue.fieldName = :$cvFieldName")
+                    ->andWhere("$creatorValue.value = :$cvValueTrue")
             ))
-                ->setParameter('wwmFieldName', Field::WORKS_WITH_MINORS->value)
-                ->setParameter('a2vTrue', StrUtils::asStr(true));
+                ->setParameter($cvFieldName, Field::WORKS_WITH_MINORS->value)
+                ->setParameter($cvValueTrue, StrUtils::asStr(true));
         }
     }
 
     private function applyPaymentPlans(QueryBuilder $builder): void
     {
+        $paymentPlansValue = $this->getUniqueId();
+
         if ($this->choices->wantsUnknownPaymentPlans) {
             if ($this->choices->wantsAnyPaymentPlans) {
                 if ($this->choices->wantsNoPaymentPlans) {
@@ -172,17 +198,17 @@ class QueryChoicesAppender
                     return;
                 } else {
                     // Unknown + ANY
-                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $andWhere = "a.paymentPlans <> :$paymentPlansValue";
                     $parameter = Consts::DATA_PAYPLANS_NONE;
                 }
             } else {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // Unknown + None
-                    $andWhere = 'a.paymentPlans IN (:paymentPlans)';
+                    $andWhere = "a.paymentPlans IN (:$paymentPlansValue)";
                     $parameter = [Consts::DATA_VALUE_UNKNOWN, Consts::DATA_PAYPLANS_NONE];
                 } else {
                     // Unknown
-                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $andWhere = "a.paymentPlans = :$paymentPlansValue";
                     $parameter = Consts::DATA_VALUE_UNKNOWN;
                 }
             }
@@ -190,17 +216,17 @@ class QueryChoicesAppender
             if ($this->choices->wantsAnyPaymentPlans) {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // ANY + None
-                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $andWhere = "a.paymentPlans <> :$paymentPlansValue";
                     $parameter = Consts::DATA_VALUE_UNKNOWN;
                 } else {
                     // ANY
-                    $andWhere = 'a.paymentPlans NOT IN (:paymentPlans)';
+                    $andWhere = "a.paymentPlans NOT IN (:$paymentPlansValue)";
                     $parameter = [Consts::DATA_PAYPLANS_NONE, Consts::DATA_VALUE_UNKNOWN];
                 }
             } else {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // None
-                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $andWhere = "a.paymentPlans = :$paymentPlansValue";
                     $parameter = Consts::DATA_PAYPLANS_NONE;
                 } else {
                     // Nothing selected
@@ -211,15 +237,17 @@ class QueryChoicesAppender
 
         $builder
             ->andWhere($andWhere)
-            ->setParameter('paymentPlans', $parameter);
+            ->setParameter($paymentPlansValue, $parameter);
     }
 
     private function applyWantsInactive(QueryBuilder $builder): void
     {
         if (!$this->choices->wantsInactive) {
+            $inactiveReasonValue = $this->getUniqueId();
+
             $builder
-                ->andWhere('a.inactiveReason = :emptyInactiveReason')
-                ->setParameter('emptyInactiveReason', '');
+                ->andWhere("a.inactiveReason = :$inactiveReasonValue")
+                ->setParameter($inactiveReasonValue, '');
         }
     }
 
@@ -234,28 +262,34 @@ class QueryChoicesAppender
         $items = new SpecialItemsExtractor($this->choices->species, Consts::FILTER_VALUE_UNKNOWN);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $creatorSpecie = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorSpecie::class)
-                    ->createQueryBuilder('cs1')
+                    ->createQueryBuilder($creatorSpecie)
                     ->select('1')
-                    ->join('cs1.specie', 'sp1')
-                    ->where('cs1.creator = a')
+                    ->join("$creatorSpecie.specie", $this->getUniqueId())
+                    ->where("$creatorSpecie.creator = a")
             ));
         }
 
         if ($items->common->isNotEmpty()) {
+            $creatorSpecie = $this->getUniqueId();
+            $specie = $this->getUniqueId();
+            $sNameValues = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorSpecie::class)
-                    ->createQueryBuilder('cs2')
+                    ->createQueryBuilder($creatorSpecie)
                     ->select('1')
-                    ->join('cs2.specie', 'sp2')
-                    ->where('sp2.name IN (:specieNames)')
-                    ->andWhere('cs2.creator = a')
+                    ->join("$creatorSpecie.specie", $specie)
+                    ->where("$specie.name IN (:$sNameValues)")
+                    ->andWhere("$creatorSpecie.creator = a")
             );
 
-            $builder->setParameter('specieNames', $items->common);
+            $builder->setParameter($sNameValues, $items->common);
         }
 
         $this->addWheres($builder, $conditions);
@@ -269,38 +303,47 @@ class QueryChoicesAppender
             Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
-            $conditions[] = $builder->expr()->eq('vd.csTrackerIssue', ':hasCsTrackerIssue');
+            $cvdCsTrackerIssueValueTrue = $this->getUniqueId();
 
-            $builder->setParameter('hasCsTrackerIssue', true, ParameterType::BOOLEAN);
+            $conditions[] = $builder->expr()->eq('vd.csTrackerIssue', ":$cvdCsTrackerIssueValueTrue");
+
+            $builder->setParameter($cvdCsTrackerIssueValueTrue, true, ParameterType::BOOLEAN);
         }
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_NOT_TRACKED)) {
+            $creatorUrl = $this->getUniqueId();
+            $cuTypeValue = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(ArtisanUrl::class)
-                    ->createQueryBuilder('au1')
+                    ->createQueryBuilder($creatorUrl)
                     ->select('1')
-                    ->where('au1.artisan = a')
-                    ->andWhere('au1.type = :urlTypeCommissions')
+                    ->where("$creatorUrl.artisan = a")
+                    ->andWhere("$creatorUrl.type = :$cuTypeValue")
             ));
 
-            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->value);
+            $builder->setParameter($cuTypeValue, Field::URL_COMMISSIONS->value);
         }
 
         if ($items->common->isNotEmpty()) {
+            $creatorOfferStatus = $this->getUniqueId();
+            $cosIsOpenValueTrue = $this->getUniqueId();
+            $cosOfferValues = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorOfferStatus::class)
-                    ->createQueryBuilder('cos1')
+                    ->createQueryBuilder($creatorOfferStatus)
                     ->select('1')
-                    ->where('cos1.isOpen = :isOpen')
-                    ->andWhere('cos1.offer IN (:openForOffers)')
-                    ->andWhere('cos1.artisan = a')
+                    ->where("$creatorOfferStatus.isOpen = :$cosIsOpenValueTrue")
+                    ->andWhere("$creatorOfferStatus.offer IN (:$cosOfferValues)")
+                    ->andWhere("$creatorOfferStatus.artisan = a")
             );
 
             $builder
-                ->setParameter('openForOffers', $items->common)
-                ->setParameter('isOpen', true, ParameterType::BOOLEAN);
+                ->setParameter($cosOfferValues, $items->common)
+                ->setParameter($cosIsOpenValueTrue, true, ParameterType::BOOLEAN);
         }
 
         $this->addWheres($builder, $conditions);
@@ -334,67 +377,67 @@ class QueryChoicesAppender
                 throw new InvalidArgumentException('Other field not selected');
             }
 
-            $creatorAlias = $this->getUniqueAlias();
-            $valuesAlias = $this->getUniqueAlias();
-            $parameterAlias = $this->getUniqueAlias();
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldNameValue = $this->getUniqueId();
 
             $conditions[] = $builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, $creatorAlias)
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join("$creatorAlias.values", $valuesAlias)
-                    ->where("$creatorAlias.id = a.id")
-                    ->andWhere("$valuesAlias.fieldName = :$parameterAlias")
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = a.id")
+                    ->andWhere("$creatorValue.fieldName = :$cvFieldNameValue")
             );
 
-            $builder->setParameter($parameterAlias, $otherField->value);
+            $builder->setParameter($cvFieldNameValue, $otherField->value);
         }
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
-            $creatorAlias = $this->getUniqueAlias();
-            $valuesAlias = $this->getUniqueAlias();
-            $parameterAlias = $this->getUniqueAlias();
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldNameValue = $this->getUniqueId();
 
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, $creatorAlias)
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join("$creatorAlias.values", $valuesAlias)
-                    ->where("$creatorAlias.id = a.id")
-                    ->andWhere("$valuesAlias.fieldName IN (:$parameterAlias)")
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = a.id")
+                    ->andWhere("$creatorValue.fieldName IN (:$cvFieldNameValue)")
             ));
 
-            $builder->setParameter($parameterAlias, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
+            $builder->setParameter($cvFieldNameValue, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
         }
 
         if ($items->common->isNotEmpty()) {
-            $creatorAlias = $this->getUniqueAlias();
-            $valuesAlias = $this->getUniqueAlias();
-            $fieldNameParamAlias = $this->getUniqueAlias();
-            $valueParamAlias = $this->getUniqueAlias();
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldName = $this->getUniqueId();
+            $cvValueValues = $this->getUniqueId();
 
             $having = $allInsteadOfAny
-                ? $builder->expr()->eq("COUNT($creatorAlias)", $items->common->count())
-                : $builder->expr()->gt("COUNT($creatorAlias)", 0);
+                ? $builder->expr()->eq("COUNT($creator)", $items->common->count())
+                : $builder->expr()->gt("COUNT($creator)", 0);
 
             $conditions[] = $builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, $creatorAlias)
+                $this->createSubqueryBuilder($builder, $creator)
                 ->select('1')
-                ->join("$creatorAlias.values", $valuesAlias)
-                ->where("$creatorAlias.id = a.id")
-                ->andWhere("$valuesAlias.fieldName = :$fieldNameParamAlias")
-                ->andWhere("$valuesAlias.value IN (:$valueParamAlias)")
-                ->groupBy("$creatorAlias.id")
+                ->join("$creator.values", $creatorValue)
+                ->where("$creator.id = a.id")
+                ->andWhere("$creatorValue.fieldName = :$cvFieldName")
+                ->andWhere("$creatorValue.value IN (:$cvValueValues)")
+                ->groupBy("$creator.id")
                 ->having($having)
             );
 
-            $builder->setParameter($fieldNameParamAlias, $primaryField->value);
-            $builder->setParameter($valueParamAlias, $items->common);
+            $builder->setParameter($cvFieldName, $primaryField->value);
+            $builder->setParameter($cvValueValues, $items->common);
         }
 
         $this->addWheres($builder, $conditions);
     }
 
-    private function getUniqueAlias(): string
+    private function getUniqueId(): string
     {
-        return 'qca'.((string) $this->uniqueAliasIndex++);
+        return 'd_uid'.((string) $this->uniqueIdIndex++);
     }
 }
