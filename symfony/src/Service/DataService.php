@@ -51,19 +51,12 @@ class DataService
                 $activeArtisansCount = $this->countActiveCreators();
 
                 try {
-                    $allArtisansCount = $this->creatorRepository->countAll();
-                } catch (UnexpectedResultException) {
-                    $allArtisansCount = null;
-                }
-
-                try {
                     $countryCount = $this->creatorRepository->getDistinctCountriesCount();
                 } catch (UnexpectedResultException) {
                     $countryCount = null;
                 }
 
                 return new MainPageStats(
-                    $allArtisansCount,
                     $activeArtisansCount,
                     $countryCount,
                     $lastDataUpdateTimeUtc,

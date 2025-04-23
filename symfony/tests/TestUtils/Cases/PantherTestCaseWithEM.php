@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\Traits\UtilsTrait;
 use App\Utils\TestUtils\TestsBridge;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
-use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 use LogicException;

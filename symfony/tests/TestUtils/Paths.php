@@ -16,14 +16,6 @@ final class Paths
     /**
      * @return non-empty-string
      */
-    public static function getArtisanTypeScriptClassPath(): string
-    {
-        return __DIR__.'/../../assets/scripts/class/Artisan.ts';
-    }
-
-    /**
-     * @return non-empty-string
-     */
     public static function getTestIuFormDataPath(): string
     {
         return __DIR__.'/../../var/testIuFormData';
