@@ -5,26 +5,26 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {% if update.matchedArtisans|length > 1 %}
+    {% if update.matchedCreators|length > 1 %}
         <p>
-            Matched multiple makers:
+            Matched multiple creators:
 
-            {% for artisan in update.matchedArtisans %}
-                <a href="{{ path('main', {_fragment: artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>
+            {% for creator in update.matchedCreators %}
+                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
 
             <span class="text-danger">Unable to continue.</span>
         </p>
-    {% elseif update.matchedArtisans is empty %}
-        <p>Creating a new maker.</p>
+    {% elseif update.matchedCreators is empty %}
+        <p>Adding a new creator.</p>
     {% else %}
-        {% set artisan = update.matchedArtisans|first %}
+        {% set creator = update.matchedCreators|first %}
 
         <p>
-            Updating: <a href="{{ path('main', {_fragment: artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>.
+            Updating: <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
 
-            {% if '' != artisan.inactiveReason %}
+            {% if '' != creator.inactiveReason %}
                 <span id="creator-hidden-warning" class="badge bg-warning text-dark">Hidden</span>
             {% endif %}
         </p>
@@ -52,25 +52,25 @@
                     ~ ' ' ~ (field.isFreeForm ? 'free-form' : 'structured')
                 %}
 
-                {% set new_value_class = update.updatedArtisan|is_valid(field) ? '' : 'table-danger' %}
+                {% set new_value_class = update.updatedCreator|is_valid(field) ? '' : 'table-danger' %}
 
                 {% if not update.isNew %}
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>{{ field.name }}&nbsp;[before]</td>
-                        <td>{{ field|difference('danger', update.originalArtisan, update.updatedArtisan)|link_urls }}</td>
+                        <td>{{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}</td>
                         <td></td>
                     </tr>
                 {% endif %}
 
                 <tr class="{{ field.value }} submitted {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[submitted]</td>
-                    <td>{{ field|difference('primary', update.originalInput, update.updatedArtisan)|link_urls }}</td>
+                    <td>{{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}</td>
                     <td></td>
                 </tr>
 
-                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedArtisan.get(field)|as_str }}">
+                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str }}">
                     <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
-                    <td>{{ field|difference('success', update.updatedArtisan, update.originalArtisan)|link_urls }}</td>
+                    <td>{{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}</td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-secondary fix-button">fix</button>
                     </td>

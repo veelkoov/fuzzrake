@@ -42,11 +42,11 @@ class Start extends AbstractType
                 'expanded'   => true,
                 'required'   => true,
             ])
-            ->add('confirmYouAreTheMaker', ChoiceType::class, [
+            ->add('confirmYouAreTheCreator', ChoiceType::class, [
                 'label'      => 'Are you the maker (studio member)?',
                 'choices'    => [
-                    'I am the maker'                                  => 'i-am-the-maker',
-                    "I'm a friend or a customer or other/non-related" => 'not-the-maker',
+                    'I am the maker'                                  => 'i-am-the-creator',
+                    "I'm a friend or a customer or other/non-related" => 'not-the-creator',
                 ],
                 'expanded'   => true,
                 'required'   => true,

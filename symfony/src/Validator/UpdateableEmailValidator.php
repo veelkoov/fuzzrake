@@ -6,7 +6,7 @@ namespace App\Validator;
 
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Email;
 use App\Utils\Enforce;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,7 +53,7 @@ class UpdateableEmailValidator extends ConstraintValidator
 
     private function getOldEmailAddressOrEmpty(Creator $creator): string
     {
-        $privateDataE = $creator->getArtisan()->getPrivateData() ?? new stdClass();
+        $privateDataE = $creator->getCreator()->getPrivateData() ?? new stdClass();
 
         return Enforce::string($this->entityManager->getUnitOfWork()
             ->getOriginalEntityData($privateDataE)[Field::EMAIL_ADDRESS->modelName()] ?? '');

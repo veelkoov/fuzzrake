@@ -6,7 +6,7 @@ namespace App\Tests\IuHandling\Import;
 
 use App\IuHandling\Exception\ManagerConfigError;
 use App\IuHandling\Import\Manager;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,14 +26,14 @@ class ManagerTest extends TestCase
     public function testDetectingDelimiter(): void
     {
         $manager = new Manager('set NAME |abcdef|');
-        $manager->correctArtisan($artisan = Artisan::new());
+        $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('abcdef', $artisan->getName());
+        self::assertEquals('abcdef', $creator->getName());
 
         $manager = new Manager('set NAME |fedcba|');
-        $manager->correctArtisan($artisan = Artisan::new());
+        $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('fedcba', $artisan->getName());
+        self::assertEquals('fedcba', $creator->getName());
     }
 
     public function testAcceptCommand(): void
@@ -47,33 +47,33 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('clear NOTES');
 
-        $artisan = Artisan::new()->setNotes('will be removed');
+        $creator = Creator::new()->setNotes('will be removed');
 
-        self::assertEquals('will be removed', $artisan->getNotes());
-        $manager->correctArtisan($artisan);
-        self::assertEquals('', $artisan->getNotes());
+        self::assertEquals('will be removed', $creator->getNotes());
+        $manager->correctCreator($creator);
+        self::assertEquals('', $creator->getNotes());
     }
 
     public function testSetCommand(): void
     {
         $manager = new Manager('set NOTES "will be added"');
 
-        $artisan = Artisan::new();
+        $creator = Creator::new();
 
-        self::assertEquals('', $artisan->getNotes());
-        $manager->correctArtisan($artisan);
-        self::assertEquals('will be added', $artisan->getNotes());
+        self::assertEquals('', $creator->getNotes());
+        $manager->correctCreator($creator);
+        self::assertEquals('will be added', $creator->getNotes());
     }
 
-    public function testMatchMakerIdCommand(): void
+    public function testMatchCreatorIdCommand(): void
     {
         $manager = new Manager('accept');
 
-        self::assertNull($manager->getMatchedMakerId());
+        self::assertNull($manager->getMatchedCreatorId());
 
-        $manager = new Manager('match-maker-id MI12345');
+        $manager = new Manager('match-maker-id TEST001');
 
-        self::assertEquals('MI12345', $manager->getMatchedMakerId());
+        self::assertEquals('TEST001', $manager->getMatchedCreatorId());
     }
 
     public function testInvalidCommand(): void

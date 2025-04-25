@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Data\Definitions\Fields\Validation;
-use App\Entity\Artisan as Creator;
 use App\Repository\CreatorPrivateDataRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * NOTE: Private information given exclusively to the DB maintainer, must not be shared without makers' approval.
+ * NOTE: Private information given exclusively to the DB maintainer, must not be shared without creators' approval.
  *       Must never be dumped, nor committed.
  */
 #[ORM\Entity(repositoryClass: CreatorPrivateDataRepository::class)]

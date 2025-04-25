@@ -34,14 +34,14 @@ class EventRepository extends ServiceEntityRepository
      */
     public function getRecent(?StringList $types = null): array
     {
-        $query = $this->createQueryBuilder('e')
-            ->where('e.timestamp >= :oldest')
-            ->orderBy('e.timestamp', 'DESC')
+        $query = $this->createQueryBuilder('d_e')
+            ->where('d_e.timestamp >= :oldest')
+            ->orderBy('d_e.timestamp', 'DESC')
             ->setParameter('oldest', UtcClock::at('-31 days'));
 
         if ($types?->isNotEmpty()) {
             $query
-                ->andWhere('e.type IN (:types)')
+                ->andWhere('d_e.type IN (:types)')
                 ->setParameter('types', $types);
         }
 
@@ -53,8 +53,8 @@ class EventRepository extends ServiceEntityRepository
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
         $resultData = $this
-            ->createQueryBuilder('e')
-            ->select('MAX(e.timestamp)')
+            ->createQueryBuilder('d_e')
+            ->select('MAX(d_e.timestamp)')
             ->getQuery()
             ->getSingleScalarResult();
 

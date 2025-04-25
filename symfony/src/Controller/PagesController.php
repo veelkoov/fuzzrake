@@ -45,11 +45,11 @@ class PagesController extends AbstractController
         return $this->render('pages/tracking.html.twig', []);
     }
 
-    #[Route(path: '/maker-ids', name: RouteName::MAKER_IDS)]
+    #[Route(path: '/maker-ids', name: RouteName::CREATOR_IDS)]
     #[Cache(maxage: 21600, public: true)]
-    public function makerIds(): Response
+    public function creatorIds(): Response
     {
-        return $this->render('pages/maker_ids.html.twig', []);
+        return $this->render('pages/creator_ids.html.twig', []);
     }
 
     #[Route(path: '/donate', name: RouteName::DONATE)]

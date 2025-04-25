@@ -8,7 +8,7 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
-use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorRepository;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;

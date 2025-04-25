@@ -7,11 +7,11 @@ namespace App\Twig;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Data\Validator\Validator;
-use App\Entity\Artisan as ArtisanE;
+use App\Entity\Creator as CreatorE;
 use App\IuHandling\Import\SubmissionData;
 use App\Repository\SubmissionRepository;
 use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Override;
@@ -51,13 +51,13 @@ class AdminExtensions extends AbstractExtension
         ];
     }
 
-    private function smartFilter(Artisan|ArtisanE $artisan): Artisan
+    private function smartFilter(Creator|CreatorE $creator): Creator
     {
-        if (!($artisan instanceof Artisan)) {
-            $artisan = Artisan::wrap($artisan);
+        if (!($creator instanceof Creator)) {
+            $creator = Creator::wrap($creator);
         }
 
-        return $artisan;
+        return $creator;
     }
 
     /**
@@ -73,7 +73,7 @@ class AdminExtensions extends AbstractExtension
         return Field::from($name);
     }
 
-    private function difference(Field $field, string $classSuffix, Artisan $subject, Artisan $other): string
+    private function difference(Field $field, string $classSuffix, Creator $subject, Creator $other): string
     {
         if (!$field->isList()) {
             $value = $this->getOptionallyRedactedValue($field, $subject);
@@ -109,9 +109,9 @@ class AdminExtensions extends AbstractExtension
         });
     }
 
-    private function isValid(Artisan $artisan, Field $field): bool
+    private function isValid(Creator $creator, Field $field): bool
     {
-        return $this->validator->isValid($artisan, $field);
+        return $this->validator->isValid($creator, $field);
     }
 
     /**
@@ -125,7 +125,7 @@ class AdminExtensions extends AbstractExtension
     /**
      * @return psFieldValue
      */
-    private function getOptionallyRedactedValue(Field $field, Artisan $subject): mixed
+    private function getOptionallyRedactedValue(Field $field, Creator $subject): mixed
     {
         if (SecureValues::hideOnAdminScreen($field)) {
             return '[redacted]';

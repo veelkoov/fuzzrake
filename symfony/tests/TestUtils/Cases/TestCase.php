@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases;
 
-use App\Entity\Artisan as ArtisanE;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Entity\Creator as CreatorE;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\TestUtils\TestsBridge;
 use Override;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
@@ -20,11 +20,11 @@ abstract class TestCase extends PHPUnitTestCase
         TestsBridge::reset();
     }
 
-    protected function getPersistedArtisanMock(): Artisan
+    protected function getPersistedCreatorMock(): Creator
     {
-        $result = $this->getMockBuilder(ArtisanE::class)->onlyMethods(['getId'])->getMock();
+        $result = $this->getMockBuilder(CreatorE::class)->onlyMethods(['getId'])->getMock();
         $result->method('getId')->willReturn(1);
 
-        return Artisan::wrap($result);
+        return Creator::wrap($result);
     }
 }

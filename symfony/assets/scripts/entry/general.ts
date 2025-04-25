@@ -32,14 +32,14 @@ jQuery(() => {
   const config = AgeAndSfwConfig.getInstance();
 
   jQuery("a.disable-filters-goto-main-page").on("click", () => {
-    config.setMakerMode(true);
+    config.setCreatorMode(true);
     config.save();
   });
 
   jQuery("#btn-reenable-filters").on("click", () => {
     // Does not prevent default (link navigation -> page reload) to display the checklist.
     // TODO: Optimize. See https://github.com/veelkoov/fuzzrake/issues/233
-    config.setMakerMode(false);
+    config.setCreatorMode(false);
     config.save();
   });
 });

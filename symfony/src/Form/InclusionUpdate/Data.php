@@ -19,7 +19,7 @@ use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Email;
 use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
@@ -47,7 +47,7 @@ class Data extends AbstractType
     final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
     final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const string FLD_MAKER_ID = 'makerId';
+    final public const string FLD_CREATOR_ID = 'creatorId';
     final public const string FLD_CHANGE_PASSWORD = 'changePassword';
     final public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
     final public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
@@ -62,7 +62,7 @@ class Data extends AbstractType
         $otherStylesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles']));
         $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
-        $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
+        $creatorIdsPagePath = htmlspecialchars($router->generate(RouteName::CREATOR_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
         $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
         $currentEmailAddressHtmlHelp = $this->getCurrentEmailAddressHtmlHelp($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
 
@@ -442,9 +442,9 @@ class Data extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add(self::FLD_MAKER_ID, TextType::class, [
+            ->add(self::FLD_CREATOR_ID, TextType::class, [
                 'label'      => '"Maker ID"',
-                'help'       => '<a href="'.$makerIdPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
+                'help'       => '<a href="'.$creatorIdsPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
                 'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',

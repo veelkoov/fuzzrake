@@ -20,7 +20,7 @@ class RestApiControllerWithEMTest extends WebTestCaseWithEM
     public function testCreators(): void
     {
         $client = static::createClient();
-        self::persistAndFlush(self::getArtisan('API testing artisan', 'APIARTS', 'FI'));
+        self::persistAndFlush(self::getCreator('API testing creator', 'TEST001', 'FI'));
 
         $client->request('GET', '/api/artisans.json');
         self::assertResponseStatusCodeIs($client, 200);
@@ -31,8 +31,8 @@ class RestApiControllerWithEMTest extends WebTestCaseWithEM
         $parsedJson = Json::decode($text, Json::FORCE_ARRAY);
         $arrayReader = ArrayReader::of($parsedJson);
 
-        self::assertEquals('API testing artisan', $arrayReader->getNonEmptyString('[0][NAME]'));
-        self::assertEquals('APIARTS', $arrayReader->getNonEmptyString('[0][MAKER_ID]'));
+        self::assertEquals('API testing creator', $arrayReader->getNonEmptyString('[0][NAME]'));
+        self::assertEquals('TEST001', $arrayReader->getNonEmptyString('[0][MAKER_ID]'));
         self::assertEquals('FI', $arrayReader->getNonEmptyString('[0][COUNTRY]'));
     }
 }

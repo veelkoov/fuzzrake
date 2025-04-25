@@ -11,7 +11,7 @@ use Veelkoov\Debris\StringSet;
 readonly class Choices
 {
     public function __construct(
-        public string $makerId,
+        public string $creatorId,
         public string $textSearch,
         public StringSet $countries,
         public StringSet $states,
@@ -37,7 +37,7 @@ readonly class Choices
     public function changePage(int $newPageNumber): self
     {
         return new self(
-            $this->makerId,
+            $this->creatorId,
             $this->textSearch,
             $this->countries,
             $this->states,

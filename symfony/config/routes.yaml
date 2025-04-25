@@ -14,7 +14,7 @@ legacy_new:
   path: /new.html
   controller: *redirect
   defaults:
-    route: new_artisans
+    route: new_creators
 
 legacy_events:
   path: /events.html
@@ -38,7 +38,7 @@ legacy_maker_ids:
   path: /maker_ids.html
   controller: *redirect
   defaults:
-    route: maker_ids
+    route: creator_ids
 
 legacy_donate:
   path: /donate.html

@@ -25,7 +25,7 @@ final class CreatorSpeciesResolver
     public function __construct(
         private readonly Species $species,
     ) {
-        $this->mostSpecies = $this->species->getByName('Most species'); // grep-assumed-does-specie-when-artisan-has-only-doesnt
+        $this->mostSpecies = $this->species->getByName('Most species'); // grep-assumed-does-specie-when-creator-has-only-doesnt
         $this->other = $this->species->getByName('Other'); // grep-species-other
     }
 

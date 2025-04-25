@@ -21,7 +21,7 @@ use App\Data\Fixer\StrList\PayMethodFixer;
 use App\Data\Fixer\StrList\PayPlanFixer;
 use App\Data\Fixer\StrList\SpeciesListFixer;
 use App\Data\Fixer\StrList\UrlListStringFixer;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 class Fixer
 {
@@ -44,7 +44,7 @@ class Fixer
     ) {
     }
 
-    public function getFixed(Artisan $input): Artisan
+    public function getFixed(Creator $input): Creator
     {
         $result = clone $input;
 
@@ -55,17 +55,17 @@ class Fixer
         return $result;
     }
 
-    public function fix(Artisan $artisan, F $field): void
+    public function fix(Creator $creator, F $field): void
     {
         if ($field->isList()) {
-            $value = $artisan->getStringList($field);
+            $value = $creator->getStringList($field);
 
-            $artisan->set($field, $this->getStrListFixer($field)->fix($value));
+            $creator->set($field, $this->getStrListFixer($field)->fix($value));
         } else {
-            $value = $artisan->get($field);
+            $value = $creator->get($field);
 
             if (is_string($value)) {
-                $artisan->set($field, $this->getFixer($field)->fix($value));
+                $creator->set($field, $this->getFixer($field)->fix($value));
             }
         }
     }

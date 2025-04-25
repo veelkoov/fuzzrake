@@ -9,7 +9,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -20,7 +20,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
     public function testStatisticsPageLoads(): void
     {
         $client = static::createClient();
-        self::persistAndFlush(self::getArtisan()
+        self::persistAndFlush(self::getCreator()
             ->setOtherFeatures(['Smoke detector'])
             ->setSpeciesDoes(['Wolves'])
             ->setSpeciesDoesnt(['Coyotes'])
@@ -32,21 +32,21 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         static::assertSelectorTextContains('h1#data-statistics', 'Data statistics');
     }
 
-    public function testInactiveMakersDontCount(): void
+    public function testInactiveCreatorsDontCount(): void
     {
         $client = static::createClient();
 
-        $a1 = self::getArtisan('A1', 'AAAAAAA1')
+        $a1 = self::getCreator('A1', 'TEST0041')
             ->setFeatures([Features::FOLLOW_ME_EYES])
             ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setCountry('CZ')
         ;
-        $a2 = self::getArtisan('A2', 'AAAAAAA2')
+        $a2 = self::getCreator('A2', 'TEST0042')
             ->setFeatures([Features::FOLLOW_ME_EYES])
             ->setOrderTypes([OrderTypes::FULL_DIGITIGRADE])
             ->setCountry('SK')
         ;
-        $a3 = self::getArtisan('A3', 'AAAAAAA3')
+        $a3 = self::getCreator('A3', 'TEST0043')
             ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setInactiveReason('Hidden')
             ->setCountry('IT')
@@ -70,27 +70,27 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         // static::assertRowValueEquals('1 (50.00%)', '50-59%', $crawler);
     }
 
-    public function testFakeFormerMakerIdsDontCount(): void
+    public function testFakeFormerCreatorIdsDontCount(): void
     {
         $client = static::createClient();
 
-        $artisanOnlyFakeId = new Artisan();
-        $artisanFakeIdAndNew = new Artisan();
-        $artisanFakeIdAndOldAndNew = new Artisan();
+        $creatorOnlyFakeId = new Creator();
+        $creatorFakeIdAndNew = new Creator();
+        $creatorFakeIdAndOldAndNew = new Creator();
 
-        self::persistAndFlush($artisanFakeIdAndNew, $artisanOnlyFakeId, $artisanFakeIdAndOldAndNew);
+        self::persistAndFlush($creatorFakeIdAndNew, $creatorOnlyFakeId, $creatorFakeIdAndOldAndNew);
 
-        $artisanOnlyFakeId->setMakerId('')->setFormerMakerIds([sprintf('M%06d', $artisanOnlyFakeId->getId())]);
-        $artisanFakeIdAndNew->setMakerId('MAKERID')
-            ->setFormerMakerIds([sprintf('M%06d', $artisanFakeIdAndNew->getId())]);
-        $artisanFakeIdAndOldAndNew->setMakerId('MAKE3ID')
-            ->setFormerMakerIds([sprintf("MAKE2ID\nM%06d", $artisanFakeIdAndOldAndNew->getId())]);
+        $creatorOnlyFakeId->setCreatorId('')->setFormerCreatorIds([sprintf('M%06d', $creatorOnlyFakeId->getId())]);
+        $creatorFakeIdAndNew->setCreatorId('TEST001')
+            ->setFormerCreatorIds([sprintf('M%06d', $creatorFakeIdAndNew->getId())]);
+        $creatorFakeIdAndOldAndNew->setCreatorId('TEST002')
+            ->setFormerCreatorIds([sprintf("TEST003\nM%06d", $creatorFakeIdAndOldAndNew->getId())]);
 
-        $artisan3 = (new Artisan())->setMakerId('AAAAAAA')->setFormerMakerIds(['BBBBBBB', 'CCCCCCC']);
-        $artisan4 = (new Artisan())->setMakerId('DDDDDDD')->setFormerMakerIds(['EEEEEEE']);
-        $artisan5 = (new Artisan())->setMakerId('FFFFFFF')->setFormerMakerIds([]);
+        $creator3 = (new Creator())->setCreatorId('TEST004')->setFormerCreatorIds(['TEST005', 'TEST006']);
+        $creator4 = (new Creator())->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
+        $creator5 = (new Creator())->setCreatorId('TEST009')->setFormerCreatorIds([]);
 
-        self::persistAndFlush($artisan3, $artisan4, $artisan5);
+        self::persistAndFlush($creator3, $creator4, $creator5);
 
         $client->request('GET', '/stats');
         $crawler = $client->getCrawler();

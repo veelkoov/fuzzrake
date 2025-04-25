@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\NewArtisan;
+use App\Data\Definitions\NewCreator;
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
 use App\Service\DataService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\Completeness;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\Completeness;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
@@ -104,7 +104,7 @@ class AppExtensions extends AbstractExtension
 
     public function isNew(Creator $creator): bool
     {
-        return NewArtisan::isNew($creator);
+        return NewCreator::isNew($creator);
     }
 
     public function hasGoodCompleteness(Creator $creator): bool

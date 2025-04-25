@@ -48,7 +48,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
             'You must answer this question.');
         self::assertSelectorTextContains('#form_errors_top li:nth-child(5)',
             'Is there a possibility of NSFW (or the type of content listed above) being liked/shared/posted/commented on by your social media account? - You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback',
+        self::assertSelectorTextContains('#iu_form_creatorId + .help-text + .invalid-feedback',
             'This value should not be blank.');
         self::assertSelectorTextContains('#form_errors_top li:nth-child(6)',
             '"Maker ID" - This value should not be blank.');
@@ -93,7 +93,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'test-maker-555',
             'iu_form[country]' => 'Finland',
-            'iu_form[makerId]' => 'MAKERID',
+            'iu_form[creatorId]' => 'TEST001',
             'iu_form[ages]' => $ages,
             'iu_form[nsfwWebsite]' => $nsfwWebsite,
             'iu_form[nsfwSocial]' => $nsfwSocial,
@@ -178,7 +178,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
     {
         return DataProvider::tuples(
             [
-                null, // No pre-existing maker
+                null, // No pre-existing creator
                 'new-password', // Setting a new password
                 'FEEDBACK', // Contact allowed
                 null, // ERROR: Not filling email address
@@ -190,7 +190,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
                 },
             ],
             [
-                null, // No pre-existing maker
+                null, // No pre-existing creator
                 null, // ERROR: Not filling password
                 'NO', // Not allowing contact
                 null, // Email not required
@@ -202,7 +202,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
                 },
             ],
             [
-                null, // No pre-existing maker
+                null, // No pre-existing creator
                 'new-password', // Setting a new password
                 'NO', // Not allowing contact
                 null, // Email not required
@@ -304,13 +304,13 @@ class IuFormValidationTest extends WebTestCaseWithEM
         callable $assertions,
     ): void {
         $itIsAnUpdate = null !== $previousContactPermit;
-        $iuFormStartUri = $itIsAnUpdate ? '/iu_form/start/MAKERID' : '/iu_form/start';
+        $iuFormStartUri = $itIsAnUpdate ? '/iu_form/start/TEST001' : '/iu_form/start';
 
         $client = static::createClient();
 
         if ($itIsAnUpdate) {
-            self::persistAndFlush(self::getArtisan(
-                makerId: 'MAKERID',
+            self::persistAndFlush(self::getCreator(
+                creatorId: 'TEST001',
                 password: 'previous-password',
                 contactAllowed: $previousContactPermit,
             ));
@@ -320,7 +320,7 @@ class IuFormValidationTest extends WebTestCaseWithEM
         self::skipRules($client);
 
         $formData = [
-            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[creatorId]'       => 'TEST001',
             'iu_form[name]'            => 'Test name',
             'iu_form[country]'         => 'Test country',
             'iu_form[ages]'            => 'MIXED',

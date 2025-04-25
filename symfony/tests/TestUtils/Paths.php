@@ -26,7 +26,7 @@ final class Paths
      */
     public static function getCompletenessCalcClassPath(): string
     {
-        return __DIR__.'/../../src/Utils/Artisan/CompletenessCalc.php';
+        return __DIR__.'/../../src/Utils/Creator/CompletenessCalc.php';
     }
 
     /**

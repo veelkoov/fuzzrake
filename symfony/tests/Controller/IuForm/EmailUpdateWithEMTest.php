@@ -93,7 +93,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     private function havingACreatorWithContactAndEmailSetAs(ContactPermit $contactPermit, string $email): void
     {
         self::persistAndFlush(
-            self::getArtisan(makerId: self::CREATOR_ID, contactAllowed: $contactPermit, ages: Ages::ADULTS,
+            self::getCreator(creatorId: self::CREATOR_ID, contactAllowed: $contactPermit, ages: Ages::ADULTS,
                 nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false)
                 ->setEmailAddress($email)
         );

@@ -26,9 +26,9 @@ class EventsExtensions extends AbstractExtension
             throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__FUNCTION__);
         }
 
-        $n = $event->getNewMakersCount();
-        $u = $event->getUpdatedMakersCount();
-        $r = $event->getReportedUpdatedMakersCount();
+        $n = $event->getNewCreatorsCount();
+        $u = $event->getUpdatedCreatorsCount();
+        $r = $event->getReportedUpdatedCreatorsCount();
 
         $result = '';
 

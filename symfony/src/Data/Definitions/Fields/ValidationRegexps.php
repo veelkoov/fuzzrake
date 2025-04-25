@@ -27,7 +27,7 @@ final class ValidationRegexps
     final public const string TELEGRAM_CHANNEL_URL = '^https://t\.me/[^/?#]+$';
 
     final public const string LIST_VALIDATION = '^[-,&!.A-Za-z0-9+()/\n %:"\'@]*$'; // TODO: Be more specific, separate lists?
-    final public const string FORMER_MAKER_IDS = '^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$';
+    final public const string FORMER_CREATOR_IDS = '^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$';
     final public const string NON_EMPTY = '.';
     final public const string SINCE = '^(\d{4}-\d{2})?$';
     final public const string COUNTRY = '^([A-Z]{2})?$';

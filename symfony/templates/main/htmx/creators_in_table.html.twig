@@ -4,11 +4,11 @@
 
 {% for creator in creators_page.items %}
     {% set creator_idx = loop.index %}
-    <tr {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %} class="{{ html_classes({
+    <tr {% if creator.creatorId %}id="{{ creator.creatorId }}"{% endif %} class="{{ html_classes({
             inactive: creator.isHidden,
-            'matched-maker-id': creator.hasMakerId(searched_creator_id),
+            'matched-creator-id': creator.hasCreatorId(searched_creator_id),
         }) }}">
-        <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="name" {{ card_open_attrs(creator.lastCreatorId) }}>
             <span class="fi fi-{{ creator.country|lower }}"></span>&nbsp;
 
             {{- creator.name -}}
@@ -24,35 +24,35 @@
             {% endif %}
         </td>
 
-        <td class="makerId column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
-            {{ creator.makerId }}
+        <td class="creator-id column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
+            {{ creator.creatorId }}
         </td>
 
-        <td class="state column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="state column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.state }}
         </td>
 
-        <td class="languages column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="languages column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.languages|join(', ') }}
         </td>
 
-        <td  class="productionModels column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td  class="production-models column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.productionModels|join(', ') }}
         </td>
 
-        <td class="styles column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="styles column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.styles, creator.otherStyles) }}
         </td>
 
-        <td class="types column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="types column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.orderTypes, creator.otherOrderTypes) }}
         </td>
 
-        <td class="features column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="features column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.features, creator.otherFeatures) }}
         </td>
 
-        <td class="species column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="species column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {% if creator.hasSpeciesInfo %}
                 <ul>
                     {% for item in creator.speciesDoes %}
@@ -66,7 +66,7 @@
             {% endif %}
         </td>
 
-        <td class="commissions column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="commissions column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {% if creator.isTracked %}
                 <ul>
                     {% if creator.csTrackerIssue %}
@@ -156,7 +156,7 @@
                         {% endfor %}
 
                         <li>
-                            <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastMakerId) }}>
+                            <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
                                 <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
                             </a>
                         </li>

@@ -10,7 +10,7 @@ use App\Filtering\FiltersData\Data\SpecialItemList;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
 use App\Filtering\FiltersData\SpecialItem;
-use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorRepository;
 use App\Repository\CreatorSpecieRepository;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;

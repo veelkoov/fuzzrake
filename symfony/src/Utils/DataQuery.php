@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 class DataQuery
 {
@@ -14,7 +14,7 @@ class DataQuery
     private const string CMD_ONLY_FEEDBACK_YES = ':YES';
 
     /**
-     * @var Artisan[]
+     * @var Creator[]
      */
     private array $result = [];
 
@@ -63,17 +63,17 @@ class DataQuery
         }
     }
 
-    public function run(ArtisanRepository $artisanRepository): void
+    public function run(CreatorRepository $creatorRepository): void
     {
         $this->result = [];
         $this->matchedItems = [];
 
-        $creators = $artisanRepository->getWithOtherItemsLikePaged($this->searchedItems);
+        $creators = $creatorRepository->getWithOtherItemsLikePaged($this->searchedItems);
 
         foreach ($creators as $creatorE) {
-            $creator = Artisan::wrap($creatorE);
+            $creator = Creator::wrap($creatorE);
 
-            if ($this->artisanMatches($creator)) {
+            if ($this->creatorMatches($creator)) {
                 $this->result[] = $creator;
             }
         }
@@ -87,7 +87,7 @@ class DataQuery
     }
 
     /**
-     * @return Artisan[]
+     * @return Creator[]
      */
     public function getResult(): array
     {
@@ -139,15 +139,15 @@ class DataQuery
         }
     }
 
-    private function artisanMatches(Artisan $artisan): bool
+    private function creatorMatches(Creator $creator): bool
     {
-        if ($this->optOnlyFeedbackYes && !$artisan->allowsFeedback()) {
+        if ($this->optOnlyFeedbackYes && !$creator->allowsFeedback()) {
             return false;
         }
 
-        return $this->listMatches($artisan->getOtherFeatures())
-            || $this->listMatches($artisan->getOtherOrderTypes())
-            || $this->listMatches($artisan->getOtherStyles());
+        return $this->listMatches($creator->getOtherFeatures())
+            || $this->listMatches($creator->getOtherOrderTypes())
+            || $this->listMatches($creator->getOtherStyles());
     }
 
     /**

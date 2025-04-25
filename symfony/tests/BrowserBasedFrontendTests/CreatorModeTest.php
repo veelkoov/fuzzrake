@@ -22,18 +22,18 @@ class CreatorModeTest extends PantherTestCaseWithEM
      */
     public function testTurningCreatorModeOnAndOff(): void
     {
-        // Having two makers, 1 minor-friendly and one NSFW-ish
+        // Having two creators, 1 minor-friendly and one NSFW-ish
 
         self::persistAndFlush(
-            self::getArtisan('Creator: adult, NSFW', 'TEST001', 'FI', ages: Ages::ADULTS,
+            self::getCreator('Creator: adult, NSFW', 'TEST001', 'FI', ages: Ages::ADULTS,
                 nsfwWebsite: false, nsfwSocial: true, doesNsfw: true, worksWithMinors: false),
-            self::getArtisan('Creator: minor, WWM', 'TEST002', 'FI', ages: Ages::MINORS,
+            self::getCreator('Creator: minor, WWM', 'TEST002', 'FI', ages: Ages::MINORS,
                 nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: true),
         );
 
         $this->clearCache();
 
-        // Expect: main page initially shows the checklist and no makers
+        // Expect: main page initially shows the checklist and no creators
 
         $this->client->request('GET', '/index.php/');
 
@@ -50,35 +50,35 @@ class CreatorModeTest extends PantherTestCaseWithEM
         $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
-        // Expect: checklist is hidden and all makers are visible
+        // Expect: checklist is hidden and all creators are visible
 
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertVisible('#btn-reenable-filters');
-        $this->assertMakersVisibility(['TEST001', 'TEST002'], []);
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
 
         // Expect: text search works properly even in creator mode
 
         $this->clearTypeInTextSearch('NSFW');
         self::waitForLoadingIndicatorToDisappear();
-        $this->assertMakersVisibility(['TEST001'], ['TEST002']);
+        $this->assertCreatorsVisibility(['TEST001'], ['TEST002']);
 
         $this->clearTypeInTextSearch('WWM');
         self::waitForLoadingIndicatorToDisappear();
-        $this->assertMakersVisibility(['TEST002'], ['TEST001']);
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
 
         $this->clearTypeInTextSearch('Creator');
         self::waitForLoadingIndicatorToDisappear();
-        $this->assertMakersVisibility(['TEST001', 'TEST002'], []);
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
 
         // Action: click re-enable filters button
 
         $this->client->clickLink('Re-enable filters');
 
-        // Expect: main page shows the checklist and no makers, no checklist items are selected
+        // Expect: main page shows the checklist and no creators, no checklist items are selected
 
         self::assertVisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
-        $this->assertMakersVisibility([], ['TEST001', 'TEST002']);
+        $this->assertCreatorsVisibility([], ['TEST001', 'TEST002']);
 
         self::assertSelectorAttributeContains('#checklist-dismiss-btn', 'value', "I can't click this button yet");
 
@@ -94,7 +94,7 @@ class CreatorModeTest extends PantherTestCaseWithEM
 
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
-        $this->assertMakersVisibility(['TEST002'], ['TEST001']);
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
 
         // Action: navigate to the data updates page and enable the creator mode, go back to the main page
 
@@ -104,11 +104,11 @@ class CreatorModeTest extends PantherTestCaseWithEM
         $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
-        // Expect: checklist is hidden and all makers are visible
+        // Expect: checklist is hidden and all creators are visible
 
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertVisible('#btn-reenable-filters');
-        $this->assertMakersVisibility(['TEST001', 'TEST002'], []);
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
 
         // Action: click re-enable filters button
 
@@ -118,7 +118,7 @@ class CreatorModeTest extends PantherTestCaseWithEM
 
         self::assertVisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
-        $this->assertMakersVisibility([], ['TEST001', 'TEST002']);
+        $this->assertCreatorsVisibility([], ['TEST001', 'TEST002']);
 
         self::assertSelectorAttributeContains('#checklist-dismiss-btn', 'value', 'I will now click this button');
 
@@ -131,6 +131,6 @@ class CreatorModeTest extends PantherTestCaseWithEM
 
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
-        $this->assertMakersVisibility(['TEST002'], ['TEST001']);
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
     }
 }

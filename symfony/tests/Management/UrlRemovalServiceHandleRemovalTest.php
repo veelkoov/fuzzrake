@@ -6,7 +6,7 @@ namespace App\Tests\Management;
 
 use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
@@ -41,7 +41,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $routerMock = $this->createMock(RouterInterface::class);
         $routerMock->expects($this->atMost(3))->method('generate')
-            ->willReturnOnConsecutiveCalls('/#CREATOR', '/ui/update', '/contact');
+            ->willReturnOnConsecutiveCalls('/#TEST001', '/ui/update', '/contact');
 
         $this->messengerBusMock = $this->createMock(MessageBusInterface::class);
 
@@ -189,7 +189,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Hidden Creator!
 
-                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#CREATOR ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
+                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
                     - https://getfursu.it/info
 
                     Since the remaining information+links on your card are not sufficient, your card has been hidden.
@@ -204,7 +204,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                 return new Envelope($notification);
             });
 
-        $creator = Creator::new()->setName('The Hidden Creator')->setMakerId('CREATOR');
+        $creator = Creator::new()->setName('The Hidden Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),
@@ -226,7 +226,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                 $this->assertEquals(<<<'CONTENTS'
                     Hello The Updated Creator!
 
-                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#CREATOR ) may require your attention. The following links were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
+                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. The following links were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
                     - https://getfursu.it/info
                     - https://example.com/prices
                     - https://example.com/commissions
@@ -241,7 +241,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                 return new Envelope($notification);
             });
 
-        $creator = Creator::new()->setName('The Updated Creator')->setMakerId('CREATOR');
+        $creator = Creator::new()->setName('The Updated Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),

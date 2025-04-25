@@ -55,9 +55,9 @@ function setup_start_page(): void {
   );
   const $addNewStudioInstead = jQuery("#addNewStudioInstead");
   const $findTheStudioToUpdate = jQuery("#findTheStudioToUpdate");
-  const confirmYouAreTheMaker = new DynamicRadio(
-    "iu_form[confirmYouAreTheMaker]",
-    "#confirmYouAreTheMaker",
+  const confirmYouAreTheCreator = new DynamicRadio(
+    "iu_form[confirmYouAreTheCreator]",
+    "#confirmYouAreTheCreator",
     refresh_page,
     false,
   );
@@ -94,15 +94,15 @@ function setup_start_page(): void {
         confirmUpdatingTheRightOne.isVal("update-other-one"),
     );
 
-    confirmYouAreTheMaker.toggle(
+    confirmYouAreTheCreator.toggle(
       ensureStudioIsNotThereAlready.isVal("is-new-studio") ||
         confirmUpdatingTheRightOne.isVal("correct"),
     );
 
-    toggle($doNotFillTheForm, confirmYouAreTheMaker.isVal("not-the-maker"));
+    toggle($doNotFillTheForm, confirmYouAreTheCreator.isVal("not-the-creator"));
 
     confirmNoPendingUpdates.toggle(
-      confirmYouAreTheMaker.isVal("i-am-the-maker"),
+      confirmYouAreTheCreator.isVal("i-am-the-creator"),
     );
 
     decisionOverPreviousUpdates.toggle(

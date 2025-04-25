@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 final readonly class UpdateContact
 {

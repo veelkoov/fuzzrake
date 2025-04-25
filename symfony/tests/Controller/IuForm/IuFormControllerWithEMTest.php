@@ -29,9 +29,9 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $this->client = self::createClient();
     }
 
-    public function testIuFormLoadsForExistingMakers(): void
+    public function testIuFormLoadsForExistingCreators(): void
     {
-        self::addSimpleArtisan();
+        self::addSimpleCreator();
 
         $this->client->request('GET', '/iu_form/start/TEST');
         static::assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -73,44 +73,44 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    public function testOneMakerCannotUseOtherMakersMakerId(): void
+    public function testOneCreatorCannotUseOtherCreatorsCreatorId(): void
     {
         self::persistAndFlush(
-            self::getArtisan(makerId: 'OTHERID'),
-            self::getArtisan(makerId: 'MAKERID', password: 'aBcDeFgH1324', contactAllowed: ContactPermit::NO,
+            self::getCreator(creatorId: 'TEST002'),
+            self::getCreator(creatorId: 'TEST001', password: 'aBcDeFgH1324', contactAllowed: ContactPermit::NO,
                 ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
         );
 
-        $this->client->request('GET', '/iu_form/start/MAKERID');
+        $this->client->request('GET', '/iu_form/start/TEST001');
         self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[makerId]' => 'OTHERID',
+            'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
-        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+        self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[makerId]' => 'ANOTHER',
+            'iu_form[creatorId]' => 'TEST003',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($this->client, $form);
     }
 
-    public function testNewMakerCannotUseOtherMakersMakerId(): void
+    public function testNewCreatorCannotUseOtherCreatorsCreatorId(): void
     {
         self::persistAndFlush(
-            self::getArtisan(makerId: 'OTHERID'),
+            self::getCreator(creatorId: 'TEST001'),
         );
 
         $this->client->request('GET', '/iu_form/start');
         self::skipRules($this->client);
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[makerId]'         => 'OTHERID',
+            'iu_form[creatorId]'       => 'TEST001',
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
             'iu_form[ages]'            => 'MINORS',
@@ -122,11 +122,11 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($this->client, $form);
-        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+        self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[makerId]' => 'ANOTHER',
+            'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($this->client, $form);
@@ -144,16 +144,16 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testInvalidEmailAddressNotShownForExistingCreator(): void
     {
-        self::persistAndFlush(self::getArtisan(makerId: 'CREATOR', emailAddress: 'garbage'));
-        $this->client->request('GET', '/iu_form/start/CREATOR');
+        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'garbage'));
+        $this->client->request('GET', '/iu_form/start/TEST001');
         self::skipRules($this->client);
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
     public function testPreviousEmailAddressShownForExistingCreator(): void
     {
-        self::persistAndFlush(self::getArtisan(makerId: 'CREATOR', emailAddress: 'valid@example.com'));
-        $this->client->request('GET', '/iu_form/start/CREATOR');
+        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'valid@example.com'));
+        $this->client->request('GET', '/iu_form/start/TEST001');
         self::skipRules($this->client);
         self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
     }

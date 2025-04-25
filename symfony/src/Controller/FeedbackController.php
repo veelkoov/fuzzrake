@@ -35,8 +35,8 @@ class FeedbackController extends AbstractController
     {
         $feedback = new Feedback();
 
-        if (null !== $maker = $request->query->get('maker')) { // grep-maker-query-parameter
-            $feedback->maker = $maker;
+        if (null !== $creator = $request->query->get('creator')) { // grep-creator-query-parameter
+            $feedback->creator = $creator;
         }
 
         $form = $this->createForm(FeedbackType::class, $feedback, [
@@ -75,7 +75,7 @@ class FeedbackController extends AbstractController
     {
         $contents = <<<contents
             Subject: $feedback->subject
-            Maker: $feedback->maker
+            Creator: $feedback->creator
             Details:
             $feedback->details
             contents;

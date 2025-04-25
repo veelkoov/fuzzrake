@@ -2,8 +2,8 @@ package database.tables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Creators : IntIdTable("artisans") {
-    val creatorId = varchar("maker_id", 16).default("")
+object Creators : IntIdTable("creators") {
+    val creatorId = varchar("creator_id", 16).default("")
     val name = varchar("name", 128).default("")
     val formerly = varchar("formerly", 256).default("")
     val inactiveReason = varchar("inactive_reason", 512).default("")

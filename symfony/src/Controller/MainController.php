@@ -8,10 +8,10 @@ use App\Controller\Traits\CreatorByCreatorIdTrait;
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Filtering\DataRequests\RequestParser;
 use App\Filtering\FiltersData\FiltersService;
-use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\CreatorRepository;
 use App\Service\DataService;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Creator\CreatorId;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
 use Psr\Log\LoggerInterface;
@@ -46,31 +46,31 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/new', name: RouteName::NEW_ARTISANS)]
+    #[Route(path: '/new', name: RouteName::NEW_CREATORS)]
     #[Cache(maxage: 3600, public: true)]
     public function newCreators(): Response
     {
         return $this->render('main/new.html.twig', [
-            'artisans' => Artisan::wrapAll($this->creatorRepository->getNewWithLimit()),
+            'creators' => Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
         ]);
     }
 
-    #[Route(path: '/htmx/main/creator-card/{makerId}', name: RouteName::HTMX_MAIN_CREATOR_CARD)]
+    #[Route(path: '/htmx/main/creator-card/{creatorId}', name: RouteName::HTMX_MAIN_CREATOR_CARD)]
     #[Cache(maxage: 3600, public: true)]
-    public function creatorCard(string $makerId): Response
+    public function creatorCard(string $creatorId): Response
     {
-        $creator = $this->getCreatorByCreatorIdOrThrow404($makerId);
+        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
 
         return $this->render('main/htmx/creator_card.html.twig', [
             'creator' => $creator,
         ]);
     }
 
-    #[Route(path: '/htmx/main/updates-dialog/{makerId}', name: RouteName::HTMX_MAIN_UPDATES_DIALOG)]
+    #[Route(path: '/htmx/main/updates-dialog/{creatorId}', name: RouteName::HTMX_MAIN_UPDATES_DIALOG)]
     #[Cache(maxage: 3600, public: true)]
-    public function updatesDialog(string $makerId): Response
+    public function updatesDialog(string $creatorId): Response
     {
-        $creator = $this->getCreatorByCreatorIdOrThrow404($makerId);
+        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
 
         return $this->render('main/htmx/updates_dialog.html.twig', [
             'creator' => $creator,

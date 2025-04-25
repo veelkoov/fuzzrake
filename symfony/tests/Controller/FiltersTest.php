@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -23,17 +23,17 @@ class FiltersTest extends WebTestCaseWithEM
     /**
      * @dataProvider filterChoicesDataProvider
      *
-     * @param list<Artisan>                    $artisans
+     * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
-     * @param list<string>                     $expectedMakerIds
+     * @param list<string>                     $expectedCreatorIds
      *
      * @throws JsonException
      */
-    public function testFiltersThroughHtmx(array $artisans, array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
         $client = static::createClient();
 
-        self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
+        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
 
         $queryParts = [];
 
@@ -60,8 +60,8 @@ class FiltersTest extends WebTestCaseWithEM
         $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        $resultMakerIds = $crawler->filter('td.makerId')->each(fn (Crawler $node, $_) => $node->text(''));
+        $resultCreatorIds = $crawler->filter('td.creator-id')->each(fn (Crawler $node, $_) => $node->text(''));
 
-        self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
+        self::assertArrayItemsSameOrderIgnored($expectedCreatorIds, $resultCreatorIds, "$query query failed.");
     }
 }

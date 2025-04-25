@@ -38,7 +38,7 @@ class FeedbackType extends AbstractType
                 'help'      => "If you need a response, please contact me using any means listed on <a href=\"$contactPageUrl\">this page</a>.",
                 'help_html' => true,
             ])
-            ->add('maker', TextType::class, [
+            ->add('creator', TextType::class, [
                 'label'      => 'Maker (if applicable)',
                 'required'   => false,
                 'empty_data' => '',

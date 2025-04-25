@@ -30,9 +30,9 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         static::assertResponseStatusCodeIs($this->client, 200);
 
         $this->client->submitForm('Save', [
-            'event[newMakersCount]'             => 2,
-            'event[updatedMakersCount]'         => 0,
-            'event[reportedUpdatedMakersCount]' => 0,
+            'event[newCreatorsCount]'             => 2,
+            'event[updatedCreatorsCount]'         => 0,
+            'event[reportedUpdatedCreatorsCount]' => 0,
         ]);
 
         $this->client->followRedirect();
@@ -43,9 +43,9 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         static::assertResponseStatusCodeIs($this->client, 200);
 
         $this->client->submitForm('Save', [
-            'event[newMakersCount]'             => 0,
-            'event[updatedMakersCount]'         => 1,
-            'event[reportedUpdatedMakersCount]' => 1,
+            'event[newCreatorsCount]'             => 0,
+            'event[updatedCreatorsCount]'         => 1,
+            'event[reportedUpdatedCreatorsCount]' => 1,
         ]);
 
         $this->client->followRedirect();

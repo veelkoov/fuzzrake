@@ -123,10 +123,10 @@ function action_dbdump() {
 
         echo 'Dumping to JSON...'
 
-        if grep -q 'CREATE TABLE artisans_urls (' "$SQL_DUMP_PATH"; then
-            order_by='ORDER BY artisan_id, type, url'
-        elif grep -q 'CREATE TABLE artisans_values (' "$SQL_DUMP_PATH"; then
-            order_by='ORDER BY artisan_id, field_name, value'
+        if grep -q 'CREATE TABLE creators_urls (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY creator_id, type, url'
+        elif grep -q 'CREATE TABLE creators_values (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY creator_id, field_name, value'
         elif grep -q 'CREATE TABLE doctrine_migration_versions (' "$SQL_DUMP_PATH"; then
             order_by=''
         else

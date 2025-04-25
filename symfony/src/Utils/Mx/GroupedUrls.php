@@ -6,8 +6,8 @@ namespace App\Utils\Mx;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Collections\Arrays;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Psl\Iter;
 use Psl\Vec;

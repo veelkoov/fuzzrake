@@ -6,7 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -20,37 +20,37 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
     use MainPageTestsTrait;
 
     /**
-     * @return array<array{string, Artisan}>
+     * @return array<array{string, Creator}>
      */
-    public function feedbackFromMakersCardCarriesMakerIdOverToTheFormDataProvider(): array
+    public function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
     {
-        $official = Artisan::new()->setCountry('FI')->setName('Modern maker')
-            ->setMakerId('FDBCKMR');
+        $official = Creator::new()->setCountry('FI')->setName('Modern creator')
+            ->setCreatorId('TEST001');
 
-        $placeholder = Artisan::new()->setCountry('CZ')->setName('Early maker')
-            ->setFormerMakerIds(['M000000']);
+        $placeholder = Creator::new()->setCountry('CZ')->setName('Early creator')
+            ->setFormerCreatorIds(['M000000']);
 
         return [
-            'With an official maker ID' => ['FDBCKMR', $official],
-            'With placeholder maker ID' => ['M000000', $placeholder],
+            'With an official creator ID' => ['TEST001', $official],
+            'With placeholder creator ID' => ['M000000', $placeholder],
         ];
     }
 
     /**
      * @throws WebDriverException
      *
-     * @dataProvider feedbackFromMakersCardCarriesMakerIdOverToTheFormDataProvider
+     * @dataProvider feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider
      */
-    public function testFeedbackFromMakersCardCarriesMakerIdOverToTheForm(string $expectedMakerId, Artisan $artisan): void
+    public function testFeedbackFromCreatorCardCarriesCreatorIdOverToTheForm(string $expectedCreatorId, Creator $creator): void
     {
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1);
 
-        $this->openMakerCardByClickingOnTheirNameInTheTable($artisan->getName());
-        $this->openDataOutdatedPopupFromTheMakerCard();
+        $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());
+        $this->openDataOutdatedPopupFromTheCreatorCard();
 
         $this->client->clickLink('submit the feedback form');
 
@@ -61,7 +61,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
 
         $this->client->waitForVisibility('h1', 10);
         self::assertSelectorTExtSame('h1', 'Feedback form');
-        self::assertSelectorExists('//input[@id="feedback_maker" and @value="'.$expectedMakerId.'"]');
+        self::assertSelectorExists('//input[@id="feedback_creator" and @value="'.$expectedCreatorId.'"]');
     }
 
     /**
