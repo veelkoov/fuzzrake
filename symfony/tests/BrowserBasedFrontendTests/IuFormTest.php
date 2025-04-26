@@ -62,26 +62,68 @@ class IuFormTest extends PantherTestCaseWithEM
     /**
      * @throws Exception
      */
-    public function testContactMethodNotRequiredAndHiddenWhenContactNotAllowed(): void
+    public function testNewCreatorEmailVisibilityAndRequirement(): void
     {
-        $this->setupIuTestGoToTheDataPage();
+        $this->goToTheDataPage();
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
-        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
 
-        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
-        self::assertSelectorIsVisible('#iu_form_emailAddress');
+        self::waitUntilShows('#iu_form_emailAddress');
         self::assertSelectorExists('#iu_form_emailAddress[required]');
 
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
-        $this->client->waitForInvisibility('#iu_form_emailAddress', 5);
 
-        $this->client->waitForInvisibility('#iu_form_emailAddress', 5);
-        self::assertSelectorIsNotVisible('#iu_form_emailAddress');
+        self::waitUntilHides('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress:not([required])');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testExistingCreatorPreviouslyNotAllowedEmailRequirement(): void
+    {
+        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', contactAllowed: ContactPermit::NO));
+        $this->goToTheDataPage('TEST001');
+
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[contactAllowed]' => 'FEEDBACK',
+        ]);
+
+        self::waitUntilShows('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress[required]');
+
+        $form->setValues([
+            'iu_form[contactAllowed]' => 'NO',
+        ]);
+
+        self::waitUntilHides('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress:not([required])');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testExistingCreatorWithAnEmailEmailRequirement(): void
+    {
+        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', contactAllowed: ContactPermit::NO, emailAddress: 'example@example.com'));
+        $this->goToTheDataPage('TEST001');
+
+        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[contactAllowed]' => 'FEEDBACK',
+        ]);
+
+        self::waitUntilShows('#iu_form_emailAddress');
+        self::assertSelectorExists('#iu_form_emailAddress:not([required])');
+
+        $form->setValues([
+            'iu_form[contactAllowed]' => 'NO',
+        ]);
+
+        self::waitUntilHides('#iu_form_emailAddress');
         self::assertSelectorExists('#iu_form_emailAddress:not([required])');
     }
 

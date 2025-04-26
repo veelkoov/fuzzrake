@@ -64,6 +64,7 @@ class Data extends AbstractType
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
         $creatorIdsPagePath = htmlspecialchars($router->generate(RouteName::CREATOR_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
         $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
+        $emailAddressRequired = $this->shouldRequireEmailAddress($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
         $currentEmailAddressHtmlHelp = $this->getCurrentEmailAddressHtmlHelp($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
 
         $builder
@@ -472,7 +473,7 @@ class Data extends AbstractType
                 'label'      => 'Email address',
                 'help'       => $currentEmailAddressHtmlHelp.'<span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
                 'help_html'  => true,
-                'required'   => true,
+                'required'   => $emailAddressRequired,
                 'empty_data' => '',
             ])
             ->add(self::FLD_PASSWORD, PasswordType::class, [
@@ -565,9 +566,9 @@ class Data extends AbstractType
         return $result;
     }
 
-    private function getCurrentEmailAddressHtmlHelp(mixed $inputFromOptions): string
+    private function getCurrentEmailAddressHtmlHelp(mixed $emailFromOptions): string
     {
-        $currentEmailAddress = Enforce::string($inputFromOptions);
+        $currentEmailAddress = Enforce::string($emailFromOptions);
 
         // LEGACY: grep-code-invalid-email-addresses
         // Should just check if email address !== '' (displaying form for a new creator),
@@ -579,5 +580,10 @@ class Data extends AbstractType
         return 'Your current email address is '
             .htmlspecialchars(Email::obfuscate($currentEmailAddress))
             .'. To change, provide a new one in this field. To keep the old one, leave this field empty. ';
+    }
+
+    private function shouldRequireEmailAddress(mixed $emailFromOptions): bool
+    {
+        return !Email::isValid(Enforce::string($emailFromOptions)); // LEGACY: grep-code-invalid-email-addresses
     }
 }

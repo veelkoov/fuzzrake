@@ -155,7 +155,7 @@ function setup_password_and_contact_automation(): void {
   const emailAddressField = new DynamicFields(
     "#iu_form_emailAddress",
     "#email-address",
-    true,
+    "from-html-attr",
   );
 
   function refresh(immediate = false): void {
