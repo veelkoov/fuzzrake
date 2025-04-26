@@ -19,7 +19,7 @@ final class LanguagesFixer extends AbstractListFixer
     private readonly ConfigurableStringFixer $fixer;
 
     /**
-     * @param psLanguagesFixerConfig $languages
+     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string} $languages
      */
     public function __construct(
         #[Autowire(param: 'languages')] array $languages,

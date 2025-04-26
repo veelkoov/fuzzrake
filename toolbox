@@ -186,8 +186,6 @@ Available actions:
     prettier     Symfony: run Prettier
 
     gradle       Kotlin: run Gradle command
-    species      Kotlin: update creators' species
-    filters      Kotlin: update filters data
     miniatures   Kotlin: set miniatures data for changed photos
 EOF
 }
