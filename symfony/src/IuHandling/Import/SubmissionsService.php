@@ -12,6 +12,7 @@ use App\Repository\SubmissionRepository;
 use App\Utils\Pagination\ItemsPage;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Psl\File;
 
 class SubmissionsService
 {
@@ -66,5 +67,14 @@ class SubmissionsService
     public function updateEntity(Update $update): void
     {
         $this->repository->add($update->submission, true);
+    }
+
+    public function fillData(Submission $submission): void
+    {
+        $path = $this->submissionsDirPath.'/'.SubmissionData::getFilePathFromId($submission->getStrId());
+
+        if ($submission->getPayload() === '') {
+            $submission->setPayload(File\read($path));
+        }
     }
 }

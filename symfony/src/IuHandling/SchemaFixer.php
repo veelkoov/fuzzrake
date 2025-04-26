@@ -7,9 +7,12 @@ namespace App\IuHandling;
 use App\Data\Definitions\Fields\Field;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
+use App\Utils\Traits\UtilityClass;
 
 final class SchemaFixer
 {
+    use UtilityClass;
+
     private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
     private const int CURRENT_SCHEMA_VERSION = 18;
 
@@ -18,7 +21,7 @@ final class SchemaFixer
      *
      * @return array<string, psJsonFieldValue>
      */
-    public function fix(array $data): array
+    public static function fix(array $data): array
     {
         $data = self::assureVersionFieldExists($data);
 
@@ -86,7 +89,7 @@ final class SchemaFixer
      *
      * @return array<string, psJsonFieldValue>
      */
-    private function assureVersionFieldExists(array $data): array
+    private static function assureVersionFieldExists(array $data): array
     {
         if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
             $data[self::SCHEMA_VERSION] = 8;

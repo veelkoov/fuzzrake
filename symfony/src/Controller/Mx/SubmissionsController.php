@@ -11,6 +11,7 @@ use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
+use App\Repository\SubmissionRepository;
 use App\Service\Cache as CacheService;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -18,6 +19,7 @@ use App\Utils\DateTime\UtcClock;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,18 +28,18 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route(path: '/mx')]
-class SubmissionsController extends FuzzrakeAbstractController
+class SubmissionsController extends AbstractController
 {
     use ButtonClickedTrait;
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly SubmissionRepository $submissionRepository,
         private readonly SubmissionsService $submissions,
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
-        CreatorRepository $creatorRepository,
+        private readonly CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($creatorRepository);
     }
 
     /**
@@ -47,7 +49,11 @@ class SubmissionsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function submissions(int $page): Response
     {
-        $submissionsPage = $this->submissions->getSubmissions($page);
+        $submissionsPage = $this->submissionRepository->getPage($page);
+
+        foreach ($submissionsPage->items as $submission) {
+            $this->submissions->fillData($submission);
+        }
 
         return $this->render('mx/submissions/index.html.twig', [
             'submissions_page' => $submissionsPage,

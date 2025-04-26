@@ -99,7 +99,7 @@ readonly class SubmissionData implements FieldReadInterface
             throw new DataInputException(previous: $ex);
         }
 
-        return new self($timestamp, $id, (new SchemaFixer())->fix($data));
+        return new self($timestamp, $id, SchemaFixer::fix($data));
     }
 
     private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable

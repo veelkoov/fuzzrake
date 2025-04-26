@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Submission;
+use App\Utils\Pagination\ItemsPage;
+use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -50,5 +53,29 @@ class SubmissionRepository extends ServiceEntityRepository
         }
 
         return $result; // @phpstan-ignore-line Lack of skill to fix this
+    }
+
+    /**
+     * @return ItemsPage<Submission>
+     */
+    public function getPage(int $pageNumber): ItemsPage
+    {
+        do {
+            $query = $this->createQueryBuilder('d_s')
+                ->orderBy('d_s.id', 'DESC')
+                ->setFirstResult(Pagination::getFirstIdx(100, $pageNumber))
+                ->setMaxResults(100);
+
+            $paginator = new Paginator($query, fetchJoinCollection: true);
+
+            $pagesCount = Pagination::countPages($paginator, 100);
+        } while ($pageNumber > $pagesCount);
+
+        return new ItemsPage(
+            array_values([...$paginator->getIterator()]),
+            $paginator->count(),
+            $pageNumber,
+            $pagesCount,
+        );
     }
 }
