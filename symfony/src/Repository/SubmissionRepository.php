@@ -63,12 +63,12 @@ class SubmissionRepository extends ServiceEntityRepository
         do {
             $query = $this->createQueryBuilder('d_s')
                 ->orderBy('d_s.id', 'DESC')
-                ->setFirstResult(Pagination::getFirstIdx(100, $pageNumber))
-                ->setMaxResults(100);
+                ->setFirstResult(Pagination::getFirstIdx(Pagination::PAGE_SIZE, $pageNumber))
+                ->setMaxResults(Pagination::PAGE_SIZE);
 
             $paginator = new Paginator($query, fetchJoinCollection: true);
 
-            $pagesCount = Pagination::countPages($paginator, 100);
+            $pagesCount = Pagination::countPages($paginator, Pagination::PAGE_SIZE);
         } while ($pageNumber > $pagesCount);
 
         return new ItemsPage(

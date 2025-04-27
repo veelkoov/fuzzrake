@@ -22,16 +22,6 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
-
-        Submissions::emptyTestSubmissionsDir();
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Submissions::emptyTestSubmissionsDir();
     }
 
     protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void

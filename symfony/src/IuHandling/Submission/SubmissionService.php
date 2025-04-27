@@ -33,14 +33,10 @@ class SubmissionService
     public function submit(Creator $submissionData): Submission
     {
         try {
-            $jsonData = self::asJson($submissionData);
+            $submission = self::getEntityForSubmission($submissionData);
 
-            $submission = (new Submission())
-                ->setStrId(UtcClock::now()->format('Y-m-d_His_').random_int(1000, 9999))
-                ->setPayload($jsonData);
             $this->submissionRepository->add($submission, true);
-
-            $this->sendNotification($submissionData, $jsonData);
+            $this->sendNotification($submissionData, $submission->getPayload());
 
             return $submission;
         } catch (JsonException|RandomException $exception) {
@@ -49,9 +45,20 @@ class SubmissionService
     }
 
     /**
+     * @throws JsonException|RandomException
+     */
+    public static function getEntityForSubmission(Creator $submissionData): Submission
+    {
+        $result = new Submission();
+        $result->setPayload(self::asJson($submissionData));
+
+        return $result;
+    }
+
+    /**
      * @throws JsonException
      */
-    public static function asJson(Creator $submission): string
+    public static function asJson(Creator $submission): string // TODO: Double check if needs to be public
     {
         return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
     }

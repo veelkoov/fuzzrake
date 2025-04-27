@@ -8,11 +8,13 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
+use App\IuHandling\Submission\SubmissionService;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Override;
+use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Uid\Uuid;
 
@@ -30,21 +32,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
-
-        Submissions::emptyTestSubmissionsDir();
     }
 
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Submissions::emptyTestSubmissionsDir();
-    }
-
-    /**
-     * @throws JsonException
-     */
     public function testPaginationWorksInSubmissions(): void
     {
         $this->generateRandomFakeSubmissions(24);
@@ -60,9 +49,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testAdditionIsProperlyRendered(): void
     {
         $submission = (new Creator())
@@ -82,7 +68,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setOtherFeatures(['Hidden pockets'])
         ;
 
-        $id = Submissions::submit($submission);
+        $id = $this->createSubmission($submission);
 
         $this->client->request('GET', "/mx/submission/$id");
 
@@ -112,9 +98,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testUpdateIsProperlyRendered(): void
     {
         $entity = (new Creator())
@@ -162,9 +145,10 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setCurrenciesAccepted(['Euro'])
         ;
 
-        $id = Submissions::submit($submission);
+        $id = $this->createSubmission($submission);
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'TEST001');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -212,9 +196,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testSubmissionMatchingMultipleCreators(): void
     {
         $entity1 = Creator::new()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
@@ -222,9 +203,10 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($entity1, $entity2);
 
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu'));
+        $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu'));
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
         self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
@@ -243,9 +225,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testUpdatingExistingSubmissionWithoutImport(): void
     {
         $submissionData = (new Creator())
@@ -253,7 +232,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         $submission = (new Submission())
             ->setStrId($id)
@@ -264,6 +243,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $this->persistAndFlush($submission);
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
@@ -285,9 +265,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('#submission_directives', 'New directives');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testCreatingSubmission(): void
     {
         $submissionData = (new Creator())
@@ -295,9 +272,10 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('#submission_comment', '');
         self::assertSelectorTextSame('#submission_directives', '');
@@ -316,9 +294,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('#submission_directives', 'Added directives');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testDirectivesWork(): void
     {
         $submissionData = (new Creator())
@@ -328,7 +303,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         $submission = (new Submission())
             ->setStrId($id)
@@ -338,6 +313,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $this->persistAndFlush($submission);
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td', 'Some submitted intro information');
         self::assertSelectorTextSame('tr.INTRO.after td+td', 'Some changed intro information');
@@ -349,9 +325,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td', 'Most experience in canines');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testDirectivesUpdateIsImmediate(): void
     {
         $submissionData = (new Creator())
@@ -361,7 +334,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         $submission = (new Submission())
             ->setStrId($id)
@@ -370,6 +343,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $this->persistAndFlush($submission);
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Import', [
             'submission[directives]' => 'invalid-directive',
@@ -379,9 +353,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('.invalid-feedback', "The directives have been ignored completely due to an error. Unknown command: 'invalid-directive'");
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testInvalidDirectivesDontBreakPage(): void
     {
         $submissionData = (new Creator())
@@ -389,7 +360,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         $submission = (new Submission())
             ->setStrId($id)
@@ -405,8 +376,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
     /**
      * @dataProvider passwordHandlingAndAcceptingWorksDataProvider
-     *
-     * @throws JsonException
      */
     public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
@@ -424,13 +393,14 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $id = $this->createSubmission($submissionData);
 
         if ($accepted) {
             self::persistAndFlush((new Submission())->setStrId($id)->setDirectives('accept'));
         }
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         if ($new || $passwordSame || $accepted) {
             self::assertSelectorNotExists('.invalid-feedback');
@@ -460,16 +430,15 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function testChangesDescriptionShowUp(): void
     {
         self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('New name'));
+        $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('New name'));
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextContains('p.text-body', 'Changed NAME from "Old name" to "New name"');
     }
 
     /**
-     * @throws JsonException
-     *
      * @dataProvider contactInfoWorksDataProvider
      */
     public function testContactInfoWorks(bool $allowed): void
@@ -482,13 +451,14 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')
+        $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')
             ->setName('New name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
         self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
@@ -507,12 +477,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         ];
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testInvalidIdDoesntCauseError500(): void
     {
-        Submissions::submit(Creator::new()); // Only to have the submissions directory existing
+        $this->createSubmission(Creator::new()); // Only to have the submissions directory existing
         $this->client->request('GET', '/mx/submission/wrongId');
 
         self::assertResponseStatusCodeIs($this->client, 404);
@@ -520,8 +487,6 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
     /**
      * @dataProvider passwordIsRedactedDataProvider
-     *
-     * @throws JsonException
      */
     public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
     {
@@ -532,9 +497,10 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         }
 
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
+        $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID td+td', 'TEST001');
         self::assertSelectorTextNotContains('body', 'password___');
@@ -558,30 +524,25 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         ];
     }
 
-    /**
-     * @throws JsonException
-     */
     private function generateRandomFakeSubmissions(int $count): void
     {
         while (--$count >= 0) {
             $creator = new Creator();
             $creator->setName(Uuid::v4()->toRfc4122());
 
-            Submissions::submit($creator);
+            $this->createSubmission($creator);
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testHiddenCreator(): void
     {
         $entity = Creator::new()->setCreatorId('TEST001')->setInactiveReason('Dunno');
         self::persistAndFlush($entity);
 
-        $id = Submissions::submit($entity); // No need to modify
+        $id = $this->createSubmission($entity); // No need to modify
 
         $this->client->request('GET', "/mx/submission/$id");
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
         self::assertSelectorTextSame('#creator-hidden-warning', 'Hidden');
@@ -590,7 +551,21 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::flush();
 
         $this->client->request('GET', '/mx/submission/TEST001');
+        $this->assertResponseStatusCodeSame(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');
+    }
+
+    private function createSubmission(Creator $submissionData): string
+    {
+        try {
+            $submission = SubmissionService::getEntityForSubmission($submissionData);
+            $this->getEM()->persist($submission);
+            $this->getEM()->flush();
+
+            return $submission->getStrId(); }
+            catch (RandomException|JsonException $exception) {
+                throw new \RuntimeException(previous: $exception);
+            }
     }
 }

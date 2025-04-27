@@ -38,13 +38,13 @@ class SubmissionsService
      */
     public function getUpdateInputBySubmissionId(string $id): UpdateInput
     {
-        return new UpdateInput($this->getSubmissionDataById($id), $this->getSubmissionById($id));
+        return new UpdateInput($this->getSubmissionById($id));
     }
 
     /**
      * @throws MissingSubmissionException
      */
-    private function getSubmissionDataById(string $id): SubmissionData
+    private function getSubmissionDataById(string $id): SubmissionData // TODO: Needed?
     {
         $result = Finder::getSingleFrom($this->submissionsDirPath, $id);
 

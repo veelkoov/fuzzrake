@@ -6,6 +6,6 @@ namespace App\IuHandling\Exception;
 
 use Exception;
 
-class MissingSubmissionException extends Exception
+class MissingSubmissionException extends Exception // TODO: Needed?
 {
 }

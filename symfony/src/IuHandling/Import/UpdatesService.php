@@ -41,7 +41,7 @@ class UpdatesService
         $errors = filter([$directivesError]);
 
         $originalInput = new Creator();
-        $this->updateWith($originalInput, $input->submissionData, Fields::readFromSubmissionData());
+        $this->updateWith($originalInput, $input->submission, Fields::readFromSubmissionData());
 
         $fixedInput = $this->fixer->getFixed($originalInput);
 
@@ -74,7 +74,6 @@ class UpdatesService
         }
 
         return new Update(
-            $input->submissionData,
             $input->submission,
             $matchedCreators,
             $originalInput,

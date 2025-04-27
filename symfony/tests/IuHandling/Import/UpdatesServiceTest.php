@@ -8,8 +8,10 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
+use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdateInput;
 use App\IuHandling\Import\UpdatesService;
+use App\IuHandling\Submission\SubmissionService;
 use App\Repository\CreatorRepository;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
@@ -28,14 +30,14 @@ class UpdatesServiceTest extends TestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void
     {
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], []]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals('', $result->originalCreator->getEmailAddress());
 
@@ -50,14 +52,14 @@ class UpdatesServiceTest extends TestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
@@ -71,14 +73,14 @@ class UpdatesServiceTest extends TestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$creator]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
@@ -92,7 +94,7 @@ class UpdatesServiceTest extends TestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain') // Should be ignored
@@ -100,7 +102,7 @@ class UpdatesServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('', $result->updatedCreator->getEmailAddress());
@@ -110,14 +112,14 @@ class UpdatesServiceTest extends TestCase
     {
         UtcClockMock::start();
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setCreatorId('TEST001')
         );
 
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], []],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals(null, $result->originalCreator->getDateAdded());
         self::assertEquals(null, $result->originalCreator->getDateUpdated());
@@ -143,14 +145,14 @@ class UpdatesServiceTest extends TestCase
             ->setDateAdded($dateAdded)
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setCreatorId('TEST001')
         );
 
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], [$creator]],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals($dateAdded, $result->originalCreator->getDateAdded());
         self::assertEquals(null, $result->originalCreator->getDateUpdated());
@@ -178,7 +180,7 @@ class UpdatesServiceTest extends TestCase
             ->setMiniatureUrls($initialMiniatures)
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setCreatorId('TEST001')
             ->setPhotoUrls($newUrlPhotos)
         );
@@ -186,7 +188,7 @@ class UpdatesServiceTest extends TestCase
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], [$creator]],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
 
         self::assertEquals($expectedMiniatures, $result->updatedCreator->getMiniatureUrls());
     }
@@ -217,7 +219,7 @@ class UpdatesServiceTest extends TestCase
             ->setName('Common part')
         ;
 
-        $submissionData = Submissions::from((new Creator())
+        $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setCreatorId('TEST0A2')
             ->setName('Common')
         );
@@ -227,10 +229,11 @@ class UpdatesServiceTest extends TestCase
             [[], ['TEST0A1'], [$creator1]],
         ]);
 
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
         self::assertEquals([$creator1, $creator2], $result->matchedCreators);
 
-        $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id TEST0A1')));
+        $submission->setDirectives('match-maker-id TEST0A1');
+        $result = $subject->getUpdateFor(new UpdateInput($submission));
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
@@ -243,7 +246,7 @@ class UpdatesServiceTest extends TestCase
         ;
 
         // Changing
-        $submissionData1 = Submissions::from(Creator::new()
+        $submission1 = SubmissionService::getEntityForSubmission(Creator::new()
             ->setCreatorId('TEST003')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -251,7 +254,7 @@ class UpdatesServiceTest extends TestCase
 
         $result1 = $this->getSetUpUpdatesService([
             [['The new creator name', 'The old creator name'], ['TEST003'], [$creator]],
-        ])->getUpdateFor(new UpdateInput($submissionData1, new Submission()));
+        ])->getUpdateFor(new UpdateInput($submission1));
 
         self::assertEquals('The new creator name', $result1->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
@@ -259,7 +262,7 @@ class UpdatesServiceTest extends TestCase
         self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
-        $submissionData2 = Submissions::from(Creator::new()
+        $submission2 = SubmissionService::getEntityForSubmission(Creator::new()
             ->setCreatorId('TEST001')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -267,7 +270,7 @@ class UpdatesServiceTest extends TestCase
 
         $result2 = $this->getSetUpUpdatesService([
             [['The new creator name', 'The old creator name'], ['TEST001'], [$creator]],
-        ])->getUpdateFor(new UpdateInput($submissionData2, new Submission()));
+        ])->getUpdateFor(new UpdateInput($submission2));
 
         self::assertEquals('The new creator name', $result2->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());

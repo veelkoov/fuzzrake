@@ -18,6 +18,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
+use Random\RandomException;
 use RuntimeException;
 
 #[ORM\Entity(repositoryClass: SubmissionRepository::class)]
@@ -31,6 +32,9 @@ class Submission implements FieldReadInterface
 
     #[ORM\Column(type: Types::TEXT, unique: true)]
     private string $strId = '';
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private DateTimeImmutable $submittedAtUtc;
 
     #[ORM\Column(type: Types::TEXT)]
     private string $payload = '';
@@ -46,6 +50,15 @@ class Submission implements FieldReadInterface
      */
     private ?array $parsed = null;
 
+    /**
+     * @throws RandomException
+     */
+    public function __construct()
+    {
+        $this->submittedAtUtc = UtcClock::now();
+        $this->setStrId($this->submittedAtUtc->format('Y-m-d_His_').random_int(1000, 9999));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +72,18 @@ class Submission implements FieldReadInterface
     public function setStrId(string $strId): Submission
     {
         $this->strId = $strId;
+
+        return $this;
+    }
+
+    public function getSubmittedAtUtc(): DateTimeImmutable
+    {
+        return $this->submittedAtUtc;
+    }
+
+    public function setSubmittedAtUtc(DateTimeImmutable $submittedAtUtc): Submission
+    {
+        $this->submittedAtUtc = $submittedAtUtc;
 
         return $this;
     }
@@ -97,21 +122,6 @@ class Submission implements FieldReadInterface
         $this->comment = $comment;
 
         return $this;
-    }
-
-    public function getTimestamp(): DateTimeImmutable
-    {
-        // TODO: Use a column with value
-        $dateTimeStr = pattern('^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})(\d{2})_\d{4}$')
-            ->replace($this->strId)
-            ->first()
-            ->withReferences('$1 $2:$3:$4');
-
-        try {
-            return UtcClock::at($dateTimeStr);
-        } catch (DateTimeException $exception) {
-            throw new DataInputException("Couldn't parse the timestamp from submission ID: '$this->strId'.", previous: $exception);
-        }
     }
 
     /**

@@ -19,7 +19,7 @@ use JsonException;
 use Override;
 use Symfony\Component\Finder\SplFileInfo;
 
-readonly class SubmissionData implements FieldReadInterface
+readonly class SubmissionData implements FieldReadInterface // TODO: Should be removed
 {
     /**
      * @param array<string, psJsonFieldValue> $data

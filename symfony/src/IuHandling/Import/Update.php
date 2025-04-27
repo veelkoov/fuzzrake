@@ -18,7 +18,6 @@ class Update
      * @param string[]  $errors
      */
     public function __construct(
-        public readonly SubmissionData $submissionData,
         public readonly Submission $submission,
         public readonly array $matchedCreators,
         public readonly Creator $originalInput,

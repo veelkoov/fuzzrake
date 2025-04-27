@@ -10,7 +10,7 @@
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Timestamp</th>
+                <th>Submitted at (UTC)</th>
                 <th>ID</th>
                 <th>Maker ID</th>
                 <th>Maker name</th>
@@ -21,7 +21,7 @@
         <tbody>
             {% for submission in submissions_page.items %}
                 <tr>
-                    <td>{{ submission.timestamp|fragile_datetime_utc }}</td>
+                    <td>{{ submission.submittedAtUtc|fragile_datetime_utc }}</td>
                     <td>{{ submission.strId }}</td>
                     <td>{{ submission.get('MAKER_ID'|as_field) }}</td>
                     <td>{{ submission.get('NAME'|as_field) }}</td>
