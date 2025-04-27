@@ -22,12 +22,12 @@
             {% for submission in submissions_page.items %}
                 <tr>
                     <td>{{ submission.timestamp|fragile_datetime_utc }}</td>
-                    <td>{{ submission.id }}</td>
+                    <td>{{ submission.strId }}</td>
                     <td>{{ submission.get('MAKER_ID'|as_field) }}</td>
                     <td>{{ submission.get('NAME'|as_field) }}</td>
                     <td>{{ submission.comment|nl2br }}</td>
                     <td>
-                        <a href="{{ path('mx_submission', {id: submission.id}) }}">Open</a>
+                        <a href="{{ path('mx_submission', {id: submission.strId}) }}">Open</a>
                     </td>
                 </tr>
             {% endfor %}
