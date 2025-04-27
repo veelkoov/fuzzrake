@@ -6,7 +6,7 @@ namespace App\Tests\Event\Doctrine;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -14,7 +14,7 @@ use Exception;
 /**
  * @medium
  */
-class CreatorUrlListenerTest extends KernelTestCaseWithEM
+class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception

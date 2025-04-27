@@ -10,14 +10,14 @@ use App\Repository\CreatorVolatileDataRepository;
 use App\Repository\EventRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 
 /**
  * @medium
  */
-class DataServiceWithEMTest extends KernelTestCaseWithEM
+class DataServiceWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testUnknownAndEuCreatorsDontCountTowardsTotalCountries(): void
     {

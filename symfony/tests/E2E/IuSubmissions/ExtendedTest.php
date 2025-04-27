@@ -26,7 +26,7 @@ use TRegx\CleanRegex\Pattern;
 /**
  * @medium
  */
-class ExtendedTest extends AbstractTestWithEM
+class ExtendedTest extends IuSubmissionsAbstractTest
 {
     use IuFormTrait;
 

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Mx;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @medium
  */
-class CreatorUrlsControllerWithEMTest extends WebTestCaseWithEM
+class CreatorUrlsControllerTest extends FuzzrakeWebTestCase
 {
     private KernelBrowser $client;
 

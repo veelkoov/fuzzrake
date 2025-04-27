@@ -9,7 +9,7 @@ use App\Utils\TestUtils\TestsBridge;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-abstract class KernelTestCaseWithEM extends KernelTestCase
+abstract class FuzzrakeKernelTestCase extends KernelTestCase
 {
     use EntityManagerTrait;
 

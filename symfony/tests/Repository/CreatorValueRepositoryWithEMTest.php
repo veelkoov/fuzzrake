@@ -6,13 +6,13 @@ namespace App\Tests\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorValue;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @medium
  */
-class CreatorValueRepositoryWithEMTest extends KernelTestCaseWithEM
+class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {

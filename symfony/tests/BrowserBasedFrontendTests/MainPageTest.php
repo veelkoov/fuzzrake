@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -20,7 +20,7 @@ use Facebook\WebDriver\WebDriverKeys;
 /**
  * @large
  */
-class MainPageTest extends PantherTestCaseWithEM
+class MainPageTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 

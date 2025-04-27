@@ -7,8 +7,8 @@ namespace App\Tests\Controller\IuForm;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use TRegx\PhpUnit\DataProviders\DataProvider;
@@ -16,7 +16,7 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @medium
  */
-class IuFormControllerWithEMTest extends WebTestCaseWithEM
+class IuFormControllerTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
     use FormsChoicesValuesAndLabelsTestTrait;

@@ -9,13 +9,13 @@ use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @medium
  */
-class CreatorChangesWithEMTest extends KernelTestCaseWithEM
+class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void
     {

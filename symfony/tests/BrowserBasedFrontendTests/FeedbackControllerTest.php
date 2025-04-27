@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -15,7 +15,7 @@ use Facebook\WebDriver\WebDriverBy;
  *
  * @large
  */
-class FeedbackControllerTest extends PantherTestCaseWithEM
+class FeedbackControllerTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 

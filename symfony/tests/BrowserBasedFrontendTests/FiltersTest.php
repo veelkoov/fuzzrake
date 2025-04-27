@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -16,7 +16,7 @@ use JsonException;
 /**
  * @large
  */
-class FiltersTest extends PantherTestCaseWithEM
+class FiltersTest extends FuzzrakePantherTestCase
 {
     use FiltersTestTrait;
     use MainPageTestsTrait;

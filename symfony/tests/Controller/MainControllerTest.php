@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -13,7 +13,7 @@ use App\Utils\TestUtils\UtcClockMock;
 /**
  * @medium
  */
-class MainControllerWithEMTest extends WebTestCaseWithEM
+class MainControllerTest extends FuzzrakeWebTestCase
 {
     public function testMainPageLoads(): void
     {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Creator as CreatorE;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
@@ -14,7 +14,7 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @medium
  */
-class CreatorRepositoryWithEMTest extends KernelTestCaseWithEM
+class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     /**
      * @dataProvider findByCreatorIdDataProvider

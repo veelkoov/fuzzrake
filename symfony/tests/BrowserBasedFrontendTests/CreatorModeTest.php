@@ -6,14 +6,14 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
 /**
  * @large
  */
-class CreatorModeTest extends PantherTestCaseWithEM
+class CreatorModeTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 

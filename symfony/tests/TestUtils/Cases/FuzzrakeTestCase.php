@@ -8,9 +8,9 @@ use App\Entity\Creator as CreatorE;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\TestUtils\TestsBridge;
 use Override;
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class TestCase extends PHPUnitTestCase
+abstract class FuzzrakeTestCase extends TestCase
 {
     #[Override]
     protected function tearDown(): void

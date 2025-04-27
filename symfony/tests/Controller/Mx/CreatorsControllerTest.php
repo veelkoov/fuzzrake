@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller\Mx;
 
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use TRegx\PhpUnit\DataProviders\DataProvider;
@@ -13,7 +13,7 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @medium
  */
-class CreatorsControllerWithEMTest extends WebTestCaseWithEM
+class CreatorsControllerTest extends FuzzrakeWebTestCase
 {
     use FormsChoicesValuesAndLabelsTestTrait;
 

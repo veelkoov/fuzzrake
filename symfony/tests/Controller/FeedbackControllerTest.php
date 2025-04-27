@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
  */
-class FeedbackControllerTest extends WebTestCase
+class FeedbackControllerTest extends FuzzrakeWebTestCase
 {
     public function testSimpleFeedbackSubmission(): void
     {

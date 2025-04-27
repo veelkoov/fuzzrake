@@ -17,7 +17,7 @@ use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;
 
-abstract class PantherTestCaseWithEM extends PantherTestCase
+abstract class FuzzrakePantherTestCase extends PantherTestCase
 {
     use EntityManagerTrait;
     use UtilsTrait;

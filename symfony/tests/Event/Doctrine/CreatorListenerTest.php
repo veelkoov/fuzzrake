@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Event\Doctrine;
 
 use App\Data\Definitions\Ages;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator;
 use Exception;
 
 /**
  * @medium
  */
-class CreatorListenerTest extends KernelTestCaseWithEM
+class CreatorListenerTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception

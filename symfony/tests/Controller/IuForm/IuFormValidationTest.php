@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\ContactPermit;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
  */
-class IuFormValidationTest extends WebTestCaseWithEM
+class IuFormValidationTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
 

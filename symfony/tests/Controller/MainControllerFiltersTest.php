@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
@@ -15,7 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * @medium
  */
-class FiltersTest extends WebTestCaseWithEM
+class MainControllerFiltersTest extends FuzzrakeWebTestCase
 {
     use AssertsTrait;
     use FiltersTestTrait;

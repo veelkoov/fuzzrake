@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Collections\ArrayReader;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -12,7 +12,7 @@ use Nette\Utils\JsonException;
 /**
  * @medium
  */
-class RestApiControllerWithEMTest extends WebTestCaseWithEM
+class RestApiControllerTest extends FuzzrakeWebTestCase
 {
     /**
      * @throws JsonException

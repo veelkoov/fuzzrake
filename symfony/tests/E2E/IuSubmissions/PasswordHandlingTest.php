@@ -11,7 +11,7 @@ use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 /**
  * @medium
  */
-class PasswordHandlingTest extends AbstractTestWithEM
+class PasswordHandlingTest extends IuSubmissionsAbstractTest
 {
     use IuFormTrait;
 

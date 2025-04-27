@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases;
 
+use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use App\Tests\TestUtils\Cases\Traits\UtilsTrait;
 use App\Utils\TestUtils\TestsBridge;
 use LogicException;
 use Override;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class WebTestCase extends SymfonyWebTestCase
+abstract class FuzzrakeWebTestCase extends WebTestCase
 {
+    use EntityManagerTrait;
     use UtilsTrait;
 
     #[Override]
@@ -20,6 +23,20 @@ abstract class WebTestCase extends SymfonyWebTestCase
         parent::tearDown();
 
         TestsBridge::reset();
+    }
+
+    /**
+     * @param array<string, string> $options
+     * @param array<string, string> $server
+     */
+    #[Override]
+    protected static function createClient(array $options = [], array $server = []): KernelBrowser
+    {
+        $result = parent::createClient($options, $server);
+
+        self::resetDB();
+
+        return $result;
     }
 
     /**

@@ -8,7 +8,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * @medium
  */
-class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
+class SubmissionsControllerTest extends FuzzrakeWebTestCase
 {
     private KernelBrowser $client;
 

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Traits;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 
 /**
  * @medium
  */
-class ButtonClickedTraitTest extends WebTestCaseWithEM
+class ButtonClickedTraitTest extends FuzzrakeWebTestCase
 {
     public function testClicked(): void
     {

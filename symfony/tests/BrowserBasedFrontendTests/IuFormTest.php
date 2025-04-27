@@ -6,7 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -16,7 +16,7 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @large
  */
-class IuFormTest extends PantherTestCaseWithEM
+class IuFormTest extends FuzzrakePantherTestCase
 {
     public function passwordCheckBoxesDataProvider(): DataProvider
     {

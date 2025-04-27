@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 
 /**
  * @medium
  */
-class PagesControllerTest extends WebTestCase
+class PagesControllerTest extends FuzzrakeWebTestCase
 {
     /**
      * @dataProvider pageDataProvider

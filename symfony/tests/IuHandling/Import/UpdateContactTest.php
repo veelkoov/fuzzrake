@@ -6,13 +6,13 @@ namespace App\Tests\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
 use App\IuHandling\Import\UpdateContact;
-use App\Tests\TestUtils\Cases\TestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @small
  */
-class UpdateContactTest extends TestCase
+class UpdateContactTest extends FuzzrakeTestCase
 {
     public function testPermissionAndDescription(): void
     {

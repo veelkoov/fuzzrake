@@ -8,14 +8,14 @@ use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @medium
  */
-class StatisticsControllerWithEMTest extends WebTestCaseWithEM
+class StatisticsControllerTest extends FuzzrakeWebTestCase
 {
     public function testStatisticsPageLoads(): void
     {

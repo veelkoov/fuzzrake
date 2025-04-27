@@ -6,7 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
@@ -16,7 +16,7 @@ use Symfony\Component\Panther\DomCrawler\Crawler;
 /**
  * @large
  */
-class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
+class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 

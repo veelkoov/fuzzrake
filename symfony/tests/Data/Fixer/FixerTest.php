@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
- * @small
+ * @medium
  */
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {

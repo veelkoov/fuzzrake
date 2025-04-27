@@ -6,8 +6,8 @@ namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use Override;
 use Psl\Dict;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 /**
  * @medium
  */
-class EmailUpdateWithEMTest extends WebTestCaseWithEM
+class EmailUpdateTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
 

@@ -7,7 +7,7 @@ namespace App\Tests\Filtering\DataRequests;
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
@@ -21,7 +21,7 @@ use Veelkoov\Debris\StringSet;
 /**
  * @medium
  */
-class FilteredDataProviderTest extends KernelTestCaseWithEM
+class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws InvalidArgumentException
