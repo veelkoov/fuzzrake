@@ -25,8 +25,6 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
      */
     public function testFindByCreatorId(array $creators, string $creatorId, ?int $resultIdx): void
     {
-        self::bootKernel();
-
         foreach ($creators as $key => $creator) {
             $creators[$key] = clone $creator; // Don't mangle the tests
             self::getEM()->persist($creators[$key]);
@@ -75,8 +73,6 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
      */
     public function testFindByCreatorIdReturnsCompleteCreatorIdsSet(): void
     {
-        self::bootKernel();
-
         $accessor = Creator::wrap($creator = new CreatorE())->setCreatorId('TESTID1')->setFormerCreatorIds(['TESTID2', 'TESTID3']);
 
         self::persistAndFlush($creator);
@@ -93,8 +89,6 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
     public function testFindBestMatches(): void
     {
-        self::bootKernel();
-
         $commonPart = 'creator A';
 
         $creator1name = 'Creator 1';

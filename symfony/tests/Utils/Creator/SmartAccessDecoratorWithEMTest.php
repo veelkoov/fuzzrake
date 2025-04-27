@@ -19,7 +19,6 @@ class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
      */
     public function testBooleanValues(): void
     {
-        self::bootKernel();
         $repo = self::getEM()->getRepository(CreatorValue::class);
 
         $creator = new Creator();

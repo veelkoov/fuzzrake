@@ -15,6 +15,13 @@ abstract class FuzzrakeKernelTestCase extends KernelTestCase
     use CacheTrait;
     use EntityManagerTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+    }
+
     #[Override]
     protected function tearDown(): void
     {

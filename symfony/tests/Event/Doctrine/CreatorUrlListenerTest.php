@@ -21,8 +21,6 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
      */
     public function testChangingUrlResetsLastSuccessAndFailure(): void
     {
-        self::bootKernel();
-
         $lastFailureUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $lastSuccessUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $lastFailureCode = 404;

@@ -28,8 +28,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
      */
     public function testWorkingWithMinors(): void
     {
-        self::bootKernel();
-
         $a1 = Creator::new()->setCreatorId('M000001')->setWorksWithMinors(false);
         $a2 = Creator::new()->setCreatorId('M000002')->setWorksWithMinors(true);
         $a3 = Creator::new()->setCreatorId('M000003');
@@ -51,8 +49,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
     public function testWantsSfw(): void
     {
-        self::bootKernel();
-
         $a1 = Creator::new()->setCreatorId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
         $a2 = Creator::new()->setCreatorId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
         $a3 = Creator::new()->setCreatorId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
@@ -98,8 +94,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount,
         int $expectedFirst, int $expectedLast): void
     {
-        self::bootKernel();
-
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
             self::persist(Creator::new()
                 ->setName(sprintf('%03d', $i)) // For sorting

@@ -21,8 +21,6 @@ class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
      */
     public function testGetOnlyAllowed(): void
     {
-        self::bootKernel();
-
         $creator = Creator::new()
             ->setLanguages(['Czech', 'Finnish'])
             ->setOpenFor(['Pancakes', 'Waffles'])

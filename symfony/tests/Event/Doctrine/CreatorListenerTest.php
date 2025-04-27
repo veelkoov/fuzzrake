@@ -19,8 +19,6 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
      */
     public function testPersistingCreatorsSetsSafeValues(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             (new SmartAccessDecorator())
                 ->setCreatorId('TEST001')
@@ -42,8 +40,6 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
      */
     public function testUpdatingCreatorsSetsSafeValues(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             (new SmartAccessDecorator())
                 ->setCreatorId('TEST001')

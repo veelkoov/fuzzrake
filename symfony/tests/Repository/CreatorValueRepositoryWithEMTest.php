@@ -16,8 +16,6 @@ class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD'])->setOtherFeatures(['01', '02']),
             Creator::new()->setFeatures(['EF'])->setOtherFeatures(['03', '04']),
@@ -33,8 +31,6 @@ class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
     public function testCountDistinctInActiveCreatorsHaving(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD']),
             Creator::new()->setFeatures(['AB']),
@@ -54,8 +50,6 @@ class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
     public function testCountActiveCreatorsHavingAnyOf(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD']),
             Creator::new()->setFeatures(['EF']),

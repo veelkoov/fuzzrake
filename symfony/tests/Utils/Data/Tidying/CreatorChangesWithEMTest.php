@@ -19,8 +19,6 @@ class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void
     {
-        self::bootKernel();
-
         $creator1 = (new Creator())
             ->setName('Creator 1')
             ->setCity('Varkaus')
