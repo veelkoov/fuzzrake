@@ -34,10 +34,10 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     public function testSubmittingEmptyDoesnt500(): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
     }
 
     /**
@@ -48,7 +48,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
         $crawler = self::$client->getCrawler();
 
         foreach ($choices as $choice) {
@@ -72,14 +72,14 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         );
 
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
@@ -87,7 +87,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             'iu_form[creatorId]' => 'TEST003',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
-        self::submitValid(self::$client, $form);
+        self::submitValid($form);
     }
 
     public function testNewCreatorCannotUseOtherCreatorsCreatorId(): void
@@ -97,7 +97,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         );
 
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]'       => 'TEST001',
@@ -111,7 +111,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             'iu_form[password]'        => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
@@ -119,13 +119,13 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
-        self::submitValid(self::$client, $form);
+        self::submitValid($form);
     }
 
     public function testEmailAddressNotShownForNewCreator(): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
@@ -136,7 +136,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     {
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'garbage'));
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
@@ -144,7 +144,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     {
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'valid@example.com'));
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
         self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
     }
 }

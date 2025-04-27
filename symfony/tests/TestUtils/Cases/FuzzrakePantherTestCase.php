@@ -7,7 +7,6 @@ namespace App\Tests\TestUtils\Cases;
 use App\Tests\TestUtils\Cases\Traits\BrowserTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
-use App\Tests\TestUtils\Cases\Traits\FormsTrait;
 use App\Utils\TestUtils\TestsBridge;
 use Facebook\WebDriver\WebDriverDimension;
 use Override;
@@ -19,7 +18,6 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
     use BrowserTrait;
     use CacheTrait;
     use EntityManagerTrait;
-    use FormsTrait;
 
     protected static Client $client;
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use RuntimeException;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Form;
 
 trait FormsTrait
@@ -15,30 +14,30 @@ trait FormsTrait
     /**
      * @param array<string, string> $formData
      */
-    protected static function submitValidForm(KernelBrowser $client, string $buttonName, array $formData): void
+    protected static function submitValidForm(string $buttonName, array $formData): void
     {
-        $button = $client->getCrawler()->selectButton($buttonName);
+        $button = self::$client->getCrawler()->selectButton($buttonName);
 
         if (0 === $button->count()) {
             throw new RuntimeException("Button '$buttonName' has not been found.");
         }
 
-        self::submitValid($client, $button->form($formData));
+        self::submitValid($button->form($formData));
     }
 
-    protected static function submitValid(KernelBrowser $client, Form $form): void
+    protected static function submitValid(Form $form): void
     {
-        $crawler = $client->submit($form);
+        $crawler = self::$client->submit($form);
 
-        if ($client->getResponse()->isRedirect()) {
+        if (self::$client->getResponse()->isRedirect()) {
             // Not done above, so that we can do other assertions for failure case
-            self::assertTrue($client->getResponse()->isRedirect());
-            $client->followRedirect();
+            self::assertTrue(self::$client->getResponse()->isRedirect());
+            self::$client->followRedirect();
 
             return;
         }
 
-        self::assertLessThan(500, $client->getResponse()->getStatusCode(), 'Server returned 5XX');
+        self::assertLessThan(500, self::$client->getResponse()->getStatusCode(), 'Server returned 5XX');
 
         $fields = [];
         foreach ($crawler->filter('input.is-invalid') as $field) {
@@ -51,20 +50,20 @@ trait FormsTrait
     /**
      * @param array<string, string> $formData
      */
-    protected static function submitInvalidForm(KernelBrowser $client, string $buttonName, array $formData): void
+    protected static function submitInvalidForm(string $buttonName, array $formData): void
     {
-        $button = $client->getCrawler()->selectButton($buttonName);
+        $button = self::$client->getCrawler()->selectButton($buttonName);
 
         if (0 === $button->count()) {
             throw new RuntimeException("Button '$buttonName' has not been found.");
         }
 
-        self::submitInvalid($client, $button->form($formData));
+        self::submitInvalid($button->form($formData));
     }
 
-    protected static function submitInvalid(KernelBrowser $client, Form $form): void
+    protected static function submitInvalid(Form $form): void
     {
-        $client->submit($form);
+        self::$client->submit($form);
 
         self::assertResponseStatusCodeIs(422);
     }

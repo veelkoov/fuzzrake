@@ -35,20 +35,20 @@ class ButtonClickedTraitTest extends FuzzrakeWebTestCase
 
         /* Make sure CSRF tokens are being validated in the first place */
         self::$client->request('GET', $editUrl);
-        self::submitInvalidForm(self::$client, 'Save', $invalidCsrf);
+        self::submitInvalidForm('Save', $invalidCsrf);
 
         /* Make sure SAVE button works for valid data */
-        self::submitValidForm(self::$client, 'Save', $validData);
+        self::submitValidForm('Save', $validData);
 
         /* Make sure validation works as intended for SAVE button, so we can test if DELETE ignores it */
         self::$client->request('GET', $editUrl);
-        self::submitInvalidForm(self::$client, 'Save', $invalidData);
+        self::submitInvalidForm('Save', $invalidData);
 
         /* Make sure DELETE doesn't work with wrong CSRF even if form is OK */
         self::$client->request('GET', $editUrl);
-        self::submitInvalidForm(self::$client, 'Delete', $invalidCsrf);
+        self::submitInvalidForm('Delete', $invalidCsrf);
 
         /* Make sure DELETE works with invalid data as long as CSRF is OK */
-        self::submitValidForm(self::$client, 'Delete', $invalidData);
+        self::submitValidForm('Delete', $invalidData);
     }
 }

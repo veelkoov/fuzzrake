@@ -47,20 +47,20 @@ class FeedbackControllerTest extends FuzzrakeWebTestCase
             'feedback[noContactBack]' => true,
             $this->getCaptchaFieldName('wrong') => 'wrong',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
         self::assertCaptchaSolutionRejected();
 
         $form = self::$client->getCrawler()->selectButton('Send')->form([
             'feedback[details]' => '', // To cause 422 and see if the captcha does not show again
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
 
         $form = self::$client->getCrawler()->selectButton('Send')->form([
             'feedback[details]' => 'Testing details',
             // Captcha solved previously, not needed again
         ]);
-        self::submitValid(self::$client, $form);
+        self::submitValid($form);
 
         self::assertSelectorTextSame('h1', 'Feedback submitted');
         self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');

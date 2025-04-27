@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use Psl\Iter;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait IuFormTrait
 {
-    private static function skipRules(KernelBrowser $client): void
+    private static function skipRules(): void
     {
-        $client->submit($client->getCrawler()->selectButton('Agree and continue')->form());
-        $client->followRedirect();
+        self::$client->submit(self::$client->getCrawler()->selectButton('Agree and continue')->form());
+        self::$client->followRedirect();
     }
 
-    private static function assertIuSubmittedAnyResult(KernelBrowser $client): void
+    private static function assertIuSubmittedAnyResult(): void
     {
-        $text = $client->getCrawler()->filter('.card-header')->text();
+        $text = self::$client->getCrawler()->filter('.card-header')->text();
 
         self::assertTrue(Iter\any(
             ['Your submission has been queued', 'Submission recorded, but on hold'],

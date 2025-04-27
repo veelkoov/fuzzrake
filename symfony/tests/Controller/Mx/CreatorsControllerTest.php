@@ -132,7 +132,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
 
         self::$client->request('GET', '/mx/creators/TEST001/edit');
 
-        self::submitValidForm(self::$client, 'Save', [
+        self::submitValidForm('Save', [
             'creator[emailAddress]' => $set,
         ]);
 

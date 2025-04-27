@@ -19,10 +19,10 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
     public function testErrorMessagesForRequiredDataFields(): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
 
         self::assertCaptchaSolutionRejected();
 
@@ -56,7 +56,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
 
         self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback',
             'You must answer this question.');
@@ -68,7 +68,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
         ]);
-        self::submitInvalid(self::$client, $form);
+        self::submitInvalid($form);
 
         self::assertSelectorTextContains('#iu_form_doesNsfw + .invalid-feedback',
             'You must answer this question.');
@@ -84,7 +84,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'test-maker-555',
@@ -107,9 +107,9 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         }
 
         if ([] === $expectedErrors) {
-            self::submitValid(self::$client, $form);
+            self::submitValid($form);
         } else {
-            self::submitInvalid(self::$client, $form);
+            self::submitInvalid($form);
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);
@@ -311,7 +311,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         }
 
         self::$client->request('GET', $iuFormStartUri);
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $formData = [
             'iu_form[creatorId]'       => 'TEST001',
@@ -347,9 +347,9 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         $form = self::$client->getCrawler()->selectButton('Submit')->form($formData);
 
         if ($shouldSucceed) {
-            self::submitValid(self::$client, $form);
+            self::submitValid($form);
         } else {
-            self::submitInvalid(self::$client, $form);
+            self::submitInvalid($form);
         }
 
         $assertions();

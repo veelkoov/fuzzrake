@@ -93,7 +93,7 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
     private function skipToTheDataIuFormPage(): void
     {
         self::$client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
-        self::skipRules(self::$client);
+        self::skipRules();
     }
 
     /**
@@ -101,7 +101,7 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
      */
     private function succeedsSubmittingAfterSetting(array $values): void
     {
-        self::submitValidForm(self::$client, 'Submit', $this->extendFormValuesWith($values));
+        self::submitValidForm('Submit', $this->extendFormValuesWith($values));
     }
 
     /**
@@ -109,7 +109,7 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
      */
     private function failsSubmittingAfterSetting(array $values): void
     {
-        self::submitInvalidForm(self::$client, 'Submit', $this->extendFormValuesWith($values));
+        self::submitInvalidForm('Submit', $this->extendFormValuesWith($values));
 
         self::assertFieldErrorValidEmailAddressRequired();
     }

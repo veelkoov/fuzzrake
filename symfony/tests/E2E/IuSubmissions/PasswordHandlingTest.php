@@ -18,7 +18,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
     public function testNewCreatorPasswordIsHashed(): void
     {
         self::$client->request('GET', '/iu_form/start');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST001',
@@ -32,7 +32,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
             'iu_form[password]' => 'some-password',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid(self::$client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedCorrectPassword();
 
@@ -60,14 +60,14 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         unset($creator);
 
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
             'iu_form[password]' => 'known-password',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid(self::$client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedCorrectPassword();
 
@@ -96,7 +96,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         unset($creator);
 
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
@@ -105,7 +105,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
             'iu_form[verificationAcknowledgement]' => '1',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid(self::$client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
@@ -135,7 +135,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         unset($creator);
 
         self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules(self::$client);
+        self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
@@ -144,7 +144,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
             'iu_form[verificationAcknowledgement]' => '1',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid(self::$client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 

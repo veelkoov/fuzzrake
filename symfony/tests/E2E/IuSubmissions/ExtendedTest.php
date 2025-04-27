@@ -163,16 +163,16 @@ class ExtendedTest extends IuSubmissionsAbstractTest
     {
         self::$client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
         self::assertResponseStatusCodeIs(200);
-        self::skipRules(self::$client);
+        self::skipRules();
 
         self::assertNotFalse(self::$client->getResponse()->getContent());
         self::verifyGeneratedIuFormFilledWithData($oldData, self::$client->getResponse()->getContent());
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
         $this->setValuesInForm($form, $newData, $solveCaptcha);
-        self::submitValid(self::$client, $form);
+        self::submitValid($form);
 
-        self::assertIuSubmittedAnyResult(self::$client);
+        self::assertIuSubmittedAnyResult();
     }
 
     private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
