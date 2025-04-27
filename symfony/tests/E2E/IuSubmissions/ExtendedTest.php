@@ -26,7 +26,7 @@ use TRegx\CleanRegex\Pattern;
 /**
  * @medium
  */
-class ExtendedTest extends AbstractTestWithEM
+class ExtendedTest extends IuSubmissionsAbstractTest
 {
     use IuFormTrait;
 
@@ -138,7 +138,7 @@ class ExtendedTest extends AbstractTestWithEM
         $creatorId5 = $oldData5->getLastCreatorId();
         self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
 
-        $this->performImport($this->client, true, $finalCount);
+        $this->performImport(self::$client, true, $finalCount);
 
         self::flush();
         self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount creators in the DB after import");
@@ -161,18 +161,18 @@ class ExtendedTest extends AbstractTestWithEM
 
     private function validateIuFormOldDataSubmitNew(string $urlCreatorId, Creator $oldData, Creator $newData, bool $solveCaptcha = false): void
     {
-        $this->client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
-        self::assertResponseStatusCodeIs($this->client, 200);
-        self::skipRules($this->client);
+        self::$client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
+        self::assertResponseStatusCodeIs(200);
+        self::skipRules();
 
-        self::assertNotFalse($this->client->getResponse()->getContent());
-        self::verifyGeneratedIuFormFilledWithData($oldData, $this->client->getResponse()->getContent());
+        self::assertNotFalse(self::$client->getResponse()->getContent());
+        self::verifyGeneratedIuFormFilledWithData($oldData, self::$client->getResponse()->getContent());
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form();
+        $form = self::$client->getCrawler()->selectButton('Submit')->form();
         $this->setValuesInForm($form, $newData, $solveCaptcha);
-        self::submitValid($this->client, $form);
+        self::submitValid($form);
 
-        self::assertIuSubmittedAnyResult($this->client);
+        self::assertIuSubmittedAnyResult();
     }
 
     private static function getIuFormUrlForCreatorId(string $urlCreatorId): string

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Event;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
@@ -14,15 +14,13 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @medium
  */
-class EventsControllerWithEMTest extends WebTestCaseWithEM
+class EventsControllerTest extends FuzzrakeWebTestCase
 {
     public function testPageLoads(): void
     {
-        $client = static::createClient();
+        self::$client->request('GET', '/events');
 
-        $client->request('GET', '/events');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(200);
         static::assertSelectorTextContains('p', 'See all recently added makers');
     }
 
@@ -31,12 +29,11 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testEventDescription(Event $event, string $expectedHtml): void
     {
-        $client = static::createClient();
         $this->persistAndFlush($event);
 
-        $client->request('GET', '/events');
+        self::$client->request('GET', '/events');
 
-        $actualHtml = $client->getCrawler()->filter('#events-list p')->html();
+        $actualHtml = self::$client->getCrawler()->filter('#events-list p')->html();
 
         self::assertEqualsIgnoringWhitespace($expectedHtml, $actualHtml);
     }
@@ -93,11 +90,9 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
 
     public function testAtomFeedLoadsWithoutAnyEvents(): void
     {
-        $client = static::createClient();
+        self::$client->request('GET', '/events-atom.xml');
 
-        $client->request('GET', '/events-atom.xml');
-
-        self::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(200);
     }
 
     /**
@@ -121,10 +116,9 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
             ->setDescription('I should not appear in the Atom feed')
             ->setTimestamp(UtcClock::at("@$older"));
 
-        $client = static::createClient();
         $this->persistAndFlush($eventVisible, $eventHidden);
 
-        $contents = $client->request('GET', '/events-atom.xml')->outerHtml();
+        $contents = self::$client->request('GET', '/events-atom.xml')->outerHtml();
 
         self::assertStringContainsString('I should be visible in the Atom feed', $contents);
         self::assertStringNotContainsString('I should not appear in the Atom feed', $contents);

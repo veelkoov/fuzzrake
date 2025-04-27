@@ -219,7 +219,7 @@ function action() {
         'cc-prod')      run_command ssh getfursu.it \
             'docker exec fuzzrake-prod bin/console cache:clear && docker exec fuzzrake-prod bin/console app:precompute-data' ;;
 
-        'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
+        'pu')           run_docker_compose_exec ./bin/phpunit "$@" ;;
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;

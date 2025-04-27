@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace App\Tests\Controller\Mx;
 
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
  */
-class CreatorsControllerWithEMTest extends WebTestCaseWithEM
+class CreatorsControllerTest extends FuzzrakeWebTestCase
 {
     use FormsChoicesValuesAndLabelsTestTrait;
-
-    private KernelBrowser $client;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->client = static::createClient([], [
+        parent::setUp();
+
+        self::$client->setServerParameters([
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
@@ -35,8 +34,8 @@ class CreatorsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testFormsChoicesValuesAndLabels(array $choices): void
     {
-        $crawler = $this->client->request('GET', '/mx/creators/new');
-        self::assertResponseStatusCodeIs($this->client, 200);
+        $crawler = self::$client->request('GET', '/mx/creators/new');
+        self::assertResponseStatusCodeIs(200);
 
         foreach ($choices as $choice) {
             $label = $choice['label'];
@@ -49,17 +48,17 @@ class CreatorsControllerWithEMTest extends WebTestCaseWithEM
 
     public function testNewCreator(): void
     {
-        $crawler = $this->client->request('GET', '/mx/creators/new');
-        self::assertResponseStatusCodeIs($this->client, 200);
+        $crawler = self::$client->request('GET', '/mx/creators/new');
+        self::assertResponseStatusCodeIs(200);
 
         $form = $crawler->selectButton('Save')->form([
             'creator[creatorId]' => 'TEST001',
             'creator[name]' => 'New creator',
         ]);
 
-        $this->client->submit($form);
-        $this->client->followRedirect();
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::$client->submit($form);
+        self::$client->followRedirect();
+        self::assertResponseStatusCodeIs(200);
 
         self::clear();
 
@@ -74,16 +73,16 @@ class CreatorsControllerWithEMTest extends WebTestCaseWithEM
 
         self::assertTrue(password_verify('password-555', $creator->getPassword()), 'Hashed password do not match.');
 
-        $crawler = $this->client->request('GET', '/mx/creators/TEST001/edit');
-        self::assertResponseStatusCodeIs($this->client, 200);
+        $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
+        self::assertResponseStatusCodeIs(200);
 
         $form = $crawler->selectButton('Save')->form([
             'creator[creatorId]' => 'TEST001',
         ]);
 
-        $this->client->submit($form);
-        $this->client->followRedirect();
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::$client->submit($form);
+        self::$client->followRedirect();
+        self::assertResponseStatusCodeIs(200);
 
         unset($creator);
         self::clear();
@@ -99,27 +98,27 @@ class CreatorsControllerWithEMTest extends WebTestCaseWithEM
         $creator = self::getCreator(creatorId: 'TEST001');
         self::persistAndFlush($creator);
 
-        $crawler = $this->client->request('GET', '/mx/creators/TEST001/edit');
-        self::assertResponseStatusCodeIs($this->client, 200);
+        $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
+        self::assertResponseStatusCodeIs(200);
 
         $form = $crawler->selectButton('Delete')->form();
-        $this->client->submit($form);
-        $this->client->followRedirect();
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::$client->submit($form);
+        self::$client->followRedirect();
+        self::assertResponseStatusCodeIs(200);
 
         self::clear();
 
-        $this->client->request('GET', '/mx/creators/TEST001/edit');
-        self::assertResponseStatusCodeIs($this->client, 404);
+        self::$client->request('GET', '/mx/creators/TEST001/edit');
+        self::assertResponseStatusCodeIs(404);
     }
 
     public function testSubmittingEmptyDoesnt500(): void
     {
-        $this->client->request('GET', '/mx/creators/new');
-        $form = $this->client->getCrawler()->selectButton('Save')->form();
-        $this->client->submit($form);
+        self::$client->request('GET', '/mx/creators/new');
+        $form = self::$client->getCrawler()->selectButton('Save')->form();
+        self::$client->submit($form);
 
-        self::assertResponseStatusCodeIs($this->client, 422);
+        self::assertResponseStatusCodeIs(422);
     }
 
     /**
@@ -131,9 +130,9 @@ class CreatorsControllerWithEMTest extends WebTestCaseWithEM
         $creator->setEmailAddress($was);
         self::persistAndFlush($creator);
 
-        $this->client->request('GET', '/mx/creators/TEST001/edit');
+        self::$client->request('GET', '/mx/creators/TEST001/edit');
 
-        self::submitValidForm($this->client, 'Save', [
+        self::submitValidForm('Save', [
             'creator[emailAddress]' => $set,
         ]);
 

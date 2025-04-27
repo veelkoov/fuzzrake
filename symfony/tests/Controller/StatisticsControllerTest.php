@@ -8,34 +8,31 @@ use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @medium
  */
-class StatisticsControllerWithEMTest extends WebTestCaseWithEM
+class StatisticsControllerTest extends FuzzrakeWebTestCase
 {
     public function testStatisticsPageLoads(): void
     {
-        $client = static::createClient();
         self::persistAndFlush(self::getCreator()
             ->setOtherFeatures(['Smoke detector'])
             ->setSpeciesDoes(['Wolves'])
             ->setSpeciesDoesnt(['Coyotes'])
         );
 
-        $client->request('GET', '/stats');
+        self::$client->request('GET', '/stats');
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1#data-statistics', 'Data statistics');
+        self::assertResponseStatusCodeIs(200);
+        self::assertSelectorTextContains('h1#data-statistics', 'Data statistics');
     }
 
     public function testInactiveCreatorsDontCount(): void
     {
-        $client = static::createClient();
-
         $a1 = self::getCreator('A1', 'TEST0041')
             ->setFeatures([Features::FOLLOW_ME_EYES])
             ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
@@ -54,10 +51,10 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $client->request('GET', '/stats');
-        $crawler = $client->getCrawler();
+        self::$client->request('GET', '/stats');
+        $crawler = self::$client->getCrawler();
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(200);
         self::assertRowValueEquals('2 (100.00%)', Features::FOLLOW_ME_EYES, $crawler);
         self::assertRowValueEquals('1 (50.00%)', ProductionModels::STANDARD_COMMISSIONS, $crawler);
         self::assertRowValueEquals('1 (50.00%)', OrderTypes::FULL_DIGITIGRADE, $crawler);
@@ -72,8 +69,6 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
     public function testFakeFormerCreatorIdsDontCount(): void
     {
-        $client = static::createClient();
-
         $creatorOnlyFakeId = new Creator();
         $creatorFakeIdAndNew = new Creator();
         $creatorFakeIdAndOldAndNew = new Creator();
@@ -92,8 +87,8 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($creator3, $creator4, $creator5);
 
-        $client->request('GET', '/stats');
-        $crawler = $client->getCrawler();
+        self::$client->request('GET', '/stats');
+        $crawler = self::$client->getCrawler();
 
         self::assertEquals('3 (50.00%)', $this->getRowValue($crawler, 'FORMER_MAKER_IDS'));
     }

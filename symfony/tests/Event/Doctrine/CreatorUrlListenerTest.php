@@ -6,7 +6,7 @@ namespace App\Tests\Event\Doctrine;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -14,15 +14,13 @@ use Exception;
 /**
  * @medium
  */
-class CreatorUrlListenerTest extends KernelTestCaseWithEM
+class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception
      */
     public function testChangingUrlResetsLastSuccessAndFailure(): void
     {
-        self::bootKernel();
-
         $lastFailureUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $lastSuccessUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $lastFailureCode = 404;

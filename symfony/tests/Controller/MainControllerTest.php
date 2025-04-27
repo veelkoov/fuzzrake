@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -13,17 +13,16 @@ use App\Utils\TestUtils\UtcClockMock;
 /**
  * @medium
  */
-class MainControllerWithEMTest extends WebTestCaseWithEM
+class MainControllerTest extends FuzzrakeWebTestCase
 {
     public function testMainPageLoads(): void
     {
-        $client = static::createClient();
         self::addSimpleCreator();
 
-        $client->request('GET', '/');
+        self::$client->request('GET', '/');
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('#main-page-intro h4', 'Fursuit makers database');
+        self::assertResponseStatusCodeIs(200);
+        self::assertSelectorTextContains('#main-page-intro h4', 'Fursuit makers database');
     }
 
     /**
@@ -31,7 +30,6 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testRecentlyAddedPage(): void
     {
-        $client = static::createClient();
         UtcClockMock::start();
 
         $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setDateAdded(UtcClock::at('-43 days'));
@@ -45,8 +43,8 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush($creator1, $creator2, $creator3);
         $this->clearCache();
 
-        $crawler = $client->request('GET', '/new');
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = self::$client->request('GET', '/new');
+        self::assertResponseStatusCodeIs(200);
 
         self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older creator"]'));
         self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 1"]'));

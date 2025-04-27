@@ -6,7 +6,7 @@ namespace App\Tests\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorOfferStatus;
-use App\Tests\TestUtils\Cases\TestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
 use Psl\Vec;
@@ -14,7 +14,7 @@ use Psl\Vec;
 /**
  * @small
  */
-class SmartOfferStatusAccessorTest extends TestCase
+class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSet(): void
     {

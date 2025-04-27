@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Creator as CreatorE;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
@@ -14,7 +14,7 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 /**
  * @medium
  */
-class CreatorRepositoryWithEMTest extends KernelTestCaseWithEM
+class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     /**
      * @dataProvider findByCreatorIdDataProvider
@@ -25,8 +25,6 @@ class CreatorRepositoryWithEMTest extends KernelTestCaseWithEM
      */
     public function testFindByCreatorId(array $creators, string $creatorId, ?int $resultIdx): void
     {
-        self::bootKernel();
-
         foreach ($creators as $key => $creator) {
             $creators[$key] = clone $creator; // Don't mangle the tests
             self::getEM()->persist($creators[$key]);
@@ -75,8 +73,6 @@ class CreatorRepositoryWithEMTest extends KernelTestCaseWithEM
      */
     public function testFindByCreatorIdReturnsCompleteCreatorIdsSet(): void
     {
-        self::bootKernel();
-
         $accessor = Creator::wrap($creator = new CreatorE())->setCreatorId('TESTID1')->setFormerCreatorIds(['TESTID2', 'TESTID3']);
 
         self::persistAndFlush($creator);
@@ -93,8 +89,6 @@ class CreatorRepositoryWithEMTest extends KernelTestCaseWithEM
 
     public function testFindBestMatches(): void
     {
-        self::bootKernel();
-
         $commonPart = 'creator A';
 
         $creator1name = 'Creator 1';

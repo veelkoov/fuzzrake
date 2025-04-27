@@ -10,14 +10,14 @@ use App\Repository\CreatorVolatileDataRepository;
 use App\Repository\EventRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 
 /**
  * @medium
  */
-class DataServiceWithEMTest extends KernelTestCaseWithEM
+class DataServiceWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testUnknownAndEuCreatorsDontCountTowardsTotalCountries(): void
     {
@@ -25,7 +25,6 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         $a2 = (new Creator())->setCountry('EU'); // European Union generic should not count grep-country-eu
         $a3 = (new Creator())->setCountry('FI'); // Normal - should count
 
-        self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
         $subject = $this->getDataService();
@@ -40,7 +39,6 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         $a2 = (new Creator())->setInactiveReason(''); // Active should be counted
         $a3 = (new Creator())->setInactiveReason('This is a hidden creator'); // Hidden should not be counted
 
-        self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
         $subject = $this->getDataService();

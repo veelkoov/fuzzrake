@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 
 /**
  * @medium
  */
-class PagesControllerTest extends WebTestCase
+class PagesControllerTest extends FuzzrakeWebTestCase
 {
     /**
      * @dataProvider pageDataProvider
@@ -18,11 +18,8 @@ class PagesControllerTest extends WebTestCase
      */
     public function testPage(string $uri, array $texts): void
     {
-        $client = self::createClient();
-
-        $client->request('GET', $uri);
-
-        self::assertResponseStatusCodeIs($client, 200);
+        self::$client->request('GET', $uri);
+        self::assertResponseStatusCodeIs(200);
 
         foreach ($texts as $selector => $text) {
             self::assertSelectorTextContains($selector, $text);
@@ -68,17 +65,16 @@ class PagesControllerTest extends WebTestCase
 
     public function testCaptchaWorksAndEmailAddressAppears(): void
     {
-        $client = self::createClient();
-        $client->request('GET', '/contact');
+        self::$client->request('GET', '/contact');
 
         // E-mail address link is not visible by default
         self::assertSelectorNotExists('a[href^="mailto:"]');
 
         // Solve the captcha
-        $form = $client->getCrawler()->selectButton('Reveal email address')->form([
+        $form = self::$client->getCrawler()->selectButton('Reveal email address')->form([
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $client->submit($form);
+        self::$client->submit($form);
 
         // The link should now contain the e-mail address
         self::assertSelectorExists('a[href^="mailto:"]');
