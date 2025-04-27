@@ -2,26 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestUtils\Cases;
+namespace App\Tests\TestUtils\Cases\Traits;
 
-use App\Tests\TestUtils\Cases\Traits\UtilsTrait;
-use App\Utils\TestUtils\TestsBridge;
 use LogicException;
-use Override;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 
-abstract class WebTestCase extends SymfonyWebTestCase
+trait CaptchaTrait
 {
-    use UtilsTrait;
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        TestsBridge::reset();
-    }
-
     /**
      * @param literal-string $value
      */

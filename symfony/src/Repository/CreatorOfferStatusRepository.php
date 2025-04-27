@@ -30,7 +30,16 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return psCreatorStatsArray
+     * @return array{
+     *     open_for_anything: int,
+     *     closed_for_anything: int,
+     *     successfully_tracked: int,
+     *     partially_tracked: int,
+     *     tracking_failed: int,
+     *     tracking_issues: int,
+     *     tracked: int,
+     *     total: int,
+     * }
      *
      * @throws UnexpectedResultException
      */

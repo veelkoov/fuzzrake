@@ -11,16 +11,16 @@ use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 /**
  * @medium
  */
-class PasswordHandlingTest extends AbstractTestWithEM
+class PasswordHandlingTest extends IuSubmissionsAbstractTest
 {
     use IuFormTrait;
 
     public function testNewCreatorPasswordIsHashed(): void
     {
-        $this->client->request('GET', '/iu_form/start');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST001',
             'iu_form[name]' => 'Test name',
             'iu_form[country]' => 'Test country',
@@ -32,11 +32,11 @@ class PasswordHandlingTest extends AbstractTestWithEM
             'iu_form[password]' => 'some-password',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid($this->client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport($this->client, true, 1);
+        self::performImport(self::$client, true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -59,19 +59,19 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $creator->getPassword();
         unset($creator);
 
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
             'iu_form[password]' => 'known-password',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid($this->client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport($this->client, true, 1);
+        self::performImport(self::$client, true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -95,21 +95,21 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $creator->getPassword();
         unset($creator);
 
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid($this->client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport($this->client, true, 1);
+        self::performImport(self::$client, true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -134,21 +134,21 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $oldHash = $creator->getPassword();
         unset($creator);
 
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'                        => 'New name',
             'iu_form[password]'                    => 'new-password',
             'iu_form[changePassword]'              => '1',
             'iu_form[verificationAcknowledgement]' => '1',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        $this::submitValid($this->client, $form);
+        self::submitValid($form);
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport($this->client, false, 1);
+        self::performImport(self::$client, false, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');

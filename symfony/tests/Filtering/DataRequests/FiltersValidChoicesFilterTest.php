@@ -6,7 +6,7 @@ namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Veelkoov\Debris\StringSet;
@@ -14,15 +14,13 @@ use Veelkoov\Debris\StringSet;
 /**
  * @medium
  */
-class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
+class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception
      */
     public function testGetOnlyAllowed(): void
     {
-        self::bootKernel();
-
         $creator = Creator::new()
             ->setLanguages(['Czech', 'Finnish'])
             ->setOpenFor(['Pancakes', 'Waffles'])

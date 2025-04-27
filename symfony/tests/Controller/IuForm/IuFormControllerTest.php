@@ -7,47 +7,37 @@ namespace App\Tests\Controller\IuForm;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use Override;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
  */
-class IuFormControllerWithEMTest extends WebTestCaseWithEM
+class IuFormControllerTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
     use FormsChoicesValuesAndLabelsTestTrait;
-
-    private KernelBrowser $client;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->client = self::createClient();
-    }
 
     public function testIuFormLoadsForExistingCreators(): void
     {
         self::addSimpleCreator();
 
-        $this->client->request('GET', '/iu_form/start/TEST');
-        static::assertEquals(404, $this->client->getResponse()->getStatusCode());
-        $this->client->request('GET', '/iu_form/start/TEST002');
-        static::assertEquals(404, $this->client->getResponse()->getStatusCode());
-        $this->client->request('GET', '/iu_form/start/TEST000');
-        static::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::$client->request('GET', '/iu_form/start/TEST');
+        static::assertEquals(404, self::$client->getResponse()->getStatusCode());
+        self::$client->request('GET', '/iu_form/start/TEST002');
+        static::assertEquals(404, self::$client->getResponse()->getStatusCode());
+        self::$client->request('GET', '/iu_form/start/TEST000');
+        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
     }
 
     public function testSubmittingEmptyDoesnt500(): void
     {
-        $this->client->request('GET', '/iu_form/start');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form();
-        self::submitInvalid($this->client, $form);
+        $form = self::$client->getCrawler()->selectButton('Submit')->form();
+        self::submitInvalid($form);
     }
 
     /**
@@ -57,9 +47,9 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
-        $this->client->request('GET', '/iu_form/start');
-        self::skipRules($this->client);
-        $crawler = $this->client->getCrawler();
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
+        $crawler = self::$client->getCrawler();
 
         foreach ($choices as $choice) {
             $label = $choice['label'];
@@ -81,23 +71,23 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
                 ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
         );
 
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        self::submitInvalid($this->client, $form);
+        self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST003',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
-        self::submitValid($this->client, $form);
+        self::submitValid($form);
     }
 
     public function testNewCreatorCannotUseOtherCreatorsCreatorId(): void
@@ -106,10 +96,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             self::getCreator(creatorId: 'TEST001'),
         );
 
-        $this->client->request('GET', '/iu_form/start');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]'       => 'TEST001',
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
@@ -121,21 +111,21 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'iu_form[password]'        => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
-        self::submitInvalid($this->client, $form);
+        self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
             'This maker ID has been already used by another maker.');
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
         ]);
-        self::submitValid($this->client, $form);
+        self::submitValid($form);
     }
 
     public function testEmailAddressNotShownForNewCreator(): void
     {
-        $this->client->request('GET', '/iu_form/start');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
@@ -145,16 +135,16 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     public function testInvalidEmailAddressNotShownForExistingCreator(): void
     {
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'garbage'));
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
         self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
     }
 
     public function testPreviousEmailAddressShownForExistingCreator(): void
     {
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'valid@example.com'));
-        $this->client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
         self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
     }
 }

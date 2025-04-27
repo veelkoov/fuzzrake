@@ -5,26 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\ContactPermit;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
  */
-class IuFormValidationTest extends WebTestCaseWithEM
+class IuFormValidationTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
 
     public function testErrorMessagesForRequiredDataFields(): void
     {
-        $client = static::createClient();
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRules($client);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form();
-        self::submitInvalid($client, $form);
+        $form = self::$client->getCrawler()->selectButton('Submit')->form();
+        self::submitInvalid($form);
 
         self::assertCaptchaSolutionRejected();
 
@@ -53,24 +51,24 @@ class IuFormValidationTest extends WebTestCaseWithEM
         self::assertSelectorTextContains('#form_errors_top li:nth-child(6)',
             '"Maker ID" - This value should not be blank.');
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[ages]'        => 'MINORS',
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
         ]);
-        self::submitInvalid($client, $form);
+        self::submitInvalid($form);
 
         self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback',
             'You must answer this question.');
         self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
             'Do you accept commissions from minors or people under 18? - You must answer this question.');
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[ages]'        => 'ADULTS',
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]'  => 'NO',
         ]);
-        self::submitInvalid($client, $form);
+        self::submitInvalid($form);
 
         self::assertSelectorTextContains('#iu_form_doesNsfw + .invalid-feedback',
             'You must answer this question.');
@@ -85,12 +83,10 @@ class IuFormValidationTest extends WebTestCaseWithEM
      */
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
     {
-        $client = static::createClient();
+        self::$client->request('GET', '/iu_form/start');
+        self::skipRules();
 
-        $client->request('GET', '/iu_form/start');
-        self::skipRules($client);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'test-maker-555',
             'iu_form[country]' => 'Finland',
             'iu_form[creatorId]' => 'TEST001',
@@ -111,9 +107,9 @@ class IuFormValidationTest extends WebTestCaseWithEM
         }
 
         if ([] === $expectedErrors) {
-            self::submitValid($client, $form);
+            self::submitValid($form);
         } else {
-            self::submitInvalid($client, $form);
+            self::submitInvalid($form);
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);
@@ -306,8 +302,6 @@ class IuFormValidationTest extends WebTestCaseWithEM
         $itIsAnUpdate = null !== $previousContactPermit;
         $iuFormStartUri = $itIsAnUpdate ? '/iu_form/start/TEST001' : '/iu_form/start';
 
-        $client = static::createClient();
-
         if ($itIsAnUpdate) {
             self::persistAndFlush(self::getCreator(
                 creatorId: 'TEST001',
@@ -316,8 +310,8 @@ class IuFormValidationTest extends WebTestCaseWithEM
             ));
         }
 
-        $client->request('GET', $iuFormStartUri);
-        self::skipRules($client);
+        self::$client->request('GET', $iuFormStartUri);
+        self::skipRules();
 
         $formData = [
             'iu_form[creatorId]'       => 'TEST001',
@@ -350,12 +344,12 @@ class IuFormValidationTest extends WebTestCaseWithEM
             $formData['iu_form[verificationAcknowledgement]'] = '1';
         }
 
-        $form = $client->getCrawler()->selectButton('Submit')->form($formData);
+        $form = self::$client->getCrawler()->selectButton('Submit')->form($formData);
 
         if ($shouldSucceed) {
-            self::submitValid($client, $form);
+            self::submitValid($form);
         } else {
-            self::submitInvalid($client, $form);
+            self::submitInvalid($form);
         }
 
         $assertions();

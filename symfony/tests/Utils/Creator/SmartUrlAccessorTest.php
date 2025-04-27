@@ -6,14 +6,14 @@ namespace App\Tests\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
-use App\Tests\TestUtils\Cases\TestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psl\Vec;
 
 /**
  * @small
  */
-class SmartUrlAccessorTest extends TestCase
+class SmartUrlAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSetSingleAndMultiple(): void
     {

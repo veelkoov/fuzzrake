@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
@@ -15,7 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * @medium
  */
-class FiltersTest extends WebTestCaseWithEM
+class MainControllerFiltersTest extends FuzzrakeWebTestCase
 {
     use AssertsTrait;
     use FiltersTestTrait;
@@ -31,8 +31,6 @@ class FiltersTest extends WebTestCaseWithEM
      */
     public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        $client = static::createClient();
-
         self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
 
         $queryParts = [];
@@ -57,8 +55,8 @@ class FiltersTest extends WebTestCaseWithEM
 
         $query = implode('&', $queryParts);
 
-        $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = self::$client->request('GET', '/htmx/main/creators-in-table?'.$query);
+        self::assertResponseStatusCodeIs(200);
 
         $resultCreatorIds = $crawler->filter('td.creator-id')->each(fn (Crawler $node, $_) => $node->text(''));
 

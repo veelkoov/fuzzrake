@@ -6,18 +6,16 @@ namespace App\Tests\Repository;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorValue;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @medium
  */
-class CreatorValueRepositoryWithEMTest extends KernelTestCaseWithEM
+class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD'])->setOtherFeatures(['01', '02']),
             Creator::new()->setFeatures(['EF'])->setOtherFeatures(['03', '04']),
@@ -33,8 +31,6 @@ class CreatorValueRepositoryWithEMTest extends KernelTestCaseWithEM
 
     public function testCountDistinctInActiveCreatorsHaving(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD']),
             Creator::new()->setFeatures(['AB']),
@@ -54,8 +50,6 @@ class CreatorValueRepositoryWithEMTest extends KernelTestCaseWithEM
 
     public function testCountActiveCreatorsHavingAnyOf(): void
     {
-        self::bootKernel();
-
         self::persistAndFlush(
             Creator::new()->setFeatures(['AB', 'CD']),
             Creator::new()->setFeatures(['EF']),

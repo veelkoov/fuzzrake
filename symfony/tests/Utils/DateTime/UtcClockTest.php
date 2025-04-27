@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\DateTime;
 
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
-use Override;
-use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
  */
-class UtcClockTest extends TestCase
+class UtcClockTest extends FuzzrakeTestCase
 {
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        TestsBridge::reset();
-    }
-
     public function testGetUtc(): void
     {
         $subject = UtcClock::getUtc();

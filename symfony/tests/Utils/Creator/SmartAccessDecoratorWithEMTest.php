@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Creator;
 
 use App\Entity\CreatorValue;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @medium
  */
-class SmartAccessDecoratorWithEMTest extends KernelTestCaseWithEM
+class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
 {
     /**
      * This test assures that boolean field values are properly persisted. This is more like an end-to-end test,
@@ -19,7 +19,6 @@ class SmartAccessDecoratorWithEMTest extends KernelTestCaseWithEM
      */
     public function testBooleanValues(): void
     {
-        self::bootKernel();
         $repo = self::getEM()->getRepository(CreatorValue::class);
 
         $creator = new Creator();

@@ -9,26 +9,24 @@ use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
 use App\IuHandling\Submission\SubmissionService;
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Tests\TestUtils\Submissions;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Override;
 use Random\RandomException;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Uid\Uuid;
 
 /**
  * @medium
  */
-class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
+class SubmissionsControllerTest extends FuzzrakeWebTestCase
 {
-    private KernelBrowser $client;
-
     #[Override]
     protected function setUp(): void
     {
-        $this->client = static::createClient([], [
+        parent::setUp();
+
+        self::$client->setServerParameters([
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
@@ -38,13 +36,13 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     {
         $this->generateRandomFakeSubmissions(24);
 
-        $crawler = $this->client->request('GET', '/mx/submissions/1/');
+        $crawler = self::$client->request('GET', '/mx/submissions/1/');
         self::assertCount(24, $crawler->filter('table tbody tr'));
         self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
 
         $this->generateRandomFakeSubmissions(2);
 
-        $crawler = $this->client->request('GET', '/mx/submissions/1/');
+        $crawler = self::$client->request('GET', '/mx/submissions/1/');
         self::assertCount(25, $crawler->filter('table tbody tr'));
         self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
     }
@@ -70,7 +68,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $id = $this->createSubmission($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/$id");
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -147,8 +145,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $id = $this->createSubmission($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'TEST001');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -205,8 +203,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu'));
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
         self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
@@ -214,11 +212,11 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         // With multiple creators matched, will be displayed as a new creator
         self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
 
-        $this->client->submitForm('Import', [
+        self::$client->submitForm('Import', [
             'submission[directives]' => 'match-maker-id TEST001',
         ]);
 
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertResponseStatusCodeIs(200);
         self::assertSelectorNotExists('.invalid-feedback');
 
         // With a single creator selected, display actual difference
@@ -242,23 +240,23 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->persistAndFlush($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_directives', 'Old directives');
 
-        $this->client->submitForm('Save', [
+        self::$client->submitForm('Save', [
             'submission[comment]'    => 'New comment',
             'submission[directives]' => 'New directives',
         ]);
 
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        $this->client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/$id");
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
@@ -274,21 +272,21 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $id = $this->createSubmission($submissionData);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('#submission_comment', '');
         self::assertSelectorTextSame('#submission_directives', '');
 
-        $this->client->submitForm('Import', [
+        self::$client->submitForm('Import', [
             'submission[comment]'    => 'Added comment',
             'submission[directives]' => 'Added directives',
         ]);
 
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        $this->client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/$id");
 
         self::assertSelectorTextSame('#submission_comment', 'Added comment');
         self::assertSelectorTextSame('#submission_directives', 'Added directives');
@@ -312,8 +310,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->persistAndFlush($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td', 'Some submitted intro information');
         self::assertSelectorTextSame('tr.INTRO.after td+td', 'Some changed intro information');
@@ -342,14 +340,14 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->persistAndFlush($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
-        $this->client->submitForm('Import', [
+        self::$client->submitForm('Import', [
             'submission[directives]' => 'invalid-directive',
         ]);
 
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextSame('.invalid-feedback', "The directives have been ignored completely due to an error. Unknown command: 'invalid-directive'");
     }
 
@@ -369,8 +367,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $this->persistAndFlush($submission);
 
-        $this->client->request('GET', "/mx/submission/$id");
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
@@ -399,8 +397,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             self::persistAndFlush((new Submission())->setStrId($id)->setDirectives('accept'));
         }
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         if ($new || $passwordSame || $accepted) {
             self::assertSelectorNotExists('.invalid-feedback');
@@ -432,8 +430,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
         $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('New name'));
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextContains('p.text-body', 'Changed NAME from "Old name" to "New name"');
     }
@@ -457,8 +455,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setContactAllowed($permit)
         );
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
         self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
@@ -480,9 +478,9 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     public function testInvalidIdDoesntCauseError500(): void
     {
         $this->createSubmission(Creator::new()); // Only to have the submissions directory existing
-        $this->client->request('GET', '/mx/submission/wrongId');
+        self::$client->request('GET', '/mx/submission/wrongId');
 
-        self::assertResponseStatusCodeIs($this->client, 404);
+        self::assertResponseStatusCodeIs(404);
     }
 
     /**
@@ -499,8 +497,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
         $id = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID td+td', 'TEST001');
         self::assertSelectorTextNotContains('body', 'password___');
@@ -541,8 +539,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $id = $this->createSubmission($entity); // No need to modify
 
-        $this->client->request('GET', "/mx/submission/$id");
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', "/mx/submission/$id");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
         self::assertSelectorTextSame('#creator-hidden-warning', 'Hidden');
@@ -550,8 +548,8 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $entity->setInactiveReason('');
         self::flush();
 
-        $this->client->request('GET', '/mx/submission/TEST001');
-        $this->assertResponseStatusCodeSame(200);
+        self::$client->request('GET', '/mx/submission/TEST001');
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');
     }

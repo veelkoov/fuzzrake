@@ -13,7 +13,7 @@ use App\IuHandling\Import\UpdateInput;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\CreatorRepository;
-use App\Tests\TestUtils\Cases\TestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -26,7 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 /**
  * @small
  */
-class UpdatesServiceTest extends TestCase
+class UpdatesServiceTest extends FuzzrakeTestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void
     {

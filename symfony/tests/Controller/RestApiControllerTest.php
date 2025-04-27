@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Collections\ArrayReader;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -12,20 +12,19 @@ use Nette\Utils\JsonException;
 /**
  * @medium
  */
-class RestApiControllerWithEMTest extends WebTestCaseWithEM
+class RestApiControllerTest extends FuzzrakeWebTestCase
 {
     /**
      * @throws JsonException
      */
     public function testCreators(): void
     {
-        $client = static::createClient();
         self::persistAndFlush(self::getCreator('API testing creator', 'TEST001', 'FI'));
 
-        $client->request('GET', '/api/artisans.json');
-        self::assertResponseStatusCodeIs($client, 200);
+        self::$client->request('GET', '/api/artisans.json');
+        self::assertResponseStatusCodeIs(200);
 
-        $text = $client->getResponse()->getContent();
+        $text = self::$client->getResponse()->getContent();
         self::assertNotFalse($text);
 
         $parsedJson = Json::decode($text, Json::FORCE_ARRAY);
