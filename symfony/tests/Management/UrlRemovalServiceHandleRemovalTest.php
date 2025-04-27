@@ -6,19 +6,18 @@ namespace App\Tests\Management;
 
 use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
 use App\ValueObject\Messages\EmailNotificationV1;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -27,7 +26,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @small
  */
-class UrlRemovalServiceHandleRemovalTest extends TestCase
+class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 {
     private UrlRemovalService $subject;
     private DateTimeInterface $now;
@@ -50,12 +49,6 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         UtcClockMock::start();
         $this->now = UtcClock::now();
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        TestsBridge::reset();
     }
 
     /**
