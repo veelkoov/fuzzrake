@@ -20,6 +20,7 @@ abstract class FuzzrakeKernelTestCase extends KernelTestCase
         parent::setUp();
 
         self::bootKernel();
+        self::resetDB();
     }
 
     #[Override]

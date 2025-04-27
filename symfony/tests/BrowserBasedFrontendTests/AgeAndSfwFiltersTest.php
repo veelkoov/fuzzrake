@@ -98,29 +98,29 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
 
         $infoText = 'Currently '.count($creators).' makers from 0 countries are listed here.';
-        $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
         if ($userIsMinor) {
             self::waitUntilShows('#aasImNotAdult');
-            $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         } else {
             self::waitUntilShows('#aasImAdult');
-            $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
             $lastChoiceId = $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
             self::waitUntilShows("#$lastChoiceId");
-            $this->client->findElement(WebDriverBy::id($lastChoiceId))->click();
+            self::$client->findElement(WebDriverBy::id($lastChoiceId))->click();
         }
 
-        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         $displayedCreatorIds = [];
-        $crawler = $this->client->getCrawler();
+        $crawler = self::$client->getCrawler();
 
         while (true) { // Handle multiple pages
             self::waitForLoadingIndicatorToDisappear();
@@ -132,7 +132,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
             ];
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {
-                $this->client->findElement(WebDriverBy::id('next-items-page-link'))->click();
+                self::$client->findElement(WebDriverBy::id('next-items-page-link'))->click();
             } else {
                 break;
             }

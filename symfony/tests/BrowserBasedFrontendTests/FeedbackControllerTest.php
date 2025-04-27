@@ -46,20 +46,20 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         self::persistAndFlush($creator);
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());
         $this->openDataOutdatedPopupFromTheCreatorCard();
 
-        $this->client->clickLink('submit the feedback form');
+        self::$client->clickLink('submit the feedback form');
 
-        self::assertCount(2, $this->client->getWindowHandles());
-        $handle = $this->client->getWindowHandles()[1];
+        self::assertCount(2, self::$client->getWindowHandles());
+        $handle = self::$client->getWindowHandles()[1];
         self::assertIsString($handle);
-        $this->client->switchTo()->window($handle);
+        self::$client->switchTo()->window($handle);
 
-        $this->client->waitForVisibility('h1', 10);
+        self::$client->waitForVisibility('h1', 10);
         self::assertSelectorTExtSame('h1', 'Feedback form');
         self::assertSelectorExists('//input[@id="feedback_creator" and @value="'.$expectedCreatorId.'"]');
     }
@@ -69,9 +69,9 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
      */
     public function testExplanationsShowingUpAndFormBlocksForSpecialOptions(): void
     {
-        $this->client->request('GET', '/index.php/feedback');
+        self::$client->request('GET', '/index.php/feedback');
 
-        $crawler = $this->client->getCrawler();
+        $crawler = self::$client->getCrawler();
 
         self::assertCount(8, $crawler->filter('input[name="feedback[subject]"]'));
 
@@ -79,45 +79,45 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         $noticeCssSel = '#feedback-subject-notice';
 
         // 1st option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'getfursu.it maintainer does not assist individuals');
 
         // 3rd option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 2nd option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'This cannot be adjusted manually.');
 
         // 5th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 4th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'All the information needs to be updated by the makers themselves.');
 
         // 6th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 7th option, no visual change
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 8th option, no visual change
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
     }

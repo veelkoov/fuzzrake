@@ -21,7 +21,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
     use EntityManagerTrait;
     use FormsTrait;
 
-    protected Client $client;
+    protected static Client $client;
 
     #[Override]
     protected function setUp(): void
@@ -29,9 +29,9 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         parent::setUp();
 
         self::stopWebServer(); // This is slow but assures following test won't be broken by "closed entity manager"
-        $this->client = static::createPantherClient();
-        $this->client->getCookieJar()->clear();
-        $this->client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
+        self::$client = static::createPantherClient();
+        self::$client->getCookieJar()->clear();
+        self::$client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
 
         self::resetDB();
     }

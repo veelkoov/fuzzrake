@@ -6,19 +6,18 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @medium
  */
 class QueryControllerTest extends FuzzrakeWebTestCase
 {
-    private KernelBrowser $client;
-
     #[Override]
     protected function setUp(): void
     {
-        $this->client = static::createClient([], [
+        parent::setUp();
+
+        self::$client->setServerParameters([
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
@@ -26,14 +25,14 @@ class QueryControllerTest extends FuzzrakeWebTestCase
 
     public function testNewCreator(): void
     {
-        $this->client->request('GET', '/mx/query/');
+        self::$client->request('GET', '/mx/query/');
 
-        static::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
 
-        $this->client->submitForm('Run', [
+        self::$client->submitForm('Run', [
             'query[ITEM_QUERY]' => 'test',
         ]);
 
-        static::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
     }
 }

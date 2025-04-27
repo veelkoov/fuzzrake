@@ -31,8 +31,6 @@ class MainControllerFiltersTest extends FuzzrakeWebTestCase
      */
     public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        $client = static::createClient();
-
         self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
 
         $queryParts = [];
@@ -57,8 +55,8 @@ class MainControllerFiltersTest extends FuzzrakeWebTestCase
 
         $query = implode('&', $queryParts);
 
-        $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
-        self::assertResponseStatusCodeIs($client, 200);
+        $crawler = self::$client->request('GET', '/htmx/main/creators-in-table?'.$query);
+        self::assertResponseStatusCodeIs(200);
 
         $resultCreatorIds = $crawler->filter('td.creator-id')->each(fn (Crawler $node, $_) => $node->text(''));
 

@@ -66,6 +66,6 @@ trait FormsTrait
     {
         $client->submit($form);
 
-        self::assertResponseStatusCodeIs($client, 422);
+        self::assertResponseStatusCodeIs(422);
     }
 }

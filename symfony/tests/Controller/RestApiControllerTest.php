@@ -19,13 +19,12 @@ class RestApiControllerTest extends FuzzrakeWebTestCase
      */
     public function testCreators(): void
     {
-        $client = static::createClient();
         self::persistAndFlush(self::getCreator('API testing creator', 'TEST001', 'FI'));
 
-        $client->request('GET', '/api/artisans.json');
-        self::assertResponseStatusCodeIs($client, 200);
+        self::$client->request('GET', '/api/artisans.json');
+        self::assertResponseStatusCodeIs(200);
 
-        $text = $client->getResponse()->getContent();
+        $text = self::$client->getResponse()->getContent();
         self::assertNotFalse($text);
 
         $parsedJson = Json::decode($text, Json::FORCE_ARRAY);

@@ -35,7 +35,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Expect: main page initially shows the checklist and no creators
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
 
         self::assertVisible('#checklist-ill-be-careful');
         self::assertInvisible('#TEST001');
@@ -44,10 +44,10 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: navigate to the data updates page and enable the creator mode, go back to the main page
 
-        $this->client->request('GET', '/index.php/iu_form/start');
+        self::$client->request('GET', '/index.php/iu_form/start');
 
-        $this->client->clickLink('Temporarily disable all the filters and open the main page');
-        $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::$client->clickLink('Temporarily disable all the filters and open the main page');
+        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all creators are visible
@@ -72,7 +72,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: click re-enable filters button
 
-        $this->client->clickLink('Re-enable filters');
+        self::$client->clickLink('Re-enable filters');
 
         // Expect: main page shows the checklist and no creators, no checklist items are selected
 
@@ -84,10 +84,10 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: fill the checklist, aim for minors-friendly experience
 
-        $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
         self::waitUntilShows('#aasImNotAdult');
-        $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
-        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
         self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, but only minors-friendly creator shows up
@@ -98,10 +98,10 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: navigate to the data updates page and enable the creator mode, go back to the main page
 
-        $this->client->request('GET', '/index.php/iu_form/start');
+        self::$client->request('GET', '/index.php/iu_form/start');
 
-        $this->client->clickLink('Temporarily disable all the filters and open the main page');
-        $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::$client->clickLink('Temporarily disable all the filters and open the main page');
+        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all creators are visible
@@ -112,7 +112,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: click re-enable filters button
 
-        $this->client->clickLink('Re-enable filters');
+        self::$client->clickLink('Re-enable filters');
 
         // Expect: main page shows the checklist - filled
 
@@ -124,7 +124,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
 
         // Action: submit the checklist with previous settings kept
 
-        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
         self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, once again only minors-friendly creator shows up

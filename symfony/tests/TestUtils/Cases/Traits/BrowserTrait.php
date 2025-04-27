@@ -78,6 +78,6 @@ trait BrowserTrait
      */
     protected function selectRightCaptchaSolution(): void
     {
-        $this->client->findElement(WebDriverBy::xpath('//label[text()="right"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//label[text()="right"]'))->click();
     }
 }

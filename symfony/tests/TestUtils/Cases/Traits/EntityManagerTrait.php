@@ -17,27 +17,10 @@ use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 use Exception;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 trait EntityManagerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
-
-    /**
-     * @param array<string, string> $options
-     */
-    protected static function bootKernel(array $options = []): KernelInterface
-    {
-        $result = parent::bootKernel($options);
-
-        if (null !== self::$entityManager) {
-            self::$entityManager->clear();
-            self::$entityManager = null;
-        }
-        self::resetDB();
-
-        return $result;
-    }
 
     protected static function getEM(): EntityManagerInterface
     {
@@ -61,6 +44,11 @@ trait EntityManagerTrait
 
     protected static function resetDB(): void
     {
+        if (null !== self::$entityManager) {
+            self::$entityManager->clear();
+            self::$entityManager = null;
+        }
+
         $metadata = self::getEM()->getMetadataFactory()->getAllMetadata();
 
         $schemaTool = new OrmSchemaTool(self::getEM());

@@ -20,25 +20,21 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
     use FormsTrait;
     use CaptchaTrait;
 
+    protected static KernelBrowser $client;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::$client = static::createClient();
+        self::resetDB();
+    }
+
     #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();
 
         TestsBridge::reset();
-    }
-
-    /**
-     * @param array<string, string> $options
-     * @param array<string, string> $server
-     */
-    #[Override]
-    protected static function createClient(array $options = [], array $server = []): KernelBrowser
-    {
-        $result = parent::createClient($options, $server);
-
-        self::resetDB();
-
-        return $result;
     }
 }

@@ -8,9 +8,7 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use Override;
 use Psl\Dict;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @medium
@@ -20,13 +18,6 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
     use IuFormTrait;
 
     private const string CREATOR_ID = 'TESTMID';
-    private KernelBrowser $client;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->client = self::createClient();
-    }
 
     public function testEmailNotRequiredWhenNoContactAllowed(): void
     {
@@ -101,8 +92,8 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
 
     private function skipToTheDataIuFormPage(): void
     {
-        $this->client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
-        self::skipRules($this->client);
+        self::$client->request('GET', '/iu_form/start/'.self::CREATOR_ID);
+        self::skipRules(self::$client);
     }
 
     /**
@@ -110,7 +101,7 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
      */
     private function succeedsSubmittingAfterSetting(array $values): void
     {
-        self::submitValidForm($this->client, 'Submit', $this->extendFormValuesWith($values));
+        self::submitValidForm(self::$client, 'Submit', $this->extendFormValuesWith($values));
     }
 
     /**
@@ -118,7 +109,7 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
      */
     private function failsSubmittingAfterSetting(array $values): void
     {
-        self::submitInvalidForm($this->client, 'Submit', $this->extendFormValuesWith($values));
+        self::submitInvalidForm(self::$client, 'Submit', $this->extendFormValuesWith($values));
 
         self::assertFieldErrorValidEmailAddressRequired();
     }

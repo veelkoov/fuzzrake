@@ -16,7 +16,7 @@ trait MainPageTestsTrait
     private function skipCheckListAdultAllowNsfw(int $numberOfCreators, bool $expectFilled = false): void
     {
         $infoText = "Currently $numberOfCreators makers from $numberOfCreators countries are listed here.";
-        $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
         $this->fillChecklist(true, false, $expectFilled);
         $this->waitExpectLoadedCreatorsTable($numberOfCreators, $numberOfCreators); // Assumes no paging happening
@@ -29,7 +29,7 @@ trait MainPageTestsTrait
     {
         $locator = "//div[@id=\"creators-table-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
 
-        $this->client->waitFor($locator, 3);
+        self::$client->waitFor($locator, 3);
     }
 
     /**
@@ -40,27 +40,27 @@ trait MainPageTestsTrait
         self::waitForLoadingIndicatorToDisappear();
 
         if (!$expectFilled) {
-            $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+            self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
             if ($isAdult) {
                 self::waitUntilShows('#aasImAdult');
-                $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
+                self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
                 if ($wantsSfw) {
                     self::waitUntilShows('#aasKeepSfw');
-                    $this->client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
+                    self::$client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
                 } else {
                     self::waitUntilShows('#aasAllowNsfw');
-                    $this->client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+                    self::$client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
                 }
             } else {
                 self::waitUntilShows('#aasImNotAdult');
-                $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+                self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
             }
         }
 
         self::waitUntilShows('#checklist-dismiss-btn');
-        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
     }
@@ -78,7 +78,7 @@ trait MainPageTestsTrait
      */
     private function openCreatorCardByClickingOnTheirNameInTheTable(string $creatorName): void
     {
-        $this->client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
 
         self::waitUntilShows('#creator-name');
         self::assertSelectorTextSame('#creator-name', $creatorName);
@@ -91,7 +91,7 @@ trait MainPageTestsTrait
     {
         $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
-        $this->client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
+        self::$client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
         self::waitUntilShows('#creator-updates-modal-content');
     }
 
@@ -100,8 +100,8 @@ trait MainPageTestsTrait
      */
     private function closeDataOutdatedPopUpByClickingTheCloseButton(): void
     {
-        $this->client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
-        $this->client->waitForInvisibility('#creator-updates-modal-content', 5);
+        self::$client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
+        self::$client->waitForInvisibility('#creator-updates-modal-content', 5);
     }
 
     /**
@@ -124,6 +124,6 @@ trait MainPageTestsTrait
      */
     private function clearTypeInTextSearch(string $searchedText): void
     {
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
+        self::$client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
     }
 }

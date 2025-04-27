@@ -41,12 +41,12 @@ class IuFormTest extends FuzzrakePantherTestCase
         $this->setupIuTestGoToTheDataPage($previousContactPermitIfUpdate);
         self::waitUntilHides($isUpdate ? '#forgotten_password_instructions' : '#email-address');
 
-        $this->client->getCrawler()->selectButton('Submit')->form()->setValues([
+        self::$client->getCrawler()->selectButton('Submit')->form()->setValues([
             'iu_form[contactAllowed]' => $contactPermit->value,
         ]);
 
         if ($passwordChangePossible) {
-            $this->client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
+            self::$client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
             self::waitUntilShows('#forgotten_password_instructions');
         } else {
             self::waitUntilHides('#iu_form_changePassword');
@@ -66,7 +66,7 @@ class IuFormTest extends FuzzrakePantherTestCase
     {
         $this->goToTheDataPage();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
 
@@ -89,7 +89,7 @@ class IuFormTest extends FuzzrakePantherTestCase
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', contactAllowed: ContactPermit::NO));
         $this->goToTheDataPage('TEST001');
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
 
@@ -112,7 +112,7 @@ class IuFormTest extends FuzzrakePantherTestCase
         self::persistAndFlush(self::getCreator(creatorId: 'TEST001', contactAllowed: ContactPermit::NO, emailAddress: 'example@example.com'));
         $this->goToTheDataPage('TEST001');
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form([
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
 
@@ -134,25 +134,25 @@ class IuFormTest extends FuzzrakePantherTestCase
     {
         $this->setupIuTestGoToTheDataPage();
 
-        $form = $this->client->getCrawler()->selectButton('Submit')->form();
+        $form = self::$client->getCrawler()->selectButton('Submit')->form();
 
         $noSelectionYet = '.pros-cons-contact-options[data-min-level="-1"][data-max-level="-1"]';
         $neverOnly = '.pros-cons-contact-options[data-min-level="0"][data-max-level="0"]';
         $feedbackOnly = '.pros-cons-contact-options[data-min-level="3"][data-max-level="3"]';
         $anythingButFeedback = '.pros-cons-contact-options[data-min-level="0"][data-max-level="2"]';
 
-        $this->client->waitForVisibility($noSelectionYet, 5);
-        $this->client->waitForInvisibility($neverOnly, 5);
-        $this->client->waitForInvisibility($anythingButFeedback, 5);
-        $this->client->waitForInvisibility($feedbackOnly, 5);
+        self::$client->waitForVisibility($noSelectionYet, 5);
+        self::$client->waitForInvisibility($neverOnly, 5);
+        self::$client->waitForInvisibility($anythingButFeedback, 5);
+        self::$client->waitForInvisibility($feedbackOnly, 5);
 
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
 
-        $this->client->waitForInvisibility($noSelectionYet, 5);
-        $this->client->waitForVisibility($neverOnly, 5);
-        $this->client->waitForVisibility($anythingButFeedback, 5);
+        self::$client->waitForInvisibility($noSelectionYet, 5);
+        self::$client->waitForVisibility($neverOnly, 5);
+        self::$client->waitForVisibility($anythingButFeedback, 5);
         self::assertSelectorIsNotVisible($feedbackOnly);
 
         $form->setValues([
@@ -160,9 +160,9 @@ class IuFormTest extends FuzzrakePantherTestCase
         ]);
 
         self::assertSelectorIsNotVisible($noSelectionYet);
-        $this->client->waitForInvisibility($neverOnly, 5);
-        $this->client->waitForInvisibility($anythingButFeedback, 5);
-        $this->client->waitForVisibility($feedbackOnly, 5);
+        self::$client->waitForInvisibility($neverOnly, 5);
+        self::$client->waitForInvisibility($anythingButFeedback, 5);
+        self::$client->waitForVisibility($feedbackOnly, 5);
     }
 
     /**
@@ -197,15 +197,15 @@ class IuFormTest extends FuzzrakePantherTestCase
         // Load 1st creator I/U data page, change some stuff A
         $this->goToTheDataPage('TEST001');
         self::assertInputValueSame('iu_form[name]', 'Creator 001');
-        $this->client->getCrawler()->selectButton('Submit')->form([
+        self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'Creator 001 - MODIFIED',
         ]);
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
+        self::$client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
 
         // Load new creator I/U data page, set some stuff B
         $this->goToTheDataPage();
         self::assertInputValueSame('iu_form[name]', '');
-        $this->client->getCrawler()->selectButton('Submit')->form([
+        self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'New creator - MODIFIED',
             'iu_form[creatorId]' => 'TEST003',
             'iu_form[country]' => 'FI',
@@ -214,31 +214,31 @@ class IuFormTest extends FuzzrakePantherTestCase
             'iu_form[nsfwSocial]' => 'YES',
             'iu_form[contactAllowed]' => 'NO',
         ]);
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
+        self::$client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
 
         // Load 2nd creator I/U data page, change some stuff C
         $this->goToTheDataPage('TEST002');
         self::assertInputValueSame('iu_form[name]', 'Creator 002');
-        $this->client->getCrawler()->selectButton('Submit')->form([
+        self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'Creator 002 - MODIFIED',
         ]);
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
+        self::$client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
 
         // Go back to 1st creator I/U data page, make sure A matches, submit
         $this->goToTheDataPage('TEST001');
         self::assertInputValueSame('iu_form[name]', 'Creator 001 - MODIFIED');
         $this->selectRightCaptchaSolution();
-        $this->client->submit($this->client->getCrawler()->selectButton('Submit')->form(), [
+        self::$client->submit(self::$client->getCrawler()->selectButton('Submit')->form(), [
             'iu_form[password]' => 'test-password',
         ]);
-        $this->client->waitFor('#iu-form-data[data-step="confirmation"]');
+        self::$client->waitFor('#iu-form-data[data-step="confirmation"]');
 
         // Go back to the new creator I/U data page, make sure B matches, reset
         $this->goToTheDataPage();
         self::assertInputValueSame('iu_form[name]', 'New creator - MODIFIED');
-        $this->client->findElement(WebDriverBy::id('iu-form-reset-button'))->click();
-        $this->client->getWebDriver()->switchTo()->alert()->accept();
-        $this->client->waitFor('#iu-form-data[data-step="data"]');
+        self::$client->findElement(WebDriverBy::id('iu-form-reset-button'))->click();
+        self::$client->getWebDriver()->switchTo()->alert()->accept();
+        self::$client->waitFor('#iu-form-data[data-step="data"]');
 
         // Go back to the 1st creator I/U data page, make sure it's clean
         $this->goToTheDataPage('TEST001');
@@ -261,7 +261,7 @@ class IuFormTest extends FuzzrakePantherTestCase
         $isUpdate = null !== $creatorId;
 
         $iuFormStartUri = '/index.php/iu_form/start'.($isUpdate ? "/$creatorId" : '');
-        $this->client->request('GET', $iuFormStartUri);
+        self::$client->request('GET', $iuFormStartUri);
 
         $waitThenClick = $isUpdate ? [
             '#iu_form_confirmUpdatingTheRightOne_0',
@@ -276,11 +276,11 @@ class IuFormTest extends FuzzrakePantherTestCase
 
         foreach ($waitThenClick as $cssSelector) {
             self::waitUntilShows($cssSelector);
-            $this->client->findElement(WebDriverBy::cssSelector($cssSelector))->click();
+            self::$client->findElement(WebDriverBy::cssSelector($cssSelector))->click();
         }
 
         self::waitUntilShows('#rulesAndContinueButton');
-        $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
-        $this->client->waitForVisibility('#iu_form_emailAddress', 5);
+        self::$client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
+        self::$client->waitForVisibility('#iu_form_emailAddress', 5);
     }
 }
