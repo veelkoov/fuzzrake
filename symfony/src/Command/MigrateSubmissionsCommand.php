@@ -20,16 +20,13 @@ class MigrateSubmissionsCommand extends Command // TODO: Remove this https://git
     public function __construct(
         private readonly SubmissionRepository $submissionRepository, // @phpstan-ignore property.onlyWritten
         private readonly EntityManagerInterface $entityManager, // @phpstan-ignore property.onlyWritten
-    )
-    {
+    ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        
 
         return Command::SUCCESS;
     }

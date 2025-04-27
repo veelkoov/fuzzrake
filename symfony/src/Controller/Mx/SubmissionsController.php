@@ -51,9 +51,9 @@ class SubmissionsController extends AbstractController
     {
         $submissionsPage = $this->submissionRepository->getPage($page);
 
-//        foreach ($submissionsPage->items as $submission) {
-//            $this->submissions->fillData($submission);
-//        }
+        //        foreach ($submissionsPage->items as $submission) {
+        //            $this->submissions->fillData($submission);
+        //        }
 
         return $this->render('mx/submissions/index.html.twig', [
             'submissions_page' => $submissionsPage,

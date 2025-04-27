@@ -11,8 +11,8 @@ use App\IuHandling\Storage\Finder;
 use App\Repository\SubmissionRepository;
 use App\Utils\Pagination\ItemsPage;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Psl\File;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class SubmissionsService
 {
@@ -58,7 +58,7 @@ class SubmissionsService
     private function getSubmissionById(string $id): Submission
     {
         try {
-            return $this->repository->findByStrId($id) ?? (new Submission())->setStrId($id);
+            return $this->repository->findByStrId($id) ?? throw new MissingSubmissionException(); // FIXME: Don't
         } catch (NonUniqueResultException $exception) {
             throw new SubmissionException(previous: $exception);
         }
@@ -73,7 +73,7 @@ class SubmissionsService
     {
         $path = $this->submissionsDirPath.'/'.SubmissionData::getFilePathFromId($submission->getStrId());
 
-        if ($submission->getPayload() === '') {
+        if ('' === $submission->getPayload()) {
             $submission->setPayload(File\read($path));
         }
     }

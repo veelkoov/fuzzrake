@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
-use App\Tests\TestUtils\Submissions;
 use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 

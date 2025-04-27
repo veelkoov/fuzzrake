@@ -9,7 +9,6 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Repository\SubmissionRepository;
 use App\Utils\DataInputException;
-use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
@@ -17,9 +16,9 @@ use App\Utils\Json;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonException;
 use Override;
 use Random\RandomException;
-use RuntimeException;
 
 #[ORM\Entity(repositoryClass: SubmissionRepository::class)]
 #[ORM\Table(name: 'submissions')]
@@ -131,7 +130,7 @@ class Submission implements FieldReadInterface
     {
         try {
             return $this->parsed ??= Json::decode($this->payload); // @phpstan-ignore-line TODO: Affecting MX, future me - please forgive me.
-        } catch (\JsonException $exception) {
+        } catch (JsonException $exception) {
             throw new DataInputException("Failed to parse submission as an array in '$this->strId'.", previous: $exception);
         }
     }

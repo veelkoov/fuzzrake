@@ -10,7 +10,6 @@ use App\IuHandling\SchemaFixer;
 use App\IuHandling\Submission\NotificationsGenerator as Generator;
 use App\Repository\SubmissionRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DateTime\UtcClock;
 use App\Utils\Json;
 use JsonException;
 use Psr\Log\LoggerInterface;

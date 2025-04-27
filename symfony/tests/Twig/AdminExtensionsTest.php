@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Twig;
 
 use App\Data\Validator\Validator;
-use App\Repository\SubmissionRepository;
 use App\Twig\AdminExtensions;
 use PHPUnit\Framework\TestCase;
 
