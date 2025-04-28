@@ -28,7 +28,7 @@ abstract class AbstractIuFormController extends AbstractController
     {
         $creator = null === $creatorId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($creatorId);
 
-        $subject = new IuSubject($creatorId, $creator);
+        $subject = new IuSubject($creatorId, clone $creator);
         SecureValues::forIuForm($subject->creator);
 
         return $subject;

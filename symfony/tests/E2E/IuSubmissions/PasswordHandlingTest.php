@@ -36,7 +36,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport(self::$client, true, 1);
+        self::performImport(true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -71,7 +71,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
 
         self::assertIuSubmittedCorrectPassword();
 
-        self::performImport(self::$client, true, 1);
+        self::performImport(true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -109,7 +109,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport(self::$client, true, 1);
+        self::performImport(true, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
@@ -148,7 +148,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
 
         self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
-        self::performImport(self::$client, false, 1);
+        self::performImport(false, 1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');

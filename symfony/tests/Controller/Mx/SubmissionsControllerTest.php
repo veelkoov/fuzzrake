@@ -528,7 +528,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $entity->setInactiveReason('');
         self::flush();
 
-        self::$client->request('GET', '/mx/submission/TEST001');
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');

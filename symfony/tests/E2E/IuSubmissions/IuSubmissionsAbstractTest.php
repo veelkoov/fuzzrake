@@ -6,7 +6,6 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
 {
@@ -21,7 +20,7 @@ abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
         ]);
     }
 
-    protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void
+    protected function performImport(bool $acceptAll, int $expectedImports): void
     {
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
 

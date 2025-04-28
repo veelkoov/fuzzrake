@@ -138,7 +138,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
         $creatorId5 = $oldData5->getLastCreatorId();
         self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
 
-        $this->performImport(self::$client, true, $finalCount);
+        $this->performImport(true, $finalCount);
 
         self::flush();
         self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount creators in the DB after import");
