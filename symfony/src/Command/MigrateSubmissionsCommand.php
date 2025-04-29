@@ -7,9 +7,8 @@ namespace App\Command;
 use App\Command\SubmissionsMigration\Finder;
 use App\Command\SubmissionsMigration\SubmissionData;
 use App\Entity\Submission;
-use App\IuHandling\Exception\MissingSubmissionException;
 use App\Repository\SubmissionRepository;
-use App\Utils\Pagination\ItemsPage;
+use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use Psl\File;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -25,8 +24,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class MigrateSubmissionsCommand extends Command // TODO: Remove this https://github.com/veelkoov/fuzzrake/issues/290
 {
     public function __construct(
-        private readonly SubmissionRepository $submissionRepository, // @phpstan-ignore property.onlyWritten
-        private readonly EntityManagerInterface $entityManager, // @phpstan-ignore property.onlyWritten
+        private readonly SubmissionRepository $submissionRepository,
+        private readonly EntityManagerInterface $entityManager,
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
         private readonly string $submissionsDirPath,
     ) {
@@ -37,39 +36,34 @@ class MigrateSubmissionsCommand extends Command // TODO: Remove this https://git
     {
         $io = new SymfonyStyle($input, $output);
 
+        foreach (Finder::getFrom($this->submissionsDirPath) as $submissionId) {
+            $submission = $this->submissionRepository->findByStrId($submissionId);
+
+            if (null === $submission) {
+                $io->info("{$submissionId} is missing in the DB, will get created.");
+                $this->entityManager->persist((new Submission())->setStrId($submissionId));
+            }
+        }
+
+        $this->entityManager->flush();
+        $datetime2000ts = UtcClock::at('2000-01-01 00:00:00')->getTimestamp();
+
+        foreach ($this->submissionRepository->findAll() as $submission) {
+            $path = $this->submissionsDirPath.'/'.SubmissionData::getFilePathFromId($submission->getStrId());
+
+            if ('' === $submission->getPayload()) {
+                $io->info("{$submission->getStrId()} is missing payload in the DB, will get loaded.");
+                $submission->setPayload(File\read($path));
+            }
+
+            if ($submission->getSubmittedAtUtc()->getTimestamp() < $datetime2000ts) {
+                $io->info("{$submission->getStrId()} is missing timestamp in the DB, will get added.");
+                $submission->setSubmittedAtUtc(SubmissionData::getTimestampFromFilePath($path));
+            }
+        }
+
+        $this->entityManager->flush();
+
         return Command::SUCCESS;
-    }
-
-    public function fillData(Submission $submission): void
-    {
-        $path = $this->submissionsDirPath.'/'.SubmissionData::getFilePathFromId($submission->getStrId());
-
-        if ('' === $submission->getPayload()) {
-            $submission->setPayload(File\read($path));
-        }
-    }
-
-    /**
-     * @param positive-int $page
-     *
-     * @return ItemsPage<SubmissionData>
-     */
-    private function getSubmissions(int $page): ItemsPage
-    {
-        return Finder::getFrom($this->submissionsDirPath, $page);
-    }
-
-    /**
-     * @throws MissingSubmissionException
-     */
-    private function getSubmissionDataById(string $id): SubmissionData
-    {
-        $result = Finder::getSingleFrom($this->submissionsDirPath, $id);
-
-        if (null === $result) {
-            throw new MissingSubmissionException("Couldn't find the submission with the given ID: '$id'");
-        }
-
-        return $result;
     }
 }

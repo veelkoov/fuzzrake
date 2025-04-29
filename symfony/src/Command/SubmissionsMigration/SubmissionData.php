@@ -4,106 +4,17 @@ declare(strict_types=1);
 
 namespace App\Command\SubmissionsMigration;
 
-use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
-use App\Data\Definitions\Fields\Field;
-use App\IuHandling\Import\psJsonFieldValue;
-use App\IuHandling\SchemaFixer;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Enforce;
-use App\Utils\FieldReadInterface;
-use App\Utils\Json;
+use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
-use JsonException;
-use Override;
-use Symfony\Component\Finder\SplFileInfo;
 
-readonly class SubmissionData implements FieldReadInterface // TODO: Should be removed
+final class SubmissionData
 {
-    /**
-     * @param array<string, psJsonFieldValue> $data
-     */
-    public function __construct(
-        private DateTimeImmutable $timestamp,
-        private string $id,
-        private array $data,
-    ) {
-    }
+    use UtilityClass;
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getTimestamp(): DateTimeImmutable
-    {
-        return $this->timestamp;
-    }
-
-    #[Override]
-    public function get(Field $field): mixed
-    {
-        $fieldName = $field->value;
-
-        if (!array_key_exists($fieldName, $this->data)) {
-            throw new DataInputException("Submission $this->id is missing $fieldName");
-        }
-
-        $value = $this->data[$fieldName];
-
-        if ($field->isList() && !is_array($value)) {
-            throw new DataInputException("Expected an array for $fieldName, got '$value' instead in $this->id");
-        }
-
-        if (Field::AGES === $field) {
-            $value = Ages::get(Enforce::nString($value));
-        }
-
-        if (Field::CONTACT_ALLOWED === $field) {
-            $value = ContactPermit::get(Enforce::nString($value));
-        }
-
-        return $value;
-    }
-
-    #[Override]
-    public function getString(Field $field): string
-    {
-        return Enforce::string($this->get($field));
-    }
-
-    #[Override]
-    public function getStringList(Field $field): array
-    {
-        return Enforce::strList($this->get($field));
-    }
-
-    #[Override]
-    public function hasData(Field $field): bool
-    {
-        return $field->providedIn($this);
-    }
-
-    public static function fromFile(SplFileInfo $source): self
-    {
-        $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());
-        $id = self::getIdFromFilePath($source->getRelativePathname());
-
-        try {
-            /**
-             * @var array<string, psJsonFieldValue> $data
-             */
-            $data = Json::decode($source->getContents());
-        } catch (JsonException $ex) {
-            throw new DataInputException(previous: $ex);
-        }
-
-        return new self($timestamp, $id, SchemaFixer::fix($data));
-    }
-
-    private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable
+    public static function getTimestampFromFilePath(string $filePath): DateTimeImmutable
     {
         $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
             ->replace($filePath)

@@ -16,14 +16,6 @@ final class Paths
     /**
      * @return non-empty-string
      */
-    public static function getTestIuFormDataPath(): string
-    {
-        return __DIR__.'/../../var/testIuFormData';
-    }
-
-    /**
-     * @return non-empty-string
-     */
     public static function getCompletenessCalcClassPath(): string
     {
         return __DIR__.'/../../src/Utils/Creator/CompletenessCalc.php';
