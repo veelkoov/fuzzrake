@@ -35,7 +35,7 @@ class SubmissionsController extends AbstractController
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly SubmissionRepository $submissionRepository,
-        private readonly SubmissionsService $submissions,
+        private readonly SubmissionsService $submissionsService,
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
         private readonly CreatorRepository $creatorRepository,
@@ -82,19 +82,19 @@ class SubmissionsController extends AbstractController
     public function submission(Request $request, string $id): Response
     {
         try {
-            $input = $this->submissions->getUpdateInputBySubmissionId($id);
+            $submission = $this->submissionsService->getSubmissionById($id);
         } catch (MissingSubmissionException $exception) {
             $this->logger->warning($exception);
 
             throw $this->createNotFoundException($exception->getMessage());
         }
 
-        $form = $this->createForm(SubmissionType::class, $input->submission)->handleRequest($request);
+        $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
 
-        $update = $this->updates->getUpdateFor($input);
+        $update = $this->updates->getUpdateFor($submission);
 
         if ($form->isSubmitted()) {
-            $this->submissions->updateEntity($update);
+            $this->submissionsService->updateEntity($update);
         }
 
         if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)

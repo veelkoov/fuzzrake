@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
-use App\IuHandling\Import\SubmissionData;
+use App\Command\SubmissionsMigration\SubmissionData;
 use PHPUnit\Framework\TestCase;
 
 /**

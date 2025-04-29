@@ -18,12 +18,10 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\UnbelievableRuntimeException;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
+use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-
-use function Psl\Vec\concat;
-use function Psl\Vec\filter;
 
 class UpdatesService
 {
@@ -35,13 +33,13 @@ class UpdatesService
     ) {
     }
 
-    public function getUpdateFor(UpdateInput $input): Update
+    public function getUpdateFor(Submission $submission): Update
     {
-        [$directivesError, $manager] = $this->getManager($input->submission);
-        $errors = filter([$directivesError]);
+        [$directivesError, $manager] = $this->getManager($submission);
+        $errors = Vec\filter([$directivesError]);
 
         $originalInput = new Creator();
-        $this->updateWith($originalInput, $input->submission, Fields::readFromSubmissionData());
+        $this->updateWith($originalInput, $submission, Fields::readFromSubmissionData());
 
         $fixedInput = $this->fixer->getFixed($originalInput);
 
@@ -74,7 +72,7 @@ class UpdatesService
         }
 
         return new Update(
-            $input->submission,
+            $submission,
             $matchedCreators,
             $originalInput,
             $originalCreator,
@@ -122,7 +120,7 @@ class UpdatesService
             $names = [];
         } else {
             $creatorIds = $submissionData->getAllCreatorIds();
-            $names = concat([$submissionData->getName()], $submissionData->getFormerly());
+            $names = Vec\concat([$submissionData->getName()], $submissionData->getFormerly());
         }
 
         $results = $this->creatorRepository->findBestMatches($names, $creatorIds);

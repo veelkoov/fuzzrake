@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
-use App\IuHandling\Import\SubmissionData;
+use App\Command\SubmissionsMigration\SubmissionData;
 use App\IuHandling\Submission\SubmissionService;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;

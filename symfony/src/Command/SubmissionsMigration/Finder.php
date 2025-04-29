@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling\Storage;
+namespace App\Command\SubmissionsMigration;
 
-use App\IuHandling\Import\SubmissionData;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use App\Utils\Traits\UtilityClass;

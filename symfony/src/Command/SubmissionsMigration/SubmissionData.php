@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling\Import;
+namespace App\Command\SubmissionsMigration;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
+use App\IuHandling\Import\psJsonFieldValue;
 use App\IuHandling\SchemaFixer;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;

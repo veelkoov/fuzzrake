@@ -7,7 +7,6 @@ namespace App\Tests\IuHandling\Import;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\IuHandling\Exception\SubmissionException;
-use App\IuHandling\Import\UpdateInput;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\CreatorRepository;
@@ -34,7 +33,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], []]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals('', $result->originalCreator->getEmailAddress());
 
@@ -56,7 +55,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
@@ -77,7 +76,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$creator]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
@@ -99,7 +98,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertEquals('', $result->updatedCreator->getEmailAddress());
@@ -116,7 +115,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], []],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals(null, $result->originalCreator->getDateAdded());
         self::assertEquals(null, $result->originalCreator->getDateUpdated());
@@ -149,7 +148,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], [$creator]],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals($dateAdded, $result->originalCreator->getDateAdded());
         self::assertEquals(null, $result->originalCreator->getDateUpdated());
@@ -185,7 +184,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([
             [[''], ['TEST001'], [$creator]],
         ]);
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
 
         self::assertEquals($expectedMiniatures, $result->updatedCreator->getMiniatureUrls());
     }
@@ -226,11 +225,11 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             [[], ['TEST0A1'], [$creator1]],
         ]);
 
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
         self::assertEquals([$creator1, $creator2], $result->matchedCreators);
 
         $submission->setDirectives('match-maker-id TEST0A1');
-        $result = $subject->getUpdateFor(new UpdateInput($submission));
+        $result = $subject->getUpdateFor($submission);
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
@@ -251,7 +250,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
         $result1 = $this->getSetUpUpdatesService([
             [['The new creator name', 'The old creator name'], ['TEST003'], [$creator]],
-        ])->getUpdateFor(new UpdateInput($submission1));
+        ])->getUpdateFor($submission1);
 
         self::assertEquals('The new creator name', $result1->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
@@ -267,7 +266,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
         $result2 = $this->getSetUpUpdatesService([
             [['The new creator name', 'The old creator name'], ['TEST001'], [$creator]],
-        ])->getUpdateFor(new UpdateInput($submission2));
+        ])->getUpdateFor($submission2);
 
         self::assertEquals('The new creator name', $result2->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());
