@@ -6,10 +6,9 @@ namespace App\Validator;
 
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
-use App\Entity\CreatorPrivateData;
+use App\Repository\CreatorPrivateDataRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Email;
-use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Override;
 use Symfony\Component\Validator\Constraint;
@@ -22,7 +21,7 @@ class UpdateableEmailValidator extends ConstraintValidator
         .' If you do not agree to provide your email, disallow any contact.';
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly CreatorPrivateDataRepository $creatorPrivateDataRepository,
     ) {
     }
 
@@ -58,8 +57,6 @@ class UpdateableEmailValidator extends ConstraintValidator
             return '';
         }
 
-        $entity = $this->entityManager->getRepository(CreatorPrivateData::class)->find($privateDataId);
-
-        return $entity?->getEmailAddress() ?? '';
+        return $this->creatorPrivateDataRepository->find($privateDataId)?->getEmailAddress() ?? '';
     }
 }
