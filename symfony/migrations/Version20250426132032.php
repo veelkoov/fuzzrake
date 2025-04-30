@@ -11,7 +11,7 @@ final class Version20250426132032 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Removes old submissions (backups kept separately). Add timestamp and payload columns to the submissions table.';
     }
 
     public function up(Schema $schema): void
