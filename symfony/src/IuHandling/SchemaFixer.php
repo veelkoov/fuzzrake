@@ -26,29 +26,6 @@ final class SchemaFixer
         $data = self::assureVersionFieldExists($data);
 
         switch ($data[self::SCHEMA_VERSION]) {
-            case 8:
-                $data[Field::URL_PRICES->value] = [Enforce::string($data[Field::URL_PRICES->value])];
-                $data[Field::URL_COMMISSIONS->value] = [Enforce::string($data['URL_CST'])];
-                // no break
-
-            case 9:
-                $data[Field::WORKS_WITH_MINORS->value] = null;
-                // no break
-
-            case 10:
-                $data[Field::AGES->value] = null;
-                // no break
-
-            case 11:
-                $data[Field::PAYMENT_PLANS->value] = PackedStringList::unpack(Enforce::string($data[Field::PAYMENT_PLANS->value]));
-                // no break
-
-            case 12:
-                $data[Field::NSFW_WEBSITE->value] = null;
-                $data[Field::NSFW_SOCIAL->value] = null;
-                $data[Field::DOES_NSFW->value] = null;
-                // no break
-
             case 13:
                 unset($data['BP_LAST_CHECK']);
 

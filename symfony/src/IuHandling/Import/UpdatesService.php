@@ -39,7 +39,7 @@ class UpdatesService
         $errors = Vec\filter([$directivesError]);
 
         $originalInput = new Creator();
-        $this->updateWith($originalInput, $submission, Fields::readFromSubmissionData());
+        $this->updateWith($originalInput, $submission->getReader(), Fields::readFromSubmissionData());
 
         $fixedInput = $this->fixer->getFixed($originalInput);
 

@@ -9,6 +9,7 @@ use App\Command\SubmissionsMigration\SubmissionData;
 use App\Entity\Submission;
 use App\Repository\SubmissionRepository;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Json;
 use Doctrine\ORM\EntityManagerInterface;
 use Psl\File;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -53,7 +54,7 @@ class MigrateSubmissionsCommand extends Command // TODO: Remove this https://git
 
             if ('' === $submission->getPayload()) {
                 $io->info("{$submission->getStrId()} is missing payload in the DB, will get loaded.");
-                $submission->setPayload(File\read($path));
+                $submission->setPayload($this->removePrettyFormatting(File\read($path)));
             }
 
             if ($submission->getSubmittedAtUtc()->getTimestamp() < $datetime2000ts) {
@@ -65,5 +66,10 @@ class MigrateSubmissionsCommand extends Command // TODO: Remove this https://git
         $this->entityManager->flush();
 
         return Command::SUCCESS;
+    }
+
+    private function removePrettyFormatting(string $payload): string
+    {
+        return Json::encode(Json::decode($payload));
     }
 }

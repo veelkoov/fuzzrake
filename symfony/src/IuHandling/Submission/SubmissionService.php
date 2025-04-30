@@ -57,9 +57,9 @@ class SubmissionService
     /**
      * @throws JsonException
      */
-    public static function asJson(Creator $submission): string // TODO: Double check if needs to be public
+    private static function asJson(Creator $submission): string
     {
-        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
+        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()));
     }
 
     private function sendNotification(Creator $submission, string $jsonData): void
