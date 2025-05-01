@@ -8,11 +8,13 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
+use App\IuHandling\Submission\SubmissionService;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
-use App\Tests\TestUtils\Submissions;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Override;
+use Random\RandomException;
+use RuntimeException;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -29,42 +31,28 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
-
-        Submissions::emptyTestSubmissionsDir();
     }
 
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Submissions::emptyTestSubmissionsDir();
-    }
-
-    /**
-     * @throws JsonException
-     */
     public function testPaginationWorksInSubmissions(): void
     {
         $this->generateRandomFakeSubmissions(24);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        self::assertResponseStatusCodeIs(200);
         self::assertCount(24, $crawler->filter('table tbody tr'));
         self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
 
         $this->generateRandomFakeSubmissions(2);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        self::assertResponseStatusCodeIs(200);
         self::assertCount(25, $crawler->filter('table tbody tr'));
         self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testAdditionIsProperlyRendered(): void
     {
-        $submission = (new Creator())
+        $submissionData = (new Creator())
             // NOT fixed
             ->setCreatorId('TEST001')
 
@@ -81,9 +69,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setOtherFeatures(['Hidden pockets'])
         ;
 
-        $id = Submissions::submit($submission);
+        $submission = $this->createSubmission($submissionData);
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -111,12 +101,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testUpdateIsProperlyRendered(): void
     {
-        $entity = (new Creator())
+        $creator = (new Creator())
             ->setCreatorId('TEST001')
             ->setName('Some testing creator')
             ->setCountry('FI')
@@ -127,9 +114,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCurrenciesAccepted(['Euro'])
         ;
 
-        self::persistAndFlush($entity);
+        self::persistAndFlush($creator);
 
-        $submission = (new Creator())
+        $submissionData = (new Creator())
             // Submitted the same, NOT fixed, NOT changed
             ->setCreatorId('TEST001')
 
@@ -161,9 +148,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCurrenciesAccepted(['Euro'])
         ;
 
-        $id = Submissions::submit($submission);
+        $submission = $this->createSubmission($submissionData);
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'TEST001');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -211,19 +200,19 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testSubmissionMatchingMultipleCreators(): void
     {
-        $entity1 = Creator::new()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
-        $entity2 = Creator::new()->setCreatorId('TEST002')->setName('Testing creator');
+        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
+        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Testing creator');
 
-        self::persistAndFlush($entity1, $entity2);
+        self::persistAndFlush($creator1, $creator2);
 
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu'));
+        $submissionData = Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu');
+        $submission = $this->createSubmission($submissionData);
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
         self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
@@ -242,9 +231,6 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testUpdatingExistingSubmissionWithoutImport(): void
     {
         $submissionData = (new Creator())
@@ -252,17 +238,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
-
-        $submission = (new Submission())
-            ->setStrId($id)
-            ->setComment('Old comment')
-            ->setDirectives('Old directives')
-        ;
-
+        $submission = $this->createSubmission($submissionData);
+        $submission->setComment('Old comment')->setDirectives('Old directives');
         $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
@@ -277,47 +258,35 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
         self::assertSelectorTextSame('#submission_directives', 'New directives');
+
+        self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function testCreatingSubmission(): void
+    public function testImportDoesntWorkWithoutAccepting(): void
     {
         $submissionData = (new Creator())
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $submission = $this->createSubmission($submissionData);
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
-
-        self::assertSelectorTextSame('#submission_comment', '');
-        self::assertSelectorTextSame('#submission_directives', '');
-
-        self::$client->submitForm('Import', [
-            'submission[comment]'    => 'Added comment',
-            'submission[directives]' => 'Added directives',
-        ]);
-
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
-        // Reload to make sure saved is OK
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->submitForm('Import', []);
+        self::assertResponseStatusCodeIs(200);
 
-        self::assertSelectorTextSame('#submission_comment', 'Added comment');
-        self::assertSelectorTextSame('#submission_directives', 'Added directives');
+        self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testDirectivesWork(): void
     {
         $submissionData = (new Creator())
@@ -327,16 +296,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
-        $id = Submissions::submit($submissionData);
-
-        $submission = (new Submission())
-            ->setStrId($id)
-            ->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'")
-        ;
-
+        $submission = $this->createSubmission($submissionData);
+        $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td', 'Some submitted intro information');
         self::assertSelectorTextSame('tr.INTRO.after td+td', 'Some changed intro information');
@@ -348,9 +313,6 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td', 'Most experience in canines');
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testDirectivesUpdateIsImmediate(): void
     {
         $submissionData = (new Creator())
@@ -360,15 +322,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
-        $id = Submissions::submit($submissionData);
-
-        $submission = (new Submission())
-            ->setStrId($id)
-        ;
-
+        $submission = $this->createSubmission($submissionData);
         $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', [
             'submission[directives]' => 'invalid-directive',
@@ -378,58 +336,49 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('.invalid-feedback', "The directives have been ignored completely due to an error. Unknown command: 'invalid-directive'");
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function testInvalidDirectivesDontBreakPage(): void
+    public function testInvalidDirectivesDontBreakPageLoad(): void
     {
         $submissionData = (new Creator())
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
 
-        $id = Submissions::submit($submissionData);
+        $submission = $this->createSubmission($submissionData);
+        $this->persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
-        $submission = (new Submission())
-            ->setStrId($id)
-            ->setDirectives('Let me just put something random here')
-        ;
-
-        $this->persistAndFlush($submission);
-
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
     /**
      * @dataProvider passwordHandlingAndAcceptingWorksDataProvider
-     *
-     * @throws JsonException
      */
     public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
         if (!$new) {
-            $entity = (new Creator())
+            $creator = (new Creator())
                 ->setCreatorId('TEST001')
                 ->setPassword('password')
             ;
 
-            self::persistAndFlush($entity);
+            self::persistAndFlush($creator);
         }
 
         $submissionData = (new Creator())
             ->setCreatorId('TEST001')
             ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
         ;
-
-        $id = Submissions::submit($submissionData);
+        $submission = $this->createSubmission($submissionData);
 
         if ($accepted) {
-            self::persistAndFlush((new Submission())->setStrId($id)->setDirectives('accept'));
+            $submission->setDirectives('accept');
         }
 
-        self::$client->request('GET', "/mx/submission/$id");
+        $this->persistAndFlush($submission);
+
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         if ($new || $passwordSame || $accepted) {
             self::assertSelectorNotExists('.invalid-feedback');
@@ -453,22 +402,20 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ];
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testChangesDescriptionShowUp(): void
     {
         self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setName('New name'));
 
-        self::$client->request('GET', "/mx/submission/$id");
+        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('New name'));
+        $this->persistAndFlush($submission);
+
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextContains('p.text-body', 'Changed NAME from "Old name" to "New name"');
     }
 
     /**
-     * @throws JsonException
-     *
      * @dataProvider contactInfoWorksDataProvider
      */
     public function testContactInfoWorks(bool $allowed): void
@@ -481,13 +428,15 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')
+        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')
             ->setName('New name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
         self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
@@ -506,12 +455,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ];
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function testInvalidIdDoesntCauseError500(): void
+    public function testMissingSubmissionReturns404(): void
     {
-        Submissions::submit(Creator::new()); // Only to have the submissions directory existing
+        $this->createSubmission(Creator::new()); // Only to have the submissions directory existing
         self::$client->request('GET', '/mx/submission/wrongId');
 
         self::assertResponseStatusCodeIs(404);
@@ -519,21 +465,21 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     /**
      * @dataProvider passwordIsRedactedDataProvider
-     *
-     * @throws JsonException
      */
     public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
     {
         if (!$isNew) {
-            $entity = Creator::new()->setCreatorId('TEST001')->setPassword('password___1234');
+            $creator = Creator::new()->setCreatorId('TEST001')->setPassword('password___1234');
 
-            self::persistAndFlush($entity);
+            self::persistAndFlush($creator);
         }
 
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
-        $id = Submissions::submit(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
+        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID td+td', 'TEST001');
         self::assertSelectorTextNotContains('body', 'password___');
@@ -557,30 +503,28 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ];
     }
 
-    /**
-     * @throws JsonException
-     */
     private function generateRandomFakeSubmissions(int $count): void
     {
         while (--$count >= 0) {
             $creator = new Creator();
             $creator->setName(Uuid::v4()->toRfc4122());
 
-            Submissions::submit($creator);
+            $this->persist($this->createSubmission($creator));
         }
+
+        $this->flush();
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testHiddenCreator(): void
     {
         $entity = Creator::new()->setCreatorId('TEST001')->setInactiveReason('Dunno');
         self::persistAndFlush($entity);
 
-        $id = Submissions::submit($entity); // No need to modify
+        $submission = $this->createSubmission($entity); // No need to modify
+        $this->persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/$id");
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
         self::assertSelectorTextSame('#creator-hidden-warning', 'Hidden');
@@ -588,8 +532,18 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $entity->setInactiveReason('');
         self::flush();
 
-        self::$client->request('GET', '/mx/submission/TEST001');
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');
+    }
+
+    private function createSubmission(Creator $submissionData): Submission
+    {
+        try {
+            return SubmissionService::getEntityForSubmission($submissionData);
+        } catch (RandomException|JsonException $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
     }
 }

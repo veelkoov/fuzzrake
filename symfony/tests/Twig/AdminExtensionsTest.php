@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Twig;
 
 use App\Data\Validator\Validator;
-use App\Repository\SubmissionRepository;
 use App\Twig\AdminExtensions;
 use PHPUnit\Framework\TestCase;
 
@@ -20,9 +19,7 @@ class AdminExtensionsTest extends TestCase
     public function testLinkUrls(string $input, string $expectedOutput): void
     {
         $validatorMock = $this->createMock(Validator::class);
-        $repoMock = $this->createMock(SubmissionRepository::class);
-
-        $subject = new AdminExtensions($validatorMock, $repoMock);
+        $subject = new AdminExtensions($validatorMock);
 
         self::assertEquals($expectedOutput, $subject->linkUrls($input));
     }

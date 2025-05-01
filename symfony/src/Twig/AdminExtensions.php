@@ -8,12 +8,9 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Data\Validator\Validator;
 use App\Entity\Creator as CreatorE;
-use App\IuHandling\Import\SubmissionData;
-use App\Repository\SubmissionRepository;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
-use Doctrine\ORM\NonUniqueResultException;
 use Override;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
@@ -26,10 +23,8 @@ class AdminExtensions extends AbstractExtension
 {
     private readonly Pattern $linkPattern;
 
-    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: https://github.com/veelkoov/fuzzrake/issues/156 */
     public function __construct(
         private readonly Validator $validator,
-        private readonly SubmissionRepository $submissionRepository,
     ) {
         $this->linkPattern = pattern('(?<!title=")https?://[^ ,\n<>"]+', 'i');
     }
@@ -44,7 +39,6 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
             new TwigFilter('is_valid', $this->isValid(...)),
-            new TwigFilter('get_comments', $this->getComment(...)),
             new TwigFilter('bluesky_at', $this->blueskyAt(...)),
             new TwigFilter('mastodon_at', $this->mastodonAt(...)),
             new TwigFilter('tumblr_at', $this->tumblrAt(...)),
@@ -112,14 +106,6 @@ class AdminExtensions extends AbstractExtension
     private function isValid(Creator $creator, Field $field): bool
     {
         return $this->validator->isValid($creator, $field);
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     */
-    private function getComment(SubmissionData $submissionData): string
-    {
-        return $this->submissionRepository->findByStrId($submissionData->getId())?->getComment() ?? '';
     }
 
     /**

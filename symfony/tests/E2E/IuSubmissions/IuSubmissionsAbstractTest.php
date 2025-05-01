@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
-use App\Tests\TestUtils\Submissions;
 use Override;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
 {
@@ -20,19 +18,9 @@ abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'testing',
         ]);
-
-        Submissions::emptyTestSubmissionsDir();
     }
 
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Submissions::emptyTestSubmissionsDir();
-    }
-
-    protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void
+    protected function performImport(bool $acceptAll, int $expectedImports): void
     {
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
 

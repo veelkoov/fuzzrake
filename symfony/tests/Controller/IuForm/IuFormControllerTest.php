@@ -6,6 +6,9 @@ namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
+use App\Entity\CreatorId;
+use App\Entity\CreatorUrl;
+use App\Entity\Submission;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
@@ -146,5 +149,60 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', '/iu_form/start/TEST001');
         self::skipRules();
         self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
+    }
+
+    public function testSubmittingOnlyAddsSubmissionWithNoOtherChanges(): void
+    {
+        $creator = self::getCreator(
+            name: 'Unchanged name',
+            creatorId: 'TEST001',
+            password: 'testing-password',
+            contactAllowed: ContactPermit::CORRECTIONS,
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            doesNsfw: false,
+            worksWithMinors: false,
+            emailAddress: 'old-unchanged@example.com',
+        );
+        self::persistAndFlush($creator);
+        self::clear();
+        $creatorId = $creator->getId();
+        unset($creator);
+
+        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::skipRules();
+
+        $form = self::$client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[name]' => 'A new name',
+            'iu_form[creatorId]' => 'TEST002',
+            'iu_form[password]' => 'testing-password',
+            'iu_form[emailAddress]' => 'new-changed@example.com',
+            'iu_form[websiteUrl]' => 'new-website.example.com',
+            $this->getCaptchaFieldName('right') => 'right',
+        ]);
+        self::submitValid($form);
+
+        // Validate that no changes to existing data has been done
+
+        $creator = $this->getCreatorRepository()->find($creatorId);
+        self::assertNotNull($creator);
+        self::assertSame('Unchanged name', $creator->getName());
+        self::assertSame('TEST001', $creator->getCreatorId());
+        self::assertSame('old-unchanged@example.com', $creator->getPrivateData()?->getEmailAddress());
+
+        $creatorIds = $this->getEM()->getRepository(CreatorId::class)->findAll();
+        self::assertCount(1, $creatorIds);
+        self::assertSame('TEST001', $creatorIds[0]->getCreatorId());
+
+        $urls = $this->getEM()->getRepository(CreatorUrl::class)->findAll();
+        self::assertCount(0, $urls, 'No URL should have been persisted.');
+
+        // Validate that the submission has been created
+
+        $submissions = $this->getEM()->getRepository(Submission::class)->findAll();
+        self::assertCount(1, $submissions);
+        self::assertStringContainsString('A new name', $submissions[0]->getPayload());
+        self::assertStringContainsString('new-website.example.com', $submissions[0]->getPayload());
     }
 }

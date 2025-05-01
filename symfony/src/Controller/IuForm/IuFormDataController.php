@@ -9,6 +9,7 @@ use App\Controller\IuForm\Utils\IuSubject;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
+use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Submission\SubmissionService;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -59,16 +60,20 @@ class IuFormDataController extends AbstractIuFormController
 
             $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();
 
-            if ($submissionService->submit($subject->creator)) {
+            try {
+                $submission = $submissionService->submit($subject->creator);
+
                 return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
                     'isNew'          => $subject->isNew ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
                     'creatorId'      => $creatorId,
-                    // TODO 'submissionId'   =>
+                    'submissionId'   => $submission->getStrId(),
                 ]);
-            } else {
-                $form->addError(new FormError('There was an error while trying to submit the form. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
+            } catch (SubmissionException $exception) {
+                $this->logger->error('Failed to submit I/U form data.', ['exception' => $exception]);
+
+                $form->addError(new FormError('There was an error while submitting the form. Please try again or contact the website maintainer.'));
             }
         }
 
