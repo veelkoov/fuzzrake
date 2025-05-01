@@ -6,7 +6,6 @@ PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
 SYMFONY_DIR_REL_PATH='symfony'
 KOTLIN_DIR_REL_PATH='kotlin'
-SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-path
 SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
 DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
 DB_DUMP_DIR_REL_PATH='db_dump'
@@ -74,11 +73,6 @@ function action_release_beta() {
 function action_get_snapshots() {
     run_command rsync --recursive --progress --human-readable --compress --checksum \
         "$PROD_ENV_SSH_PATH/$SNAPSHOTS_REL_PATH/" "$SNAPSHOTS_REL_PATH"
-}
-
-function action_get_submissions() {
-    run_command rsync --recursive --progress --human-readable --compress --checksum \
-        "$PROD_ENV_SSH_PATH/$SUBMISSIONS_DIR_REL_PATH/" "$SUBMISSIONS_DIR_REL_PATH/"
 }
 
 function action_dbcommit() {
@@ -244,7 +238,6 @@ function action() {
         'release-prod') action_release_prod ;;
 
         'get-snapshots')   action_get_snapshots ;;
-        'get-submissions') action_get_submissions ;;
 
         'gradle')       run_gradle "$@" ;;
         'miniatures')   run_gradle run --args update-miniatures "$@" ;;
