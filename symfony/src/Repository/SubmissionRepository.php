@@ -12,6 +12,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
+use RuntimeException;
 
 /**
  * @extends ServiceEntityRepository<Submission>
@@ -71,11 +73,16 @@ class SubmissionRepository extends ServiceEntityRepository
             $pagesCount = Pagination::countPages($paginator, Pagination::PAGE_SIZE);
         } while ($pageNumber > $pagesCount);
 
-        return new ItemsPage(
-            array_values([...$paginator->getIterator()]),
-            $paginator->count(),
-            $pageNumber,
-            $pagesCount,
-        );
+        /** @var Paginator<Submission> $paginator */
+        try {
+            return new ItemsPage(
+                array_values([...$paginator->getIterator()]),
+                $paginator->count(),
+                $pageNumber,
+                $pagesCount,
+            );
+        } catch (Exception $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
     }
 }

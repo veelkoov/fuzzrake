@@ -6,9 +6,8 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
+use App\Entity\Submission;
 use App\Form\Mx\SubmissionType;
-use App\IuHandling\Exception\MissingSubmissionException;
-use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
@@ -18,7 +17,8 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
-use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +33,8 @@ class SubmissionsController extends AbstractController
     use ButtonClickedTrait;
 
     public function __construct(
-        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
-        private readonly SubmissionsService $submissionsService,
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
         private readonly CreatorRepository $creatorRepository,
@@ -50,10 +49,6 @@ class SubmissionsController extends AbstractController
     public function submissions(int $page): Response
     {
         $submissionsPage = $this->submissionRepository->getPage($page);
-
-        //        foreach ($submissionsPage->items as $submission) {
-        //            $this->submissions->fillData($submission);
-        //        }
 
         return $this->render('mx/submissions/index.html.twig', [
             'submissions_page' => $submissionsPage,
@@ -70,31 +65,23 @@ class SubmissionsController extends AbstractController
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
         $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
-            fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
+            static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('mx/submissions/social.html.twig', [
             'creators' => $creators,
         ]);
     }
 
-    #[Route(path: '/submission/{id}', name: RouteName::MX_SUBMISSION)]
+    #[Route(path: '/submission/{strId}', name: RouteName::MX_SUBMISSION)]
     #[Cache(maxage: 0, public: false)]
-    public function submission(Request $request, string $id): Response
+    public function submission(#[MapEntity(mapping: ['strId' => 'strId'])] Submission $submission, Request $request): Response
     {
-        try {
-            $submission = $this->submissionsService->getSubmissionById($id);
-        } catch (MissingSubmissionException $exception) {
-            $this->logger->warning($exception);
-
-            throw $this->createNotFoundException($exception->getMessage());
-        }
-
         $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
 
         $update = $this->updates->getUpdateFor($submission);
 
         if ($form->isSubmitted()) {
-            $this->submissionsService->updateEntity($update);
+            $this->entityManager->flush();
         }
 
         if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)

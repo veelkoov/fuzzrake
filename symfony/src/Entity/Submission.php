@@ -4,25 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
-use App\Data\Definitions\Fields\Field;
+use App\IuHandling\SubmissionDataReader;
 use App\Repository\SubmissionRepository;
-use App\Utils\DataInputException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Enforce;
-use App\Utils\FieldReadInterface;
-use App\Utils\Json;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JsonException;
-use Override;
 use Random\RandomException;
 
 #[ORM\Entity(repositoryClass: SubmissionRepository::class)]
 #[ORM\Table(name: 'submissions')]
-class Submission implements FieldReadInterface
+class Submission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -44,10 +36,7 @@ class Submission implements FieldReadInterface
     #[ORM\Column(type: Types::TEXT)]
     private string $comment = '';
 
-    /**
-     * @var ?array<psJsonFieldValue>
-     */
-    private ?array $parsed = null;
+    private ?SubmissionDataReader $reader = null;
 
     /**
      * @throws RandomException
@@ -95,6 +84,7 @@ class Submission implements FieldReadInterface
     public function setPayload(string $payload): Submission
     {
         $this->payload = $payload;
+        $this->reader = null;
 
         return $this;
     }
@@ -123,59 +113,8 @@ class Submission implements FieldReadInterface
         return $this;
     }
 
-    /**
-     * @return array<psJsonFieldValue>
-     */
-    private function getParsed(): array
+    public function getReader(): SubmissionDataReader
     {
-        try {
-            return $this->parsed ??= Json::decode($this->payload); // @phpstan-ignore-line TODO: Affecting MX, future me - please forgive me.
-        } catch (JsonException $exception) {
-            throw new DataInputException("Failed to parse submission as an array in '$this->strId'.", previous: $exception);
-        }
-    }
-
-    #[Override]
-    public function get(Field $field): mixed
-    {
-        $fieldName = $field->value;
-
-        if (!array_key_exists($fieldName, $this->getParsed())) {
-            throw new DataInputException("Submission $this->id is missing $fieldName");
-        }
-
-        $value = $this->getParsed()[$fieldName];
-
-        if ($field->isList() && !is_array($value)) {
-            throw new DataInputException("Expected an array for $fieldName, got '$value' instead in '$this->strId'.");
-        }
-
-        if (Field::AGES === $field) {
-            $value = Ages::get(Enforce::nString($value));
-        }
-
-        if (Field::CONTACT_ALLOWED === $field) {
-            $value = ContactPermit::get(Enforce::nString($value));
-        }
-
-        return $value;
-    }
-
-    #[Override]
-    public function getString(Field $field): string
-    {
-        return Enforce::string($this->get($field));
-    }
-
-    #[Override]
-    public function getStringList(Field $field): array
-    {
-        return Enforce::strList($this->get($field));
-    }
-
-    #[Override]
-    public function hasData(Field $field): bool
-    {
-        return $field->providedIn($this);
+        return $this->reader ??= new SubmissionDataReader($this);
     }
 }
