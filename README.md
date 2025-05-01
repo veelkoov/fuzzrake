@@ -13,38 +13,22 @@ See [getfursu.it/info](https://getfursu.it/info)
 
 * Docker w/Compose plugin
 * ACL-enabled filesystem
-* Yarn (to be able to do more than run tests in the `@small` group)
-* TODO: Kotlin stuff
+* Yarn
 
 
 ## Quickstart
 
 
-TODO: Kotlin stuff
-
-To make tests in `@small` group work:
-
 * Clone
 * `./toolbox docker-up`
 * `./toolbox composer install`
-* `./toolbox pus`
-
-To make tests in `@medium` group work:
-* All the above setup
 * `./toolbox yarn install`
 * `./toolbox yep`
-* `./toolbox pum`
-
-To make the local development environment and tests in `@large` group work:
-* All the above setup
 * `./toolbox console doctrine:schema:create`
-* `./toolbox pul`
 * http://localhost:8080/ should now respond
+* Tests should now pass: `./toolbox pu` (or `pus` - short, `pum` - medium, `pul` - large)
 
 
 ## Known issues ("gotchas")
 
-* Yarn is not dockerized and automated
-* Tests in `@medium` and above groups will not work without Yarn
-* Kotlin repo got merged here and docs are not updated
-  * What docs am I even talking about?
+* Some extra functionalities rely on Kotlin parts, and there are no docs
