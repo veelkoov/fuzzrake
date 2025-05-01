@@ -23,8 +23,6 @@ final class SchemaFixer
      */
     public static function fix(array $data): array
     {
-        $data = self::assureVersionFieldExists($data);
-
         switch ($data[self::SCHEMA_VERSION]) {
             case 13:
                 unset($data['BP_LAST_CHECK']);
@@ -56,20 +54,6 @@ final class SchemaFixer
                 $data[Field::URL_DONATIONS->value] = '';
                 $data[Field::URL_TELEGRAM_CHANNEL->value] = '';
                 $data[Field::URL_TIKTOK->value] = '';
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param array<string, psJsonFieldValue> $data
-     *
-     * @return array<string, psJsonFieldValue>
-     */
-    private static function assureVersionFieldExists(array $data): array
-    {
-        if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
-            $data[self::SCHEMA_VERSION] = 8;
         }
 
         return $data;

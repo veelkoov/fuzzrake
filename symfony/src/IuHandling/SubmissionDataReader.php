@@ -19,7 +19,7 @@ use Override;
 readonly class SubmissionDataReader implements FieldReadInterface
 {
     /**
-     * @var array<psJsonFieldValue>
+     * @var array<string, psJsonFieldValue>
      */
     private array $parsed;
 
@@ -28,7 +28,7 @@ readonly class SubmissionDataReader implements FieldReadInterface
      */
     public function __construct(Submission $submission)
     {
-        $this->parsed = SchemaFixer::fix(Json::decode($submission->getPayload()));
+        $this->parsed = SchemaFixer::fix(Json::decode($submission->getPayload())); // @phpstan-ignore argument.type (FIXME: https://github.com/veelkoov/fuzzrake/issues/293)
     }
 
     #[Override]
