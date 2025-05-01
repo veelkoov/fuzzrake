@@ -38,12 +38,14 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $this->generateRandomFakeSubmissions(24);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        self::assertResponseStatusCodeIs(200);
         self::assertCount(24, $crawler->filter('table tbody tr'));
         self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
 
         $this->generateRandomFakeSubmissions(2);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        self::assertResponseStatusCodeIs(200);
         self::assertCount(25, $crawler->filter('table tbody tr'));
         self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
     }
@@ -71,6 +73,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $this->persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
         self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
@@ -256,6 +259,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         // Reload to make sure saved is OK
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
@@ -451,7 +455,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ];
     }
 
-    public function testInvalidIdDoesntCauseError500(): void
+    public function testMissingSubmissionReturns404(): void
     {
         $this->createSubmission(Creator::new()); // Only to have the submissions directory existing
         self::$client->request('GET', '/mx/submission/wrongId');
