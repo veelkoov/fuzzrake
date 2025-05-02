@@ -132,6 +132,8 @@ class UpdatesService
     {
         if (ContactPermit::NO === $submission->getContactAllowed()) {
             $submission->setEmailAddress('');
+        } elseif ('' === $submission->getEmailAddress()) {
+            $submission->setEmailAddress($original->getEmailAddress());
         }
 
         if (null === $original->getId()) {

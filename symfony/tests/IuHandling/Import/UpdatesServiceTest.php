@@ -72,7 +72,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setName('A creator')
             ->setCreatorId('TEST001')
-            ->setEmailAddress('getfursu.it@localhost.localdomain')
+            ->setEmailAddress('')
         );
 
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$creator]]]);
