@@ -37,7 +37,7 @@ final class StrUtils
     }
 
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
     public static function asStr(mixed $value): string
     {

@@ -102,7 +102,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ])
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     public function getDistinctWithOpenCount(): StringIntMap

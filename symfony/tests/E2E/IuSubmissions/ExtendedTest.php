@@ -414,7 +414,8 @@ class ExtendedTest extends IuSubmissionsAbstractTest
                 throw new InvalidArgumentException('Expected choice field');
             }
 
-            if (in_array($formField->availableOptionValues()[0], $value)) {
+            /* @phpstan-ignore method.internal (Don't know how to do that nicely) */
+            if (in_array($formField->availableOptionValues()[0], $value, true)) {
                 $formField->tick();
             } else {
                 $formField->untick();

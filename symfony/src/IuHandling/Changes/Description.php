@@ -41,7 +41,7 @@ class Description
     }
 
     /**
-     * @return array{0: Field, 1: psFieldValue, 2: psFieldValue}
+     * @return array{0: Field, 1: psPhpFieldValue, 2: psPhpFieldValue}
      */
     private function getField(Field $field, Creator $old, Creator $new): array
     {
@@ -49,8 +49,8 @@ class Description
     }
 
     /**
-     * @param psFieldValue $old
-     * @param psFieldValue $new
+     * @param psPhpFieldValue $old
+     * @param psPhpFieldValue $new
      */
     private function addChange(Field $field, mixed $old, mixed $new): void
     {

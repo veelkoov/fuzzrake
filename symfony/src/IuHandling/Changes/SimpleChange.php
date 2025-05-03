@@ -14,8 +14,8 @@ use Override;
 class SimpleChange implements ChangeInterface
 {
     /**
-     * @param psFieldValue $old
-     * @param psFieldValue $new
+     * @param psPhpFieldValue $old
+     * @param psPhpFieldValue $new
      */
     public function __construct(
         private readonly Field $field,
@@ -63,7 +63,7 @@ class SimpleChange implements ChangeInterface
     }
 
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
     private function getOptionallyQuotedValue(mixed $value): string
     {

@@ -114,7 +114,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             throw new InvalidArgumentException("Getter for $field->value does not exist");
         }
 
-        return call_user_func($callback); // @phpstan-ignore-line
+        return call_user_func($callback); // @phpstan-ignore return.type (Field choices SHOULD™ guarantee the return value type)
     }
 
     public function equals(Field $field, self $other): bool // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
@@ -883,11 +883,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore-line FIXME
+        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore return.type (FIXME)
             Field::COMPLETENESS => $this->getCompleteness(),
             Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
             Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
@@ -897,7 +897,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public function getPublicData(): array
     {
@@ -905,7 +905,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public function getAllData(): array
     {
@@ -913,7 +913,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     #[Override]
     public function jsonSerialize(): array // Safely assume "public" for default

@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Paths;
 use App\Utils\Creator\CompletenessCalc;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 use function Psl\File\read;
 
@@ -50,14 +51,14 @@ class CompletenessCalcTest extends TestCase
         self::assertEquals(50, CompletenessCalc::count($subject));
     }
 
-    public function justRequiredGive50DataProvider(): array // @phpstan-ignore-line
+    public function justRequiredGive50DataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],
             [Ages::MINORS, false, true,  null,  null],
-        ];
+        );
     }
 
     public function testAllNonRequiredAndAllButOneRequiredCantGetPast50(): void

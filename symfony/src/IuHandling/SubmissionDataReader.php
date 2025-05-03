@@ -9,7 +9,6 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
-use App\IuHandling\Import\psJsonFieldValue;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
@@ -19,7 +18,7 @@ use Override;
 readonly class SubmissionDataReader implements FieldReadInterface
 {
     /**
-     * @var array<string, psJsonFieldValue>
+     * @var psJsonFieldsData
      */
     private array $parsed;
 

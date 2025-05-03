@@ -19,7 +19,7 @@ class ArraysTest extends TestCase
 
         try {
             Arrays::single([]);
-            self::fail('Did not throw on empty array'); // @phpstan-ignore-line That's what's being tested here
+            self::fail('Did not throw on empty array'); // @phpstan-ignore deadCode.unreachable (Being tested here)
         } catch (InvalidArgumentException) {
         }
 
