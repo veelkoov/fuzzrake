@@ -11,6 +11,7 @@
         "php": "8.3.*",
         "ext-ctype": "*",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
