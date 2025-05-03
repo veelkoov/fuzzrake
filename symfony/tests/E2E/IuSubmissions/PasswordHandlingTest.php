@@ -75,8 +75,8 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
-        self::assertEquals($oldHash, $creator->getPassword(), 'The password hash has changed'); // Fails on plaintext
-        self::assertEquals('New name', $creator->getName(), 'The update did not actually happen');
+        self::assertSame($oldHash, $creator->getPassword(), 'The password hash has changed'); // Fails on plaintext
+        self::assertSame('New name', $creator->getName(), 'The update did not actually happen');
     }
 
     public function testCreatorUpdatedWithPasswordChangeHasUpdatedHash(): void
@@ -113,8 +113,8 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
-        self::assertNotEquals($oldHash, $creator->getPassword(), 'The password was not changed');
-        self::assertEquals('New name', $creator->getName(), 'The update did not actually happen');
+        self::assertNotSame($oldHash, $creator->getPassword(), 'The password was not changed');
+        self::assertSame('New name', $creator->getName(), 'The update did not actually happen');
         self::assertTrue(password_verify('new-password', $creator->getPassword()), 'Updated password fails');
     }
 
@@ -152,7 +152,7 @@ class PasswordHandlingTest extends IuSubmissionsAbstractTest
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
-        self::assertEquals($oldHash, $creator->getPassword(), 'The password was actually changed');
-        self::assertEquals('Old name', $creator->getName(), 'The update actually happened');
+        self::assertSame($oldHash, $creator->getPassword(), 'The password was actually changed');
+        self::assertSame('Old name', $creator->getName(), 'The update actually happened');
     }
 }

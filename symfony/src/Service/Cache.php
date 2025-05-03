@@ -60,7 +60,7 @@ class Cache
             $keyParts = [$keyParts];
         }
 
-        $keyParts = Vec\map((array) $keyParts, function (mixed $item): string {
+        $keyParts = Vec\map($keyParts, function (mixed $item): string {
             if ($item instanceof Field) {
                 $result = $item->value;
             } elseif (is_string($item)) {

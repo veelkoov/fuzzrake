@@ -10,6 +10,7 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
@@ -81,11 +82,11 @@ class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
         self::assertNotNull($creator1);
         self::assertNotNull($creator2);
 
-        self::assertEquals('Creator 1', $creator1->getName());
-        self::assertEquals('Tampere', $creator1->getCity());
+        self::assertSame('Creator 1', $creator1->getName());
+        self::assertSame('Tampere', $creator1->getCity());
 
-        self::assertEquals('Creator 2', $creator2->getName());
-        self::assertEquals('Joensuu', $creator2->getCity());
+        self::assertSame('Creator 2', $creator2->getName());
+        self::assertSame('Joensuu', $creator2->getCity());
 
         $urls1 = [];
         $urls2 = [];
@@ -116,11 +117,11 @@ class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
         self::assertEquals([
             'URL_COMMISSIONS' => 'https://some-commissions-address/',
             'URL_ETSY'        => 'https://some-etsy-address/',
-        ], array_filter($urls1));
+        ], Arrays::nonEmptyStrings($urls1));
         self::assertEquals([
             'URL_WEBSITE' => 'https://some-website-address/',
             'URL_TWITTER' => 'https://some-twitter-address/',
-        ], array_filter($urls2));
+        ], Arrays::nonEmptyStrings($urls2));
 
         self::assertEquals(['Maple syrup' => false, 'Tortillas' => false, 'Popcorn' => true], $comms1);
         self::assertEquals(['Cheese' => true, 'Sitruuna' => true], $comms2);

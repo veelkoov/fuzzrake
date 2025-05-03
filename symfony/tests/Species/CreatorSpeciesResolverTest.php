@@ -42,7 +42,7 @@ class CreatorSpeciesResolverTest extends TestCase
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
         $result = $subject->resolveDoes(new StringList(), new StringList());
-        self::assertEquals(0, $result->count());
+        self::assertSame(0, $result->count());
     }
 
     public function testEmptyDoesAndUnknownDoesntReturnMostSpeciesOnly(): void
@@ -126,7 +126,7 @@ class CreatorSpeciesResolverTest extends TestCase
         $strResult = StringList::mapFrom($result,
             static fn (bool $does, Specie $specie) => ($does ? '+' : '-').$specie->getName())->join(' ');
 
-        self::assertEquals($expected, $strResult);
+        self::assertSame($expected, $strResult);
     }
 
     /**

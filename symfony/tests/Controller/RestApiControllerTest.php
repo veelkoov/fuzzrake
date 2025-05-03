@@ -30,8 +30,8 @@ class RestApiControllerTest extends FuzzrakeWebTestCase
         $parsedJson = Json::decode($text, Json::FORCE_ARRAY);
         $arrayReader = ArrayReader::of($parsedJson);
 
-        self::assertEquals('API testing creator', $arrayReader->getNonEmptyString('[0][NAME]'));
-        self::assertEquals('TEST001', $arrayReader->getNonEmptyString('[0][MAKER_ID]'));
-        self::assertEquals('FI', $arrayReader->getNonEmptyString('[0][COUNTRY]'));
+        self::assertSame('API testing creator', $arrayReader->getNonEmptyString('[0][NAME]'));
+        self::assertSame('TEST001', $arrayReader->getNonEmptyString('[0][MAKER_ID]'));
+        self::assertSame('FI', $arrayReader->getNonEmptyString('[0][COUNTRY]'));
     }
 }

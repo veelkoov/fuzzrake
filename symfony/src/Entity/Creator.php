@@ -136,11 +136,11 @@ class Creator implements Stringable
 
     public function __clone()
     {
-        if ($this->privateData) {
+        if (null !== $this->privateData) {
             $this->setPrivateData(clone $this->privateData);
         }
 
-        if ($this->volatileData) {
+        if (null !== $this->volatileData) {
             $this->setVolatileData(clone $this->volatileData);
         }
 

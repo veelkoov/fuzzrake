@@ -13,7 +13,7 @@ trait CaptchaTrait
      */
     protected function getCaptchaFieldName(string $value): string
     {
-        if (($client = $this->getClient()) === null) {
+        if (($client = self::getClient()) === null) {
             throw new LogicException('Client not initialized.');
         }
 

@@ -34,7 +34,7 @@ class CreatorUrl implements Stringable
 
     public function __clone()
     {
-        if ($this->state) {
+        if (null !== $this->state) {
             $this->setState(clone $this->state);
         }
     }

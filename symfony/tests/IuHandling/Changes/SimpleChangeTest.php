@@ -26,8 +26,8 @@ class SimpleChangeTest extends TestCase
     {
         $subject = new SimpleChange($field, $old, $new);
 
-        self::assertEquals($changed, $subject->isActuallyAChange());
-        self::assertEquals($description, $subject->getDescription());
+        self::assertSame($changed, $subject->isActuallyAChange());
+        self::assertSame($description, $subject->getDescription());
     }
 
     public function simpleChangeDataProvider(): DataProvider

@@ -38,7 +38,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
 
         $this->subject->fix($creator, $field);
 
-        $this->assertEquals($expected, $creator->get($field));
+        self::assertEquals($expected, $creator->get($field));
     }
 
     public function getFixedDataProvider(): DataProvider

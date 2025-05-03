@@ -33,11 +33,11 @@ readonly class ListChange implements ChangeInterface
         }
 
         if ($this->removed->isNotEmpty()) {
-            $res .= '' === $res ? "Removed {$name}" : ' and removed';
+            $res .= '' === $res ? "Removed $name" : ' and removed';
 
             $res .= ': "'.$this->removed->join('", "').'"';
         } elseif ('' === $res) {
-            $res = "{$name} did not change";
+            $res = "$name did not change";
         }
 
         return $res;

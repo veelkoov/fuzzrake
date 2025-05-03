@@ -26,7 +26,7 @@ final class Email
 
                 if ($len <= 1) {
                     return $input;
-                } elseif (2 == $len) {
+                } elseif (2 === $len) {
                     return mb_substr($input, 0, 1).'*';
                 } else {
                     return mb_substr($input, 0, 1).str_repeat('*', $len - 2).mb_substr($input, -1);

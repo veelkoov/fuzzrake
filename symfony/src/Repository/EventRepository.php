@@ -39,7 +39,7 @@ class EventRepository extends ServiceEntityRepository
             ->orderBy('d_e.timestamp', 'DESC')
             ->setParameter('oldest', UtcClock::at('-31 days'));
 
-        if ($types?->isNotEmpty()) {
+        if (true === $types?->isNotEmpty()) {
             $query
                 ->andWhere('d_e.type IN (:types)')
                 ->setParameter('types', $types);

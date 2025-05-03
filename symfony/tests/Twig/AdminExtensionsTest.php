@@ -21,7 +21,7 @@ class AdminExtensionsTest extends TestCase
         $validatorMock = $this->createMock(Validator::class);
         $subject = new AdminExtensions($validatorMock);
 
-        self::assertEquals($expectedOutput, $subject->linkUrls($input));
+        self::assertSame($expectedOutput, $subject->linkUrls($input));
     }
 
     /**

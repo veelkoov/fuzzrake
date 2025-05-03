@@ -47,7 +47,7 @@ class MutableSpeciesTest extends TestCase
     {
         $subject = $this->getTestInstance();
 
-        self::assertEquals('Leaf 1B', $subject->getByName('Leaf 1B')->getName());
+        self::assertSame('Leaf 1B', $subject->getByName('Leaf 1B')->getName());
         try {
             $subject->getByName('Middle 2');
         } catch (SpecieException) {

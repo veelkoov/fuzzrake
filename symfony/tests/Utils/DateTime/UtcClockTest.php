@@ -19,7 +19,7 @@ class UtcClockTest extends FuzzrakeTestCase
     {
         $subject = UtcClock::getUtc();
 
-        self::assertEquals('UTC', $subject->getName());
+        self::assertSame('UTC', $subject->getName());
     }
 
     public function testNow(): void
@@ -27,7 +27,7 @@ class UtcClockTest extends FuzzrakeTestCase
         $subject = UtcClock::now();
 
         self::assertEqualsWithDelta(time(), $subject->getTimestamp(), 1.1);
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
+        self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
     /**
@@ -38,7 +38,7 @@ class UtcClockTest extends FuzzrakeTestCase
         $subject = UtcClock::at('2022-01-07 13:01');
 
         self::assertEquals('2022-01-07T13:01:00.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
+        self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
     /**
@@ -69,7 +69,7 @@ class UtcClockTest extends FuzzrakeTestCase
         $subject = UtcClock::fromTimestamp(1658658993);
 
         self::assertEquals('2022-07-24T10:36:33.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
+        self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
     /**
@@ -131,7 +131,7 @@ class UtcClockTest extends FuzzrakeTestCase
         $expected = UtcClock::timems() + $millisecondsToPass;
         UtcClockMock::passMs($millisecondsToPass);
 
-        self::assertEquals($expected, UtcClock::timems());
+        self::assertSame($expected, UtcClock::timems());
     }
 
     public function testTime(): void
@@ -146,6 +146,6 @@ class UtcClockTest extends FuzzrakeTestCase
         $expected = UtcClock::time() + $secondsToPass;
         UtcClockMock::passMs(1000 * $secondsToPass);
 
-        self::assertEquals($expected, UtcClock::time());
+        self::assertSame($expected, UtcClock::time());
     }
 }

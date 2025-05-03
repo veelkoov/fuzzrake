@@ -285,7 +285,7 @@ class CreatorRepository extends ServiceEntityRepository
             throw new UnbelievableRuntimeException($e);
         } // @codeCoverageIgnoreEnd
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     public function countActive(): int

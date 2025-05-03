@@ -15,11 +15,11 @@ class ArraysTest extends TestCase
 {
     public function testSingle(): void
     {
-        self::assertEquals(10, Arrays::single([10]));
+        self::assertSame(10, Arrays::single([10])); // @phpstan-ignore staticMethod.alreadyNarrowedType (Being tested here)
 
         try {
             Arrays::single([]);
-            self::fail('Did not throw on empty array'); // @phpstan-ignore-line That's what's being tested here
+            self::fail('Did not throw on empty array'); // @phpstan-ignore deadCode.unreachable (Being tested here)
         } catch (InvalidArgumentException) {
         }
 

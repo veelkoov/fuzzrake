@@ -54,7 +54,7 @@ class SubmissionRepository extends ServiceEntityRepository
             return null;
         }
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     /**

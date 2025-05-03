@@ -57,7 +57,7 @@ class EventsController extends AbstractController
 
     private function getChosenEventTypes(Request $request): StringList
     {
-        $requestedTypes = StringList::split(',', (string) $request->query->get('types', ''));
+        $requestedTypes = StringList::split(',', $request->query->get('types', ''));
 
         return $requestedTypes->intersect([
             Event::TYPE_DATA_UPDATED,

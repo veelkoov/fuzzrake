@@ -24,11 +24,13 @@ final class NotificationsGenerator
             
             MESSAGE;
 
-        foreach (Fields::urls() as $url) {
-            if ($val = $data->get($url)) {
-                $val = StrUtils::asStr($val);
+        foreach (Fields::urls() as $urlField) {
+            $url = $data->get($urlField);
 
-                $message .= $url->value.': '.$val."\n";
+            if ('' !== $url) {
+                $url = StrUtils::asStr($url);
+
+                $message .= $urlField->value.': '.$url."\n";
             }
         }
 

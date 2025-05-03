@@ -55,7 +55,7 @@ class AdminExtensions extends AbstractExtension
     }
 
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
     private function asStr(mixed $value): string
     {
@@ -109,7 +109,7 @@ class AdminExtensions extends AbstractExtension
     }
 
     /**
-     * @return psFieldValue
+     * @return psPhpFieldValue
      */
     private function getOptionallyRedactedValue(Field $field, Creator $subject): mixed
     {

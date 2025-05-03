@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
+use DOMElement;
+use LogicException;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Form;
 
@@ -41,7 +43,11 @@ trait FormsTrait
 
         $fields = [];
         foreach ($crawler->filter('input.is-invalid') as $field) {
-            $fields[] = $field->getAttribute('name'); // @phpstan-ignore-line DOMNode::getAttribute() is defined
+            if (!$field instanceof DOMElement) {
+                throw new LogicException("Unexpected node type marked as invalid input: $field->nodeType");
+            }
+
+            $fields[] = $field->getAttribute('name');
         }
 
         self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));

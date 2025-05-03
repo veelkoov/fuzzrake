@@ -44,8 +44,8 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 
         self::assertEquals($lastSuccessUtc, $url->getState()->getLastSuccessUtc());
         self::assertEquals($lastFailureUtc, $url->getState()->getLastFailureUtc());
-        self::assertEquals($lastFailureCode, $url->getState()->getLastFailureCode());
-        self::assertEquals($lastFailureReason, $url->getState()->getLastFailureReason());
+        self::assertSame($lastFailureCode, $url->getState()->getLastFailureCode());
+        self::assertSame($lastFailureReason, $url->getState()->getLastFailureReason());
 
         $url->setUrl('new url');
 
@@ -57,7 +57,7 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 
         self::assertNull($url->getState()->getLastSuccessUtc());
         self::assertNull($url->getState()->getLastFailureUtc());
-        self::assertEquals(0, $url->getState()->getLastFailureCode());
+        self::assertSame(0, $url->getState()->getLastFailureCode());
         self::assertEmpty($url->getState()->getLastFailureReason());
     }
 }
