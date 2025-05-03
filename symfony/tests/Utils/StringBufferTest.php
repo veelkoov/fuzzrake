@@ -24,16 +24,16 @@ class StringBufferTest extends TestCase
     public function testReadCharacter(): void
     {
         $buffer = new StringBuffer('ABC');
-        self::assertEquals('A', $buffer->readCharacter());
-        self::assertEquals('B', $buffer->readCharacter());
+        self::assertSame('A', $buffer->readCharacter());
+        self::assertSame('B', $buffer->readCharacter());
     }
 
     public function testReadUntilRegexpSpecialCases(): void
     {
         $subject = new StringBuffer('ABCDqwerZXCVqwerTYUIqwerFGHJ');
 
-        self::assertEquals('ABCD', $subject->readUntilRegexp('[qw]{1,}'));
-        self::assertEquals('erZXCVqwerTYUIqwerFGHJ', $subject->peekAll());
+        self::assertSame('ABCD', $subject->readUntilRegexp('[qw]{1,}'));
+        self::assertSame('erZXCVqwerTYUIqwerFGHJ', $subject->peekAll());
 
         try {
             $result = $subject->readUntilRegexp('[qw');
@@ -56,10 +56,10 @@ class StringBufferTest extends TestCase
     {
         $subject = new StringBuffer('ABCD qw ZXCV qw TYUI');
 
-        self::assertEquals('ABCD ', $subject->readUntilRegexp('[qwer]{1,}', true));
-        self::assertEquals('ZXCV qw TYUI', $subject->peekAll());
+        self::assertSame('ABCD ', $subject->readUntilRegexp('[qwer]{1,}', true));
+        self::assertSame('ZXCV qw TYUI', $subject->peekAll());
 
-        self::assertEquals('ZXCV ', $subject->readUntilRegexp('[qwer]{1,}', false));
-        self::assertEquals(' TYUI', $subject->peekAll());
+        self::assertSame('ZXCV ', $subject->readUntilRegexp('[qwer]{1,}', false));
+        self::assertSame(' TYUI', $subject->peekAll());
     }
 }

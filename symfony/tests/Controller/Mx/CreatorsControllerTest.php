@@ -140,7 +140,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         self::clear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
-        self::assertEquals($check, $creator->getEmailAddress());
+        self::assertSame($check, $creator->getEmailAddress());
     }
 
     public function contactUpdatesDataProvider(): DataProvider

@@ -37,11 +37,11 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
             'URL_WEBSITE website',
         ], $this->getUrlArray($entity));
 
-        self::assertEquals('linklist', $creator->getLinklistUrl());
-        self::assertEquals('faq1', $creator->getFaqUrl());
+        self::assertSame('linklist', $creator->getLinklistUrl());
+        self::assertSame('faq1', $creator->getFaqUrl());
         self::assertEquals(['other', 'another'], $creator->getPhotoUrls());
         self::assertEquals(['price1', 'cost2'], $creator->getPricesUrls());
-        self::assertEquals('website', $creator->getWebsiteUrl());
+        self::assertSame('website', $creator->getWebsiteUrl());
 
         $creator
             ->setLinklistUrl('') // Remove
@@ -59,11 +59,11 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
             'URL_WEBSITE websiteChanged', // Single changed
         ], $this->getUrlArray($entity));
 
-        self::assertEquals('', $creator->getLinklistUrl());
-        self::assertEquals('faq1', $creator->getFaqUrl());
+        self::assertSame('', $creator->getLinklistUrl());
+        self::assertSame('faq1', $creator->getFaqUrl());
         self::assertEquals(['other'], $creator->getPhotoUrls());
         self::assertEquals(['price1', 'cost2', 'price3'], $creator->getPricesUrls());
-        self::assertEquals('websiteChanged', $creator->getWebsiteUrl());
+        self::assertSame('websiteChanged', $creator->getWebsiteUrl());
 
         $creator
             ->setPhotoUrls([]) // Clear

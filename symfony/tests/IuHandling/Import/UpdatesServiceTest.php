@@ -35,9 +35,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], []]]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals('', $result->originalCreator->getEmailAddress());
+        self::assertSame('', $result->originalCreator->getEmailAddress());
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
+        self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesEmailChangeProperly(): void
@@ -57,8 +57,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertEquals('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
+        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertSame('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesUnchangedEmailProperly(): void
@@ -78,8 +78,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
+        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
     public function testUpdateHandlesRevokedContactPermitProperly(): void
@@ -100,8 +100,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject = $this->getSetUpUpdatesService([[['A creator'], ['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertEquals('', $result->updatedCreator->getEmailAddress());
+        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
+        self::assertSame('', $result->updatedCreator->getEmailAddress());
     }
 
     public function testAddedDateIsHandledProperly(): void
@@ -252,9 +252,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             [['The new creator name', 'The old creator name'], ['TEST003'], [$creator]],
         ])->getUpdateFor($submission1);
 
-        self::assertEquals('The new creator name', $result1->updatedCreator->getName());
+        self::assertSame('The new creator name', $result1->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
-        self::assertEquals('TEST003', $result1->updatedCreator->getCreatorId());
+        self::assertSame('TEST003', $result1->updatedCreator->getCreatorId());
         self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
@@ -268,9 +268,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             [['The new creator name', 'The old creator name'], ['TEST001'], [$creator]],
         ])->getUpdateFor($submission2);
 
-        self::assertEquals('The new creator name', $result2->updatedCreator->getName());
+        self::assertSame('The new creator name', $result2->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());
-        self::assertEquals('TEST001', $result2->updatedCreator->getCreatorId());
+        self::assertSame('TEST001', $result2->updatedCreator->getCreatorId());
         self::assertEquals(['TEST002'], $result2->updatedCreator->getFormerCreatorIds());
     }
 

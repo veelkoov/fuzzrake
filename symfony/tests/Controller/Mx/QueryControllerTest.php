@@ -27,12 +27,12 @@ class QueryControllerTest extends FuzzrakeWebTestCase
     {
         self::$client->request('GET', '/mx/query/');
 
-        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
+        self::assertSame(200, self::$client->getResponse()->getStatusCode());
 
         self::$client->submitForm('Run', [
             'query[ITEM_QUERY]' => 'test',
         ]);
 
-        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
+        self::assertSame(200, self::$client->getResponse()->getStatusCode());
     }
 }

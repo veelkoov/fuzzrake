@@ -15,7 +15,7 @@ class ArraysTest extends TestCase
 {
     public function testSingle(): void
     {
-        self::assertEquals(10, Arrays::single([10]));
+        self::assertSame(10, Arrays::single([10])); // @phpstan-ignore staticMethod.alreadyNarrowedType (Being tested here)
 
         try {
             Arrays::single([]);

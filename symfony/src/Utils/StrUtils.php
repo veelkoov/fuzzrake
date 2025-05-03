@@ -9,6 +9,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
+use Veelkoov\Debris\StringSet;
 
 final class StrUtils
 {
@@ -16,14 +17,13 @@ final class StrUtils
 
     public static function creatorNamesSafeForCli(Creator ...$creators): string
     {
-        $names = $creatorIds = [];
+        $namesAndCreatorIds = new StringSet();
 
         foreach ($creators as $creator) {
-            $names = array_merge($creator->getAllNames(), $names);
-            $creatorIds = array_merge($creator->getAllCreatorIds(), $creatorIds);
+            $namesAndCreatorIds->addAll($creator->getAllNames())->addAll($creator->getAllCreatorIds());
         }
 
-        return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($creatorIds))]));
+        return $namesAndCreatorIds->filter(static fn (string $item) => '' !== $item)->join(' / ');
     }
 
     public static function strSafeForCli(string $input): string
@@ -46,9 +46,9 @@ final class StrUtils
         } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof Ages) {
-            return (string) $value->value;
+            return $value->value;
         } elseif ($value instanceof ContactPermit) {
-            return (string) $value->value;
+            return $value->value;
         } elseif (is_int($value)) {
             return (string) $value;
         } elseif (is_bool($value)) {

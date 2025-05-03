@@ -429,7 +429,7 @@ class Data extends AbstractType
                 'label'     => 'Copyright acknowledgement',
                 'help'      => 'Fact of the photos being published on Scritch or Furtrack <strong>doesn\'t necessarily mean the photographers agreed to repost/reuse it elsewhere</strong>, including getfursu.it. Please make sure you are allowed to link those photos here.',
                 'help_html' => true,
-                'data'      => $options[self::OPT_PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
+                'data'      => true === $options[self::OPT_PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
                 'required'  => false,
                 'mapped'    => false,
                 'expanded'  => true,

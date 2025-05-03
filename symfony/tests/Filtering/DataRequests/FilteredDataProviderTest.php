@@ -41,10 +41,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
         $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, false, false, false, 1));
-        self::assertEquals('M000002', self::creatorsListToCreatorIdList($result));
+        self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
 
         $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, true, false, false, 1));
-        self::assertEquals('M000002', self::creatorsListToCreatorIdList($result));
+        self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
     }
 
     public function testWantsSfw(): void
@@ -62,10 +62,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
         $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, true, false, false, 1));
-        self::assertEquals('M000001', self::creatorsListToCreatorIdList($result));
+        self::assertSame('M000001', self::creatorsListToCreatorIdList($result));
 
         $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, false, false, false, 1));
-        self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
+        self::assertSame('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
     }
 
     public function paginatedResultsDataProvider(): DataProvider
@@ -109,15 +109,15 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $result = $subject->getCreatorsPage($input);
 
-        self::assertEquals($numberOfCreators, $result->totalItems); // Sanity check
-        self::assertEquals($pageReturned, $result->pageNumber);
-        self::assertEquals($pagesCount, $result->totalPages);
+        self::assertSame($numberOfCreators, $result->totalItems); // Sanity check
+        self::assertSame($pageReturned, $result->pageNumber);
+        self::assertSame($pagesCount, $result->totalPages);
 
         $first = Parse::int(Iter\first($result->items)?->getCity() ?? '0');
         $last = Parse::int(Iter\last($result->items)?->getCity() ?? '0');
 
-        self::assertEquals($expectedFirst, $first);
-        self::assertEquals($expectedLast, $last);
+        self::assertSame($expectedFirst, $first);
+        self::assertSame($expectedLast, $last);
     }
 
     /**

@@ -31,8 +31,8 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
 
         $retrieved = new SmartAccessDecorator(self::getCreatorRepository()->findByCreatorId('TEST001'));
 
-        self::assertEquals(false, $retrieved->getDoesNsfw());
-        self::assertEquals(false, $retrieved->getWorksWithMinors());
+        self::assertFalse($retrieved->getDoesNsfw());
+        self::assertFalse($retrieved->getWorksWithMinors());
     }
 
     /**
@@ -53,8 +53,8 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
 
         $updated = new SmartAccessDecorator(self::getCreatorRepository()->findByCreatorId('TEST001'));
 
-        self::assertEquals(false, $updated->getDoesNsfw());
-        self::assertEquals(true, $updated->getWorksWithMinors());
+        self::assertFalse($updated->getDoesNsfw());
+        self::assertTrue($updated->getWorksWithMinors());
 
         $updated
             ->setNsfwWebsite(true)
@@ -66,8 +66,8 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
 
         $retrieved = new SmartAccessDecorator(self::getCreatorRepository()->findByCreatorId('TEST001'));
 
-        self::assertEquals(true, $retrieved->getNsfwWebsite());
-        self::assertEquals(false, $retrieved->getDoesNsfw());
-        self::assertEquals(false, $retrieved->getWorksWithMinors());
+        self::assertTrue($retrieved->getNsfwWebsite());
+        self::assertFalse($retrieved->getDoesNsfw());
+        self::assertFalse($retrieved->getWorksWithMinors());
     }
 }

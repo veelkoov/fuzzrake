@@ -27,11 +27,11 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         self::addSimpleCreator();
 
         self::$client->request('GET', '/iu_form/start/TEST');
-        static::assertEquals(404, self::$client->getResponse()->getStatusCode());
+        self::assertSame(404, self::$client->getResponse()->getStatusCode());
         self::$client->request('GET', '/iu_form/start/TEST002');
-        static::assertEquals(404, self::$client->getResponse()->getStatusCode());
+        self::assertSame(404, self::$client->getResponse()->getStatusCode());
         self::$client->request('GET', '/iu_form/start/TEST000');
-        static::assertEquals(200, self::$client->getResponse()->getStatusCode());
+        self::assertSame(200, self::$client->getResponse()->getStatusCode());
     }
 
     public function testSubmittingEmptyDoesnt500(): void
@@ -185,22 +185,22 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
         // Validate that no changes to existing data has been done
 
-        $creator = $this->getCreatorRepository()->find($creatorId);
+        $creator = self::getCreatorRepository()->find($creatorId);
         self::assertNotNull($creator);
         self::assertSame('Unchanged name', $creator->getName());
         self::assertSame('TEST001', $creator->getCreatorId());
         self::assertSame('old-unchanged@example.com', $creator->getPrivateData()?->getEmailAddress());
 
-        $creatorIds = $this->getEM()->getRepository(CreatorId::class)->findAll();
+        $creatorIds = self::getEM()->getRepository(CreatorId::class)->findAll();
         self::assertCount(1, $creatorIds);
         self::assertSame('TEST001', $creatorIds[0]->getCreatorId());
 
-        $urls = $this->getEM()->getRepository(CreatorUrl::class)->findAll();
+        $urls = self::getEM()->getRepository(CreatorUrl::class)->findAll();
         self::assertCount(0, $urls, 'No URL should have been persisted.');
 
         // Validate that the submission has been created
 
-        $submissions = $this->getEM()->getRepository(Submission::class)->findAll();
+        $submissions = self::getEM()->getRepository(Submission::class)->findAll();
         self::assertCount(1, $submissions);
         self::assertStringContainsString('A new name', $submissions[0]->getPayload());
         self::assertStringContainsString('new-website.example.com', $submissions[0]->getPayload());

@@ -37,7 +37,7 @@ class CompletenessCalcTest extends TestCase
     {
         $subject = new Creator();
 
-        self::assertEquals(0, CompletenessCalc::count($subject));
+        self::assertSame(0, CompletenessCalc::count($subject));
     }
 
     /**
@@ -48,7 +48,7 @@ class CompletenessCalcTest extends TestCase
         $subject = new Creator();
         $this->setRequired($subject, $ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
     public function justRequiredGive50DataProvider(): DataProvider
@@ -75,7 +75,7 @@ class CompletenessCalcTest extends TestCase
         $subject = new Creator();
         $this->setAllNonRequired($subject);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
     private function setAllNonRequired(Creator $subject): void

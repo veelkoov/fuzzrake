@@ -36,10 +36,10 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     protected function setUp(): void
     {
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($this->once())->method('flush');
+        $entityManagerMock->expects(self::once())->method('flush');
 
         $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($this->atMost(3))->method('generate')
+        $routerMock->expects(self::atMost(3))->method('generate')
             ->willReturnOnConsecutiveCalls('/#TEST001', '/ui/update', '/contact');
 
         $this->messengerBusMock = $this->createMock(MessageBusInterface::class);
@@ -107,7 +107,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('All previously known websites/social accounts are no longer working or are inactive',
+        self::assertSame('All previously known websites/social accounts are no longer working or are inactive',
             $creator->getInactiveReason());
     }
 
@@ -121,7 +121,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('', $creator->getInactiveReason());
+        self::assertSame('', $creator->getInactiveReason());
     }
 
     /**
@@ -152,10 +152,10 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('https://getfursu.it/info', $creator->getWebsiteUrl());
+        self::assertSame('https://getfursu.it/info', $creator->getWebsiteUrl());
         self::assertEquals(['https://example.com/prices0'], $creator->getPricesUrls());
         self::assertEquals(['https://example.com/commissions1'], $creator->getCommissionsUrls());
-        self::assertEquals('', $creator->getFaqUrl());
+        self::assertSame('', $creator->getFaqUrl());
     }
 
     /**
@@ -163,7 +163,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
      */
     public function testMessageNotSentWhenNotDesired(): void
     {
-        $this->messengerBusMock->expects($this->never())->method('dispatch');
+        $this->messengerBusMock->expects(self::never())->method('dispatch');
 
         $creator = new Creator();
         $data = new CreatorUrlsRemovalData(new GroupedUrls([]), new GroupedUrls([]), false, false);
@@ -176,10 +176,10 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
      */
     public function testProperHidingMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
+        $this->messengerBusMock->expects(self::once())->method('dispatch')->willReturnCallback(
             function (EmailNotificationV1 $notification): Envelope {
-                $this->assertEquals('Your card at ShortWebsiteName has been hidden', $notification->subject);
-                $this->assertEquals(<<<'CONTENTS'
+                self::assertSame('Your card at ShortWebsiteName has been hidden', $notification->subject);
+                self::assertSame(<<<'CONTENTS'
                     Hello The Hidden Creator!
 
                     Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
@@ -213,10 +213,10 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
      */
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
+        $this->messengerBusMock->expects(self::once())->method('dispatch')->willReturnCallback(
             function (EmailNotificationV1 $notification): Envelope {
-                $this->assertEquals('Your information at ShortWebsiteName may require your attention', $notification->subject);
-                $this->assertEquals(<<<'CONTENTS'
+                self::assertSame('Your information at ShortWebsiteName may require your attention', $notification->subject);
+                self::assertSame(<<<'CONTENTS'
                     Hello The Updated Creator!
 
                     Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. The following links were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:

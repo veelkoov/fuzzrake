@@ -90,12 +90,12 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', '/stats');
         $crawler = self::$client->getCrawler();
 
-        self::assertEquals('3 (50.00%)', $this->getRowValue($crawler, 'FORMER_MAKER_IDS'));
+        self::assertSame('3 (50.00%)', self::getRowValue($crawler, 'FORMER_MAKER_IDS'));
     }
 
     private static function assertRowValueEquals(string $expected, string $rowLabel, Crawler $crawler): void
     {
-        static::assertEquals($expected, self::getRowValue($crawler, $rowLabel));
+        self::assertSame($expected, self::getRowValue($crawler, $rowLabel));
     }
 
     private static function getRowValue(Crawler $crawler, string $rowLabel): string

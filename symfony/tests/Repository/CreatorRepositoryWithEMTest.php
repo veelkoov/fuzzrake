@@ -80,7 +80,7 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
         $retrieved1 = self::getCreatorRepository()->findByCreatorId('TESTID1');
 
-        self::assertEquals($creator->getCreatorId(), $retrieved1->getCreatorId());
+        self::assertSame($creator->getCreatorId(), $retrieved1->getCreatorId());
         self::assertEquals($accessor->getFormerCreatorIds(), Creator::wrap($retrieved1)->getFormerCreatorIds());
 
         $retrieved2 = self::getCreatorRepository()->findByCreatorId('TESTID2');

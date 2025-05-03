@@ -121,9 +121,9 @@ class IuFormDataController extends AbstractIuFormController
 
         $verificationAcknowledgmentField = $form->get(Data::FLD_VERIFICATION_ACKNOWLEDGEMENT);
 
-        $wantsPasswordChange = $form->get(Data::FLD_CHANGE_PASSWORD)->getData() ?? false;
+        $wantsPasswordChange = true === ($form->get(Data::FLD_CHANGE_PASSWORD)->getData() ?? false);
         $contactAllowed = ContactPermit::NO !== $form->get(Data::FLD_CONTACT_ALLOWED)->getData();
-        $verificationAcknowledgment = $verificationAcknowledgmentField->getData() ?? false;
+        $verificationAcknowledgment = true === ($verificationAcknowledgmentField->getData() ?? false);
 
         if ($wantsPasswordChange && (!$contactAllowed || !$subject->wasContactAllowed) && !$verificationAcknowledgment) {
             $errorMessage = 'Your action is required; your submission will be rejected otherwise.';

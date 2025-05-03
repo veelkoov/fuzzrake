@@ -96,7 +96,7 @@ class SmartAccessDecoratorTest extends TestCase
      */
     private function validateCreatorIds(Creator $creator, string $creatorId, array $formerCreatorIds, array $allCreatorIds): void
     {
-        self::assertEquals($creatorId, $creator->getCreatorId());
+        self::assertSame($creatorId, $creator->getCreatorId());
 
         self::assertEquals($formerCreatorIds, $creator->getFormerCreatorIds());
         self::assertEquals($allCreatorIds, $creator->getAllCreatorIds());

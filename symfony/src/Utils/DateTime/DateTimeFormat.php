@@ -15,11 +15,7 @@ final class DateTimeFormat
 
     public static function fragileUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string
     {
-        if ($input instanceof DateTimeImmutable) {
-            return $input->format($format) ?: 'unknown/error';
-        } else {
-            return 'unknown/error';
-        }
+        return $input instanceof DateTimeImmutable ? $input->format($format) : 'unknown/error';
     }
 
     public static function nullableUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string

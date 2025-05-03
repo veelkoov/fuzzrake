@@ -25,7 +25,7 @@ parameters:
     -
       message: '#^Class App\\Form\\[^ ]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 5
+      count: 4
       path: src/Form/*
 
     -
@@ -53,9 +53,8 @@ parameters:
       path: src/Repository/*
 
     - # This is from a recipe
-      message: '#^Call to function method_exists\(\) with ''Symfony\\\\Component\\\\Dotenv\\\\Dotenv'' and ''bootEnv'' will always evaluate to true\.$#'
-      identifier: function.alreadyNarrowedType
-      count: 1
+      message: '#.#'
+      count: 2
       path: tests/bootstrap.php
 
     - # "Using this method is the best way to get a container from your test code."

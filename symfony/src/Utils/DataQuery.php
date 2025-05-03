@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Repository\CreatorRepository;
+use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 class DataQuery
@@ -44,12 +45,12 @@ class DataQuery
 
     public function __construct(string $input)
     {
-        $items = array_filter(pattern('\s+')->split($input));
+        $items = Arrays::nonEmptyStrings(pattern('\s+')->split($input));
 
         foreach ($items as $item) {
             switch ($item[0]) {
                 case self::EXCLUDE_CHAR:
-                    $this->excludedItems[] = substr((string) $item, 1);
+                    $this->excludedItems[] = substr($item, 1);
                     break;
 
                 case self::CMD_START_CHAR:
@@ -155,7 +156,7 @@ class DataQuery
      */
     private function listMatches(array $listInput): bool
     {
-        return !empty($this->filterListInternal($listInput, true));
+        return [] !== $this->filterListInternal($listInput, true);
     }
 
     /**
@@ -171,7 +172,7 @@ class DataQuery
             if (!$this->itemMatchesList($item, $this->excludedItems) && $this->itemMatchesList($item, $this->searchedItems)) {
                 $result[] = $item;
 
-                if ($addMatches && !in_array($item, $this->matchedItems)) {
+                if ($addMatches && !array_key_exists($item, $this->matchedItems)) {
                     $this->matchedItems[$item] = ($this->matchedItems[$item] ?? 0) + 1;
                 }
             }

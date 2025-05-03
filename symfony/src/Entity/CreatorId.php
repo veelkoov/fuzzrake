@@ -44,7 +44,7 @@ class CreatorId
         return $this;
     }
 
-    public function getCreatorId(): ?string
+    public function getCreatorId(): string
     {
         return $this->creatorId;
     }

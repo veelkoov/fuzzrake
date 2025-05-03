@@ -119,7 +119,7 @@ class FiltersService
         $result = new MutableFilterData($trackingIssues, $notTracked);
 
         foreach ($this->offerStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->items->addComplexItem($offer, $offer, (int) $openCount);
+            $result->items->addComplexItem($offer, $offer, $openCount);
         }
 
         return FilterData::from($result);
