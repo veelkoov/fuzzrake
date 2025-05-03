@@ -8,8 +8,8 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
+use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\psJsonFieldValue;
-use App\Utils\DataInputException;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
@@ -37,13 +37,13 @@ readonly class SubmissionDataReader implements FieldReadInterface
         $fieldName = $field->value;
 
         if (!array_key_exists($fieldName, $this->parsed)) {
-            throw new DataInputException("Submission data is missing $fieldName");
+            throw new SubmissionException("Submission data is missing $fieldName");
         }
 
         $value = $this->parsed[$fieldName];
 
         if ($field->isList() && !is_array($value)) {
-            throw new DataInputException("Expected an array for $fieldName, got '$value' instead.");
+            throw new SubmissionException("Expected an array for $fieldName, got '$value' instead.");
         }
 
         if (Field::AGES === $field) {
