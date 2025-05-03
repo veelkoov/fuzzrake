@@ -10,6 +10,5 @@ class PhotoMiniatureResolver
 {
     public function getMiniatureUrl(Url $photoUrl): string
     {
-
     }
 }

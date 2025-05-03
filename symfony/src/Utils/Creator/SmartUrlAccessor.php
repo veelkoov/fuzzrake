@@ -17,10 +17,10 @@ final class SmartUrlAccessor
     /**
      * @return list<ItemType>
      */
-    private static function getObjects(Creator $creator, string $type): array
+    public static function getObjects(Creator $creator, string $type): array
     {
         return Vec\filter($creator->getCreator()->getUrls(),
-            fn (ItemType $url) => $url->getType() === $type);
+            fn (ItemType $url): bool => $url->getType() === $type);
     }
 
     /**

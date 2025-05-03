@@ -19,17 +19,17 @@ class MiniaturesUpdateTask
         private readonly CreatorRepository $creatorRepository,
         private readonly PhotoMiniatureResolver $resolver,
     ) {
-
     }
 
     #[AsMessageHandler]
-    public function execute(UpdateMiniaturesV1 $_): void {
+    public function execute(UpdateMiniaturesV1 $_): void
+    {
         $this->logger->info('Started miniatures update task.');
 
         foreach ($this->creatorRepository->getAllPaged() as $creator) {
             $creator = Creator::wrap($creator);
 
-            if (count($creator->getMiniatureUrls()) !== count( $creator->getPhotoUrls())) {
+            if (count($creator->getMiniatureUrls()) !== count($creator->getPhotoUrls())) {
                 $this->updateCreatorMiniatures($creator);
             }
         }
@@ -44,13 +44,20 @@ class MiniaturesUpdateTask
             $this->logger->info("Removing miniatures of {$creator->getLastCreatorId()}");
 
             $creator->setMiniatureUrls([]);
+
             return;
         }
 
+        $this->logger->info("Updating miniatures for {$creator->getLastCreatorId()}...");
+
         $newMiniatureUrls = [];
 
-        foreach ($creator->getPhotoUrls() as $photoUrl) {
-            $newMiniatureUrls[] = $this->resolver->getMiniatureUrl($photoUrl)
+        foreach ($creator->getPhotoUrlObjects() as $photoUrl) {
+            $newMiniatureUrls[] = $this->resolver->getMiniatureUrl($photoUrl);
         }
+
+        $creator->setMiniatureUrls($newMiniatureUrls);
+
+        $this->logger->info("Successfully updated miniatures for{$creator->getLastCreatorId()}");
     }
 }

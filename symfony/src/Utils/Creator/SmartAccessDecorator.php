@@ -14,6 +14,7 @@ use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
 use App\Entity\CreatorPrivateData;
+use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
 use App\Utils\Collections\StringLists;
@@ -779,6 +780,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
+     * @return list<CreatorUrl>
+     */
+    public function getPhotoUrlObjects(): array
+    {
+        return $this->getUrlObjects(Field::URL_PHOTOS);
+    }
+
+    /**
      * @param list<string> $photoUrls
      */
     public function setPhotoUrls(array $photoUrls): self
@@ -859,6 +868,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getUrls(Field $urlField): array
     {
         return SmartUrlAccessor::getList($this, $urlField->value);
+    }
+
+    /**
+     * @return list<CreatorUrl>
+     */
+    private function getUrlObjects(Field $urlField): array
+    {
+        return SmartUrlAccessor::getObjects($this, $urlField->value);
     }
 
     private function setUrl(Field $urlField, string $newUrl): self
