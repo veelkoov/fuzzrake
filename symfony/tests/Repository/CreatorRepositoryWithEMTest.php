@@ -99,7 +99,7 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
         Creator::wrap($creator1 = new CreatorE())
             ->setName($creator1name)
-            ->setFormerly(["{$creator1oldName1}", "{$creator1oldName2}"])
+            ->setFormerly([$creator1oldName1, $creator1oldName2])
             ->setCreatorId($creator1creatorId)
             ->setFormerCreatorIds([$creator1oldCreatorId1]);
 
@@ -112,7 +112,7 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
         Creator::wrap($creator2 = new CreatorE())
             ->setName($creator2name)
-            ->setFormerly(["{$creator2oldName1}", "{$creator2oldName2}"])
+            ->setFormerly([$creator2oldName1, $creator2oldName2])
             ->setCreatorId($creator2creatorId)
             ->setFormerCreatorIds([$creator2oldCreatorId1, $creator2oldCreatorId2]);
 

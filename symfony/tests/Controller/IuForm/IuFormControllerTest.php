@@ -27,11 +27,11 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         self::addSimpleCreator();
 
         self::$client->request('GET', '/iu_form/start/TEST');
-        self::assertSame(404, self::$client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(404);
         self::$client->request('GET', '/iu_form/start/TEST002');
-        self::assertSame(404, self::$client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(404);
         self::$client->request('GET', '/iu_form/start/TEST000');
-        self::assertSame(200, self::$client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(200);
     }
 
     public function testSubmittingEmptyDoesnt500(): void
