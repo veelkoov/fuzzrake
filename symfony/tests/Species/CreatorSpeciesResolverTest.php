@@ -9,13 +9,13 @@ use App\Species\Hierarchy\MutableSpecies;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Utils\Collections\StringList;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 use Veelkoov\Debris\StringSet;
 
-/**
- * @small
- */
+#[Small]
 class CreatorSpeciesResolverTest extends TestCase
 {
     /**
@@ -105,7 +105,7 @@ class CreatorSpeciesResolverTest extends TestCase
         return $species;
     }
 
-    public function getOrderedDoesDoesntSpeciesDataProvider(): DataProvider
+    public static function getOrderedDoesDoesntSpeciesDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [StringList::of('A', 'C'), StringList::of('B', 'D'), '+A -B +C -D'],
@@ -115,9 +115,7 @@ class CreatorSpeciesResolverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getOrderedDoesDoesntSpeciesDataProvider
-     */
+    #[UseDataProvider('getOrderedDoesDoesntSpeciesDataProvider')]
     public function testGetOrderedDoesDoesnt(StringList $does, StringList $doesnt, string $expected): void
     {
         $subject = new CreatorSpeciesResolver($this->getGetOrderedDoesDoesntSpecies());
@@ -171,7 +169,7 @@ class CreatorSpeciesResolverTest extends TestCase
         return $species;
     }
 
-    public function resolveDoesDataProvider(): DataProvider
+    public static function resolveDoesDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [new StringList(),                       new StringList(),                          new StringList()],
@@ -185,9 +183,7 @@ class CreatorSpeciesResolverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider resolveDoesDataProvider
-     */
+    #[UseDataProvider('resolveDoesDataProvider')]
     public function testResolveDoes(StringList $does, StringList $doesnt, StringList $expected): void
     {
         $subject = new CreatorSpeciesResolver($this->getResolveDoesSpecies());
@@ -197,7 +193,7 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
     }
 
-    public function resolveForFiltersDataProvider(): DataProvider
+    public static function resolveForFiltersDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [new StringSet(), new StringSet()],
@@ -207,9 +203,7 @@ class CreatorSpeciesResolverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider resolveForFiltersDataProvider
-     */
+    #[UseDataProvider('resolveForFiltersDataProvider')]
     public function testResolveForFilters(StringSet $speciesNames, StringSet $expected): void
     {
         $subject = new CreatorSpeciesResolver($this->getResolveDoesSpecies());

@@ -6,10 +6,9 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorUrlsControllerTest extends FuzzrakeWebTestCase
 {
     #[Override]

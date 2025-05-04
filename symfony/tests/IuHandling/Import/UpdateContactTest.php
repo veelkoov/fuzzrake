@@ -8,10 +8,9 @@ use App\Data\Definitions\ContactPermit;
 use App\IuHandling\Import\UpdateContact;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Small;
 
-/**
- * @small
- */
+#[Small]
 class UpdateContactTest extends FuzzrakeTestCase
 {
     public function testPermissionAndDescription(): void

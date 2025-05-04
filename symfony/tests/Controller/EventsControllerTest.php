@@ -9,11 +9,11 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class EventsControllerTest extends FuzzrakeWebTestCase
 {
     public function testPageLoads(): void
@@ -24,9 +24,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
         static::assertSelectorTextContains('p', 'See all recently added makers');
     }
 
-    /**
-     * @dataProvider eventDescriptionDataProvider
-     */
+    #[UseDataProvider('eventDescriptionDataProvider')]
     public function testEventDescription(Event $event, string $expectedHtml): void
     {
         self::persistAndFlush($event);
@@ -39,7 +37,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
     }
 
     /** @noinspection HtmlUnknownTarget */
-    public function eventDescriptionDataProvider(): DataProvider
+    public static function eventDescriptionDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [

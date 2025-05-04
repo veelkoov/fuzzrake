@@ -9,20 +9,19 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     /**
-     * @dataProvider findByCreatorIdDataProvider
-     *
      * @param CreatorE[] $creators
      *
      * @throws ORMException
      */
+    #[UseDataProvider('findByCreatorIdDataProvider')]
     public function testFindByCreatorId(array $creators, string $creatorId, ?int $resultIdx): void
     {
         foreach ($creators as $key => $creator) {
@@ -40,7 +39,7 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
         static::assertEquals($creators[$resultIdx], $result);
     }
 
-    public function findByCreatorIdDataProvider(): DataProvider
+    public static function findByCreatorIdDataProvider(): DataProvider
     {
         Creator::wrap($m1 = new CreatorE())->setCreatorId('TESTI11');
         Creator::wrap($m2 = new CreatorE())->setCreatorId('TESTI21')->setFormerCreatorIds(['TESTI22']);

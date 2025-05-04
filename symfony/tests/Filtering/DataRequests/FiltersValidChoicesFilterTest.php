@@ -9,11 +9,10 @@ use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
+use PHPUnit\Framework\Attributes\Medium;
 use Veelkoov\Debris\StringSet;
 
-/**
- * @medium
- */
+#[Medium]
 class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
 {
     /**

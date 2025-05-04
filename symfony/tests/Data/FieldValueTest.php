@@ -10,18 +10,16 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\FieldValue;
 use DateTimeImmutable;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @small
- */
+#[Small]
 class FieldValueTest extends TestCase
 {
-    /**
-     * @dataProvider validateTypeDataProvider
-     */
+    #[UseDataProvider('validateTypeDataProvider')]
     public function testValidateType(Field $field, mixed $value, bool $isOk): void
     {
         if (!$isOk) {
@@ -33,7 +31,7 @@ class FieldValueTest extends TestCase
         FieldValue::validateType($field, $value);
     }
 
-    public function validateTypeDataProvider(): DataProvider
+    public static function validateTypeDataProvider(): DataProvider
     {
         $date = new DateTimeImmutable();
 
@@ -79,10 +77,9 @@ class FieldValueTest extends TestCase
     }
 
     /**
-     * @dataProvider fromStringDataProvider
-     *
      * @param Throwable|list<string>|string|bool $expected
      */
+    #[UseDataProvider('fromStringDataProvider')]
     public function testFromString(Field $field, string $value, Throwable|array|string|bool $expected): void
     {
         if ($expected instanceof Throwable) {
@@ -92,7 +89,7 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::fromString($field, $value));
     }
 
-    public function fromStringDataProvider(): DataProvider
+    public static function fromStringDataProvider(): DataProvider
     {
         $iae = new InvalidArgumentException();
 
@@ -115,9 +112,7 @@ class FieldValueTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider isProvidedDataProvider
-     */
+    #[UseDataProvider('isProvidedDataProvider')]
     public function testIsProvided(Field $field, mixed $value, Throwable|bool $expected): void
     {
         if ($expected instanceof Throwable) {
@@ -127,7 +122,7 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::isProvided($field, $value));
     }
 
-    public function isProvidedDataProvider(): DataProvider
+    public static function isProvidedDataProvider(): DataProvider
     {
         $iae = new InvalidArgumentException();
         $date = new DateTimeImmutable();

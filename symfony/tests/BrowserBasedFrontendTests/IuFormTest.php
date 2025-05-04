@@ -11,14 +11,14 @@ use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Large;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @large
- */
+#[Large]
 class IuFormTest extends FuzzrakePantherTestCase
 {
-    public function passwordCheckBoxesDataProvider(): DataProvider
+    public static function passwordCheckBoxesDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [null,                    ContactPermit::FEEDBACK, false, false],
@@ -29,10 +29,9 @@ class IuFormTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * @dataProvider passwordCheckBoxesDataProvider
-     *
      * @throws WebDriverException
      */
+    #[UseDataProvider('passwordCheckBoxesDataProvider')]
     public function testPasswordCheckboxes(?ContactPermit $previousContactPermitIfUpdate, ContactPermit $contactPermit,
         bool $passwordChangePossible, bool $confirmationAcknowledgementAvailable): void
     {

@@ -10,25 +10,24 @@ use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * @medium
- */
+#[Medium]
 class MainControllerFiltersTest extends FuzzrakeWebTestCase
 {
     use AssertsTrait;
     use FiltersTestTrait;
 
     /**
-     * @dataProvider filterChoicesDataProvider
-     *
      * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedCreatorIds
      *
      * @throws JsonException
      */
+    #[DataProvider('filterChoicesDataProvider')]
     public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
         self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));

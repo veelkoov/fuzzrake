@@ -7,11 +7,10 @@ namespace App\Tests\IuHandling\Import;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\IuHandling\Import\Manager;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class ManagerTest extends TestCase
 {
     public function testBehaviorWithoutTrailingNewline(): void

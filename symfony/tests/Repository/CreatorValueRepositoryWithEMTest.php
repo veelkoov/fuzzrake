@@ -8,10 +8,9 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void

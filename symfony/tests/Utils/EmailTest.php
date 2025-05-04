@@ -5,23 +5,21 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\Email;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @small
- */
+#[Small]
 class EmailTest extends TestCase
 {
-    /**
-     * @dataProvider isValidDataProvider
-     */
+    #[UseDataProvider('isValidDataProvider')]
     public function testIsValid(string $input, bool $isValid): void
     {
         self::assertSame($isValid, Email::isValid($input));
     }
 
-    public function isValidDataProvider(): DataProvider
+    public static function isValidDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             ['', false],
@@ -32,15 +30,13 @@ class EmailTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider obfuscateDataProvider
-     */
+    #[UseDataProvider('obfuscateDataProvider')]
     public function testObfuscate(string $input, string $expected): void
     {
         self::assertSame($expected, Email::obfuscate($input));
     }
 
-    public function obfuscateDataProvider(): DataProvider
+    public static function obfuscateDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             ['@example.com', '@e*********m'],

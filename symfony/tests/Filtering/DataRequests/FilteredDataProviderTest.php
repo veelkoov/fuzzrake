@@ -11,6 +11,8 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use Psl\Iter;
 use Psl\Str;
 use Psl\Vec;
@@ -18,9 +20,7 @@ use Psr\Cache\InvalidArgumentException;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 use Veelkoov\Debris\StringSet;
 
-/**
- * @medium
- */
+#[Medium]
 class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 {
     /**
@@ -68,7 +68,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         self::assertSame('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
     }
 
-    public function paginatedResultsDataProvider(): DataProvider
+    public static function paginatedResultsDataProvider(): DataProvider
     {
         // Page size is 25
 
@@ -88,9 +88,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         );
     }
 
-    /**
-     * @dataProvider paginatedResultsDataProvider
-     */
+    #[UseDataProvider('paginatedResultsDataProvider')]
     public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount,
         int $expectedFirst, int $expectedLast): void
     {

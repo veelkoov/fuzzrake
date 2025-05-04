@@ -5,26 +5,25 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\PackedStringList;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @small
- */
+#[Small]
 class PackedStringListTest extends TestCase
 {
     /**
-     * @dataProvider splitDataProvider
-     *
      * @param string[] $nonsplittables
      * @param string[] $expectedResult
      */
+    #[UseDataProvider('splitDataProvider')]
     public function testSplit(string $input, string $separatorRegexp, array $nonsplittables, array $expectedResult): void
     {
         self::assertEquals($expectedResult, PackedStringList::split($input, $separatorRegexp, $nonsplittables));
     }
 
-    public function splitDataProvider(): DataProvider
+    public static function splitDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [

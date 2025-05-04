@@ -6,11 +6,10 @@ namespace App\Tests\Species\Hierarchy;
 
 use App\Species\Hierarchy\MutableSpecie;
 use App\Species\SpecieException;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class MutableSpecieTest extends TestCase
 {
     public function testRelationshipIsBeingSetTwoWay(): void

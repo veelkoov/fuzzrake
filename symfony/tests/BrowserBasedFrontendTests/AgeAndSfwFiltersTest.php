@@ -10,12 +10,12 @@ use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 use Psl\Iter;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 
-/**
- * @large
- */
+#[Large]
 class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
@@ -54,10 +54,9 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * @dataProvider ageAndSfwFiltersDataProvider
-     *
      * @throws Exception
      */
+    #[DataProvider('ageAndSfwFiltersDataProvider')]
     public function testAgeAndSfwFilters(bool $userIsMinor, ?bool $userWantsSfw): void
     {
         self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
@@ -151,7 +150,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
     /**
      * @return array<array{0: bool, 1: ?bool}>
      */
-    public function ageAndSfwFiltersDataProvider(): array
+    public static function ageAndSfwFiltersDataProvider(): array
     {
         return [
             'Minor'    => [true,  null],

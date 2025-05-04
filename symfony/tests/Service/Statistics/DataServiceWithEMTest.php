@@ -12,11 +12,10 @@ use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Medium;
 use Psr\Log\LoggerInterface;
 
-/**
- * @medium
- */
+#[Medium]
 class DataServiceWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testUnknownAndEuCreatorsDontCountTowardsTotalCountries(): void

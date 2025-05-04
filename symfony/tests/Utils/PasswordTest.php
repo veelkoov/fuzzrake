@@ -6,11 +6,10 @@ namespace App\Tests\Utils;
 
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Password;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class PasswordTest extends TestCase
 {
     public function testPlaintextGetsEncrypted(): void

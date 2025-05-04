@@ -9,12 +9,12 @@ use App\Data\Fixer\Fixer;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {
     private readonly Fixer $subject;
@@ -28,9 +28,8 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
     /**
      * @param list<string>|string $input
      * @param list<string>|string $expected
-     *
-     * @dataProvider getFixedDataProvider
      */
+    #[UseDataProvider('getFixedDataProvider')]
     public function testGetFixed(Field $field, array|string $input, array|string $expected): void
     {
         $creator = new Creator();
@@ -41,7 +40,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
         self::assertEquals($expected, $creator->get($field));
     }
 
-    public function getFixedDataProvider(): DataProvider
+    public static function getFixedDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             [Field::NAME, ' The name ', 'The name'],

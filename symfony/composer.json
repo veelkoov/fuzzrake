@@ -1,6 +1,15 @@
 {
-    "type": "project",
+    "name": "veelkoov/fuzzrake",
     "license": "AGPL-3.0-only",
+    "type": "project",
+    "replace": {
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
+    },
     "repositories": [
         {
             "type": "vcs",
@@ -51,6 +60,7 @@
         "veelkoov/debris": "dev-develop"
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^8.3",
         "friendsofphp/php-cs-fixer": "*",
         "phpdocumentor/reflection-docblock": "*",
         "phpstan/extension-installer": "^1.1",
@@ -59,6 +69,7 @@
         "phpstan/phpstan-phpunit": "^2.0.3",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0.1",
+        "phpunit/phpunit": "^11",
         "rawr/phpunit-data-provider": "^3.0",
         "rector/rector": "*",
         "symfony/css-selector": "*",
@@ -72,16 +83,16 @@
         "vincentlanglet/twig-cs-fixer": "^3.4.0"
     },
     "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "phpstan/extension-installer": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "symfony/flex": true,
-            "symfony/runtime": true,
-            "phpstan/extension-installer": true
-        }
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
@@ -90,8 +101,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/",
-            "PHPUnit\\": "vendor/bin/.phpunit/phpunit/src/"
+            "App\\Tests\\": "tests/"
         }
     },
     "scripts": {

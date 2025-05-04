@@ -9,11 +9,10 @@ use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorValue;
 use App\Utils\Creator\PartialCreatorValueListAccessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class PartialCreatorValueListAccessorTest extends TestCase
 {
     public function testGetAndSet(): void

@@ -6,16 +6,14 @@ namespace App\Tests\Twig;
 
 use App\Data\Validator\Validator;
 use App\Twig\AdminExtensions;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class AdminExtensionsTest extends TestCase
 {
-    /**
-     * @dataProvider linkUrlsDataProvider
-     */
+    #[DataProvider('linkUrlsDataProvider')]
     public function testLinkUrls(string $input, string $expectedOutput): void
     {
         $validatorMock = $this->createMock(Validator::class);
@@ -27,7 +25,7 @@ class AdminExtensionsTest extends TestCase
     /**
      * @return array<array{string, string}>
      */
-    public function linkUrlsDataProvider(): array
+    public static function linkUrlsDataProvider(): array
     {
         return [
             [

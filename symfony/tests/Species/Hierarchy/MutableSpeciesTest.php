@@ -6,11 +6,10 @@ namespace App\Tests\Species\Hierarchy;
 
 use App\Species\Hierarchy\MutableSpecies;
 use App\Species\SpecieException;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class MutableSpeciesTest extends TestCase
 {
     public function testGetNames(): void

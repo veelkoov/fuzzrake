@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class PagesControllerTest extends FuzzrakeWebTestCase
 {
     /**
-     * @dataProvider pageDataProvider
-     *
      * @param array<string, string> $texts
      */
+    #[DataProvider('pageDataProvider')]
     public function testPage(string $uri, array $texts): void
     {
         self::$client->request('GET', $uri);
@@ -29,7 +28,7 @@ class PagesControllerTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{string, array<string, string>}>
      */
-    public function pageDataProvider(): array
+    public static function pageDataProvider(): array
     {
         return [
             'contact' => ['/contact', [

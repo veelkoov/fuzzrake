@@ -8,11 +8,10 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use PHPUnit\Framework\Attributes\Medium;
 use Psl\Dict;
 
-/**
- * @medium
- */
+#[Medium]
 class EmailUpdateTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;

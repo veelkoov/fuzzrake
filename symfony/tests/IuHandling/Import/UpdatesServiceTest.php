@@ -6,7 +6,6 @@ namespace App\Tests\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
-use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\CreatorRepository;
@@ -15,13 +14,16 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use JsonException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\MockObject\Exception;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
+use Random\RandomException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * @small
- */
+#[Small]
 class UpdatesServiceTest extends FuzzrakeTestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void
@@ -128,7 +130,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws SubmissionException|DateTimeException
+     * @throws DateTimeException|Exception|RandomException|JsonException
      */
     public function testUpdatedDateIsHandledProperly(): void
     {
@@ -161,13 +163,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
-     *
      * @param list<string> $initialUrlPhotos
      * @param list<string> $initialMiniatures
      * @param list<string> $newUrlPhotos
      * @param list<string> $expectedMiniatures
+     *
+     * @throws Exception|RandomException|JsonException
      */
+    #[DataProvider('imagesUpdateShouldResetMiniaturesDataProvider')]
     public function testUpdateHandlesImagesUpdateProperly(array $initialUrlPhotos, array $initialMiniatures, array $newUrlPhotos, array $expectedMiniatures): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -192,7 +195,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     /**
      * @return array<string, array{list<string>, list<string>, list<string>, list<string>}>
      */
-    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
+    public static function imagesUpdateShouldResetMiniaturesDataProvider(): array
     {
         return [
             'No photos at all'         => [[], [], [], []],
@@ -276,6 +279,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     /**
      * @param list<array{list<string>, list<string>, list<Creator>}> $calls
+     *
+     * @throws Exception
      */
     private function getSetUpUpdatesService(array $calls): UpdatesService
     {
@@ -293,8 +298,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnCallback(fn (object $input) => clone $input);
 
-        $messageBusStub = $this->createStub(MessageBusInterface::class);
-        $loggerStub = $this->createStub(LoggerInterface::class);
+        $messageBusStub = self::createStub(MessageBusInterface::class);
+        $loggerStub = self::createStub(LoggerInterface::class);
 
         return new UpdatesService($creatorRepoMock, $fixerMock, $messageBusStub, $loggerStub);
     }

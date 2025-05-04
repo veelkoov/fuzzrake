@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider as UseDataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class FeedbackControllerTest extends FuzzrakeWebTestCase
 {
     public function testSimpleFeedbackSubmission(): void
@@ -81,9 +81,7 @@ class FeedbackControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('#feedback_details + .invalid-feedback', 'This is required.');
     }
 
-    /**
-     * @dataProvider blockedOptionsDataProvider
-     */
+    #[UseDataProvider('blockedOptionsDataProvider')]
     public function testBlockedOptions(string $optionToSelect, bool $shouldBlock): void
     {
         self::$client->request('GET', '/feedback');
@@ -103,7 +101,7 @@ class FeedbackControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs($shouldBlock ? 422 : 302);
     }
 
-    public function blockedOptionsDataProvider(): DataProvider
+    public static function blockedOptionsDataProvider(): DataProvider
     {
         return DataProvider::tuples(
             ['Help me get a fursuit', true],

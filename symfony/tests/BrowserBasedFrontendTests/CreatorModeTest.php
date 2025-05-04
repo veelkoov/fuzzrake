@@ -9,10 +9,9 @@ use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\Large;
 
-/**
- * @large
- */
+#[Large]
 class CreatorModeTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;

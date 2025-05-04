@@ -6,11 +6,11 @@ namespace App\Tests\Twig\Utils;
 
 use App\Twig\Utils\HumanFriendly;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class HumanFriendlyTest extends TestCase
 {
     private static HumanFriendly $subject;
@@ -21,9 +21,7 @@ class HumanFriendlyTest extends TestCase
         self::$subject = new HumanFriendly();
     }
 
-    /**
-     * @dataProvider shortUrlDataProvider
-     */
+    #[DataProvider('shortUrlDataProvider')]
     public function testShortUrl(string $input, string $expected): void
     {
         self::assertSame($expected, self::$subject->shortUrl($input));
@@ -32,7 +30,7 @@ class HumanFriendlyTest extends TestCase
     /**
      * @return array<array{string, string}>
      */
-    public function shortUrlDataProvider(): array
+    public static function shortUrlDataProvider(): array
     {
         return [
             ['http://www.getfursu.it/', 'getfursu.it'],
@@ -43,9 +41,7 @@ class HumanFriendlyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider regexDataProvider
-     */
+    #[DataProvider('regexDataProvider')]
     public function testRegex(string $input, string $expected): void
     {
         self::assertSame($expected, self::$subject->regex($input));
@@ -54,7 +50,7 @@ class HumanFriendlyTest extends TestCase
     /**
      * @return array<array{string, string}>
      */
-    public function regexDataProvider(): array
+    public static function regexDataProvider(): array
     {
         return [
             ['PART(?!IAL)S', 'PARTS'],

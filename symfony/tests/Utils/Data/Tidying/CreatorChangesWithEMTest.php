@@ -12,10 +12,9 @@ use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void

@@ -52,9 +52,9 @@ parameters:
       count: 12
       path: src/Repository/*
 
-    - # This is from a recipe
+    - # This is from a recipe + docs
       message: '#.#'
-      count: 2
+      count: 4
       path: tests/bootstrap.php
 
     - # "Using this method is the best way to get a container from your test code."
