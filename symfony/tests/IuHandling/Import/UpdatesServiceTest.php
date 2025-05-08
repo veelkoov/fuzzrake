@@ -293,8 +293,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnCallback(fn (object $input) => clone $input);
 
-        $messageBusStub = $this->createStub(MessageBusInterface::class);
-        $loggerStub = $this->createStub(LoggerInterface::class);
+        $messageBusStub = self::createStub(MessageBusInterface::class);
+        $loggerStub = self::createStub(LoggerInterface::class);
 
         return new UpdatesService($creatorRepoMock, $fixerMock, $messageBusStub, $loggerStub);
     }

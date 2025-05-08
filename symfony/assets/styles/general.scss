@@ -79,3 +79,17 @@ span.utc_datetime {
     padding: 1ex;
   }
 }
+
+.путін-хуйло {
+  div:first-child {
+    height: 10px;
+    background-color: #0057b7;
+  }
+
+  div:last-child {
+    height: 10px;
+    background-color: #ffd700;
+  }
+
+  padding-bottom: 1.5em;
+}
