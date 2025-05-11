@@ -10,6 +10,7 @@ use App\Data\Validator\Validator;
 use App\Entity\Creator as CreatorE;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\DataQuery;
 use App\Utils\StrUtils;
 use Override;
 use TRegx\CleanRegex\Match\Detail;
@@ -42,6 +43,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('bluesky_at', $this->blueskyAt(...)),
             new TwigFilter('mastodon_at', $this->mastodonAt(...)),
             new TwigFilter('tumblr_at', $this->tumblrAt(...)),
+            new TwigFilter('filter_by_query', $this->filterFilterByQuery(...)),
         ];
     }
 
@@ -139,5 +141,13 @@ class AdminExtensions extends AbstractExtension
         return Pattern::of('^https://www\.tumblr\.com/([^/#?]+).*')
             ->replace($mastodonUrl)
             ->withReferences('@$1 _FIX_');
+    }
+
+    /**
+     * @param list<string> $input
+     */
+    public function filterFilterByQuery(array $input, DataQuery $query): string
+    {
+        return implode(', ', $query->filterList($input));
     }
 }

@@ -13,7 +13,6 @@ use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Creator\Completeness;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DataQuery;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
@@ -45,7 +44,6 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('event_url', $this->friendly->shortUrl(...)),
             new TwigFilter('filter_items_matching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('human_friendly_regexp', $this->friendly->regex(...)),
-            new TwigFilter('filter_by_query', $this->filterFilterByQuery(...)),
         ];
     }
 
@@ -176,13 +174,5 @@ class AppExtensions extends AbstractExtension
         $pattern = Patterns::getI($matchWord);
 
         return $items->filter(static fn (Item $item) => $pattern->test($item->label));
-    }
-
-    /**
-     * @param list<string> $input
-     */
-    public function filterFilterByQuery(array $input, DataQuery $query): string
-    {
-        return implode(', ', $query->filterList($input));
     }
 }
