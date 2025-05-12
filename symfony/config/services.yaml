@@ -37,10 +37,3 @@ services:
             - { name: 'doctrine.event_subscriber' }
         arguments:
             - '@cache.app'
-
-    App\Event\Doctrine\CreatorListener:
-        tags:
-            - name: 'doctrine.orm.entity_listener'
-              event: 'preFlush'
-              entity: 'App\Entity\Creator'
-              lazy: true

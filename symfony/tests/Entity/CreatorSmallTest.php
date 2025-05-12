@@ -23,7 +23,7 @@ use ReflectionNamedType;
 /**
  * @small
  */
-class CreatorTest extends TestCase
+class CreatorSmallTest extends TestCase
 {
     /**
      * @var list<string>
