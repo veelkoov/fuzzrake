@@ -30,43 +30,45 @@ class CacheTest extends TestCase
     /**
      * @throws InvalidArgumentException
      */
-    public function testGetCached(): void
+    public function testGet(): void
     {
         /* @phpstan-ignore staticMethod.alreadyNarrowedType (Testing the contract) */
-        self::assertSame('a-result-1', $this->subject->getCached('a-key-1', 'a-tag-1', fn () => 'a-result-1'));
+        self::assertSame('a-result-1', $this->subject->get(static fn () => 'a-result-1', 'a-tag-1', 'a-key-1'));
         /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-1', $this->subject->getCached('a-key-1', 'a-tag-1', fn () => 'a-result-2'));
+        self::assertSame('a-result-1', $this->subject->get(static fn () => 'a-result-2', 'a-tag-1', 'a-key-1'));
         /* @phpstan-ignore staticMethod.alreadyNarrowedType (Testing the contract) */
-        self::assertSame('a-result-3', $this->subject->getCached('a-key-2', 'a-tag-2', fn () => 'a-result-3'));
+        self::assertSame('a-result-3', $this->subject->get(static fn () => 'a-result-3', 'a-tag-2', 'a-key-2'));
         /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-3', $this->subject->getCached('a-key-2', 'a-tag-2', fn () => 'a-result-4'));
+        self::assertSame('a-result-3', $this->subject->get(static fn () => 'a-result-4', 'a-tag-2', 'a-key-2'));
 
         $this->tagAwareAdapter->invalidateTags(['a-tag-1']);
 
         /* @phpstan-ignore staticMethod.alreadyNarrowedType (Testing the contract) */
-        self::assertSame('a-result-5', $this->subject->getCached('a-key-1', 'a-tag-1', fn () => 'a-result-5'));
+        self::assertSame('a-result-5', $this->subject->get(static fn () => 'a-result-5', 'a-tag-1', 'a-key-1'));
         /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-3', $this->subject->getCached('a-key-2', 'a-tag-2', fn () => 'a-result-6'));
+        self::assertSame('a-result-3', $this->subject->get(static fn () => 'a-result-6', 'a-tag-2', 'a-key-2'));
     }
 
     public function testKeysHandling(): void
     {
-        $this->subject->get(fn () => 'a-result-1', [], ['abc', Field::FEATURES]);
-        $this->subject->get(fn () => 'a-result-2', [], Field::FEATURES);
+        self::assertSame(
+            $this->subject->getKeyFromParts(Field::FEATURES),
+            $this->subject->getKeyFromParts('FEATURES'),
+        );
 
-        /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-1', $this->subject->get(fn () => 'wrong', [], ['abc', 'FEATURES']));
-        /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-2', $this->subject->get(fn () => 'wrong', [], 'FEATURES'));
-        /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
-        self::assertSame('a-result-2', $this->subject->get(fn () => 'wrong', [], ['FEATURES']));
-    }
+        self::assertSame(
+            $this->subject->getKeyFromParts(Field::FEATURES),
+            $this->subject->getKeyFromParts(['FEATURES']),
+        );
 
-    public function testKeysEscaping(): void
-    {
-        $this->subject->get(fn () => 'a-result-1', [], ['abc', 'def']);
+        self::assertSame(
+            $this->subject->getKeyFromParts(['abc', Field::FEATURES]),
+            $this->subject->getKeyFromParts(['abc', 'FEATURES']),
+        );
 
-        /* @phpstan-ignore staticMethod.alreadyNarrowedType (Testing the contract) */
-        self::assertSame('other-1', $this->subject->get(fn () => 'other-1', [], 'abc.def'));
+        self::assertNotSame(
+            $this->subject->getKeyFromParts(['abc', 'FEATURES']),
+            $this->subject->getKeyFromParts('abc.FEATURES'),
+        );
     }
 }
