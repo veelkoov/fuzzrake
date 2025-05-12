@@ -44,10 +44,3 @@ services:
               event: 'preFlush'
               entity: 'App\Entity\Creator'
               lazy: true
-
-    App\Event\Doctrine\CreatorUrlListener:
-        tags:
-            - name: 'doctrine.orm.entity_listener'
-              event: 'preUpdate'
-              entity: 'App\Entity\CreatorUrl'
-              lazy: true
