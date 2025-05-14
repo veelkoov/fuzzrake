@@ -14,7 +14,7 @@ final class Parse
 {
     use UtilityClass;
 
-    public static function int(null|int|float|string $input): int
+    public static function int(int|float|string|null $input): int
     {
         if (is_int($input)) {
             return $input;

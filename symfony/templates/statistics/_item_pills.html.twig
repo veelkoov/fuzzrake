@@ -1,20 +1,20 @@
 <p class="item-pills">
     {% for item in items %}
-        {% include 'statistics/_item_pill.html.twig' %}
+        {{ include('statistics/_item_pill.html.twig') }}
     {% endfor %}
 
-    {% for matchWord in matchWords %}
-        {% set itemsFiltered = items|filterItemsMatching(matchWord) %}
+    {% for match_word in matchWords %}
+        {% set items_filtered = items|filter_items_matching(match_word) %}
 
-        {% if itemsFiltered|length > 1 %}
+        {% if items_filtered|length > 1 %}
             <br />
 
             <span class="badge bg-primary p-2 my-1">
-                {{ matchWord|humanFriendlyRegexp }} ({{ itemsFiltered|length }}&times;):
+                {{ match_word|human_friendly_regexp }} ({{ items_filtered|length }}&times;):
             </span>
 
-            {% for item in itemsFiltered %}
-                {% include 'statistics/_item_pill.html.twig' %}
+            {% for item in items_filtered %}
+                {{ include('statistics/_item_pill.html.twig') }}
             {% endfor %}
         {% endif %}
     {% endfor %}

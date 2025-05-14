@@ -1,4 +1,4 @@
-<div id="main-page-intro" class="alert alert-light alert-dismissible fade show border-dark" role="alert">
+<div id="main-page-intro" class="alert alert-light alert-dismissible fade show" role="alert">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
     <div class="row">
@@ -6,12 +6,11 @@
             <h4 class="alert-heading pb-0 mb-0">Fursuit makers database</h4>
 
             <p class="intro-updated-info">
-                Updated: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }} (data)
-                / {{ stats.lastSystemUpdateTimeUtc|fragile_datetime_utc }} (system).
+                Data last updated: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }}.
             </p>
 
             <p>
-                Welcome to the spawnbase of the furries! Currently {{ stats.activeArtisansCount|fragile_int }}&nbsp;makers from
+                Welcome to the spawnbase of the furries! Currently {{ stats.activeCreatorsCount|fragile_int }}&nbsp;makers from
                 {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here.
             </p>
 

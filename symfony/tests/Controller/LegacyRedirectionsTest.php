@@ -4,30 +4,22 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 
 /**
  * @medium
  */
-class LegacyRedirectionsTest extends WebTestCaseWithEM
+class LegacyRedirectionsTest extends FuzzrakeWebTestCase
 {
-    private KernelBrowser $client;
-
-    public function setUp(): void
-    {
-        $this->client = self::createClient();
-        $this->client->followRedirects();
-    }
-
     /**
      * @dataProvider legacyRedirectionDataProvider
      */
     public function testLegacyRedirection(string $oldUri, string $checkedSelector, string $expectedText): void
     {
-        $this->client->request('GET', $oldUri);
+        self::$client->followRedirects();
+        self::$client->request('GET', $oldUri);
 
-        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains($checkedSelector, $expectedText);
     }
 
@@ -48,7 +40,7 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
             '/rules'             => ['/rules', 'h1', 'Guidelines for makers/studios'],
             '/should_know.html'  => ['/should_know.html', 'h1', 'What you should know'],
             '/statistics.html'   => ['/statistics.html', 'h1', 'Statistics'],
-            '/data_updates.html' => ['/data_updates.html', 'h1', 'Inclusion/update request'],
+            '/data_updates.html' => ['/data_updates.html', 'h1', 'Inclusion request'],
         ];
     }
 }

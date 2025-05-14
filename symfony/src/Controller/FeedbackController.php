@@ -4,58 +4,61 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Captcha\CaptchaService;
 use App\Form\FeedbackType;
-use App\Service\Captcha;
-use App\Service\DataService;
-use App\Service\Notifications\MessengerInterface;
 use App\ValueObject\Feedback;
-use App\ValueObject\Notification;
+use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 class FeedbackController extends AbstractController
 {
     public function __construct(
         private readonly RouterInterface $router,
-        private readonly MessengerInterface $messenger,
-        private readonly DataService $dataService,
-        private readonly Captcha $captcha,
+        private readonly MessageBusInterface $messageBus,
+        private readonly CaptchaService $captcha,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     #[Route('/feedback', RouteName::FEEDBACK_FORM)]
-    public function feedback(Request $request): Response
+    public function feedback(Request $request, Session $session): Response
     {
         $feedback = new Feedback();
 
-        if (null !== $maker = $request->query->get('maker')) { // grep-maker-query-parameter
-            $feedback->maker = $maker;
+        if (null !== $creator = $request->query->get('creator')) { // grep-creator-query-parameter
+            $feedback->creator = $creator;
         }
 
         $form = $this->createForm(FeedbackType::class, $feedback, [
             'router' => $this->router,
-        ]);
+        ])->handleRequest($request);
+        $captcha = $this->captcha->getCaptcha($session)->handleRequest($request, $form);
 
-        $big_error_message = '';
+        if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
+            try {
+                $this->sendFeedback($feedback);
 
-        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
-            if (!$this->captcha->isValid($request, 'feedback_form_captcha')) {
-                $big_error_message = "Captcha failed. Please retry submitting. If this doesn't help, try another browser or other network connection.";
-            } elseif (!$this->sendFeedback($feedback)) {
-                $big_error_message = 'Could not sent the message due to server error. Sorry for the inconvenience!';
-            } else {
                 return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
+            } catch (ExceptionInterface $exception) {
+                $this->logger->error('Exception while sending feedback.', ['exception' => $exception]);
+
+                $errorMessage = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
+                $form->get(FeedbackType::FLD_DETAILS)->addError(new FormError($errorMessage));
             }
         }
 
         return $this->render('feedback/feedback.html.twig', [
-            'form'              => $form,
-            'big_error_message' => $big_error_message,
-            'ooo_notice'        => $this->dataService->getOooNotice(),
+            'form' => $form,
         ]);
     }
 
@@ -65,17 +68,18 @@ class FeedbackController extends AbstractController
         return $this->render('feedback/feedback_sent.html.twig');
     }
 
-    private function sendFeedback(Feedback $feedback): bool
+    /**
+     * @throws ExceptionInterface
+     */
+    private function sendFeedback(Feedback $feedback): void
     {
         $contents = <<<contents
             Subject: $feedback->subject
-            Maker: $feedback->maker
+            Creator: $feedback->creator
             Details:
             $feedback->details
             contents;
 
-        $notification = new Notification('Feedback submitted', $contents);
-
-        return $this->messenger->send($notification);
+        $this->messageBus->dispatch(new EmailNotificationV1('Feedback submitted', $contents));
     }
 }

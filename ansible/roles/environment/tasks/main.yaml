@@ -7,10 +7,6 @@
   ansible.builtin.import_tasks: 'setup_docker_container.yaml'
   tags: 'docker'
 
-- name: 'Setup Apache virtual host'
-  ansible.builtin.import_tasks: 'setup_apache_vhost.yaml'
-  tags: 'vhost'
-
 - name: 'Build/install/compile'
   ansible.builtin.import_tasks: 'build.yaml'
   tags: 'build'
@@ -19,6 +15,19 @@
   ansible.builtin.import_tasks: 'clear_cache.yaml'
   tags: 'cache'
 
+- name: 'Migrate DB schema'
+  ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
+  tags: 'migrate'
+
 - name: 'Setup backend'
   ansible.builtin.import_tasks: 'setup_backend.yaml'
   tags: 'backend'
+
+- name: 'Setup automation'
+  when: 'setup_automation | default(false)'
+  ansible.builtin.import_tasks: 'setup_automation.yaml'
+  tags: 'automation'
+
+- name: 'Setup Apache virtual host'
+  ansible.builtin.import_tasks: 'setup_apache_vhost.yaml'
+  tags: 'vhost'

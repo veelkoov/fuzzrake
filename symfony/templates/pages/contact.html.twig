@@ -1,20 +1,11 @@
 {% extends '_base.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('contact') }}
-
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
-{% endblock %}
-
 {% block title %}contact{% endblock %}
 
 {% block body %}
     <h1>
         <i class="fa-regular fa-envelope"></i> Contact
     </h1>
-
-    {% include 'shared_parts/ooo_notice.html.twig' %}
 
     <div class="card border-primary my-5 w-75 mx-auto">
         <div class="card-body">
@@ -28,12 +19,15 @@
         </div>
     </div>
 
-    <p class="text-center overflow-x-auto">
+    <p class="text-center">
         <a class="btn btn-primary my-1 btn-sm" href="https://www.tumblr.com/getfursuit">
             <i class="fa-brands fa-tumblr"></i> Tumblr
         </a>
         <a class="btn btn-primary my-1 btn-sm" rel="me" href="https://fursuits.online/@getfursuit">
             <i class="fab fa-mastodon"></i> Mastodon
+        </a>
+        <a class="btn btn-primary my-1 btn-sm" rel="me" href="https://bsky.app/profile/getfursuit.bsky.social">
+            <i class="fas fa-cloud"></i> Bluesky
         </a>
 
         <br>
@@ -45,14 +39,19 @@
             <i class="fab fa-twitter"></i> Twitter
         </a>
 
-        <br>
+        {% if is_solved %}
+            <br>
 
-        <span id="protected-contact-info"></span>
+            <a href="mailto:{{ contact_email }}" class="btn btn-primary my-1 btn-sm">
+                <i class="fas fa-envelope"></i> {{ contact_email }}
+            </a>
+        {% endif %}
     </p>
 
-    <div>
-        <p class="small my-5 w-75 mx-auto">
-            If you want to use e-mail and an address didn't appear above, it means the automatic captcha failed. In that case please try using a different browser or device or network.
-        </p>
-    </div>
+    {% if not is_solved %}
+        {{ form_start(form) }}
+        {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
+        <input type="submit" class="btn btn-primary my-1 btn-sm" value="Reveal email address">
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}

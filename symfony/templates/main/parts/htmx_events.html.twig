@@ -1,0 +1,24 @@
+{% from 'main/shared_macros.html.twig' import card_open_attrs %}
+
+{# FIXME: Many filter selections break the requests. See https://github.com/veelkoov/fuzzrake/issues/185 #}
+
+<input type="hidden" id="page-number" name="page" value="1">
+<input type="hidden" id="creator-mode-parameter-field" name="creatorMode" value="0">
+
+<div hx-trigger="click from:#checklist-dismiss-btn,
+    hidden.bs.modal from:#filters-modal,
+    input from:#search-text-field changed delay:500ms,
+    click from:#page-number,
+    click from:#creator-mode-parameter-field"
+
+    hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
+    hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
+
+    hx-include="#checklist-container, #filters-modal-body, #search-text-field, #creator-mode-parameter-field, #page-number"
+
+    hx-get="{{ path('htmx_main_creators_in_table') }}"
+    hx-target="#creators-table-body"
+    hx-indicator="#loading-indicator"
+></div>
+
+<div id="open-creator-card-given-creator-id-anchor" {{ card_open_attrs('_______') }}></div>

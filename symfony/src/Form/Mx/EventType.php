@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\Mx;
 
 use App\Entity\Event;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,6 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractTypeWithDelete
 {
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -36,11 +38,11 @@ class EventType extends AbstractTypeWithDelete
                 ],
                 'expanded' => true,
             ])
-            ->add('newMakersCount', NumberType::class, [
+            ->add('newCreatorsCount', NumberType::class, [
             ])
-            ->add('updatedMakersCount', NumberType::class, [
+            ->add('updatedCreatorsCount', NumberType::class, [
             ])
-            ->add('reportedUpdatedMakersCount', NumberType::class, [
+            ->add('reportedUpdatedCreatorsCount', NumberType::class, [
             ])
             ->add('gitCommits', TextareaType::class, [
                 'required'   => false,
@@ -49,6 +51,7 @@ class EventType extends AbstractTypeWithDelete
         ;
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);

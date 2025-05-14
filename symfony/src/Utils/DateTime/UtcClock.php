@@ -29,9 +29,9 @@ final class UtcClock
     /**
      * @throws DateTimeException
      */
-    public static function at(string|false|null $time): DateTimeImmutable
+    public static function at(string $time): DateTimeImmutable
     {
-        $timestamp = strtotime((string) $time, self::time());
+        $timestamp = strtotime($time, self::time());
 
         if (false === $timestamp) {
             throw new DateTimeException("Failed to parse timestamp from input: '$time'");
@@ -47,21 +47,6 @@ final class UtcClock
         } catch (Exception $exception) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($exception); // Each timestamp can be converted to a date
         } // @codeCoverageIgnoreEnd
-    }
-
-    public static function getMonthLaterYmd(): string
-    {
-        return date('Y-m-d', strtotime('+1 month', self::time()));
-    }
-
-    public static function getWeekLaterYmd(): string
-    {
-        return date('Y-m-d', strtotime('+1 week', self::time()));
-    }
-
-    public static function getTomorrowYmd(): string
-    {
-        return date('Y-m-d', strtotime('+1 day', self::time()));
     }
 
     public static function passed(DateTimeImmutable $dateTime): bool

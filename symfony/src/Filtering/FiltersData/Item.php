@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Filtering\FiltersData\Builder\MutableItem;
+use App\Filtering\FiltersData\Data\ItemList;
 
 readonly class Item
 {
-    /**
-     * @param list<Item> $subitems
-     */
     public function __construct(
         public string $value,
         public string $label,
         public int $count,
-        public array $subitems,
+        public ItemList $subitems = new ItemList(),
     ) {
     }
 

@@ -6,15 +6,17 @@ namespace App\Twig;
 
 use App\Entity\Event;
 use InvalidArgumentException;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class EventsExtensions extends AbstractExtension
 {
+    #[Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('eventDescription', $this->eventDescriptionFunction(...)),
+            new TwigFunction('event_description', $this->eventDescriptionFunction(...)),
         ];
     }
 
@@ -24,32 +26,32 @@ class EventsExtensions extends AbstractExtension
             throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__FUNCTION__);
         }
 
-        $n = $event->getNewMakersCount();
-        $u = $event->getUpdatedMakersCount();
-        $r = $event->getReportedUpdatedMakersCount();
+        $n = $event->getNewCreatorsCount();
+        $u = $event->getUpdatedCreatorsCount();
+        $r = $event->getReportedUpdatedCreatorsCount();
 
         $result = '';
 
-        if ($n) {
+        if ($n > 0) {
             $s = $n > 1 ? 's' : '';
             $result .= "$n new maker$s";
         }
 
-        if ($n && $u) {
+        if ($n > 0 && $u > 0) {
             $result .= ' and ';
         }
 
-        if ($u) {
+        if ($u > 0) {
             $s = $u > 1 ? 's' : '';
             $result .= "$u updated maker$s";
         }
 
-        if ($n || $u) {
+        if ($n > 0 || $u > 0) {
             $s = $n + $u > 1 ? 's' : '';
             $result .= " based on received I/U request$s.";
         }
 
-        if ($r) {
+        if ($r > 0) {
             $s = $r > 1 ? 's' : '';
             $result .= " $r maker$s updated after report$s sent by a visitor(s). Thank you for your contribution!";
         }

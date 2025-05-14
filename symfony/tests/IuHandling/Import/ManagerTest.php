@@ -6,7 +6,7 @@ namespace App\Tests\IuHandling\Import;
 
 use App\IuHandling\Exception\ManagerConfigError;
 use App\IuHandling\Import\Manager;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,14 +26,14 @@ class ManagerTest extends TestCase
     public function testDetectingDelimiter(): void
     {
         $manager = new Manager('set NAME |abcdef|');
-        $manager->correctArtisan($artisan = Artisan::new());
+        $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('abcdef', $artisan->getName());
+        self::assertSame('abcdef', $creator->getName());
 
         $manager = new Manager('set NAME |fedcba|');
-        $manager->correctArtisan($artisan = Artisan::new());
+        $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('fedcba', $artisan->getName());
+        self::assertSame('fedcba', $creator->getName());
     }
 
     public function testAcceptCommand(): void
@@ -47,33 +47,33 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('clear NOTES');
 
-        $artisan = Artisan::new()->setNotes('will be removed');
+        $creator = Creator::new()->setNotes('will be removed');
 
-        self::assertEquals('will be removed', $artisan->getNotes());
-        $manager->correctArtisan($artisan);
-        self::assertEquals('', $artisan->getNotes());
+        self::assertSame('will be removed', $creator->getNotes());
+        $manager->correctCreator($creator);
+        self::assertSame('', $creator->getNotes());
     }
 
     public function testSetCommand(): void
     {
         $manager = new Manager('set NOTES "will be added"');
 
-        $artisan = Artisan::new();
+        $creator = Creator::new();
 
-        self::assertEquals('', $artisan->getNotes());
-        $manager->correctArtisan($artisan);
-        self::assertEquals('will be added', $artisan->getNotes());
+        self::assertSame('', $creator->getNotes());
+        $manager->correctCreator($creator);
+        self::assertSame('will be added', $creator->getNotes());
     }
 
-    public function testMatchMakerIdCommand(): void
+    public function testMatchCreatorIdCommand(): void
     {
         $manager = new Manager('accept');
 
-        self::assertNull($manager->getMatchedMakerId());
+        self::assertNull($manager->getMatchedCreatorId());
 
-        $manager = new Manager('match-maker-id MI12345');
+        $manager = new Manager('match-maker-id TEST001');
 
-        self::assertEquals('MI12345', $manager->getMatchedMakerId());
+        self::assertSame('TEST001', $manager->getMatchedCreatorId());
     }
 
     public function testInvalidCommand(): void
@@ -83,7 +83,18 @@ class ManagerTest extends TestCase
 
             self::fail();
         } catch (ManagerConfigError $exception) {
-            self::assertEquals("Unknown command: 'pancakes'", $exception->getMessage());
+            self::assertSame("Unknown command: 'pancakes'", $exception->getMessage());
+        }
+    }
+
+    public function testHandlingInvalidFieldName(): void
+    {
+        try {
+            new Manager("set NOTE 'blargh'");
+
+            self::fail();
+        } catch (ManagerConfigError $exception) {
+            self::assertSame("Unknown field: 'NOTE'", $exception->getMessage());
         }
     }
 }

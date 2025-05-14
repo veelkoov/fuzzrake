@@ -2,31 +2,17 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 imports:
-    - { resource: data_definitions/*.yaml }
+    - { resource: fuzzrake/*.yaml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
-            $countries:                       '%countries%'
-            $currencies:                      '%currencies%'
-            $languages:                       '%languages%'
-            $lists:                           '%lists%'
-            $noPayPlans:                      '%noPayPlans%'
-            $paymentMethods:                  '%paymentMethods%'
-            $projectDir:                      '%kernel.project_dir%'
-            $speciesDefinitions:              '%species_definitions%'
-            $states:                          '%states%'
-            $strings:                         '%strings%'
-            $urls:                            '%urls%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -52,16 +38,16 @@ services:
         arguments:
             - '@cache.app'
 
-    App\Event\Doctrine\ArtisanListener:
+    App\Event\Doctrine\CreatorListener:
         tags:
             - name: 'doctrine.orm.entity_listener'
               event: 'preFlush'
-              entity: 'App\Entity\Artisan'
+              entity: 'App\Entity\Creator'
               lazy: true
 
-    App\Event\Doctrine\ArtisanUrlListener:
+    App\Event\Doctrine\CreatorUrlListener:
         tags:
             - name: 'doctrine.orm.entity_listener'
               event: 'preUpdate'
-              entity: 'App\Entity\ArtisanUrl'
+              entity: 'App\Entity\CreatorUrl'
               lazy: true

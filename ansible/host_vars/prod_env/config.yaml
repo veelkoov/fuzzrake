@@ -9,4 +9,4 @@ server_name: 'getfursu.it'
 php_fpm_container_port: 9557
 php_fpm_container_name: 'fuzzrake-prod'
 
-setup_tracking: true
+setup_automation: true

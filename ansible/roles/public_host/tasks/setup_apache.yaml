@@ -18,7 +18,7 @@
     name:  'httpd'
     state: 'installed'
 
-- name: '{{ "Install" if ssl_ready else "Uninstall" }} mod_ssl' # Easier
+- name: 'Apache mod_ssl {{ "install" if ssl_ready else "removal" }}' # Easier
   ansible.builtin.dnf:
     name:  'mod_ssl'
     state: '{{ "present" if ssl_ready else "absent" }}'
@@ -94,3 +94,9 @@
     dest:   '/etc/logrotate.d/httpd'
     mode:   '0644'
     backup: true
+
+- name: 'Setup certbot renew cronjob'
+  ansible.builtin.cron:
+    job:          '{ date; certbot renew; } >> /var/log/certbot_renew.log'
+    name:         'certbot renew'
+    special_time: 'weekly'

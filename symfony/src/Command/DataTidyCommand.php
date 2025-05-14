@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Data\Tidying\ArtisanChanges;
+use App\Data\Tidying\CreatorChanges;
 use App\Data\Tidying\FdvFactory;
 use App\Data\Tidying\Printer;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,17 +20,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand('app:data:tidy')]
 class DataTidyCommand extends Command
 {
-    private const OPT_COMMIT = 'commit';
-    private const OPT_WITH_INACTIVE = 'with-inactive';
+    private const string OPT_COMMIT = 'commit';
+    private const string OPT_WITH_INACTIVE = 'with-inactive';
 
     public function __construct(
-        private readonly EntityManagerInterface $objectManager,
-        private readonly ArtisanRepository $artisanRepo,
+        private readonly CreatorRepository $creatorRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly FdvFactory $fdvFactory,
     ) {
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -38,22 +40,26 @@ class DataTidyCommand extends Command
         ;
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $wantCommit = $input->getOption(self::OPT_COMMIT);
+
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
+        $creators = $input->getOption(self::OPT_WITH_INACTIVE)
+            ? $this->creatorRepository->getAllPaged()
+            : $this->creatorRepository->getActivePaged();
 
-        foreach ($artisans as $artisan) {
-            $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
-
-            $fdv->perform($artisanFixWip);
-            $artisanFixWip->apply();
+        foreach ($creators as $creatorE) {
+            $creatorFixWip = new CreatorChanges(Creator::wrap($creatorE));
+            $fdv->perform($creatorFixWip);
+            $creatorFixWip->apply();
         }
 
-        if ($input->getOption(self::OPT_COMMIT)) {
-            $this->objectManager->flush();
+        if ($wantCommit) {
+            $this->entityManager->flush();
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');

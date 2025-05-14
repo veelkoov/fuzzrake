@@ -6,17 +6,17 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
-
-use function Psl\Iter\contains;
+use Psl\Iter;
+use Symfony\Component\Panther\DomCrawler\Crawler;
 
 /**
  * @large
  */
-class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
+class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 
@@ -37,7 +37,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
                             $showToMinors = false === $nsfwWebsite
                                 && false === $nsfwSocial
-                                && (false === $doesNsfw || (null === $doesNsfw && contains([Ages::MIXED, Ages::MINORS], $ages)))
+                                && (false === $doesNsfw || (null === $doesNsfw && Iter\contains([Ages::MIXED, Ages::MINORS], $ages)))
                                 && true === $worksWithMinors;
 
                             $showAsSfw = false === $nsfwWebsite
@@ -62,15 +62,13 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
     {
         self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
 
-        $client = static::createPantherClient();
-
-        $artisans = [];
+        $creators = [];
         $expected = [];
 
         foreach (self::getCombinations() as $idx => $data) {
             [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showToMinors, $showAsSfw] = $data;
 
-            $makerId = sprintf('M%06d', $idx);
+            $creatorId = sprintf('M%06d', $idx);
 
             $name = match ($ages) {
                 Ages::MINORS => 'MIN',
@@ -83,8 +81,8 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
             $name .= ' '.$this->descBool($doesNsfw, 'nsfw');
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
-            $artisans[$makerId] = (new Artisan())
-                ->setMakerId($makerId)
+            $creators[$creatorId] = (new Creator())
+                ->setCreatorId($creatorId)
                 ->setName($name)
                 ->setAges($ages)
                 ->setNsfwWebsite($nsfwWebsite)
@@ -93,44 +91,60 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                 ->setWorksWithMinors($worksWithMinors);
 
             if (($showToMinors && $userIsMinor) || ($showAsSfw && true === $userWantsSfw) || false === $userWantsSfw) {
-                $expected[$makerId] = $artisans[$makerId];
+                $expected[$creatorId] = $creators[$creatorId];
             }
         }
-        $this->persistAndFlush(...$artisans);
+        self::persistAndFlush(...$creators);
 
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
 
-        $infoText = 'Currently '.count($artisans).' makers from 0 countries are listed here.';
-        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        $infoText = 'Currently '.count($creators).' makers from 0 countries are listed here.';
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
         if ($userIsMinor) {
             self::waitUntilShows('#aasImNotAdult');
-            $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         } else {
             self::waitUntilShows('#aasImAdult');
-            $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-            $lastChoiceId = $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
+            $lastChoiceId = true === $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
             self::waitUntilShows("#$lastChoiceId");
-            $client->findElement(WebDriverBy::id($lastChoiceId))->click();
+            self::$client->findElement(WebDriverBy::id($lastChoiceId))->click();
         }
 
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
-        self::waitForLoadingIndicatorToDisappear();
+        $displayedCreatorIds = [];
+        $crawler = self::$client->getCrawler();
 
-        foreach ($expected as $artisan) {
-            self::assertVisible('#'.$artisan->getMakerId(), "Should display {$artisan->getName()}");
-        }
+        while (true) { // Handle multiple pages
+            self::waitForLoadingIndicatorToDisappear();
 
-        foreach ($artisans as $makerId => $artisan) {
-            if (!array_key_exists($makerId, $expected)) {
-                self::assertInvisible('#'.$artisan->getMakerId(), "Should not display {$artisan->getName()}");
+            $displayedCreatorIds = [
+                ...$displayedCreatorIds,
+                ...$crawler->filter('#creators-table-body tr')
+                    ->each(fn (Crawler $node, $_) => $node->attr('id', '')),
+            ];
+
+            if (0 < $crawler->filter('#next-items-page-link')->count()) {
+                self::$client->findElement(WebDriverBy::id('next-items-page-link'))->click();
+            } else {
+                break;
             }
+        }
+
+        foreach ($expected as $creator) {
+            self::assertContains($creator->getCreatorId(), $displayedCreatorIds, "Should display {$creator->getName()}");
+        }
+
+        foreach ($displayedCreatorIds as $creatorId) {
+            self::assertIsString($creatorId); // Workaround lacking type hinting in crawler's each()
+            self::assertArrayHasKey($creatorId, $expected, "Should not display {$creators[$creatorId]->getName()}");
         }
     }
 

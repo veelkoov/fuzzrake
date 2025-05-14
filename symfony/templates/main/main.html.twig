@@ -4,10 +4,6 @@
     {{ parent() }}
 
     {{ encore_entry_script_tags('main') }}
-
-    <script>
-        {% include 'main/parts/data.js.twig' %}
-    </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -17,37 +13,119 @@
 {% endblock %}
 
 {% block body %}
-    <div id="loading-indicator-container" class="fixed-top text-center">
-        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);"></div>
+    {{ include('main/parts/intro.html.twig') }}
 
-        <div class="container p-2 text-start">
-            <div class="alert alert-light border-primary shadow" role="alert">
-                <h4 class="alert-heading">
-                    <span class="badge bg-primary">Loading, please wait</span> <small class="text-muted" id="loading-indicator-message"></small>
-                </h4>
+    {{ include('main/parts/checklist.html.twig') }}
 
-                <hr>
+    {{ include('main/parts/htmx_events.html.twig') }}
 
-                <p class="small mb-1">If it is stuck for more than half a minute, you may want to try:</p>
+    <div id="creator-mode-banner" class="card border-danger mb-3 d-none">
+        <div class="card-header">
+            Filters disabled
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.
+            </p>
+            <a id="btn-reenable-filters" href="{{ path('main') }}" class="btn btn-light btn-outline-danger">Re-enable filters</a>
+        </div>
+    </div>
 
-                <ul class="small mb-0">
-                    <li>refreshing the page / clearing the cache</li>
-                    <li>using the "incognito mode"</li>
-                    <li>using other browser or device</li>
-                </ul>
+    {{ include('main/parts/filters.html.twig') }}
+
+    {{ include('main/parts/legend_modal.html.twig') }}
+
+    <div id="creator-updates-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div id="creator-updates-modal-content" class="modal-content">
             </div>
         </div>
     </div>
 
-    {% include '_loading.html.twig' %}
+    <div id="creator-card-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div id="creator-card-modal-content" class="modal-content"></div>
+        </div>
+    </div>
 
-    {% include 'main/parts/legendPopUp.html.twig' %}
+    {# twig-cs-fixer-disable PunctuationSpacing.After #}
+    {# Unable to disable for the following lines only #}
+    {% set columns = [
+        {id: 'creator-id',        label: 'Maker ID',          alignment_class: 'text-center'},
+        {id: 'state',             label: 'State',             alignment_class: 'text-center'},
+        {id: 'languages',         label: 'Languages',         alignment_class: 'text-center'},
+        {id: 'production-models', label: 'Production models', alignment_class: 'text-center'},
+        {id: 'styles',            label: 'Styles',            alignment_class: 'text-center'},
+        {id: 'types',             label: 'Types',             alignment_class: 'text-center'},
+        {id: 'features',          label: 'Features',          alignment_class: 'text-center'},
+        {id: 'species',           label: 'Species',           alignment_class: 'text-center'},
+        {id: 'commissions',       label: 'Commissions',       alignment_class: 'text-center'},
+        {id: 'links',             label: 'Links',             alignment_class: 'text-end'},
+    ] %}
 
-    {% include 'main/parts/intro.html.twig' %}
+    <div id="main-primary-content" class="row d-none">
+        <div class="col-md-6">
+            <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside" aria-expanded="false">
+                        Columns
+                    </button>
+                    <ul id="columns-visibility-links" class="dropdown-menu">
+                        {% for column in columns %}
+                            <li>
+                                <a class="dropdown-item" href="#" data-column-id="{{ column.id }}">{{ column.label }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-    <div id="main-primary-component"></div>
+                <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
+                        data-bs-target="#filters-modal">
+                    Filters
+
+                    <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
+                </button>
+
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
+                    Legend
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-md-end">
+            <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
+        </div>
+
+        <div id="data-table-container">
+            <table id="creators-table" class="table table-striped table-sm table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="name text-start">Fursuit maker /&nbsp;studio name</th>
+                        {% for column in columns %}
+                            <th class="{{ column.id }} {{ column.alignment_class }}">
+                                {{ column.label }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody id="creators-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="creators-table-pagination"></div>
 
     <div class="container text-center">
         <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">
+    </div>
+
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </div>
     </div>
 {% endblock %}

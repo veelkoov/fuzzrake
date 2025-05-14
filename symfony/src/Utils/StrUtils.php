@@ -6,24 +6,24 @@ namespace App\Utils;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
+use Veelkoov\Debris\StringSet;
 
 final class StrUtils
 {
     use UtilityClass;
 
-    public static function artisanNamesSafeForCli(Artisan ...$artisans): string
+    public static function creatorNamesSafeForCli(Creator ...$creators): string
     {
-        $names = $makerIds = [];
+        $namesAndCreatorIds = new StringSet();
 
-        foreach (array_filter($artisans) as /* @var Artisan $artisan */ $artisan) {
-            $names = array_merge($artisan->getAllNamesArr(), $names);
-            $makerIds = array_merge($artisan->getAllMakerIdsArr(), $makerIds);
+        foreach ($creators as $creator) {
+            $namesAndCreatorIds->addAll($creator->getAllNames())->addAll($creator->getAllCreatorIds());
         }
 
-        return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($makerIds))]));
+        return $namesAndCreatorIds->filter(static fn (string $item) => '' !== $item)->join(' / ');
     }
 
     public static function strSafeForCli(string $input): string
@@ -36,13 +36,8 @@ final class StrUtils
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
-    public static function ucfirst(string $input): string
-    {
-        return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
-    }
-
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
     public static function asStr(mixed $value): string
     {
@@ -51,9 +46,9 @@ final class StrUtils
         } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof Ages) {
-            return (string) $value->value;
+            return $value->value;
         } elseif ($value instanceof ContactPermit) {
-            return (string) $value->value;
+            return $value->value;
         } elseif (is_int($value)) {
             return (string) $value;
         } elseif (is_bool($value)) {

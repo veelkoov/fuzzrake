@@ -1,0 +1,8 @@
+{% macro card_open_attrs(creator_id) %}
+    hx-get="{{ path('htmx_main_creator_card', {creatorId: creator_id}) }}"
+    hx-target="#creator-card-modal"
+    hx-trigger="click"
+    hx-indicator="#loading-indicator"
+    data-bs-toggle="modal"
+    data-bs-target="#creator-card-modal"
+{% endmacro %}

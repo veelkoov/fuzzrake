@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block body %}
-    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_artisans') }}">See all recently added makers</a></p>
+    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_creators') }}">See all recently added makers</a></p>
 
     <p class="small">All times are UTC</p>
 
@@ -43,11 +43,11 @@
                     <p>
                         {% if event.typeDataUpdated %}
 
-                            {{ eventDescription(event) }}
+                            {{ event_description(event) }}
 
                         {% elseif event.typeCsUpdated %}
 
-                            <strong>{{ event.artisanName }}</strong> commissions status changed.
+                            <strong>{{ event.creatorName }}</strong> commissions status changed.
 
                             {% if event.noLongerOpenFor %}
                                 No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.
@@ -81,8 +81,8 @@
                             {%- endfor -%})
                         {% endif %}
 
-                        {% if isDevOrTestEnv() and event.editable %}
-                            <a href="{{ path('mx_event_edit', { id: event.id }) }}"><i class="fas fa-edit"></i></a>
+                        {% if is_granted('ROLE_ADMIN') and event.editable %}
+                            <a href="{{ path('mx_event_edit', {id: event.id}) }}"><i class="fas fa-edit"></i></a>
                         {% endif %}
                     </p>
                 </div>

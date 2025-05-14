@@ -5,97 +5,76 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
-use App\Utils\StringList;
+use App\Utils\Collections\StringList;
+use Override;
 
-class ListChange implements ChangeInterface
+readonly class ListChange implements ChangeInterface
 {
-    /**
-     * @var string[]
-     */
-    public readonly array $old;
-
-    /**
-     * @var string[]
-     */
-    public readonly array $new;
-
-    /**
-     * @var string[]
-     */
-    public readonly array $added;
-
-    /**
-     * @var string[]
-     */
-    public readonly array $removed;
+    public StringList $added;
+    public StringList $removed;
 
     public function __construct(
-        private readonly Field $field,
-        string $old,
-        string $new,
+        private Field $field,
+        private StringList $old,
+        private StringList $new,
     ) {
-        $this->old = StringList::unpack($old);
-        $this->new = StringList::unpack($new);
-
         [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
 
+    #[Override]
     public function getDescription(): string
     {
-        $name = $this->field->name;
-        $added = $this->added;
-        $removed = $this->removed;
+        $name = $this->field->value;
 
-        if (!empty($added)) {
-            $res = 'Added '.$name.': "'.implode('", "', $added).'"';
+        if ($this->added->isNotEmpty()) {
+            $res = 'Added '.$name.': "'.$this->added->join('", "').'"';
         } else {
             $res = '';
         }
 
-        if (!empty($removed)) {
-            $res .= '' === $res ? "Removed {$name}" : ' and removed';
+        if ($this->removed->isNotEmpty()) {
+            $res .= '' === $res ? "Removed $name" : ' and removed';
 
-            $res .= ': "'.implode('", "', $removed).'"';
+            $res .= ': "'.$this->removed->join('", "').'"';
         } elseif ('' === $res) {
-            $res = "{$name} did not change";
+            $res = "$name did not change";
         }
 
         return $res;
     }
 
+    #[Override]
     public function isActuallyAChange(): bool
     {
-        return !empty($this->added) || !empty($this->removed);
+        return $this->added->isNotEmpty() || $this->removed->isNotEmpty();
     }
 
     /**
-     * @param string[] $new
-     * @param string[] $old
-     *
-     * @return array{string[], string[]}
+     * @return array{StringList, StringList}
      */
-    private static function calculateAddedRemoved(array $old, array $new): array
+    private static function calculateAddedRemoved(StringList $old, StringList $new): array
     {
-        $added = [];
-        $removed = [];
+        $added = new StringList();
+        $removed = new StringList();
 
-        $common = array_intersect($new, $old);
+        $common = $new->intersect($old);
 
         foreach ($old as $item) {
-            if (!in_array($item, $common)) {
-                $removed[] = $item;
+            if (!$common->contains($item)) {
+                $removed->add($item);
             }
         }
 
         foreach ($new as $item) {
-            if (!in_array($item, $common)) {
-                $added[] = $item;
+            if (!$common->contains($item)) {
+                $added->add($item);
             }
         }
 
-        return [$added, $removed];
+        return [$added->freeze(), $removed->freeze()];
     }
 
+    #[Override]
     public function getField(): Field
     {
         return $this->field;

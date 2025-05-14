@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Contact;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
-class UpdateContact
+final readonly class UpdateContact
 {
     public function __construct(
-        public readonly string $description,
-        public readonly bool $isAllowed,
-        public readonly string $method,
-        public readonly string $address,
-        public readonly bool $isEmail,
+        public string $description,
+        public bool $isAllowed,
+        public string $address,
     ) {
     }
 
-    public static function from(Artisan $original, Artisan $updated): self
+    public static function from(Creator $original, Creator $updated): self
     {
         $was = self::getContactAllowed($original);
         $now = self::getContactAllowed($updated);
@@ -28,25 +25,21 @@ class UpdateContact
         $description = $isNew || $was === $now ? $now->getLabel() : "{$was->getLabel()} → {$now->getLabel()}";
         $isAllowed = ($isNew || ContactPermit::NO !== $was) && (ContactPermit::NO !== $now);
 
-        if ($isNew) {
-            $method = $updated->getContactMethod();
-            $address = $updated->getContactAddressPlain();
-        } else {
-            $method = $original->getContactMethod();
-            $address = $original->getContactAddressPlain();
-        }
+        $address = !$isAllowed
+            ? ''
+            : ($isNew
+                ? $updated->getEmailAddress()
+                : $original->getEmailAddress());
 
         return new self(
             $description,
             $isAllowed,
-            $method,
             $address,
-            Contact::E_MAIL === $method,
         );
     }
 
-    private static function getContactAllowed(Artisan $artisan): ContactPermit
+    private static function getContactAllowed(Creator $creator): ContactPermit
     {
-        return $artisan->getContactAllowed() ?? ContactPermit::NO;
+        return $creator->getContactAllowed() ?? ContactPermit::NO;
     }
 }

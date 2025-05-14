@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Service\EnvironmentsService;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class FuzzrakeAbstractController extends AbstractController
 {
     public function __construct(
-        protected readonly EnvironmentsService $environments,
+        protected readonly CreatorRepository $creatorRepository,
     ) {
     }
 
-    protected function authorize(bool $shouldLetIn = true): void
+    protected function getCreatorOrThrow404(string $creatorId): Creator
     {
-        if (!$this->environments->isDevOrTest() || !$shouldLetIn) {
-            throw $this->createAccessDeniedException();
+        try {
+            return Creator::wrap($this->creatorRepository->findByCreatorId($creatorId));
+        } catch (NoResultException) {
+            throw $this->createNotFoundException("Creator with creator ID '$creatorId' does not exist");
         }
     }
 }

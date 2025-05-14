@@ -8,7 +8,7 @@ use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrawlersController extends AbstractController
@@ -23,8 +23,8 @@ class CrawlersController extends AbstractController
             RouteName::EVENTS,
             RouteName::INFO,
             RouteName::MAIN,
-            RouteName::MAKER_IDS,
-            RouteName::NEW_ARTISANS,
+            RouteName::CREATOR_IDS,
+            RouteName::NEW_CREATORS,
             RouteName::GUIDELINES,
             RouteName::SHOULD_KNOW,
             RouteName::STATISTICS,

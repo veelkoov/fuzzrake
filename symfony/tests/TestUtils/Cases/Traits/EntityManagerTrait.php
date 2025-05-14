@@ -6,10 +6,10 @@ namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
-use App\Entity\Artisan as ArtisanE;
+use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,27 +17,10 @@ use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 use Exception;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 trait EntityManagerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
-
-    /**
-     * @param array<string, string> $options
-     */
-    protected static function bootKernel(array $options = []): KernelInterface
-    {
-        $result = parent::bootKernel($options);
-
-        if (null !== self::$entityManager) {
-            self::$entityManager->clear();
-            self::$entityManager = null;
-        }
-        self::resetDB();
-
-        return $result;
-    }
 
     protected static function getEM(): EntityManagerInterface
     {
@@ -52,13 +35,20 @@ trait EntityManagerTrait
             throw new RuntimeException(previous: $caught);
         }
 
-        self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
+        if (!($entityManager instanceof EntityManagerInterface)) {
+            throw new RuntimeException('Expected '.EntityManagerInterface::class.' but received something else');
+        }
 
         return $entityManager;
     }
 
     protected static function resetDB(): void
     {
+        if (null !== self::$entityManager) {
+            self::$entityManager->clear();
+            self::$entityManager = null;
+        }
+
         $metadata = self::getEM()->getMetadataFactory()->getAllMetadata();
 
         $schemaTool = new OrmSchemaTool(self::getEM());
@@ -66,26 +56,26 @@ trait EntityManagerTrait
         $schemaTool->updateSchema($metadata);
     }
 
-    protected static function getArtisanRepository(): ArtisanRepository
+    protected static function getCreatorRepository(): CreatorRepository
     {
-        return self::getEM()->getRepository(ArtisanE::class);
+        return self::getEM()->getRepository(CreatorE::class);
     }
 
-    protected static function findArtisanByMakerId(string $makerId): Artisan
+    protected static function findCreatorByCreatorId(string $creatorId): Creator
     {
-        $artisan = self::getArtisanRepository()->findOneBy(['makerId' => $makerId]);
-        self::assertNotNull($artisan);
+        $creator = self::getCreatorRepository()->findOneBy(['creatorId' => $creatorId]);
+        self::assertNotNull($creator);
 
-        return Artisan::wrap($artisan);
+        return Creator::wrap($creator);
     }
 
-    protected static function addSimpleArtisan(): Artisan
+    protected static function addSimpleCreator(): Creator
     {
-        $artisan = self::getArtisan();
+        $creator = self::getCreator();
 
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
 
-        return $artisan;
+        return $creator;
     }
 
     protected static function addSimpleGenericEvent(): Event
@@ -99,9 +89,9 @@ trait EntityManagerTrait
         return $event;
     }
 
-    protected static function getArtisan(
-        string $name = 'Test artisan',
-        string $makerId = 'TEST000',
+    protected static function getCreator(
+        string $name = 'Test creator',
+        string $creatorId = 'TEST000',
         string $country = 'CZ',
         string $password = '',
         ContactPermit $contactAllowed = null,
@@ -110,10 +100,11 @@ trait EntityManagerTrait
         ?bool $nsfwSocial = null,
         ?bool $doesNsfw = null,
         ?bool $worksWithMinors = null,
-    ): Artisan {
-        $result = (new Artisan())
+        ?string $emailAddress = null,
+    ): Creator {
+        $result = (new Creator())
             ->setName($name)
-            ->setMakerId($makerId)
+            ->setCreatorId($creatorId)
             ->setCountry($country);
 
         $result
@@ -124,6 +115,10 @@ trait EntityManagerTrait
         if ('' !== $password) {
             $result->setPassword($password);
             Password::encryptOn($result);
+        }
+
+        if (null !== $emailAddress) {
+            $result->setEmailAddress($emailAddress);
         }
 
         $result->setContactAllowed($contactAllowed);
@@ -138,11 +133,15 @@ trait EntityManagerTrait
 
     protected static function persistAndFlush(object ...$entities): void
     {
+        self::persist(...$entities);
+        self::flush();
+    }
+
+    protected static function persist(object ...$entities): void
+    {
         foreach ($entities as $entity) {
             self::getEM()->persist($entity);
         }
-
-        self::flush();
     }
 
     protected static function flush(): void

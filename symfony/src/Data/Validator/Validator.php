@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\PackedStringList;
 
 class Validator
 {
@@ -17,9 +18,20 @@ class Validator
         $this->genericValidator = new GenericValidator();
     }
 
-    public function isValid(Artisan $artisan, Field $field): bool
+    public function isValid(Creator $creator, Field $field): bool
     {
-        return !$field->isValidated() || $this->getValidator($field)->isValid($field, $artisan->getString($field));
+        if (!$field->isValidated()) {
+            return true;
+        }
+
+        if ($field->isList()) {
+            // https://github.com/veelkoov/fuzzrake/issues/221 FIXME: Should not work like that
+            $value = PackedStringList::pack($creator->getStringList($field));
+        } else {
+            $value = $creator->getString($field);
+        }
+
+        return $this->getValidator($field)->isValid($field, $value);
     }
 
     private function getValidator(Field $field): ValidatorInterface

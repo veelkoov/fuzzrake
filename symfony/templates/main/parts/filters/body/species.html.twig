@@ -1,0 +1,56 @@
+{% macro choices(items, filter_name) %}
+    {% import _self as _macro_self %}
+
+    {% for specie in items %}
+        {% set id = 'checkbox' ~ unique_int() %}
+        <div class="btn-group specie" role="group">
+            <span class="btn btn-outline-secondary">
+                <input id="{{ id }}" class="form-check-input" type="checkbox" name="{{ filter_name }}[]" data-label="{{ specie.value }}" value="{{ specie.value }}">
+
+                <label class="form-check-label" for="{{ id }}">
+                    {{ specie.label }}&nbsp;<span class="count">({{ specie.count }})</span>
+                </label>
+
+                <span class="descendants-indicator d-none">
+                    &nbsp;<i class="fas fa-tasks"></i>
+                </span>
+            </span>
+
+            {% if specie.subitems.notEmpty %}
+                <span class="btn btn-outline-secondary toggle">
+                    <i class="fas fa-caret-right"></i>
+                </span>
+            {% endif %}
+        </div>
+
+        {% if specie.subitems.notEmpty %}
+            <br>
+
+            <fieldset class="subspecies" data-parent-specie="{{ specie.value }}">
+                {{ _macro_self.choices(specie.subitems, filter_name) }}
+            </fieldset>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<fieldset class="species">
+    <div class="row">
+        <div class="col">
+            {% import 'main/parts/filters/body/shared_macros.html.twig' as macros %}
+
+            {{ macros.special_items(filter.data.specialItems, filter_name) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {{ _self.choices(filter.data.items, filter_name) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-end">
+            <a class="btn btn-secondary" href="#filters-top">Top</a>
+        </div>
+    </div>
+</fieldset>

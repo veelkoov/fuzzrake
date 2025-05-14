@@ -4,45 +4,34 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\Json;
-use JsonException;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use App\Utils\Collections\ArrayReader;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 /**
  * @medium
  */
-class RestApiControllerTest extends WebTestCaseWithEM
+class RestApiControllerTest extends FuzzrakeWebTestCase
 {
     /**
      * @throws JsonException
      */
-    public function testArtisansArrayOk(): void
+    public function testCreators(): void
     {
-        $client = static::createClient();
+        self::persistAndFlush(self::getCreator('API testing creator', 'TEST001', 'FI'));
 
-        self::persistAndFlush(
-            self::getArtisan(makerId: 'MAKER01', country: 'FI'),
-            self::getArtisan(makerId: 'MAKER02', country: 'CZ'),
-        );
+        self::$client->request('GET', '/api/artisans.json');
+        self::assertResponseStatusCodeIs(200);
 
-        $client->request('GET', '/api/artisans-array.json?countries[]=FI&wantsSfw=0&isAdult=1');
-        self::assertResponseStatusCodeIs($client, 200);
+        $text = self::$client->getResponse()->getContent();
+        self::assertNotFalse($text);
 
-        self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
-        $content = $client->getResponse()->getContent();
-        self::assertNotFalse($content);
+        $parsedJson = Json::decode($text, Json::FORCE_ARRAY);
+        $arrayReader = ArrayReader::of($parsedJson);
 
-        $data = Json::decode($content);
-        self::assertIsArray($data);
-        self::assertCount(1, $data);
-        self::assertEquals('MAKER01', $data[0][0] ?? null);
-    }
-
-    public function testArtisansArrayCoercionFailed(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/api/artisans-array.json?countries=FI');
-        self::assertResponseStatusCodeIs($client, 400);
+        self::assertSame('API testing creator', $arrayReader->getNonEmptyString('[0][NAME]'));
+        self::assertSame('TEST001', $arrayReader->getNonEmptyString('[0][MAKER_ID]'));
+        self::assertSame('FI', $arrayReader->getNonEmptyString('[0][COUNTRY]'));
     }
 }

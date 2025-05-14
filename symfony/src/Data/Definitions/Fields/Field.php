@@ -6,14 +6,18 @@ namespace App\Data\Definitions\Fields;
 
 use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
+use App\Data\FieldValue;
+use App\Utils\Creator\CreatorId;
+use App\Utils\FieldReadInterface;
+use Psl\Vec;
 use TRegx\CleanRegex\Pattern;
 
-enum Field: string
+enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
-    #[Props('makerId', validationRegex: V::MAKER_ID)]
+    #[Props('creatorId', validationRegex: CreatorId::VALID_REGEX)]
     case MAKER_ID = 'MAKER_ID';
 
-    #[Props('formerMakerIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, affectedByIuForm: true)]
+    #[Props('formerCreatorIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_CREATOR_IDS, affectedByIuForm: true)]
     case FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
 
     #[Props('name', validationRegex: V::NON_EMPTY)]
@@ -97,28 +101,25 @@ enum Field: string
     #[Props('speciesDoesnt', type: Type::STR_LIST)]
     case SPECIES_DOESNT = 'SPECIES_DOESNT';
 
-    #[Props('isMinor', inIuForm: false, inStats: false, freeForm: false)]
-    case IS_MINOR = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
-
     #[Props('ages', freeForm: false)]
     case AGES = 'AGES';
 
-    #[Props('nsfwWebsite', inStats: false, freeForm: false)]
+    #[Props('nsfwWebsite', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case NSFW_WEBSITE = 'NSFW_WEBSITE';
 
-    #[Props('nsfwSocial', inStats: false, freeForm: false)]
+    #[Props('nsfwSocial', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case NSFW_SOCIAL = 'NSFW_SOCIAL';
 
-    #[Props('doesNsfw', inStats: false, freeForm: false)]
+    #[Props('doesNsfw', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case DOES_NSFW = 'DOES_NSFW';
 
-    #[Props('safeDoesNsfw', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
+    #[Props('safeDoesNsfw', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_DOES_NSFW = 'SAFE_DOES_NSFW';
 
-    #[Props('worksWithMinors', public: false, inStats: false, freeForm: false)]
+    #[Props('worksWithMinors', type: Type::BOOLEAN, public: false, inStats: false, freeForm: false)]
     case WORKS_WITH_MINORS = 'WORKS_WITH_MINORS';
 
-    #[Props('safeWorksWithMinors', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
+    #[Props('safeWorksWithMinors', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_WORKS_WITH_MINORS = 'SAFE_WORKS_WITH_MINORS';
 
     #[Props('fursuitReviewUrl', validationRegex: V::FSR_URL)]
@@ -190,8 +191,20 @@ enum Field: string
     #[Props('miniatureUrls', type: Type::STR_LIST, inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, notInspectedUrl: true)]
     case URL_MINIATURES = 'URL_MINIATURES';
 
-    #[Props('otherUrls', notInspectedUrl: true)]
-    case URL_OTHER = 'URL_OTHER';
+    #[Props('otherUrls', type: Type::STR_LIST, notInspectedUrl: true)]
+    case URL_OTHER = 'URL_OTHER'; // TODO: Rename "-s"
+
+    #[Props('blueskyUrl', validationRegex: V::BLUESKY_URL)]
+    case URL_BLUESKY = 'URL_BLUESKY';
+
+    #[Props('donationsUrl', validationRegex: V::DONATIONS_URL)]
+    case URL_DONATIONS = 'URL_DONATIONS';
+
+    #[Props('telegramChannelUrl', validationRegex: V::TELEGRAM_CHANNEL_URL)]
+    case URL_TELEGRAM_CHANNEL = 'URL_TELEGRAM_CHANNEL';
+
+    #[Props('tikTokUrl', validationRegex: V::TIKTOK_URL)]
+    case URL_TIKTOK = 'URL_TIKTOK';
 
     #[Props('notes', inStats: false)]
     case NOTES = 'NOTES';
@@ -202,10 +215,10 @@ enum Field: string
     #[Props('password', public: false, inStats: false, freeForm: false)]
     case PASSWORD = 'PASSWORD';
 
-    #[Props('csLastCheck', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('csLastCheck', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
 
-    #[Props('csTrackerIssue', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('csTrackerIssue', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
     case CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
 
     #[Props('openFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
@@ -220,17 +233,8 @@ enum Field: string
     #[Props('contactAllowed', inStats: false, freeForm: false)]
     case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
 
-    #[Props('contactMethod', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_METHOD = 'CONTACT_METHOD';
-
-    #[Props('contactAddressPlain', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
-
-    #[Props('contactInfoObfuscated', inStats: false, freeForm: false)]
-    case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
-
-    #[Props('contactInfoOriginal', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
+    #[Props('emailAddress', public: false, inStats: false, freeForm: false, affectedByIuForm: true)]
+    case EMAIL_ADDRESS = 'EMAIL_ADDRESS';
 
     public function getData(): FieldData
     {
@@ -255,6 +259,11 @@ enum Field: string
     public function isDate(): bool
     {
         return Type::DATE === $this->getData()->type;
+    }
+
+    public function isBoolean(): bool
+    {
+        return Type::BOOLEAN === $this->getData()->type;
     }
 
     public function isPersisted(): bool
@@ -295,5 +304,20 @@ enum Field: string
     public function isFreeForm(): bool
     {
         return $this->getData()->isFreeForm;
+    }
+
+    public function providedIn(FieldReadInterface $source): bool
+    {
+        return FieldValue::isProvided($this, $source->get($this));
+    }
+
+    /**
+     * @param Field[] $fields
+     *
+     * @return list<string>
+     */
+    public static function strings(array $fields): array
+    {
+        return Vec\map($fields, fn (self $field): string => $field->value);
     }
 }

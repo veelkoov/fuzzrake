@@ -1,0 +1,364 @@
+{% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
+
+{% macro list_cs_opt(items) %}
+    {% if items %}
+        {{ items|join(', ') }}
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
+    {% if comment %}
+        <span class="nl2br">{{ comment }}</span>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+
+            {% if other_items %}
+                <li>{{ other_items|join('; ') }}</li>
+            {% endif %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro based_in(state, city) %}
+    {% set text = [state, city]|filter(i => i)|join(', ') %}
+
+    {% if text %}
+        {{ text -}}
+    {% else %}
+        {{ unknown_value() -}}
+    {% endif %}
+{% endmacro %}
+
+{% macro crafting_since(input) %}
+    {% set months = {
+        '01': 'Jan',
+        '02': 'Feb',
+        '03': 'Mar',
+        '04': 'Apr',
+        '05': 'May',
+        '06': 'Jun',
+        '07': 'Jul',
+        '08': 'Aug',
+        '09': 'Sep',
+        10: 'Oct',
+        11: 'Nov',
+        12: 'Dec',
+    } %}
+
+    {% if input %}
+        {% set parts = input|split('-') %}
+
+        {{ months[parts[1]] }} {{ parts[0] }}
+    {% else %}
+        {{ unknown_value() }}
+    {%- endif -%}
+{% endmacro %}
+
+{% macro link(uri, label, icon_class, additional_button_class = '') %}
+    {% if uri %}
+        <a class="btn btn-light {{ additional_button_class }}" href="{{ uri }}" target="_blank">
+            <i class="{{ icon_class }}"></i> {{ label }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
+<div class="modal-dialog modal-xl">
+    <div id="creator-card-modal-content" class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                {% if creator.creatorId %}
+                    <a id="creator-id" href="#{{ creator.creatorId }}"><span class="badge bg-secondary">
+                        <i class="fas fa-link"></i> {{ creator.creatorId -}}
+                    </span></a>
+                {% endif %}
+
+                <span id="creator-name">{{ creator.name }}</span>&nbsp;<span class="fi fi-{{ creator.country|lower }}"></span>
+
+                &nbsp;
+
+                <small>
+                    Based in {{ _self.based_in(creator.state, creator.city) }};
+                    crafting since {{ _self.crafting_since(creator.since) }}
+
+                    {% if creator.formerly %}
+                        <br>Formerly/a.k.a. {{ creator.formerly|join(', ') }}
+                    {% endif %}
+                </small>
+            </h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body row px-4 py-2">
+            {% if creator.inactiveReason %}
+                <div class="col-md-12 p-1 alert alert-warning" role="alert">
+                    <strong>This maker has been hidden for the following reason:</strong> <br>
+                    {{ creator.inactiveReason }}
+                </div>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="text-end p-0">
+                    <a class="btn btn-warning" href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <a class="btn btn-warning" href="{{ path('mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
+                        <i class="fas fa-link"></i>
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if creator.hasValidPhotos %}
+                <div class="col-md-12 p-1 overflow-auto imgs-container">
+                    {% for photo_url in creator.photoUrls %}
+                        <div>
+                            <a href="{{ photo_url }}" target="_blank"><img src="{{ creator.miniatureUrls[loop.index0] }}" alt=""></a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if creator.intro %}
+                <div class="col-md-12 p-1">
+                    <p class="lead nl2br">
+                        {{- creator.intro -}}
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 p-1">
+                <p class="mb-0 small">
+                    Ages of studio members: {{ ages_description(creator, true) }}
+                </p>
+            </div>
+
+            <div class="col-md-3 p-1">
+                <h5>Produces</h5>
+
+                <div class="small pb-2">
+                    {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
+                </div>
+
+                <h5>Styles</h5>
+
+                <div class="small">
+                    {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
+                </div>
+            </div>
+
+            <div class="col-md-5 p-1">
+                <h5>Types</h5>
+
+                <div class="small">
+                    {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
+                </div>
+            </div>
+
+            <div class="col-md-4 p-1">
+                <h5>Features</h5>
+
+                <div class="small">
+                    {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
+                </div>
+            </div>
+
+            <div class="col-md-6 p-1">
+                <h5>Species</h5>
+
+                <div class="small pb-2">
+                    {% if creator.speciesComment %}
+                        <span class="nl2br">{{ creator.speciesComment }}</span><br>
+                    {% endif %}
+
+                    {% if creator.speciesDoes %}
+                        <strong>Does</strong>: {{ creator.speciesDoes|join(', ') }}
+                        {% if creator.speciesDoesnt %}<br>{% endif %}
+                    {% endif %}
+
+                    {% if creator.speciesDoesnt %}
+                        <strong>Doesn't</strong>: {{ creator.speciesDoesnt|join(', ') }}
+                    {% endif %}
+
+                    {% if not creator.speciesDoes and not creator.speciesDoesnt %}
+                        {{ unknown_value() }}
+                    {% endif %}
+                </div>
+
+                <h5>Languages</h5>
+
+                <div class="small">
+                    {{ _self.list_cs_opt(creator.languages) }}
+                </div>
+            </div>
+
+            <div class="col-md-6 p-1">
+                <h5>Payment plans</h5>
+
+                <div class="small pb-2">
+                    {{ _self.list_with_others_comment_opt(creator.paymentPlans) }}
+                </div>
+
+                <h5>Currencies</h5>
+
+                <div class="small pb-2">
+                    {{ _self.list_cs_opt(creator.currenciesAccepted) }}
+                </div>
+
+                <h5>Methods</h5>
+
+                <div class="small">
+                    {{ _self.list_cs_opt(creator.paymentMethods) }}
+                </div>
+            </div>
+
+            <div class="col-md-12 p-1">
+                <h5>Links</h5>
+
+                <p class="small mb-1">
+                    Please mention "<mark class="user-select-all">I found you on getfursu.it
+                        {%- if not has_good_completeness(creator) %}
+                            (BTW it says your data could use some updates)
+                        {%- endif -%}
+                    </mark>" when contacting the maker, thank you! ❤️
+                </p>
+
+                {# twig-cs-fixer-disable PunctuationSpacing.After #}
+                {# Unable to disable for the following lines only #}
+                <div>
+                    {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
+                    {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview',              'fas fa-balance-scale', 'border border-primary') }}
+
+                    {{ _self.link(creator.websiteUrl,       'Official website', 'fas fa-link') }}
+                    {{ _self.link(creator.linklistUrl,      'List of links',    'fas fa-link') }}
+                    {% for uri in creator.pricesUrls %}
+                        {{ _self.link(uri, 'Prices', 'fas fa-dollar-sign') }}
+                    {% endfor %}
+                    {{ _self.link(creator.faqUrl,           'FAQ',              'fas fa-comments') }}
+                    {{ _self.link(creator.queueUrl,         'Queue',            'fas fa-clipboard-list') }}
+
+                    {{ _self.link(creator.furAffinityUrl,     'Fur Affinity',     'fas fa-image') }}
+                    {{ _self.link(creator.deviantArtUrl,      'DeviantArt',       'fab fa-deviantart') }}
+                    {{ _self.link(creator.mastodonUrl,        'Mastodon',         'fab fa-mastodon') }}
+                    {{ _self.link(creator.blueskyUrl,         'Bluesky',          'fab fa-bluesky') }}
+                    {{ _self.link(creator.facebookUrl,        'Facebook',         'fab fa-facebook') }}
+                    {{ _self.link(creator.tumblrUrl,          'Tumblr',           'fab fa-tumblr') }}
+                    {{ _self.link(creator.twitterUrl,         'Twitter',          'fab fa-twitter') }}
+                    {{ _self.link(creator.instagramUrl,       'Instagram',        'fab fa-instagram') }}
+                    {{ _self.link(creator.furryAminoUrl,      'Furry Amino',      'fas fa-paw') }}
+                    {{ _self.link(creator.youtubeUrl,         'YouTube',          'fab fa-youtube') }}
+                    {{ _self.link(creator.tiktokUrl,          'TikTok',           'fab fa-tiktok') }}
+                    {{ _self.link(creator.telegramChannelUrl, 'Telegram channel', 'fab fa-telegram') }}
+
+                    {{ _self.link(creator.etsyUrl,          'Etsy',            'fab fa-etsy') }}
+                    {{ _self.link(creator.theDealersDenUrl, 'The Dealers Den', 'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.otherShopUrl,     'On-line shop',    'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.donationsUrl,     'Donations',       'fas fa-circle-dollar-to-slot') }}
+
+                    {{ _self.link(creator.scritchUrl,       'Scritch',          'fas fa-camera') }}
+                    {{ _self.link(creator.furtrackUrl,      'Furtrack',         'fas fa-camera') }}
+                </div>
+            </div>
+
+            <div class="col-md-12 p-1">
+                <h5>Commissions status</h5>
+            </div>
+
+            {% if not creator.isTracked %}
+                <div class="col-md-12 p-1">
+                    <p>Commissions status is not being tracked.</p>
+
+                    <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                </div>
+            {% else %}
+                <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-8' }}">
+                    {% if creator.isStatusKnown %}
+                        {% if creator.csTrackerIssue %}
+                            <p>
+                                <i class="inaccurate fas fa-question-circle"></i>
+                                Note: the software encountered apparent difficulties while figuring out the status;
+                                the information is most probably inaccurate/<wbr>incomplete.
+                            </p>
+                        {% endif %}
+
+                        <table class="table table-sm table-striped table-borderless">
+                            <tbody>
+                            {% for item in creator.openFor %}
+                                <tr>
+                                    <td>{{ item }}</td>
+                                    <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                                </tr>
+                            {% endfor %}
+                            {% for item in creator.closedFor %}
+                                <tr>
+                                    <td>{{ item }}</td>
+                                    <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>
+                            <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
+                            It should be tracked and updated automatically based on the contents of:
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>,
+                            {% endfor %}
+                            however the software failed to "understand" the contents.
+                            Last time tried on {{ creator.csLastCheck|nullable_datetime_utc }}.
+                        </p>
+
+                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                    {% endif %}
+                </div>
+
+                <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-4 text-end' }}">
+                    {% if creator.isStatusKnown %}
+                        <p>
+                            Status is tracked and updated automatically based on the contents of:
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>
+                                {%- if not loop.last %},{% endif %}
+                            {%- endfor %}.
+                            <br> Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
+                        </p>
+
+                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                    {% else %}
+                        <img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 p-1 pt-3">
+                <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
+
+                <p class="small">
+                    This maker/studio has {{ creator.completeness }}% data completeness.
+                    {{ completeness_text(creator) }}
+                    Click the button below to check update options.
+                </p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light border border-warning"
+                    {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
+                Data outdated/inaccurate? <!-- grep-updates-button -->
+            </button>
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
+        </div>
+    </div>
+</div>

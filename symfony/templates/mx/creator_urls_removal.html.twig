@@ -1,0 +1,33 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}URLs removal: {{ creator.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <p>
+        Removing URLs:
+
+        {% for url in result.removedUrls.urls %}
+            <a class="text-decoration-none" href="{{ url.url }}" target="_blank">{{ url.label }}</a>
+            {%- if loop.last %}.{% else %},{% endif %}
+        {% endfor %}
+    </p>
+
+    <p>
+        Remaining URLs:
+
+        {% for url in result.remainingUrls.urls %}
+            <a class="text-decoration-none" href="{{ url.url }}" target="_blank">{{ url.label }}</a>
+            {%- if loop.last %}.{% else %},{% endif %}
+        {% endfor %}
+    </p>
+
+    {{ form_start(form) }}
+
+    {{ form_row(form['hide']) }}
+    {{ form_row(form['sendEmail']) }}
+    {{ form_row(form['confirm']) }}
+
+    {{ form_end(form) }}
+{% endblock %}

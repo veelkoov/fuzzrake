@@ -1,0 +1,63 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}List of URLs{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Maker</th>
+                <th>Type</th>
+                <th>URL</th>
+                <th>Last success</th>
+                <th>Last failure</th>
+                <th>Failure code</th>
+                <th>Failure reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+                {% if url.state.lastSuccessUtc is not null %}
+                    {% if url.state.lastFailureUtc is not null and url.state.lastFailureUtc > url.state.lastSuccessUtc %}
+                        {% set class = 'table-danger' %}
+                    {% else %}
+                        {% set class = 'table-success' %}
+                    {% endif %}
+                {% else %}
+                    {% if url.state.lastFailureUtc is not null %}
+                        {% set class = 'table-danger' %}
+                    {% else %}
+                        {% set class = '' %}
+                    {% endif %}
+                {% endif %}
+
+                <tr>
+                    <td>
+                        <a href="{{ path('mx_creator_edit', {creatorId: url.creator.id}) }}">{{ url.creator.creatorId|default((url.creator|smart).lastCreatorId) }}</a><br>
+                        {{ url.creator.contactAllowed.value|default('NO') }}
+                    </td>
+                    <td class="text-nowrap {{ class }}">
+                        {{ url.type }}
+                    </td>
+                    <td class="text-break">
+                        <a href="{{ url.url }}">{{ url.url|event_url|nl2br }}</a>
+                    </td>
+                    <td class="text-nowrap">
+                        {{ url.state.lastSuccessUtc|nullable_datetime_utc }}
+                    </td>
+                    <td class="text-nowrap">
+                        {{ url.state.lastFailureUtc|nullable_datetime_utc }}
+                    </td>
+                    <td>
+                        {{ url.state.lastFailureCode }}
+                    </td>
+                    <td class="text-break">
+                        {{ url.state.lastFailureReason }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

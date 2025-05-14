@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\StrUtils;
+use Override;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -20,18 +22,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataExportCommand extends Command
 {
     public function __construct(
-        private readonly ArtisanRepository $artisans,
+        private readonly CreatorRepository $creatorRepository,
     ) {
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
     }
 
     /**
      * @throws Exception
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -41,20 +40,21 @@ class DataExportCommand extends Command
 
         $col = 1;
         foreach (Fields::public() as $field) {
-            $sheet->getCellByColumnAndRow($col++, 1)
-                ->setValue($field->name);
+            $sheet->getCell([$col++, 1])
+                ->setValue($field->value);
         }
 
         $row = 2;
 
-        foreach (Artisan::wrapAll($this->artisans->getActive()) as $artisan) {
+        foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
+            $creator = Creator::wrap($creatorE);
             $col = 1;
 
             foreach (Fields::public() as $field) {
-                $value = $artisan->get($field);
+                $value = $creator->get($field);
 
-                $sheet->getCellByColumnAndRow($col++, $row)
-                    ->setValue($value);
+                $sheet->getCell([$col++, $row])
+                    ->setValue(StrUtils::asStr($value));
             }
 
             ++$row;

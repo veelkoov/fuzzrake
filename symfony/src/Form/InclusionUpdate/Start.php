@@ -6,15 +6,20 @@ namespace App\Form\InclusionUpdate;
 
 use App\Controller\IuForm\Utils\StartData;
 use App\Utils\Enforce;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<StartData>
+ */
 class Start extends AbstractType
 {
-    final public const OPT_STUDIO_NAME = 'studio_name';
+    final public const string OPT_STUDIO_NAME = 'studio_name';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -37,11 +42,11 @@ class Start extends AbstractType
                 'expanded'   => true,
                 'required'   => true,
             ])
-            ->add('confirmYouAreTheMaker', ChoiceType::class, [
+            ->add('confirmYouAreTheCreator', ChoiceType::class, [
                 'label'      => 'Are you the maker (studio member)?',
                 'choices'    => [
-                    'I am the maker'                                  => 'i-am-the-maker',
-                    "I'm a friend or a customer or other/non-related" => 'not-the-maker',
+                    'I am the maker'                                  => 'i-am-the-creator',
+                    "I'm a friend or a customer or other/non-related" => 'not-the-creator',
                 ],
                 'expanded'   => true,
                 'required'   => true,
@@ -60,11 +65,11 @@ class Start extends AbstractType
                     'required' => true,
                 ])
                 ->add('ensureStudioIsNotThereAlready', ChoiceType::class, [
-                    'label'      => 'You could already be on the list even if you haven\'t ever sent any form. Please navigate to the main page using the <i class="fa-solid fa-filter-circle-xmark"></i> link above. Look for old names as well. If for any reason your studio have been marked as <em>[hidden]</em>, it would be listed after the letter Z.', // grep-inactive-mark
+                    'label'      => 'You could already be on the list even if you haven\'t ever sent any form. Please navigate to the main page using the <i class="fa-solid fa-filter-circle-xmark"></i> link above. Check your old names as well.',
                     'label_html' => true,
                     'choices'    => [
-                        "Checked after clicking the link above - I'm not there, not even marked as <em>[hidden]</em>" => 'is-new-studio', // grep-inactive-mark
-                        "I've found my old name/studio"                                                               => 'found-old-studio',
+                        "Checked after clicking the link above - I'm not there" => 'is-new-studio',
+                        "I've found my old name/studio"                         => 'found-old-studio',
                     ],
                     'expanded'  => true,
                     'required'  => true,
@@ -89,11 +94,13 @@ class Start extends AbstractType
         }
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'iu_form';
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', StartData::class);

@@ -6,6 +6,7 @@ namespace App\Data\Definitions\Fields;
 
 use App\Utils\Traits\UtilityClass;
 use ReflectionEnum;
+use UnexpectedValueException;
 
 final class FieldsData
 {
@@ -25,8 +26,14 @@ final class FieldsData
                 /** @var Properties $data */
                 $data = $attribute->newInstance();
 
-                self::$fields[(string) $case->name] = new FieldData(
-                    $case->name,
+                $value = $case->getBackingValue();
+
+                if ($value !== $case->name) {
+                    throw new UnexpectedValueException('name !== value');
+                }
+
+                self::$fields[$value] = new FieldData(
+                    $value,
                     $data->modelName,
                     $data->type,
                     $data->validationRegex,
@@ -44,7 +51,7 @@ final class FieldsData
 
     public static function get(Field $field): FieldData
     {
-        return self::$fields[$field->name];
+        return self::$fields[$field->value];
     }
 }
 

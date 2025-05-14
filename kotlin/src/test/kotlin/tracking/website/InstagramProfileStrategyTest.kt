@@ -1,6 +1,5 @@
 package tracking.website
 
-import data.Resource
 import web.url.FreeUrl
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,7 +9,7 @@ class InstagramProfileStrategyTest {
 
     @Test
     fun coerceUrl() {
-        val expected = "https://www.instagram.com/getfursu.it/?__a=1&__d=dis"
+        val expected = "https://www.instagram.com/getfursu.it/profilecard/"
         val input = FreeUrl("https://www.instagram.com/getfursu.it/")
         val result = subject.getUrlForTracking(input).getUrl()
 
@@ -18,15 +17,8 @@ class InstagramProfileStrategyTest {
     }
 
     @Test
-    fun `Real-life, working scenario`() {
-        val result = subject.filterContents(Resource.read("/tracking/instagram_getfursuit_contents.txt"))
-
-        assertEquals("Single-wolf (tired) powered service running on pancakes. 🎶 🎤 🦖 🎸 🎹 🥁 🤘 🎶", result)
-    }
-
-    @Test
     fun `Simplified, working scenario`() {
-        val input = "{\"graphql\": {\"user\": {\"biography\": \"Expected description\"}}}"
+        val input = "<html><head><meta content=\"Expected description\" property=\"description\"/></head></html>"
         val result = subject.filterContents(input)
 
         assertEquals("Expected description", result)
@@ -34,7 +26,7 @@ class InstagramProfileStrategyTest {
 
     @Test
     fun `Empty description`() {
-        val input = "{\"graphql\": {\"user\": {\"biography\": \"\"}}}"
+        val input = "<html><head><meta content=\"\" property=\"description\"/></head></html>"
         val result = subject.filterContents(input)
 
         assertEquals("", result)
@@ -42,7 +34,7 @@ class InstagramProfileStrategyTest {
 
     @Test
     fun `Unparseable input`() {
-        val input = "<p>Oops, this is not JSON</p>"
+        val input = "{\"oops\": \"This is not a HTML\"}"
         val result = subject.filterContents(input)
 
         assertEquals(input, result)
@@ -50,7 +42,7 @@ class InstagramProfileStrategyTest {
 
     @Test
     fun `Missing expected field`() {
-        val input = "{\"graphql\": {\"user\": {\"wrongfield\": \"a text\"}}}"
+        val input = "<html><head><meta content=\"TheDescription\" property=\"not-description\"/></head></html>"
         val result = subject.filterContents(input)
 
         assertEquals(input, result)

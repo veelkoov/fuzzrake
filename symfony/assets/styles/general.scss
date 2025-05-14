@@ -1,20 +1,9 @@
-@import '../../node_modules/bootstrap/scss/bootstrap';
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./navbar";
 
-html { // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
+html {
+  // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
   scroll-behavior: auto !important;
-}
-
-nav.navbar .navbar-nav .nav-link .always-full-opacity {
-  color: var(--bs-navbar-hover-color);
-}
-
-#navbarNav:not(.show) + ul.top-menu-right {
-  flex-direction: row;
-
-  li > a {
-    padding-right: var(--bs-navbar-nav-link-padding-x);
-    padding-left: var(--bs-navbar-nav-link-padding-x);
-  }
 }
 
 div.footer {
@@ -57,10 +46,50 @@ span.utc_datetime {
   text-underline-offset: 0.2ex;
 }
 
-.new-artisan {
+.new-creator,
+#legend-modal .new-creator // More precise selector, otherwise was overwritten by Bootstrap styles
+{
   color: #4cae4c;
 }
 
 .references :target {
   background-color: #ffec00;
+}
+
+.captcha {
+  margin-bottom: 1rem;
+
+  .card-header {
+    padding: 0 0.375rem;
+    font-weight: bold;
+  }
+
+  .options {
+    p {
+      margin-bottom: 0.375rem;
+    }
+
+    label {
+      font-size: 48px;
+      padding: 0 0.375rem;
+    }
+  }
+
+  .list-group-item {
+    padding: 1ex;
+  }
+}
+
+.путін-хуйло {
+  div:first-child {
+    height: 10px;
+    background-color: #0057b7;
+  }
+
+  div:last-child {
+    height: 10px;
+    background-color: #ffd700;
+  }
+
+  padding-bottom: 1.5em;
 }

@@ -5,26 +5,27 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\Data\Definitions\Fields\Field;
+use App\Data\FieldValue;
 use App\IuHandling\Exception\ManagerConfigError;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
+use InvalidArgumentException;
 
 class Manager
 {
-    final public const CMD_ACCEPT = 'accept';
-    final public const CMD_CLEAR = 'clear';
-    final public const CMD_COMMENT = '//';
-    final public const CMD_MATCH_MAKER_ID = 'match-maker-id';
-    final public const CMD_REPLACE = 'replace';
-    final public const CMD_SET = 'set';
+    final public const string CMD_ACCEPT = 'accept';
+    final public const string CMD_CLEAR = 'clear';
+    final public const string CMD_COMMENT = '//';
+    final public const string CMD_MATCH_CREATOR_ID = 'match-maker-id';
+    final public const string CMD_SET = 'set';
 
     /**
-     * @var ValueCorrection[]
+     * @var list<ValueCorrection>
      */
     private array $corrections = [];
     private bool $isAccepted = false;
-    private ?string $matchedMakerId = null;
+    private ?string $matchedCreatorId = null;
 
     /**
      * @throws ManagerConfigError
@@ -35,16 +36,16 @@ class Manager
         $this->readDirectives($directives);
     }
 
-    public function correctArtisan(Artisan $artisan): void
+    public function correctCreator(Creator $creator): void
     {
         foreach ($this->corrections as $correction) {
-            $artisan->set($correction->field, $correction->value);
+            $creator->set($correction->field, $correction->value);
         }
     }
 
-    public function getMatchedMakerId(): ?string
+    public function getMatchedCreatorId(): ?string
     {
-        return $this->matchedMakerId;
+        return $this->matchedCreatorId;
     }
 
     public function isAccepted(): bool
@@ -67,9 +68,24 @@ class Manager
         }
     }
 
+    /**
+     * @throws ManagerConfigError
+     */
     private function addCorrection(string $fieldName, string $correctedValue): void
     {
-        $this->corrections[] = new ValueCorrection(Field::from($fieldName), $correctedValue);
+        $field = Field::tryFrom($fieldName);
+
+        if (null === $field) {
+            throw new ManagerConfigError("Unknown field: '$fieldName'");
+        }
+
+        try {
+            $correctedValue = FieldValue::fromString($field, $correctedValue);
+        } catch (InvalidArgumentException $ex) {
+            throw new ManagerConfigError("Wrong value for '$fieldName': {$ex->getMessage()}", $ex->getCode(), $ex);
+        }
+
+        $this->corrections[] = new ValueCorrection($field, $correctedValue);
     }
 
     /**
@@ -95,8 +111,8 @@ class Manager
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_MATCH_MAKER_ID:
-                $this->matchedMakerId = $buffer->readUntilWhitespaceOrEof();
+            case self::CMD_MATCH_CREATOR_ID:
+                $this->matchedCreatorId = $buffer->readUntilWhitespaceOrEof();
                 break;
 
             case self::CMD_SET:

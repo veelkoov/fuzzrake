@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
@@ -16,22 +16,13 @@ use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Panther\Client;
 
 /**
  * @large
  */
-class MainPageTest extends PantherTestCaseWithEM
+class MainPageTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
-
-    private Client $client;
-
-    protected function setUp(): void
-    {
-        $this->client = static::createPantherClient();
-        self::setWindowSize($this->client, 1600, 900);
-    }
 
     /**
      * @throws Exception
@@ -39,15 +30,15 @@ class MainPageTest extends PantherTestCaseWithEM
     public function testMainPageUiSmoke(): void
     {
         self::persistAndFlush(
-            self::getArtisan('Test artisan 1 CZ', 'TEST001', 'CZ'),
-            self::getArtisan('Test artisan 2 CA', 'TEST002', 'CA'),
-            self::getArtisan('Test artisan 3 DE', 'TEST003', 'DE'),
+            self::getCreator('Test creator 1 CZ', 'TEST001', 'CZ'),
+            self::getCreator('Test creator 2 CA', 'TEST002', 'CA'),
+            self::getCreator('Test creator 3 DE', 'TEST003', 'DE'),
         );
 
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 3);
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(3);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -56,51 +47,53 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->assertCountriesFilterSelections(['CZ'], ['DE', 'CA']);
 
         // Click "invert" on Europe
-        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "invert"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "invert"]'))->click();
         $this->assertCountriesFilterSelections(['DE'], ['CZ', 'CA']);
 
         // Click "none" on Europe
-        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "none"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "none"]'))->click();
         $this->assertCountriesFilterSelections([], ['CZ', 'DE', 'CA']);
 
         // Click "all" on Europe
-        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
         $this->assertCountriesFilterSelections(['CZ', 'DE'], ['CA']);
 
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(2, 3);
+        $this->waitExpectLoadedCreatorsTable(2, 2);
 
-        self::openMakerCardByClickingOnTheirNameInTheTable($this->client, 'Test artisan 1 CZ');
-        self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
-
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        self::openDataOutdatedPopupFromTheMakerCard($this->client);
-        self::assertStringContainsString('Test artisan 1 CZ', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+        $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ');
+        self::assertSelectorIsVisible('//a[@id="creator-id" and @href="#TEST001"]');
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
+        $this->openDataOutdatedPopupFromTheCreatorCard();
+        self::assertStringContainsString('Test creator 1 CZ', self::$client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+
+        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
+
+        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Open the links dropdown
-        $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
-        $this->client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
+        self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
+        self::$client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
 
         // Click the last link - data outdated
-        $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        $this->client->waitForVisibility('#artisanUpdatesModalContent', 5);
-        self::assertStringContainsString('Test artisan 3 DE', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+        self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
+        self::waitUntilShows('#creator-updates-modal-content');
+        self::assertStringContainsString('Test creator 3 DE', self::$client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
+        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Check if text search works
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
-        $this->assertMakersVisibility(['TEST001'], ['TEST003']); // TEST002 doesn't exist in DOM
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
-        $this->assertMakersVisibility(['TEST003'], ['TEST001']); // TEST002 doesn't exist in DOM
+        $this->clearTypeInTextSearch('CZ');
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertCreatorsVisibility(['TEST001'], ['TEST002', 'TEST003']);
+        $this->clearTypeInTextSearch('DE');
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertCreatorsVisibility(['TEST003'], ['TEST001', 'TEST002']);
     }
 
     /**
@@ -119,31 +112,16 @@ class MainPageTest extends PantherTestCaseWithEM
     }
 
     /**
-     * @param list<string> $visibleMakerIds
-     * @param list<string> $hiddenMakerIds
-     */
-    private function assertMakersVisibility(array $visibleMakerIds, array $hiddenMakerIds): void
-    {
-        foreach ($visibleMakerIds as $makerId) {
-            self::assertSelectorIsVisible("#$makerId");
-        }
-
-        foreach ($hiddenMakerIds as $makerId) {
-            self::assertSelectorIsNotVisible("#$makerId");
-        }
-    }
-
-    /**
      * If only I was competent enough to be able to fix this test properly.
      *
      * @throws Exception
      */
     private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(): void
     {
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
 
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
     }
 
@@ -155,37 +133,37 @@ class MainPageTest extends PantherTestCaseWithEM
     {
         UtcClockMock::start();
 
-        $maker1 = Artisan::new()->setMakerId('MAKEOLD')->setName('Older maker')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
-        $maker2 = Artisan::new()->setMakerId('MAKENEW')->setName('Newer maker 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
+        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
+        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
 
-        self::persistAndFlush($maker1, $maker2);
+        self::persistAndFlush($creator1, $creator2);
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 2);
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(2);
 
-        self::assertSelectorExists('#MAKENEW span.new-artisan');
-        self::assertSelectorExists('#MAKEOLD');
-        self::assertSelectorNotExists('#MAKEOLD span.new-artisan');
+        self::assertSelectorExists('#TEST002 span.new-creator');
+        self::assertSelectorExists('#TEST001');
+        self::assertSelectorNotExists('#TEST001 span.new-creator');
     }
 
     /**
      * @throws NoSuchElementException
      * @throws TimeoutException
      */
-    public function testOpeningArtisanCardByMakerId(): void
+    public function testOpeningCreatorCardByCreatorId(): void
     {
-        $artisan = self::getArtisan('Test artisan 1', 'TEST001', 'FI');
-        $artisan->setInactiveReason('Testing'); // Must show up even if deactivated
-        self::persistAndFlush($artisan);
+        $creator = self::getCreator(creatorId: 'TEST001');
+        $creator->setInactiveReason('Testing'); // Must show up even if deactivated
+        self::persistAndFlush($creator);
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/#TEST001');
+        self::$client->request('GET', '/index.php/#TEST001');
 
-        self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
-        self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
-        $this->client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
-        self::waitUntilHides('#artisanDetailsModal #makerId');
+        self::waitUntilShows('#creator-card-modal #creator-id', 1000);
+        self::assertSelectorTextSame('#creator-card-modal #creator-id', 'TEST001');
+        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal-content .modal-header button'))->click();
+        self::waitUntilHides('#creator-card-modal #creator-id');
     }
 
     /**
@@ -193,11 +171,11 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testFilterChoicesGetSavedAndRestored(): void
     {
-        self::persistAndFlush(self::getArtisan(country: 'FI'));
+        self::persistAndFlush(self::getCreator(country: 'FI'));
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1);
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -207,11 +185,11 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->assertCountriesFilterSelections(['FI', '?'], []);
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(1, 1);
+        $this->waitExpectLoadedCreatorsTable(1, 1);
 
         usleep(500_000); // Lame
-        $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(1, true);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -221,10 +199,42 @@ class MainPageTest extends PantherTestCaseWithEM
     /**
      * @throws WebDriverException
      */
+    public function testColumnVisibilityGetSavedAndRestored(): void
+    {
+        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', country: 'FI')->setStyles(['Toony']));
+
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(1);
+
+        // Check the defaults: styles are visible, creator IDs are hidden
+        self::assertSelectorIsVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsNotVisible('//td[contains(., "TEST001")]');
+
+        // Show creator ID column, hide styles column
+        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Columns"]'))->click();
+        self::$client->findElement(WebDriverBy::linkText('Maker ID'))->click();
+        self::$client->findElement(WebDriverBy::linkText('Styles'))->click();
+
+        // Check if the change has been applied
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+
+        // Reload the page
+        self::$client->request('GET', '/index.php/');
+        $this->skipCheckListAdultAllowNsfw(1, true);
+
+        // Check if the change has persisted between page loads
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+    }
+
+    /**
+     * @throws WebDriverException
+     */
     private function openCountriesFilter(): void
     {
-        $this->client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
-        $this->client->waitForVisibility('input[type=checkbox][name="countries[]"]', 5);
+        self::$client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
+        self::waitUntilShows('input[type=checkbox][name="countries[]"]', 1000);
     }
 
     /**
@@ -234,7 +244,7 @@ class MainPageTest extends PantherTestCaseWithEM
     {
         $selector = "input[type=checkbox][name='countries[]'][value='$countryCode']";
 
-        $this->client->findElement(WebDriverBy::cssSelector($selector))->click();
+        self::$client->findElement(WebDriverBy::cssSelector($selector))->click();
     }
 
     /**
@@ -242,8 +252,8 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function openFiltersPopUp(): void
     {
-        $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
-        $this->client->waitForVisibility('#filtersTitle', 5);
+        self::$client->findElement(WebDriverBy::id('open-filters-button'))->click();
+        self::$client->waitForVisibility('#filters-title', 5);
     }
 
     /**
@@ -251,18 +261,8 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function clickApplyInTheFiltersPopUp(): void
     {
-        $this->client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    private function expectLoadedCreatorsTable(int $displaying, int $outOf): void
-    {
-        $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
-
-        $this->client->waitFor($locator, 1);
     }
 }

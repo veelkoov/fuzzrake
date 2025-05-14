@@ -1,5 +1,5 @@
-@import '../../node_modules/bootstrap/scss/functions';
-@import '../../node_modules/bootstrap/scss/variables';
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
 
 .badge-outline-primary {
   color: $primary;
@@ -71,7 +71,9 @@
   }
 
   .badge.submission-list-item {
-    max-width: 700px; text-overflow: ellipsis; overflow: hidden;
+    max-width: 700px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 

@@ -4,41 +4,19 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use App\Utils\TestUtils\TestsBridge;
 use Psl\Iter;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait IuFormTrait
 {
-    private static function skipRulesAndCaptcha(KernelBrowser $client): void
+    private static function skipRules(): void
     {
-        TestsBridge::setSkipSingleCaptcha();
-
-        $client->submit($client->getCrawler()->selectButton('Agree and continue')->form());
-        $client->followRedirect();
+        self::$client->submit(self::$client->getCrawler()->selectButton('Agree and continue')->form());
+        self::$client->followRedirect();
     }
 
-    private static function skipData(KernelBrowser $client, bool $fillMandatoryData): void
+    private static function assertIuSubmittedAnyResult(): void
     {
-        $data = !$fillMandatoryData ? [] : [
-                'iu_form[name]'            => 'Test name',
-                'iu_form[country]'         => 'Test country',
-                'iu_form[ages]'            => 'ADULTS',
-                'iu_form[worksWithMinors]' => 'NO',
-                'iu_form[nsfwWebsite]'     => 'NO',
-                'iu_form[nsfwSocial]'      => 'NO',
-                'iu_form[doesNsfw]'        => 'NO',
-                'iu_form[makerId]'         => 'TESTMID',
-            ];
-
-        $form = $client->getCrawler()->selectButton('Continue')->form($data);
-
-        self::submitValid($client, $form);
-    }
-
-    private static function assertIuSubmittedAnyResult(KernelBrowser $client): void
-    {
-        $text = $client->getCrawler()->filter('.card-header')->text();
+        $text = self::$client->getCrawler()->filter('.card-header')->text();
 
         self::assertTrue(Iter\any(
             ['Your submission has been queued', 'Submission recorded, but on hold'],
@@ -70,9 +48,9 @@ trait IuFormTrait
         self::assertSelectorTextContains('div.border-danger p', 'You requested a password change, but you didn\'t agree before to be contacted, so');
     }
 
-    private static function assertFieldErrorContactInfoMustNotBeBlank(): void
+    private static function assertFieldErrorValidEmailAddressRequired(): void
     {
-        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_emailAddress + .help-text + .invalid-feedback', 'A valid email address is required.');
     }
 
     private static function assertFieldErrorPasswordIsRequired(): void

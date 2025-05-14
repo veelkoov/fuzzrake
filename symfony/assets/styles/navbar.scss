@@ -1,0 +1,212 @@
+@use "sass:color";
+
+$navbar-bg: #f8f9fa;
+$navbar-horizontal-padding: 12px;
+$navbar-item-gap: 12px;
+$menu-z-index: 100;
+
+.navbar {
+  padding: 0;
+  position: relative;
+
+  .navbar-main {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding: 14px $navbar-horizontal-padding;
+    background-color: $navbar-bg;
+    gap: $navbar-item-gap;
+    height: 72px;
+
+    &:not(.initialized) {
+      // Visually hide the contents of the navbar until we've run our layout function at least
+      // once in JS. If we don't do that, users will see the initial render frame flicker with
+      // all of the navbar items, and then immediately update after we run the layout.
+      // The delay isn't enough that most people will perceive the items not being there for
+      // the first render frame, but it IS enough to the navbar items be there and then
+      // disappear.
+      opacity: 0;
+    }
+
+    .nav-separator {
+      flex: 1;
+
+      &.hidden {
+        // Separator doesn't need to be measured for its width, so when the separator is hidden
+        // we should COMPLETELY hide it. If we don't do so, we'll continue to display a double
+        // gap separating the two sides
+        display: none;
+      }
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--bs-nav-link-color);
+      padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+
+      // Vertically and horizontally center the content
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover,
+      &:focus {
+        color: var(--bs-nav-link-hover-color);
+      }
+    }
+
+    .nav-overflow-menu-button {
+      transition: transform 150ms;
+
+      &.isOpen {
+        transform: scaleY(-100%);
+      }
+    }
+
+    .nav-mobile-drawer-button {
+      width: 44px;
+      height: 44px;
+
+      i.fas {
+        font-size: 24px;
+      }
+    }
+
+    .hidden {
+      visibility: hidden;
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+
+  .nav-menu-backdrop {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 100%);
+    z-index: #{$menu-z-index - 1};
+    background: rgba(white, 0.75);
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  .nav-dropdown-menu,
+  .nav-drawer-menu {
+    position: absolute;
+    background-color: color.scale($color: $navbar-bg, $lightness: 50%);
+    z-index: $menu-z-index;
+    padding: 8px $navbar-horizontal-padding;
+
+    .hidden {
+      // Hidden items in the dropdown menu don't need to be displayed at all,
+      // since we aren't using them to measure with
+      display: none;
+    }
+  }
+
+  .nav-dropdown-menu {
+    display: none;
+
+    right: 16px;
+    bottom: 0;
+    transform: translateY(100%);
+
+    border: 1px solid var(--bs-border-color);
+    border-top: 0;
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  .nav-drawer-menu {
+    left: 0;
+    top: 100%;
+    height: calc(100vh - 100%);
+    width: 50vw;
+    transition:
+      transform 100ms,
+      opacity 100ms ease-out;
+
+    transform: translateX(-100%);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+
+    border-right: 1px solid var(--bs-border-color);
+
+    overflow: auto;
+
+    &.visible {
+      transform: translateX(0);
+      pointer-events: unset;
+      user-select: unset;
+      opacity: 1;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    .label {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      grid-template-areas: "cell";
+
+      .spacer,
+      .displayed {
+        grid-area: cell;
+      }
+    }
+
+    &.active .label .displayed,
+    .label .spacer {
+      font-weight: bold;
+    }
+
+    .label .spacer {
+      opacity: 0;
+      user-select: none;
+    }
+
+    i.fas {
+      font-size: 1.2rem;
+      position: relative;
+
+      .unread-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: var(--bs-red);
+        border-radius: 100%;
+      }
+    }
+  }
+}
+
+body.nav-menu-open {
+  overflow: hidden;
+  pointer-events: none;
+
+  .navbar {
+    pointer-events: all;
+  }
+}

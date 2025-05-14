@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Collections\Arrays;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 class DataQuery
 {
-    private const EXCLUDE_CHAR = '-';
-    private const CMD_START_CHAR = ':';
-    private const CMD_ONLY_FEEDBACK_YES = ':YES';
+    private const string EXCLUDE_CHAR = '-';
+    private const string CMD_START_CHAR = ':';
+    private const string CMD_ONLY_FEEDBACK_YES = ':YES';
 
     /**
-     * @var Artisan[]
+     * @var Creator[]
      */
     private array $result = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private array $searchedItems = [];
 
@@ -44,12 +45,12 @@ class DataQuery
 
     public function __construct(string $input)
     {
-        $items = array_filter(pattern('\s+')->split($input));
+        $items = Arrays::nonEmptyStrings(pattern('\s+')->split($input));
 
         foreach ($items as $item) {
             switch ($item[0]) {
                 case self::EXCLUDE_CHAR:
-                    $this->excludedItems[] = substr((string) $item, 1);
+                    $this->excludedItems[] = substr($item, 1);
                     break;
 
                 case self::CMD_START_CHAR:
@@ -63,14 +64,18 @@ class DataQuery
         }
     }
 
-    public function run(ArtisanRepository $artisanRepository): void
+    public function run(CreatorRepository $creatorRepository): void
     {
         $this->result = [];
         $this->matchedItems = [];
 
-        foreach (Artisan::wrapAll($artisanRepository->getOthersLike($this->searchedItems)) as $artisan) {
-            if ($this->artisanMatches($artisan)) {
-                $this->result[] = $artisan;
+        $creators = $creatorRepository->getWithOtherItemsLikePaged($this->searchedItems);
+
+        foreach ($creators as $creatorE) {
+            $creator = Creator::wrap($creatorE);
+
+            if ($this->creatorMatches($creator)) {
+                $this->result[] = $creator;
             }
         }
 
@@ -83,7 +88,7 @@ class DataQuery
     }
 
     /**
-     * @return Artisan[]
+     * @return Creator[]
      */
     public function getResult(): array
     {
@@ -115,9 +120,11 @@ class DataQuery
     }
 
     /**
+     * @param list<string> $listInput
+     *
      * @return string[]
      */
-    public function filterList(string $listInput): array
+    public function filterList(array $listInput): array
     {
         return $this->filterListInternal($listInput, false);
     }
@@ -133,34 +140,39 @@ class DataQuery
         }
     }
 
-    private function artisanMatches(Artisan $artisan): bool
+    private function creatorMatches(Creator $creator): bool
     {
-        if ($this->optOnlyFeedbackYes && !$artisan->allowsFeedback()) {
+        if ($this->optOnlyFeedbackYes && !$creator->allowsFeedback()) {
             return false;
         }
 
-        return $this->listMatches($artisan->getOtherFeatures())
-            || $this->listMatches($artisan->getOtherOrderTypes())
-            || $this->listMatches($artisan->getOtherStyles());
-    }
-
-    private function listMatches(string $listInput): bool
-    {
-        return !empty($this->filterListInternal($listInput, true));
+        return $this->listMatches($creator->getOtherFeatures())
+            || $this->listMatches($creator->getOtherOrderTypes())
+            || $this->listMatches($creator->getOtherStyles());
     }
 
     /**
+     * @param list<string> $listInput
+     */
+    private function listMatches(array $listInput): bool
+    {
+        return [] !== $this->filterListInternal($listInput, true);
+    }
+
+    /**
+     * @param list<string> $listInput
+     *
      * @return string[]
      */
-    private function filterListInternal(string $listInput, bool $addMatches): array
+    private function filterListInternal(array $listInput, bool $addMatches): array
     {
         $result = [];
 
-        foreach (StringList::unpack($listInput) as $item) {
+        foreach ($listInput as $item) {
             if (!$this->itemMatchesList($item, $this->excludedItems) && $this->itemMatchesList($item, $this->searchedItems)) {
                 $result[] = $item;
 
-                if ($addMatches && !in_array($item, $this->matchedItems)) {
+                if ($addMatches && !array_key_exists($item, $this->matchedItems)) {
                     $this->matchedItems[$item] = ($this->matchedItems[$item] ?? 0) + 1;
                 }
             }

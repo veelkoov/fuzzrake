@@ -6,56 +6,56 @@ namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
-use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
+use Veelkoov\Debris\StringSet;
 
 /**
  * @medium
  */
-class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
+class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception
      */
     public function testGetOnlyAllowed(): void
     {
-        self::bootKernel();
-
-        $artisan = Artisan::new()
-            ->setLanguages("Czech\nFinnish")
-            ->setOpenFor("Pancakes\nWaffles")
+        $creator = Creator::new()
+            ->setLanguages(['Czech', 'Finnish'])
+            ->setOpenFor(['Pancakes', 'Waffles'])
             ->setCountry('FI')
             ->setState('Liquid');
 
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
 
         $subject = self::getContainer()->get(FiltersValidChoicesFilter::class);
         self::assertInstanceOf(FiltersValidChoicesFilter::class, $subject);
 
         $choices = new Choices(
             '',
-            ['FI', '?', 'UK', '*'],
-            ['Liquid', '?', 'Solid', '*'],
-            ['Finnish', 'Czech', '?', 'English', '*'],
-            ['Toony', '?', '*', 'Yellow', '!'],
-            ['LED eyes', '?', '*', 'Oven', '!'],
-            ['Full plantigrade', '?', '*', 'Pancakes', '!'],
-            ['Standard commissions', '?', 'Waffles', '*'],
-            ['Pancakes', '!', '-', 'Kettles', '*'],
-            ['Birds', '?', 'Furniture', '*'],
-            false, false, false, false, false, false);
+            '',
+            StringSet::of('FI', '?', 'UK', '*'),
+            StringSet::of('Liquid', '?', 'Solid', '*'),
+            StringSet::of('Finnish', 'Czech', '?', 'English', '*'),
+            StringSet::of('Toony', '?', '*', 'Yellow', '!'),
+            StringSet::of('LED eyes', '?', '*', 'Oven', '!'),
+            StringSet::of('Full plantigrade', '?', '*', 'Pancakes', '!'),
+            StringSet::of('Standard commissions', '?', 'Waffles', '*'),
+            StringSet::of('Pancakes', '!', '-', 'Kettles', '*'),
+            StringSet::of('Birds', '?', 'Furniture', '*'),
+            false, false, false, false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
 
-        self::assertEquals(['FI', '?'], $result->countries);
-        self::assertEquals(['Liquid', '?'], $result->states);
-        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages);
-        self::assertEquals(['Toony', '?', '*'], $result->styles);
-        self::assertEquals(['LED eyes', '?', '*'], $result->features);
-        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes);
-        self::assertEquals(['Standard commissions', '?'], $result->productionModels);
-        self::assertEquals(['Pancakes', '!', '-'], $result->openFor);
-        self::assertEquals(['Birds', '?'], $result->species);
+        self::assertEquals(['FI', '?'], $result->countries->getValuesArray());
+        self::assertEquals(['Liquid', '?'], $result->states->getValuesArray());
+        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->getValuesArray());
+        self::assertEquals(['Toony', '?', '*'], $result->styles->getValuesArray());
+        self::assertEquals(['LED eyes', '?', '*'], $result->features->getValuesArray());
+        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->getValuesArray());
+        self::assertEquals(['Standard commissions', '?'], $result->productionModels->getValuesArray());
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->getValuesArray());
+        self::assertEquals(['Birds', '?'], $result->species->getValuesArray());
     }
 }

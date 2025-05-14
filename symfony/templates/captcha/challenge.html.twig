@@ -1,0 +1,22 @@
+<div class="card {% if form.vars.errors is not empty %}border-danger{% endif %} captcha">
+    <div class="card-header {% if form.vars.errors is not empty %}text-danger{% endif %}">
+        {{ form_label(form) }}
+    </div>
+
+    <ul class="list-group list-group-flush">
+        {% for question in challenge.questions %}
+            <li class="list-group-item options">
+                <p>Select all animals that {{ question.question }}:</p>
+
+                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    {% for option in question.options %}
+                        <input type="checkbox" class="btn-check" name="{{ option.id }}" id="{{ option.id }}"
+                               autocomplete="off" value="{{ option.emoticon }}">
+
+                        <label class="btn btn-outline-info" for="{{ option.id }}">{{ option.emoticon }}</label>
+                    {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

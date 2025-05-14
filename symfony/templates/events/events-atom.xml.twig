@@ -13,19 +13,19 @@
                 {%- if event.typeDataUpdated -%}
                     Data update
                 {%- elseif event.typeCsUpdated -%}
-                    {{ event.artisanName }} commissions status changed
+                    {{ event.creatorName }} commissions status changed
                 {%- else -%}
                     Generic update
                 {%- endif -%}
             </title>
-            <link href="{{ url('events', { _fragment: 'event' ~ event.id }) }}" />
-            <id>{{ url('events', { _fragment: 'event' ~ event.id }) }}</id>
+            <link href="{{ url('events', {_fragment: 'event' ~ event.id}) }}" />
+            <id>{{ url('events', {_fragment: 'event' ~ event.id}) }}</id>
             <updated>{{ event.timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
             <summary type="xhtml">
                 <div xmlns="http://www.w3.org/1999/xhtml">
                     {%- if event.typeDataUpdated -%}
 
-                        {{ eventDescription(event) }}
+                        {{ event_description(event) }}
 
                     {%- elseif event.typeCsUpdated -%}
                         {% if event.noLongerOpenFor %}

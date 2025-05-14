@@ -5,163 +5,163 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 trait FiltersTestTrait
 {
     /**
-     * @return list<Artisan>
+     * @return list<Creator>
      */
     private function getCombinedFiltersTestSet(): array
     {
         return [
-            $this->artisan('M000001', 'CZ', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000002', 'FI', 'State2', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000003', 'FI', 'State1', 'Lang2', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000004', 'FI', 'State1', 'Lang1', 'Realistic', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000005', 'FI', 'State1', 'Lang1', 'Toony', "LED eyes\nIndoor feet", 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000006', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Tails (as parts/separate)', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000007', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Premades', 'Open1', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000008', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open2', 'Real life animals', 'Supported', false, false),
-            $this->artisan('M000009', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Fantasy creatures', 'Supported', false, false),
-            $this->artisan('M000010', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', '', 'None', false, false),
-            $this->artisan('M000011', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', true, false),
-            $this->artisan('M000012', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, true),
+            $this->creator('M000001', 'CZ', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000002', 'FI', 'State2', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000003', 'FI', 'State1', ['Lang2'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000004', 'FI', 'State1', ['Lang1'], ['Realistic'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000005', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes', 'Indoor feet'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000006', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Tails (as parts/separate)'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000007', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Premades'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000008', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open2'], ['Real life animals'], ['Supported'], false, false),
+            $this->creator('M000009', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Fantasy creatures'], ['Supported'], false, false),
+            $this->creator('M000010', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], [], ['None'], false, false),
+            $this->creator('M000011', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], true, false),
+            $this->creator('M000012', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, true),
         ];
     }
 
     /**
-     * @return list<Artisan>
+     * @return list<Creator>
      */
     private function getSpecialFiltersTestSet(): array
     {
         return [
-            $this->artisan('NOCNTRY', '', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOCNTRY', '', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('NOSTATE', 'FI', '', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOSTATE', 'FI', '', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('NOLANGG', 'FI', 'State', '',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOLANGG', 'FI', 'State', [],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('NOSTLES', 'FI', 'State', 'Language',
-                '', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOSTLES', 'FI', 'State', ['Language'],
+                [], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('BOTHSTL', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherStyles: 'Other styles'),
+            $this->creator('BOTHSTL', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherStyles: ['Other styles']),
 
-            $this->artisan('OTHRSTL', 'FI', 'State', 'Language',
-                '', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherStyles: 'Other styles'),
+            $this->creator('OTHRSTL', 'FI', 'State', ['Language'],
+                [], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherStyles: ['Other styles']),
 
-            $this->artisan('NOFTRES', 'FI', 'State', 'Language',
-                'Toony', '', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOFTRES', 'FI', 'State', ['Language'],
+                ['Toony'], [], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('BOTHFTR', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherFeatures: 'Other features'),
+            $this->creator('BOTHFTR', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherFeatures: ['Other features']),
 
-            $this->artisan('OTHRFTR', 'FI', 'State', 'Language',
-                'Toony', '', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherFeatures: 'Other features'),
+            $this->creator('OTHRFTR', 'FI', 'State', ['Language'],
+                ['Toony'], [], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherFeatures: ['Other features']),
 
-            $this->artisan('NOORTPS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', '', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOORTPS', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], [], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('BOTHORT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherOrderTypes: 'Other order types'),
+            $this->creator('BOTHORT', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherOrderTypes: ['Other order types']),
 
-            $this->artisan('OTHRORT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', '', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false,
-                otherOrderTypes: 'Other order types'),
+            $this->creator('OTHRORT', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], [], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Supported'], false, false,
+                otherOrderTypes: ['Other order types']),
 
-            $this->artisan('NOPRDMD', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', '',
-                'Open for', 'Most species', 'Supported', false, false),
+            $this->creator('NOPRDMD', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], [],
+                ['Open for'], ['Most species'], ['Supported'], false, false),
         ];
     }
 
     /**
-     * @return list<Artisan>
+     * @return list<Creator>
      */
     private function getPayPlanFiltersTestSet(): array
     {
         return [
-            $this->artisan('UNKPAYP', 'FI', 'State', 'Language', 'Toony',
-                'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', '', false, false),
+            $this->creator('UNKPAYP', 'FI', 'State', ['Language'], ['Toony'],
+                ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], [], false, false),
 
-            $this->artisan('NOPAYPL', 'FI', 'State', 'Language', 'Toony',
-                'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'None', false, false),
+            $this->creator('NOPAYPL', 'FI', 'State', ['Language'], ['Toony'],
+                ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['None'], false, false),
 
-            $this->artisan('PAYPLNS', 'FI', 'State', 'Language', 'Toony',
-                'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Some plan', false, false),
+            $this->creator('PAYPLNS', 'FI', 'State', ['Language'], ['Toony'],
+                ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Most species'], ['Some plan'], false, false),
         ];
     }
 
     /**
-     * @return list<Artisan>
+     * @return list<Creator>
      */
     private function getTrackingFiltersTestSet(): array
     {
         return [
-            $this->artisan('NTTRCKD', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                '', 'Most species', 'Supported', false, false),
+            $this->creator('NTTRCKD', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                [], ['Most species'], ['Supported'], false, false),
 
-            $this->artisan('TRACKIS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false)
-                ->setCsTrackerIssue(true)->setCommissionsUrls('url'),
+            $this->creator('TRACKIS', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Offer'], ['Most species'], ['Supported'], false, false)
+                ->setCsTrackerIssue(true)->setCommissionsUrls(['url']),
 
-            $this->artisan('TRKFAIL', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                '', 'Most species', 'Supported', false, false)
-                ->setCsTrackerIssue(true)->setCommissionsUrls('url'),
+            $this->creator('TRKFAIL', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                [], ['Most species'], ['Supported'], false, false)
+                ->setCsTrackerIssue(true)->setCommissionsUrls(['url']),
 
-            $this->artisan('TRACKOK', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false)
-                ->setCommissionsUrls('url'),
+            $this->creator('TRACKOK', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Offer'], ['Most species'], ['Supported'], false, false)
+                ->setCommissionsUrls(['url']),
         ];
     }
 
     /**
-     * @return list<Artisan>
+     * @return list<Creator>
      */
     private function getInactiveFiltersTestSet(): array
     {
         return [
-            $this->artisan('ACTIVE1', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Canines', 'Supported', false, false),
+            $this->creator('ACTIVE1', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Canines'], ['Supported'], false, false),
 
-            $this->artisan('INACTIV', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Canines', 'Supported', false, false,
+            $this->creator('INACTIV', 'FI', 'State', ['Language'],
+                ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
+                ['Open for'], ['Canines'], ['Supported'], false, false,
                 inactiveReason: 'Inactive'),
         ];
     }
 
     /**
-     * @return array<string, array{list<Artisan>, array<string, list<string>|bool>, list<string>}>
+     * @return array<string, array{list<Creator>, array<string, list<string>|bool>, list<string>}>
      */
     public function filterChoicesDataProvider(): array
     {
@@ -242,19 +242,38 @@ trait FiltersTestTrait
             'pp7' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported', 'Not supported', '?']],
                 ['UNKPAYP', 'NOPAYPL', 'PAYPLNS']],
 
-            't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],        ['NTTRCKD']],
-            't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
-            't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
+            't0' => [self::getTrackingFiltersTestSet(), [],                                 ['NTTRCKD', 'TRKFAIL', 'TRACKIS', 'TRACKOK']],
+            't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],               ['NTTRCKD']],
+            't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],               ['TRACKIS', 'TRKFAIL']],
+            't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!', '-']],          ['NTTRCKD', 'TRACKIS', 'TRKFAIL']],
+            't4' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Offer']],           ['TRACKIS', 'TRACKOK']],
+            't5' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-', 'Offer']],      ['NTTRCKD', 'TRACKIS', 'TRACKOK']],
+            't6' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!', 'Offer']],      ['TRKFAIL', 'TRACKIS', 'TRACKOK']],
+            't7' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-', '!', 'Offer']], ['NTTRCKD', 'TRKFAIL', 'TRACKIS', 'TRACKOK']],
 
             'u1' => [self::getCombinedFiltersTestSet(), ['species' => ['?']], ['M000010']],
         ];
     }
 
-    private function artisan(string $makerIdAndName, string $country, string $state, string $languages, string $styles, string $features, string $orderTypes, string $productionModels, string $openFor, string $speciesDoes, string $paymentPlans, bool $nsfw, bool $worksWithMinors, string $otherStyles = '', string $otherFeatures = '', string $otherOrderTypes = '', string $speciesDoesnt = '', string $inactiveReason = ''): Artisan
+    /**
+     * @param list<string> $languages
+     * @param list<string> $styles
+     * @param list<string> $features
+     * @param list<string> $orderTypes
+     * @param list<string> $productionModels
+     * @param list<string> $openFor
+     * @param list<string> $speciesDoes
+     * @param list<string> $paymentPlans
+     * @param list<string> $otherStyles
+     * @param list<string> $otherFeatures
+     * @param list<string> $otherOrderTypes
+     * @param list<string> $speciesDoesnt
+     */
+    private function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, array $paymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
     {
-        return Artisan::new()
-            ->setMakerId($makerIdAndName)
-            ->setName($makerIdAndName)
+        return Creator::new()
+            ->setCreatorId($creatorIdAndName)
+            ->setName($creatorIdAndName)
             ->setCountry($country)
             ->setState($state)
             ->setLanguages($languages)

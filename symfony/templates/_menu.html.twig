@@ -1,29 +1,35 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-2">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+<nav id="navbar" class="navbar mb-2">
+    <div class="navbar-main navbar-nav">
+        {{ include('_menu_item.html.twig', {name: 'main', fa_icon: 'home', label: 'Home', priority: 'high'}) }}
+        {{ include('_menu_item.html.twig', {name: 'info', fa_icon: 'circle-info', label: 'About', priority: 'high'}) }}
+        {{ include('_menu_item.html.twig', {
+            name: 'events',
+            fa_icon: 'newspaper',
+            label: 'News',
+            priority: 'high',
+            type: 'news',
+            data_attrs: {
+                'latest-event': get_latest_event_timestamp(),
+            },
+        }) }}
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ include('_menu_item.html.twig', {name: 'mx_creator_new', fa_icon: 'plus', label: 'Maker', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_creators_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_query', fa_icon: 'filter', label: 'Query', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_submissions', fa_icon: 'file-lines', label: 'Submissions', priority: 'low'}) }}
+        {% endif %}
+        <div class="nav-separator"></div>
+        {{ include('_menu_item.html.twig', {name: 'iu_form_step_start', fa_icon: 'user-gear', label: 'Fursuit Makers', priority: 'medium'}) }}
+        {{ include('_menu_item.html.twig', {name: 'donate', fa_icon: 'circle-dollar-to-slot', label: 'Donate', priority: 'medium'}) }}
+        {{ include('_menu_item.html.twig', {name: 'contact', fa_icon: 'envelope', label: 'Contact', priority: 'medium'}) }}
+        <button class="nav-overflow-menu-button">
+            <i class="fas fa-chevron-down"></i>
         </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% include '_menu_item.html.twig' with {'name': 'main', 'pretty_name': '<i class="fas fa-home"></i> Home' } %}
-                {% include '_menu_item.html.twig' with {'name': 'iu_form_step_start', 'pretty_name': '<i class="fas fa-user-plus"></i> Join/update' } %}
-                {% include '_menu_item.html.twig' with {'name': 'info', 'pretty_name': '<i class="fas fa-question-circle"></i> Information' } %}
-                {% include '_menu_item.html.twig' with {'name': 'maker_ids', 'pretty_name': '<i class="fas fa-id-badge"></i> Maker IDs' } %}
-                {% include '_menu_item.html.twig' with {'name': 'events', 'pretty_name': '<i class="fas fa-history"></i> Updates' } %}
-                {% if isDevEnv() %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> Maker' } %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'pretty_name': '<i class="fas fa-plus"></i> Event' } %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_urls', 'pretty_name': '<i class="fas fa-link"></i> URLs' } %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_query', 'pretty_name': '<i class="fas fa-filter"></i> Query' } %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_submissions', 'pretty_name': '<i class="fa-solid fa-file-lines"></i> Submissions' } %}
-                {% endif %}
-            </ul>
-        </div>
-
-        <ul class="navbar-nav d-flex top-menu-right">
-            {% include '_menu_item.html.twig' with {'name': 'contact', 'pretty_name': '<i class="fa-solid fa-envelope"></i> Contact' } %}
-            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">🥌</span>️ Donate' } %}
-        </ul>
+        <button class="nav-mobile-drawer-button">
+            <i class="fas fa-bars"></i>
+        </button>
     </div>
+    <div class="nav-menu-backdrop"></div>
+    <div class="nav-dropdown-menu navbar-nav"></div>
 </nav>

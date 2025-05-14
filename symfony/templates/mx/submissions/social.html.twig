@@ -2,7 +2,7 @@
 
 {% block title %}Social{% endblock %}
 
-{% set maker_s = artisans | length > 1 ? 'makers' : 'maker' %}
+{% set creator_s = creators|length > 1 ? 'makers' : 'maker' %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
@@ -14,14 +14,14 @@
             <h5>Markdown text</h5>
 
             <p class="user-select-all">
-                # Fursuit {{ maker_s }} added
+                # Fursuit {{ creator_s }} added
 
                 <br><br>
 
-                {% for artisan in artisans %}
-                    - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})
-                    {% if '' != artisan.tumblrUrl %}
-                        {{ artisan.tumblrUrl | tumblr_at }}
+                {% for creator in creators %}
+                    - [getfursu.it/#{{ creator.creatorId }}](https://getfursu.it/#{{ creator.creatorId }})
+                    {% if '' != creator.tumblrUrl %}
+                        {{ creator.tumblrUrl|tumblr_at }}
                     {% endif %}
                     <br><br>
                 {% endfor %}
@@ -31,73 +31,90 @@
                 Join/see all recently joined: [getfursu.it/new](https://getfursu.it/new)
             </p>
 
-            <h5>Emoji</h5>
-            <p class="user-select-all">🦖</p>
-
             <h5>Hashtags</h5>
             <p><i>#<span class="user-select-all">fursuit maker</span> #<span class="user-select-all">furry</span></i></p>
 
-            <h4>Image ALT</h4>
-            <p class="user-select-all small">
-                Screenshot of a Tumblr post announcing the addition of {{ artisans | length }} new {{ maker_s }}
-                to the getfursu.it website, and encouraging to check the list of all recently added makers,
-                or to join the list. Below the text, two large emoticons/characters are shown:
-                __CHANGE_HERE__ and a T. rex looking in __CHANGE_HERE__ direction.
+            <h4>Mastodon</h4>
+
+            <p class="user-select-all">
+                Fursuit {{ creator_s }} added:<br>
+
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
+
+                    {% if '' != creator.mastodonUrl %}
+                        {{ creator.mastodonUrl|mastodon_at }}
+                    {% endif %}
+
+                    <br>
+                {% endfor %}
+
+                <br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br><br>
+
+                <i>#fursuitmaker #furry</i>
             </p>
         </div>
 
         <div class="col">
-            <h4>Mastodon</h4>
+            <h4>Bluesky</h4>
 
-            <h5>Toot</h5>
             <p class="user-select-all">
-                <i>#fursuitmaker #furry</i>
+                Fursuit {{ creator_s }} added:<br>
 
-                {% for artisan in artisans %}
-                    https://getfursu.it/#{{ artisan.makerId }}
-                {% endfor %}
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
 
-                https://getfursu.it/new
-            </p>
-
-            <h5>Tags</h5>
-            <p>
-                {% for artisan in artisans %}
-                    {% if '' != artisan.mastodonUrl %}
-                        <span class="user-select-all">{{ artisan.mastodonUrl | mastodon_at }}</span>
+                    {% if '' != creator.blueskyUrl %}
+                        {{ creator.blueskyUrl|bluesky_at }}
                     {% endif %}
+
+                    <br>
                 {% endfor %}
+
+                &nbsp;<br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br>&nbsp;<br>
+
+                <i>#fursuitmaker #furry</i>
             </p>
 
             <h4>Twitter</h4>
 
-            <h5>Tweet</h5>
             <p class="user-select-all">
-                <i>#fursuitmaker #furry</i>
+                Fursuit {{ creator_s }} added:<br>
 
-                {% for artisan in artisans %}
-                    https://getfursu.it/#{{ artisan.makerId }}
-                {% endfor %}
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
 
-                https://getfursu.it/new
-            </p>
-
-            <h5>Tags</h5>
-            <p>
-                {% for artisan in artisans %}
-                    {% if '' != artisan.twitterUrl %}
-                        <span class="user-select-all">@{{ artisan.twitterUrl|split('/')[3] }}</span>
+                    {% if '' != creator.twitterUrl %}
+                        <span class="user-select-all">@{{ creator.twitterUrl|split('/')[3] }}</span>
                     {% endif %}
+
+                    <br>
                 {% endfor %}
+
+                <br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br><br>
+
+                <i>#fursuitmaker #furry</i>
             </p>
 
             <h4 class="pt-4">Instagram</h4>
 
             <h5>Tags and hashtags</h5>
             <p class="user-select-all">
-                {% for artisan in artisans %}
-                    {% if '' != artisan.instagramUrl %}
-                        @{{ artisan.instagramUrl|split('/')[3] }}
+                {% for creator in creators %}
+                    {% if '' != creator.instagramUrl %}
+                        @{{ creator.instagramUrl|split('/')[3] }}
                     {% endif %}
                 {% endfor %}
 

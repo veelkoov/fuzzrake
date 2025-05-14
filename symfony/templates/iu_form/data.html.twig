@@ -1,8 +1,8 @@
 {% extends '_base.html.twig' %}
 
-{% import 'iu_form/shared_parts/macros.html.twig' as macros %}
+{% import 'iu_form/parts/macros.html.twig' as macros %}
 
-{% block title %}inclusion/update request{% endblock %}
+{% block title %}{% if is_new %}inclusion{% else %}update{% endif %} request{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -15,21 +15,52 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ block('title')|capitalize }}</h1>
+    <h1 id="iu-form-data" data-step="data" data-creator-id="{{ creator_id }}">{{ block('title')|capitalize }}</h1>
 
-    {% include 'shared_parts/big_scary_error.html.twig' %}
+    <div class="card border-dark mb-3">
+        <div class="card-body">
+            <p class="card-text p-0 m-0 float-start">
+                {% if is_new %}
+                    You started filling this new maker/studio inclusion request on
+                {% else %}
+                    You began updating the maker/studio data on
+                {% endif %}
+
+                <span id="iu-form-start-time"></span>.
+            </p>
+
+            <p class="card-text text-end p-0 m-0 float-end">
+                <button type="button" id="iu-form-reset-button" class="btn btn-sm btn-outline btn-outline-danger btn">
+                    Start over or withdraw
+                </button>
+            </p>
+        </div>
+    </div>
 
     {{ form_start(form) }}
 
-    {% include 'iu_form/shared_parts/session_info.html.twig' %}
+    {% if errors is not empty %}
+        <div class="alert alert-danger" role="alert" id="form_errors_top">
+            <h4 class="alert-heading">Errors encountered</h4>
 
-    {% include 'iu_form/shared_parts/form_errors_top.html.twig' %}
+            <ul>
+                {% for error in errors %}
+                    <li>
+                        {% set label = error.origin.config.getOption('label')|default('General')|split('<br />', 2)[0] %}
+                        {% set is_html = error.origin.config.getOption('label_html') %}
 
-    {% include('iu_form/iu_form_parts/instructions.html.twig') %}
+                        <strong>{{ is_html ? label|raw : label }}</strong> - {{ error.message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ include(('iu_form/parts/instructions.html.twig')) }}
 
     <h2 class="mt-4">General info</h2>
 
-    {{ macros.help_modal('sinceForMultipleMakers', 'What if my studio has multiple makers?', "
+    {{ macros.help_modal('sinceForMultipleCreators', 'What if my studio has multiple makers?', "
         <p>
             Since it's not possible to provide this information more than once, you will need to decide what information to provide to be fair to your clients.
         </p>
@@ -51,13 +82,13 @@
 
         <div class="col-lg-5">
             <div class="mandatory">
-                {{ form_row(form.makerId) }}
+                {{ form_row(form.creatorId) }}
             </div>
             <div class="recommended">
                 {{ form_row(form.since) }}
 
                 <p class="form-text help-text form-help-pull-up">
-                    {{ macros.help_link('sinceForMultipleMakers', 'text-decoration-none fw-light', 'What if my studio has multiple makers?') }}
+                    {{ macros.help_link('sinceForMultipleCreators', 'text-decoration-none fw-light', 'What if my studio has multiple makers?') }}
                 </p>
             </div>
         </div>
@@ -132,10 +163,10 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.mastodonUrl) }}
+            {{ form_row(form.blueskyUrl) }}
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.twitterUrl) }}
+            {{ form_row(form.mastodonUrl) }}
         </div>
     </div>
 
@@ -153,7 +184,16 @@
             {{ form_row(form.tumblrUrl) }}
         </div>
         <div class="col-lg-6">
+            {{ form_row(form.twitterUrl) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
             {{ form_row(form.youtubeUrl) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.tikTokUrl) }}
         </div>
     </div>
 
@@ -177,7 +217,16 @@
 
     <div class="row">
         <div class="col-lg-6">
+            {{ form_row(form.donationsUrl) }}
+        </div>
+        <div class="col-lg-6">
             {{ form_row(form.linklistUrl) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.telegramChannelUrl) }}
         </div>
         <div class="col-lg-6">
             {{ form_row(form.otherUrls) }}
@@ -437,9 +486,88 @@
         </div>
     </div>
 
+    <h2 class="mt-5 mb-3">Contact</h2>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="mandatory">
+                {{ form_row(form.contactAllowed) }}
+            </div>
+        </div>
+        <div class="col-lg-8 pb-4">
+            <p>Based on your choice:</p>
+
+            <span class="pros-cons-contact-options" data-min-level="-1" data-max-level="-1">
+                <i class="fas fa-question-circle"></i>
+                Please choose your preferred setting<br />
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="0" data-max-level="0">
+                <i class="fa-regular fa-circle-xmark"></i>
+                <strong>Any serious issue makes your submission rejected without a notice.</strong><br />
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="1" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Get contacted when there's an issue with your submission (e.g. wrong password).<br />
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="2" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Get notified about new features available to better advertise your studio.<br />
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="0" data-max-level="1">
+                <i class="fa-regular fa-circle-xmark"></i>
+                You may miss important changes and new features, e.g. filters. That may push your studio into "Unknown" classification, skipped/rated lower by some users.<br />
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="3" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                You may occasionally receive a survey to best understand your needs as a maker and make this website suit you better. You are <strong>not</strong> obliged in any way to respond, nor provide all and complete answers.<br />
+            </span>
+            <span class="pros-cons-contact-options small" data-min-level="0" data-max-level="2">
+                <i class="fa-regular fa-circle-xmark"></i>
+                Your chances to impact how this website works will be limited.<br />
+            </span>
+            <span class="pros-cons-contact-options small" data-min-level="1" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Opt-out anytime, by simply replying, or sending an update here.<br />
+                <i class="fa-regular fa-square-check"></i>
+                Your contact info will never be shared with anyone.<br />
+                <i class="fa-regular fa-square-check"></i>
+                No 3rd party advertising. The only advertising which <strong>may</strong> appear in the future, would be banners on the website.<br />
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="email-address" class="mandatory">
+                {{ form_row(form.emailAddress) }}
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-5" />
+    <h2 class="mb-3">Password</h2>
+
+    <div class="mandatory">
+        {{ form_row(form.password) }}
+    </div>
+
+    <div class="{% if is_new %}d-none{% endif %}">
+        {{ form_row(form.changePassword) }}
+
+        <p class="d-none border bg-primary-subtle ml-5 p-2" id="forgotten_password_instructions">
+            Please type in a <strong>new</strong> password you want to use in the field above.
+        </p>
+
+        <div id="verification_acknowledgement" class="{% if not was_contact_allowed %}contact-was-not-allowed{% endif %}">
+            {{ form_row(form.verificationAcknowledgement) }}
+        </div>
+    </div>
+
+    {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}
+
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn btn-primary" value="Continue" />
+    <input type="submit" class="btn btn-primary" value="Submit" />
 
     {{ form_end(form) }}
 {% endblock %}

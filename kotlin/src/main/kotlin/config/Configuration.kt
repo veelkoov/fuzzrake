@@ -1,11 +1,17 @@
 package config
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import java.nio.file.Path
 
 data class Configuration(
-    @JsonProperty("database_path")
     val databasePath: String,
-
-    @JsonProperty("snapshots_store_dir_path")
     val snapshotsStoreDirPath: String,
-)
+) {
+    companion object {
+        fun from(path: Path, yamlConfiguration: YamlConfiguration): Configuration {
+            return Configuration(
+                path.resolve(yamlConfiguration.databasePath).toString(),
+                path.resolve(yamlConfiguration.snapshotsStoreDirPath).toString(),
+            )
+        }
+    }
+}

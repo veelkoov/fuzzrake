@@ -6,98 +6,88 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
+use App\Entity\Submission;
 use App\Form\Mx\SubmissionType;
-use App\IuHandling\Exception\MissingSubmissionException;
-use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
-use App\Repository\ArtisanRepository;
+use App\Repository\CreatorRepository;
+use App\Repository\SubmissionRepository;
 use App\Service\Cache as CacheService;
-use App\Service\EnvironmentsService;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
-use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route(path: '/mx/submissions')]
-class SubmissionsController extends FuzzrakeAbstractController
+#[Route(path: '/mx')]
+class SubmissionsController extends AbstractController
 {
     use ButtonClickedTrait;
 
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly SubmissionsService $submissions,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SubmissionRepository $submissionRepository,
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
-        EnvironmentsService $environments,
+        private readonly CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($environments);
     }
 
-    #[Route(path: '/', name: RouteName::MX_SUBMISSIONS)]
+    /**
+     * @param positive-int $page
+     */
+    #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
     #[Cache(maxage: 0, public: false)]
-    public function submissions(): Response
+    public function submissions(int $page): Response
     {
-        $this->authorize();
-
-        $submissions = $this->submissions->getSubmissions();
+        $submissionsPage = $this->submissionRepository->getPage($page);
 
         return $this->render('mx/submissions/index.html.twig', [
-            'submissions' => $submissions,
+            'submissions_page' => $submissionsPage,
         ]);
     }
 
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
+    #[Route(path: '/submissions/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
     #[Cache(maxage: 0, public: false)]
-    public function social(ArtisanRepository $repository): Response
+    public function social(): Response
     {
-        $this->authorize();
-
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
-        $artisans = array_filter(Artisan::wrapAll($repository->getNew()),
-            fn (Artisan $artisan) => ($artisan->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
+        $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
+            static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('mx/submissions/social.html.twig', [
-            'artisans' => $artisans,
+            'creators' => $creators,
         ]);
     }
 
-    #[Route(path: '/{id}', name: RouteName::MX_SUBMISSION)]
+    #[Route(path: '/submission/{strId}', name: RouteName::MX_SUBMISSION)]
     #[Cache(maxage: 0, public: false)]
-    public function submission(Request $request, string $id): Response
+    public function submission(#[MapEntity(mapping: ['strId' => 'strId'])] Submission $submission, Request $request): Response
     {
-        $this->authorize();
+        $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
 
-        try {
-            $input = $this->submissions->getUpdateInputBySubmissionId($id);
-        } catch (MissingSubmissionException $exception) {
-            $this->logger->warning($exception);
-
-            throw $this->createNotFoundException($exception->getMessage());
-        }
-
-        $form = $this->createForm(SubmissionType::class, $input->submission)->handleRequest($request);
-
-        $update = $this->updates->getUpdateFor($input);
+        $update = $this->updates->getUpdateFor($submission);
 
         if ($form->isSubmitted()) {
-            $this->submissions->updateEntity($update);
+            $this->entityManager->flush();
         }
 
         if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
                 && $form->isValid() && $update->isAccepted) {
             $this->updates->import($update);
-            $this->cache->invalidate(CacheTags::ARTISANS);
+            $this->cache->invalidate(CacheTags::CREATORS);
 
             return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
         }

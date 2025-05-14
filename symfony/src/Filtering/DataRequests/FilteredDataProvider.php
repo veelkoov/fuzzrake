@@ -4,77 +4,74 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\Filtering\DataRequests\Filters\FeaturesFilter;
-use App\Filtering\DataRequests\Filters\FilterInterface;
-use App\Filtering\DataRequests\Filters\LanguagesFilter;
-use App\Filtering\DataRequests\Filters\OpenForFilter;
-use App\Filtering\DataRequests\Filters\OrderTypesFilter;
-use App\Filtering\DataRequests\Filters\ProductionModelsFilter;
-use App\Filtering\DataRequests\Filters\StylesFilter;
-use App\Repository\ArtisanRepository;
+use App\Repository\CreatorRepository;
 use App\Service\Cache;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\Pagination\ItemsPage;
+use App\Utils\Pagination\Pagination;
 use App\ValueObject\CacheTags;
-
-use function Psl\Iter\all;
-use function Psl\Vec\filter;
-use function Psl\Vec\map;
-use function Psl\Vec\values;
+use Psl\Vec;
 
 class FilteredDataProvider
 {
     public function __construct(
-        private readonly ArtisanRepository $repository,
+        private readonly CreatorRepository $repository,
         private readonly Cache $cache,
     ) {
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return ItemsPage<Creator>
      */
-    public function getPublicDataFor(Choices $choices): array
+    public function getCreatorsPage(Choices $choices): ItemsPage
     {
-        return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => $this->retrievePublicDataFor($choices));
+        return $this->cache->get(
+            fn () => $this->filterCreatorsBy($choices),
+            CacheTags::CREATORS,
+            [__METHOD__, $choices->getCacheDigest()],
+        );
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return ItemsPage<Creator>
      */
-    private function retrievePublicDataFor(Choices $choices): array
+    private function filterCreatorsBy(Choices $choices): ItemsPage
     {
-        $appender = new QueryChoicesAppender($choices);
+        $pagesCount = null;
 
-        $artisans = $this->cache->getCached('Filtered.query.'.$appender->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => Artisan::wrapAll($this->repository->getFiltered($appender)));
+        do {
+            $choices = $this->getChoicesWithFixedPageNumber($choices, $pagesCount);
 
-        $filters = [];
+            $appender = new QueryChoicesAppender($choices);
+            $paginator = $this->repository->getFiltered($appender);
 
-        if ([] !== $choices->languages) {
-            $filters[] = new LanguagesFilter($choices->languages);
-        }
-        if ([] !== $choices->features) {
-            $filters[] = new FeaturesFilter($choices->features);
-        }
-        if ([] !== $choices->styles) {
-            $filters[] = new StylesFilter($choices->styles);
-        }
-        if ([] !== $choices->productionModels) {
-            $filters[] = new ProductionModelsFilter($choices->productionModels);
-        }
-        if ([] !== $choices->orderTypes) {
-            $filters[] = new OrderTypesFilter($choices->orderTypes);
-        }
-        if ([] !== $choices->openFor) {
-            $filters[] = new OpenForFilter($choices->openFor);
-        }
+            $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
+        } while ($choices->pageNumber > $pagesCount);
 
-        $artisans = filter($artisans,
-            fn (Artisan $artisan) => all($filters,
-                fn (FilterInterface $filter) => $filter->matches($artisan)
-            )
+        $creators = Vec\map($paginator, static fn (array $creatorAndOrderColumn) => Creator::wrap($creatorAndOrderColumn[0]));
+
+        return new ItemsPage(
+            $creators,
+            $paginator->count(),
+            $choices->pageNumber,
+            $pagesCount,
         );
+    }
 
-        return map($artisans, fn (Artisan $artisan) => values($artisan->getPublicData()));
+    private function getChoicesWithFixedPageNumber(Choices $choices, ?int $lastPageNumber): Choices
+    {
+        if ($choices->pageNumber < 1) {
+            $newPageNumber = 1;
+        } elseif (null !== $lastPageNumber && $choices->pageNumber > $lastPageNumber) {
+            $newPageNumber = $lastPageNumber;
+        } else {
+            $newPageNumber = $choices->pageNumber;
+        }
+
+        if ($choices->pageNumber !== $newPageNumber) {
+            $choices = $choices->changePage($newPageNumber);
+        }
+
+        return $choices;
     }
 }
