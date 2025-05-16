@@ -6,9 +6,11 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Override;
 
 final class Version20250412094516 extends AbstractMigration
 {
+    #[Override]
     public function getDescription(): string
     {
         return 'Remove obsolete table "kotlin_data". Rename "creators_private_data" table, columns, remove unused column "notes".';
@@ -33,6 +35,7 @@ final class Version20250412094516 extends AbstractMigration
         SQL);
     }
 
+    #[Override]
     public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException(); // Restore the backup.
