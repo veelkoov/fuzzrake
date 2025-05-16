@@ -1,4 +1,4 @@
-FROM php:8.3.20-fpm-alpine3.21
+FROM php:8.3.21-fpm-alpine3.21
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
