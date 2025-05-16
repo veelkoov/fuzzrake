@@ -121,11 +121,11 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
      */
     public static function objectOf(mixed $input, string $class): mixed
     {
-        if (is_object($input) && (is_a($input, $class) || is_subclass_of($input, $class))) {
-            return $input;
+        if (!($input instanceof $class)) {
+            throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
         }
 
-        throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
+        return $input;
     }
 
     /**

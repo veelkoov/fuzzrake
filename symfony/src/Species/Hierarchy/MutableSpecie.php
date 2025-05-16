@@ -10,8 +10,8 @@ use Psl\Vec;
 
 final class MutableSpecie implements Specie
 {
-    private SpecieSet $parents;
-    private SpecieSet $children;
+    private readonly SpecieSet $parents;
+    private readonly SpecieSet $children;
 
     public function __construct(
         readonly string $name,
