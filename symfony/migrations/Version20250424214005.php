@@ -6,9 +6,11 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Override;
 
 final class Version20250424214005 extends AbstractMigration
 {
+    #[Override]
     public function getDescription(): string
     {
         return 'Rename all legacy names in tables and columns.';
@@ -166,6 +168,7 @@ final class Version20250424214005 extends AbstractMigration
         SQL);
     }
 
+    #[Override]
     public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException(); // Restore the backup.

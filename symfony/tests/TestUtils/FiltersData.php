@@ -54,7 +54,7 @@ class FiltersData
     private static function makeSureNoCreatorUsesSpeciesDoesnt(array $creators): void
     {
         if (Iter\any($creators, fn (Creator $creator) => [] !== $creator->getSpeciesDoesnt())) {
-            throw new InvalidArgumentException(__CLASS__.' does not support resolving species. Creators cannot have "species doesn\'t" specified.');
+            throw new InvalidArgumentException(self::class.' does not support resolving species. Creators cannot have "species doesn\'t" specified.');
         }
     }
 

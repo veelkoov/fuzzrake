@@ -6,9 +6,11 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Override;
 
 final class Version20250426132032 extends AbstractMigration
 {
+    #[Override]
     public function getDescription(): string
     {
         return 'Removes old submissions (backups kept separately). Add timestamp and payload columns to the submissions table.';
@@ -39,6 +41,7 @@ final class Version20250426132032 extends AbstractMigration
         SQL);
     }
 
+    #[Override]
     public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException(); // Restore the backup.

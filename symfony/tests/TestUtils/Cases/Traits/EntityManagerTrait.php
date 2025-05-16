@@ -32,7 +32,7 @@ trait EntityManagerTrait
         try {
             $entityManager = $container->get('doctrine.orm.default_entity_manager');
         } catch (Exception $caught) {
-            throw new RuntimeException(previous: $caught);
+            throw new RuntimeException(message: $caught->getMessage(), code: $caught->getCode(), previous: $caught);
         }
 
         if (!($entityManager instanceof EntityManagerInterface)) {

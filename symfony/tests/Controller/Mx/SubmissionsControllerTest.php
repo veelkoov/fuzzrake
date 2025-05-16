@@ -543,7 +543,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         try {
             return SubmissionService::getEntityForSubmission($submissionData);
         } catch (RandomException|JsonException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
 }
