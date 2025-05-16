@@ -42,7 +42,7 @@ class Cache
                 return $callback();
             });
         } catch (InvalidArgumentException|CacheException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
 
         return $getCached;
@@ -56,7 +56,7 @@ class Cache
         try {
             $this->cache->invalidateTags(is_string($tags) ? [$tags] : $tags);
         } catch (InvalidArgumentException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
 
