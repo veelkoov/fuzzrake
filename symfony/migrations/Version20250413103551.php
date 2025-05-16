@@ -6,9 +6,11 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Override;
 
 final class Version20250413103551 extends AbstractMigration
 {
+    #[Override]
     public function getDescription(): string
     {
         return 'Remove column "contact_info_obfuscated" from "artisans" table.';
@@ -33,6 +35,7 @@ final class Version20250413103551 extends AbstractMigration
         SQL);
     }
 
+    #[Override]
     public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException(); // Restore the backup.

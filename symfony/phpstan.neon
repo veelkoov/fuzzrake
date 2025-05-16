@@ -57,11 +57,5 @@ parameters:
       count: 2
       path: tests/bootstrap.php
 
-    - # "Using this method is the best way to get a container from your test code."
-      message: '#^Call to method get\(\) of internal class Symfony\\Bundle\\FrameworkBundle\\Test\\TestContainer from outside its root namespace Symfony\.$#'
-      identifier: method.internalClass
-      count: 2
-      path: tests/*.php
-
 includes:
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon
