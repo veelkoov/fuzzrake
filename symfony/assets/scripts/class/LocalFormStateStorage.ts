@@ -1,6 +1,7 @@
 import Storage from "./Storage";
 import { FieldsStates } from "./LocalFormStateTypes";
-import * as moment from "moment/moment";
+import { DateTime } from "luxon";
+import { defaultDateTimeFormat } from "../datetimes";
 
 export default class LocalFormStateStorage {
   private readonly dataKey: string;
@@ -59,6 +60,6 @@ export default class LocalFormStateStorage {
   }
 
   private getCurrentDateTime(): string {
-    return moment().format("YYYY-MM-DD HH:mm");
+    return DateTime.now().toLocaleString(defaultDateTimeFormat);
   }
 }
