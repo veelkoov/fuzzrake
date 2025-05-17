@@ -85,13 +85,13 @@ class QueryChoicesAppender
             // Unable to sort despite EBNF/OrderByItem/ScalarExpression/CaseExpression/CoalesceExpression
             // https://www.doctrine-project.org/projects/doctrine-orm/en/3.3/reference/dql-doctrine-query-language.html#ebnf
             // The sorting column is added regardless of the creator mode, to have a concise return type.
-            // With the column added we get an array of entity and the column used for sorting (ignored later).
+            // With the column added we get an array of 1) entity and 2) the column used for sorting (ignored later).
             ->addSelect("COALESCE($updatedDateTime.value, $addedDateTime.value, :$beforeDateTimesValue) AS last_update_datetime")
             ->setParameter($beforeDateTimesValue, '2000-01-01 00:00:00')
         ;
 
         if (!$this->choices->creatorMode) {
-            $builder->addOrderBy("CASE WHEN d_c.country = 'RU' THEN 1 ELSE 0 END"); // 1939-09-17 & 2022-02-24
+            $builder->addOrderBy("CASE WHEN d_c.country = 'RU' THEN 1 ELSE 0 END"); // 2022-02-24 & 1939-09-17
             $builder->addOrderBy('last_update_datetime', 'DESC'); // Put recently updated makers on top
         }
 
