@@ -82,7 +82,7 @@ class SubmissionRepository extends ServiceEntityRepository
                 $pagesCount,
             );
         } catch (Exception $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
 }

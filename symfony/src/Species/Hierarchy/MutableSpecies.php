@@ -11,8 +11,8 @@ use Veelkoov\Debris\StringSet;
 
 class MutableSpecies implements Species
 {
-    private StringMutableSpecieMap $byName;
-    private SpecieSet $asTree;
+    private readonly StringMutableSpecieMap $byName;
+    private readonly SpecieSet $asTree;
 
     public function __construct()
     {

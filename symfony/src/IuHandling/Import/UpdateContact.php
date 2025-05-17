@@ -25,11 +25,9 @@ final readonly class UpdateContact
         $description = $isNew || $was === $now ? $now->getLabel() : "{$was->getLabel()} → {$now->getLabel()}";
         $isAllowed = ($isNew || ContactPermit::NO !== $was) && (ContactPermit::NO !== $now);
 
-        $address = !$isAllowed
-            ? ''
-            : ($isNew
-                ? $updated->getEmailAddress()
-                : $original->getEmailAddress());
+        $address = $isAllowed
+            ? ($isNew ? $updated->getEmailAddress() : $original->getEmailAddress())
+            : '';
 
         return new self(
             $description,
