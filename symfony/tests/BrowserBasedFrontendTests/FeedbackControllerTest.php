@@ -60,7 +60,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         self::$client->switchTo()->window($handle);
 
         self::$client->waitForVisibility('h1', 10);
-        self::assertSelectorTExtSame('h1', 'Feedback form');
+        self::assertSelectorTextSame('h1', 'Feedback form');
         self::assertSelectorExists('//input[@id="feedback_creator" and @value="'.$expectedCreatorId.'"]');
     }
 

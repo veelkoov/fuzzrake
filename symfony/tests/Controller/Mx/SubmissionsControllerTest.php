@@ -70,7 +70,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ;
 
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -149,7 +149,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ;
 
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -209,7 +209,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         $submissionData = Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu');
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -240,7 +240,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         $submission = $this->createSubmission($submissionData);
         $submission->setComment('Old comment')->setDirectives('Old directives');
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -276,7 +276,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ;
 
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -298,7 +298,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         $submission = $this->createSubmission($submissionData);
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -323,7 +323,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ;
 
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -344,7 +344,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         ;
 
         $submission = $this->createSubmission($submissionData);
-        $this->persistAndFlush($submission->setDirectives('Let me just put something random here'));
+        self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -375,7 +375,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             $submission->setDirectives('accept');
         }
 
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -407,7 +407,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
 
         $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('New name'));
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -433,7 +433,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -476,7 +476,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
         $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -509,10 +509,10 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             $creator = new Creator();
             $creator->setName(Uuid::v4()->toRfc4122());
 
-            $this->persist($this->createSubmission($creator));
+            self::persist($this->createSubmission($creator));
         }
 
-        $this->flush();
+        self::flush();
     }
 
     public function testHiddenCreator(): void
@@ -521,7 +521,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::persistAndFlush($entity);
 
         $submission = $this->createSubmission($entity); // No need to modify
-        $this->persistAndFlush($submission);
+        self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
@@ -543,7 +543,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         try {
             return SubmissionService::getEntityForSubmission($submissionData);
         } catch (RandomException|JsonException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
 }

@@ -94,7 +94,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
                 $expected[$creatorId] = $creators[$creatorId];
             }
         }
-        $this->persistAndFlush(...$creators);
+        self::persistAndFlush(...$creators);
 
         $this->clearCache();
 
@@ -112,7 +112,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
             self::waitUntilShows('#aasImAdult');
             self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-            $lastChoiceId = $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
+            $lastChoiceId = true === $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
             self::waitUntilShows("#$lastChoiceId");
             self::$client->findElement(WebDriverBy::id($lastChoiceId))->click();
         }

@@ -30,7 +30,7 @@ class DataServiceWithEMTest extends FuzzrakeKernelTestCase
         $subject = $this->getDataService();
         $result = $subject->getMainPageStats();
 
-        self::assertEquals(1, $result->countryCount);
+        self::assertSame(1, $result->countryCount);
     }
 
     public function testInactiveCreatorsDontCountTowardsTotalActive(): void
@@ -44,7 +44,7 @@ class DataServiceWithEMTest extends FuzzrakeKernelTestCase
         $subject = $this->getDataService();
         $result = $subject->getMainPageStats();
 
-        self::assertEquals(2, $result->activeCreatorsCount);
+        self::assertSame(2, $result->activeCreatorsCount);
     }
 
     private function getDataService(): DataService

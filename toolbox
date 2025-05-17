@@ -2,17 +2,25 @@
 
 set -euo pipefail
 
-PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
+readonly PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
-SYMFONY_DIR_REL_PATH='symfony'
-KOTLIN_DIR_REL_PATH='kotlin'
-SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
-DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
-DB_DUMP_DIR_REL_PATH='db_dump'
-DB_DUMP_COPY_DIR_REL_PATH="$DB_DUMP_DIR_REL_PATH/$(date -u '+%Y-%m-%d_%H-%M-%S')"
+readonly SYMFONY_DIR_REL_PATH='symfony'
+readonly KOTLIN_DIR_REL_PATH='kotlin'
+readonly SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
+readonly DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
+readonly DB_DUMP_DIR_REL_PATH='db_dump'
+readonly DB_DUMP_COPY_DIR_REL_PATH="$DB_DUMP_DIR_REL_PATH/$(date -u '+%Y-%m-%d_%H-%M-%S')"
 
-PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
-BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
+readonly PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
+readonly BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
+
+readonly DOCKER_EXEC_EXTRA_ARGS=(
+    --user "$(echo -n "$(id -u):www-data")"
+    --interactive
+    --tty
+    # Uncomment below to debug tests
+    # --env XDEBUG_TRIGGER=1
+)
 
 function run_command() {
     echo "Executing: $*"
@@ -25,7 +33,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" --interactive --tty php "$@"
+    run_docker_compose exec "${DOCKER_EXEC_EXTRA_ARGS[@]}" php "$@"
 }
 
 function run_composer() {
@@ -213,7 +221,7 @@ function action() {
         'cc-prod')      run_command ssh getfursu.it \
             'docker exec fuzzrake-prod bin/console cache:clear && docker exec fuzzrake-prod bin/console app:precompute-data' ;;
 
-        'pu')           run_docker_compose_exec ./bin/phpunit "$@" ;;
+        'pu')           run_docker_compose_exec ./bin/phpunit --order-by size,reverse "$@" ;;
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
@@ -239,10 +247,9 @@ function action() {
 
         'get-snapshots')   action_get_snapshots ;;
 
+        # Ugly but should be temporary
         'gradle')       run_gradle "$@" ;;
         'miniatures')   run_gradle run --args update-miniatures "$@" ;;
-
-        # Ugly but hopefully truly temporary
         'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
 
         *) error "Unknown action: '$action'" ;;

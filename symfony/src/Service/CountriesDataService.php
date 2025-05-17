@@ -14,7 +14,7 @@ class CountriesDataService
     /**
      * @var DStringMap<StringStringMap> 'Region name' => ['Country code' => 'Country name', ...]
      */
-    private DStringMap $regions;
+    private readonly DStringMap $regions;
 
     /**
      * @param array<string, array<string, string>> $regions

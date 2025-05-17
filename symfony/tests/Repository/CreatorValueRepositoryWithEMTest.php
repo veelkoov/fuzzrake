@@ -63,6 +63,6 @@ class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
 
         $result = $subject->countActiveCreatorsHavingAnyOf([Field::FEATURES->value, Field::OTHER_FEATURES->value]);
 
-        self::assertEquals(3, $result);
+        self::assertSame(3, $result);
     }
 }

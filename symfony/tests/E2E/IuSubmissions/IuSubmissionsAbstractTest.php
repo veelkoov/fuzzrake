@@ -23,6 +23,7 @@ abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
     protected function performImport(bool $acceptAll, int $expectedImports): void
     {
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        self::assertResponseIsSuccessful();
 
         $links = $crawler->filter('table a')->links();
 
@@ -30,6 +31,7 @@ abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
 
         foreach ($links as $link) {
             $crawler = self::$client->request('GET', $link->getUri());
+            self::assertResponseIsSuccessful();
 
             $form = $crawler->selectButton('Import')->form([
                 'submission[directives]' => $acceptAll ? 'accept' : '',

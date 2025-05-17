@@ -120,19 +120,19 @@ class MutableSpecieTest extends TestCase
         try {
             $specieB->addChild($specieA);
         } catch (SpecieException $exception) {
-            self::assertEquals("Recursion when adding child 'Test specie A' to 'Test specie B'", $exception->getMessage());
+            self::assertSame("Recursion when adding child 'Test specie A' to 'Test specie B'", $exception->getMessage());
         }
 
         try {
             $specieC->addChild($specieA);
         } catch (SpecieException $exception) {
-            self::assertEquals("Recursion when adding child 'Test specie A' to 'Test specie C'", $exception->getMessage());
+            self::assertSame("Recursion when adding child 'Test specie A' to 'Test specie C'", $exception->getMessage());
         }
 
         try {
             $specieC->addChild($specieB);
         } catch (SpecieException $exception) {
-            self::assertEquals("Recursion when adding child 'Test specie B' to 'Test specie C'", $exception->getMessage());
+            self::assertSame("Recursion when adding child 'Test specie B' to 'Test specie C'", $exception->getMessage());
         }
     }
 
@@ -156,9 +156,9 @@ class MutableSpecieTest extends TestCase
         $specieB->addChild($specieD);
         $specieC->addChild($specieD);
 
-        self::assertEquals(0, $specieA->getDepth());
-        self::assertEquals(1, $specieB->getDepth());
-        self::assertEquals(2, $specieC->getDepth());
-        self::assertEquals(3, $specieD->getDepth());
+        self::assertSame(0, $specieA->getDepth());
+        self::assertSame(1, $specieB->getDepth());
+        self::assertSame(2, $specieC->getDepth());
+        self::assertSame(3, $specieD->getDepth());
     }
 }

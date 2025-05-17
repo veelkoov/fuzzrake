@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Symfony\Component\HttpFoundation\Response;
-
 trait AssertsTrait
 {
     /**
@@ -15,7 +13,7 @@ trait AssertsTrait
      */
     public static function assertResponseStatusCodeIs(int $expectedCode): void
     {
-        self::assertEquals($expectedCode, self::$client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
+        self::assertSame($expectedCode, self::$client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
     }
 
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
@@ -25,7 +23,7 @@ trait AssertsTrait
         $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
         $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
 
-        self::assertEquals($expectedHtml, $actualHtml);
+        self::assertSame($expectedHtml, $actualHtml);
     }
 
     /**

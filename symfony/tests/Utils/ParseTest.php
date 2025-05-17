@@ -56,7 +56,7 @@ class ParseTest extends TestCase
      */
     public function testNBool(string $input, ?bool $expected): void
     {
-        self::assertEquals($expected, Parse::nBool($input));
+        self::assertSame($expected, Parse::nBool($input));
     }
 
     public function nBoolDataProvider(): DataProvider

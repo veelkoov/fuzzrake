@@ -54,7 +54,7 @@ class SubmissionRepository extends ServiceEntityRepository
             return null;
         }
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     /**
@@ -82,7 +82,7 @@ class SubmissionRepository extends ServiceEntityRepository
                 $pagesCount,
             );
         } catch (Exception $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
 }

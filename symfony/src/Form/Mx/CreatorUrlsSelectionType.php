@@ -26,8 +26,8 @@ class CreatorUrlsSelectionType extends AbstractType
             $builder->add($url->getId(), CheckboxType::class, [
                 'required' => false,
                 'label' => $url->getLabel(),
-                'getter' => fn (CreatorUrlsSelectionData $choices, FormInterface $form): bool => $choices->get($form->getName()),
-                'setter' => function (CreatorUrlsSelectionData &$choices, bool $selected, FormInterface $form): void {
+                'getter' => static fn (CreatorUrlsSelectionData $choices, FormInterface $form): bool => $choices->get($form->getName()),
+                'setter' => function (CreatorUrlsSelectionData $choices, bool $selected, FormInterface $form): void {
                     $choices->set($form->getName(), $selected);
                 },
             ]);

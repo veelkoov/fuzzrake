@@ -28,12 +28,12 @@ class ManagerTest extends TestCase
         $manager = new Manager('set NAME |abcdef|');
         $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('abcdef', $creator->getName());
+        self::assertSame('abcdef', $creator->getName());
 
         $manager = new Manager('set NAME |fedcba|');
         $manager->correctCreator($creator = Creator::new());
 
-        self::assertEquals('fedcba', $creator->getName());
+        self::assertSame('fedcba', $creator->getName());
     }
 
     public function testAcceptCommand(): void
@@ -49,9 +49,9 @@ class ManagerTest extends TestCase
 
         $creator = Creator::new()->setNotes('will be removed');
 
-        self::assertEquals('will be removed', $creator->getNotes());
+        self::assertSame('will be removed', $creator->getNotes());
         $manager->correctCreator($creator);
-        self::assertEquals('', $creator->getNotes());
+        self::assertSame('', $creator->getNotes());
     }
 
     public function testSetCommand(): void
@@ -60,9 +60,9 @@ class ManagerTest extends TestCase
 
         $creator = Creator::new();
 
-        self::assertEquals('', $creator->getNotes());
+        self::assertSame('', $creator->getNotes());
         $manager->correctCreator($creator);
-        self::assertEquals('will be added', $creator->getNotes());
+        self::assertSame('will be added', $creator->getNotes());
     }
 
     public function testMatchCreatorIdCommand(): void
@@ -73,7 +73,7 @@ class ManagerTest extends TestCase
 
         $manager = new Manager('match-maker-id TEST001');
 
-        self::assertEquals('TEST001', $manager->getMatchedCreatorId());
+        self::assertSame('TEST001', $manager->getMatchedCreatorId());
     }
 
     public function testInvalidCommand(): void
@@ -83,7 +83,7 @@ class ManagerTest extends TestCase
 
             self::fail();
         } catch (ManagerConfigError $exception) {
-            self::assertEquals("Unknown command: 'pancakes'", $exception->getMessage());
+            self::assertSame("Unknown command: 'pancakes'", $exception->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ class ManagerTest extends TestCase
 
             self::fail();
         } catch (ManagerConfigError $exception) {
-            self::assertEquals("Unknown field: 'NOTE'", $exception->getMessage());
+            self::assertSame("Unknown field: 'NOTE'", $exception->getMessage());
         }
     }
 }

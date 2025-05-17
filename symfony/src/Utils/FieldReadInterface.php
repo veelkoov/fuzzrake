@@ -9,7 +9,7 @@ use App\Data\Definitions\Fields\Field;
 interface FieldReadInterface
 {
     /**
-     * @return psFieldValue
+     * @return psPhpFieldValue
      */
     public function get(Field $field): mixed;
 

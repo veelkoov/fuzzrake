@@ -17,6 +17,7 @@ use App\Entity\CreatorPrivateData;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
+use App\Utils\Collections\Lists;
 use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -115,7 +116,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             throw new InvalidArgumentException("Getter for $field->value does not exist");
         }
 
-        return call_user_func($callback); // @phpstan-ignore-line
+        return call_user_func($callback); // @phpstan-ignore return.type (Field choices SHOULD™ guarantee the return value type)
     }
 
     public function equals(Field $field, self $other): bool // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
@@ -156,13 +157,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getLastCreatorId(): string
     {
-        return $this->creator->getCreatorId() ?: Iter\first($this->getFormerCreatorIds()) ?: throw new LogicException('Creator does not have any creator ID');
+        return Iter\first($this->getAllCreatorIds()) ?? throw new LogicException('Creator does not have any creator ID');
     }
 
     public function hasCreatorId(string $creatorId): bool
     {
         return in_array($creatorId, $this->creator->getCreatorIds()
-            ->map(fn (CreatorId $creatorIdE): ?string => $creatorIdE->getCreatorId())
+            ->map(static fn (CreatorId $creatorIdE): string => $creatorIdE->getCreatorId())
             ->toArray(), true);
     }
 
@@ -174,7 +175,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $allCreatorIdsToSet = [...$formerCreatorIdsToSet, $this->creator->getCreatorId()];
 
         foreach ($this->creator->getCreatorIds() as $creatorId) {
-            if (!in_array($creatorId->getCreatorId(), $allCreatorIdsToSet)) {
+            if (!in_array($creatorId->getCreatorId(), $allCreatorIdsToSet, true)) {
                 $this->creator->removeCreatorId($creatorId);
             }
         }
@@ -193,10 +194,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getFormerCreatorIds(): array
     {
-        return array_values(array_filter($this->creator->getCreatorIds()
-            ->map(fn (CreatorId $creatorId): ?string => $creatorId->getCreatorId())
-            ->filter(fn (?string $creatorId): bool => $creatorId !== $this->getCreatorId())
-            ->toArray()));
+        return Lists::nonEmptyStrings($this->creator->getCreatorIds()
+            ->map(static fn (CreatorId $creatorId): string => $creatorId->getCreatorId())
+            ->filter(fn (string $creatorId): bool => $creatorId !== $this->getCreatorId())
+            ->toArray());
     }
 
     /**
@@ -204,7 +205,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getAllCreatorIds(): array
     {
-        return array_values(array_filter([$this->creator->getCreatorId(), ...$this->getFormerCreatorIds()]));
+        return Lists::nonEmptyStrings([$this->creator->getCreatorId(), ...$this->getFormerCreatorIds()]);
     }
 
     //
@@ -329,7 +330,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getAllNames(): array
     {
-        return array_values(array_filter([$this->getName(), ...$this->getFormerly()]));
+        return Lists::nonEmptyStrings([$this->getName(), ...$this->getFormerly()]);
     }
 
     public function getCompleteness(): int
@@ -900,11 +901,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore-line FIXME
+        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore return.type (FIXME)
             Field::COMPLETENESS => $this->getCompleteness(),
             Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
             Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
@@ -914,7 +915,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public function getPublicData(): array
     {
@@ -922,7 +923,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public function getAllData(): array
     {
@@ -930,7 +931,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     #[Override]
     public function jsonSerialize(): array // Safely assume "public" for default
@@ -946,14 +947,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Callback(groups: [Validation::GRP_DATA])]
     public function validateData(ExecutionContextInterface $context, mixed $payload): void
     {
-        if (null === $this->getDoesNsfw() && $this->isAllowedToDoNsfw()) {
+        if (null === $this->getDoesNsfw() && true === $this->isAllowedToDoNsfw()) {
             $context
                 ->buildViolation('You must answer this question.')
                 ->atPath(Field::DOES_NSFW->modelName())
                 ->addViolation();
         }
 
-        if (null === $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors()) {
+        if (null === $this->getWorksWithMinors() && true === $this->isAllowedToWorkWithMinors()) {
             $context
                 ->buildViolation('You must answer this question.')
                 ->atPath(Field::WORKS_WITH_MINORS->modelName())

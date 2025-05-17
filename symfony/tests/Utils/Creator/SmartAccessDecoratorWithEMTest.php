@@ -35,9 +35,9 @@ class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
             "There should be a single value entity, the one we've just created.");
         $nsfwWebsiteEntity = $all[0];
 
-        self::assertEquals('NSFW_WEBSITE', $nsfwWebsiteEntity->getFieldName(),
+        self::assertSame('NSFW_WEBSITE', $nsfwWebsiteEntity->getFieldName(),
             'At this point we should have a single NSFW_WEBSITE value entity.');
-        self::assertEquals('True', $nsfwWebsiteEntity->getValue(),
+        self::assertSame('True', $nsfwWebsiteEntity->getValue(),
             'The NSFW_WEBSITE value entity should have "True" value.');
 
         $creator->setNsfwWebsite(null);
@@ -49,12 +49,12 @@ class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
             'There should be still only one entity, the old one removed, but a new one introduced.');
         $nsfwSocialEntity = $all[0];
 
-        self::assertEquals('NSFW_SOCIAL', $nsfwSocialEntity->getFieldName(),
+        self::assertSame('NSFW_SOCIAL', $nsfwSocialEntity->getFieldName(),
             'At this point we should have a single NSFW_SOCIAL value entity.');
-        self::assertEquals('False', $nsfwSocialEntity->getValue(),
+        self::assertSame('False', $nsfwSocialEntity->getValue(),
             'NSFW_SOCIAL value entity should have "True" value.');
 
-        self::assertNotEquals($nsfwWebsiteEntity->getId(), $nsfwSocialEntity->getId(),
+        self::assertNotSame($nsfwWebsiteEntity->getId(), $nsfwSocialEntity->getId(),
             'Different entities should be used to hold different fields.');
 
         $creator->setNsfwSocial(null);

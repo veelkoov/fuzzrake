@@ -14,7 +14,6 @@ use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +27,6 @@ class MainController extends AbstractController
 
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
-        private readonly LoggerInterface $logger,
         private readonly FilteredDataProvider $filtered,
         private readonly RequestParser $requestParser,
         private readonly FiltersService $filterService,
@@ -96,9 +94,7 @@ class MainController extends AbstractController
                 'searched_creator_id'  => $searchedCreatorId,
             ]);
         } catch (CoercionException $exception) {
-            $this->logger->info('Invalid request received', ['exception' => $exception]);
-
-            return throw new BadRequestException();
+            return throw new BadRequestException(previous: $exception);
         }
     }
 }

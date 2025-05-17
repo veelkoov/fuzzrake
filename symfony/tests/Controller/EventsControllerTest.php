@@ -29,7 +29,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
      */
     public function testEventDescription(Event $event, string $expectedHtml): void
     {
-        $this->persistAndFlush($event);
+        self::persistAndFlush($event);
 
         self::$client->request('GET', '/events');
 
@@ -116,7 +116,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
             ->setDescription('I should not appear in the Atom feed')
             ->setTimestamp(UtcClock::at("@$older"));
 
-        $this->persistAndFlush($eventVisible, $eventHidden);
+        self::persistAndFlush($eventVisible, $eventHidden);
 
         $contents = self::$client->request('GET', '/events-atom.xml')->outerHtml();
 

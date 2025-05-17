@@ -54,7 +54,7 @@ class CreatorValueRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getSingleScalarResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     public function countDistinctInActiveCreatorsHaving(string $fieldName): StringIntMap

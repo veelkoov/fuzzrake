@@ -51,6 +51,6 @@ class CreatorUrlRepository extends ServiceEntityRepository
 
         $resultData = $builder->getQuery()->execute();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 }

@@ -27,7 +27,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         parent::setUp();
 
         self::stopWebServer(); // This is slow but assures following test won't be broken by "closed entity manager"
-        self::$client = static::createPantherClient();
+        self::$client = static::createPantherClient(['hostname' => 'localhost']);
         self::$client->getCookieJar()->clear();
         self::$client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
 
@@ -40,18 +40,5 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         parent::tearDown();
 
         TestsBridge::reset();
-    }
-
-    /**
-     * @param array<string, string> $options
-     * @param array<string, string> $kernelOptions
-     * @param array<string, string> $managerOptions
-     */
-    #[Override]
-    protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): Client
-    {
-        $options['hostname'] ??= 'localhost';
-
-        return parent::createPantherClient($options, $kernelOptions, $managerOptions);
     }
 }

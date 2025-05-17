@@ -30,4 +30,14 @@ final class Arrays
 
         return $result;
     }
+
+    /**
+     * @param string[] $strings
+     *
+     * @return string[]
+     */
+    public static function nonEmptyStrings(array $strings): array
+    {
+        return array_filter($strings, static fn (string $string) => '' !== $string);
+    }
 }

@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Paths;
 use App\Utils\Creator\CompletenessCalc;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 use function Psl\File\read;
 
@@ -36,7 +37,7 @@ class CompletenessCalcTest extends TestCase
     {
         $subject = new Creator();
 
-        self::assertEquals(0, CompletenessCalc::count($subject));
+        self::assertSame(0, CompletenessCalc::count($subject));
     }
 
     /**
@@ -47,17 +48,17 @@ class CompletenessCalcTest extends TestCase
         $subject = new Creator();
         $this->setRequired($subject, $ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    public function justRequiredGive50DataProvider(): array // @phpstan-ignore-line
+    public function justRequiredGive50DataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],
             [Ages::MINORS, false, true,  null,  null],
-        ];
+        );
     }
 
     public function testAllNonRequiredAndAllButOneRequiredCantGetPast50(): void
@@ -74,7 +75,7 @@ class CompletenessCalcTest extends TestCase
         $subject = new Creator();
         $this->setAllNonRequired($subject);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
     private function setAllNonRequired(Creator $subject): void

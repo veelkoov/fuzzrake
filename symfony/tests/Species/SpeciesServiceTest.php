@@ -57,8 +57,8 @@ class SpeciesServiceTest extends TestCase
 
     public function testThirdRootHasNoConnections(): void
     {
-        self::assertEquals(0, $this->subject->getByName('Third root')->getParents()->count());
-        self::assertEquals(0, $this->subject->getByName('Third root')->getChildren()->count());
+        self::assertSame(0, $this->subject->getByName('Third root')->getParents()->count());
+        self::assertSame(0, $this->subject->getByName('Third root')->getChildren()->count());
     }
 
     public function testExceptionThrownForNonexistentSpecie(): void

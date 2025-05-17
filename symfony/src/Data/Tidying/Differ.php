@@ -41,7 +41,7 @@ class Differ
         $newValItems = PackedStringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
-            if (!in_array($item, $newValItems)) {
+            if (!in_array($item, $newValItems, true)) {
                 $item = Formatter::deleted($item);
             }
 
@@ -49,7 +49,7 @@ class Differ
         }
 
         foreach ($newValItems as &$item) {
-            if (!in_array($item, $oldValItems)) {
+            if (!in_array($item, $oldValItems, true)) {
                 $item = Formatter::added($item);
             }
 
@@ -59,7 +59,7 @@ class Differ
         $q = Formatter::shy('"');
         $n = Formatter::shy('\n');
 
-        if ($oldVal) { // In case order changed or duplicates got removed, etc.
+        if ('' !== $oldVal) { // In case order changed or duplicates got removed, etc.
             $this->printer->writeln("OLD $fieldName $q".implode($n, $oldValItems).$q);
         }
 
@@ -70,12 +70,12 @@ class Differ
     {
         $q = Formatter::shy('"');
 
-        if ($oldVal) {
+        if ('' !== $oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
             $this->printer->writeln("OLD $field->value $q".Formatter::deleted($oldVal).$q);
         }
 
-        if ($newVal) {
+        if ('' !== $newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
             $this->printer->writeln("NEW $field->value $q".Formatter::added($newVal).$q);
         }

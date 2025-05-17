@@ -26,7 +26,7 @@ class HumanFriendlyTest extends TestCase
      */
     public function testShortUrl(string $input, string $expected): void
     {
-        self::assertEquals($expected, self::$subject->shortUrl($input));
+        self::assertSame($expected, self::$subject->shortUrl($input));
     }
 
     /**
@@ -48,7 +48,7 @@ class HumanFriendlyTest extends TestCase
      */
     public function testRegex(string $input, string $expected): void
     {
-        self::assertEquals($expected, self::$subject->regex($input));
+        self::assertSame($expected, self::$subject->regex($input));
     }
 
     /**

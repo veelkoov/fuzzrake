@@ -149,12 +149,12 @@ final class CompletenessCalc
 
     private static function doesCommissions(Creator $creator): bool
     {
-        return in_array(ProductionModels::STANDARD_COMMISSIONS, $creator->getProductionModels());
+        return in_array(ProductionModels::STANDARD_COMMISSIONS, $creator->getProductionModels(), true);
     }
 
     private static function shouldCountState(Creator $creator): bool
     {
-        return in_array($creator->getCountry(), ['US', 'CA']);
+        return in_array($creator->getCountry(), ['US', 'CA'], true);
     }
 
     private static function getResultForCrucialFields(Creator $creator): int
@@ -169,11 +169,11 @@ final class CompletenessCalc
             ->anyNotNull(1, F::NSFW_SOCIAL)
             ->anyNotEmpty(1, ...self::WEBSITES);
 
-        if ($creator->isAllowedToWorkWithMinors()) {
+        if (true === $creator->isAllowedToWorkWithMinors()) {
             $result->anyNotNull(1, F::WORKS_WITH_MINORS);
         }
 
-        if ($creator->isAllowedToDoNsfw()) {
+        if (true === $creator->isAllowedToDoNsfw()) {
             $result->anyNotNull(1, F::DOES_NSFW);
         }
 

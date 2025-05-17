@@ -17,9 +17,9 @@ final class SchemaFixer
     private const int CURRENT_SCHEMA_VERSION = 18;
 
     /**
-     * @param array<string, psJsonFieldValue> $data
+     * @param psJsonFieldsData $data
      *
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public static function fix(array $data): array
     {
@@ -60,9 +60,9 @@ final class SchemaFixer
     }
 
     /**
-     * @param array<string, psJsonFieldValue> $data
+     * @param psJsonFieldsData $data
      *
-     * @return array<string, psJsonFieldValue>
+     * @return psJsonFieldsData
      */
     public static function appendSchemaVersion(array $data): array
     {

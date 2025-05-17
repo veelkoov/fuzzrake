@@ -32,26 +32,26 @@ class EventsExtensions extends AbstractExtension
 
         $result = '';
 
-        if ($n) {
+        if ($n > 0) {
             $s = $n > 1 ? 's' : '';
             $result .= "$n new maker$s";
         }
 
-        if ($n && $u) {
+        if ($n > 0 && $u > 0) {
             $result .= ' and ';
         }
 
-        if ($u) {
+        if ($u > 0) {
             $s = $u > 1 ? 's' : '';
             $result .= "$u updated maker$s";
         }
 
-        if ($n || $u) {
+        if ($n > 0 || $u > 0) {
             $s = $n + $u > 1 ? 's' : '';
             $result .= " based on received I/U request$s.";
         }
 
-        if ($r) {
+        if ($r > 0) {
             $s = $r > 1 ? 's' : '';
             $result .= " $r maker$s updated after report$s sent by a visitor(s). Thank you for your contribution!";
         }

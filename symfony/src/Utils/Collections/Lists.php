@@ -42,4 +42,14 @@ final class Lists
     {
         return array_values(array_unique($array));
     }
+
+    /**
+     * @param string[] $strings
+     *
+     * @return list<string>
+     */
+    public static function nonEmptyStrings(array $strings): array
+    {
+        return array_values(Arrays::nonEmptyStrings($strings));
+    }
 }

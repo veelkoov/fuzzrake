@@ -11,6 +11,14 @@ final class SecureValues
 {
     use UtilityClass;
 
+    public const array FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION = [
+        Field::PASSWORD,
+        Field::EMAIL_ADDRESS,
+        Field::URL_MINIATURES,
+        Field::DATE_ADDED,
+        Field::DATE_UPDATED,
+    ];
+
     public static function forIuForm(Creator $creator): void
     {
         $creator->setPassword('');
@@ -24,6 +32,6 @@ final class SecureValues
 
     public static function hideInChangesDescription(Field $field): bool
     {
-        return in_array($field, [Field::PASSWORD, Field::EMAIL_ADDRESS, Field::URL_MINIATURES, Field::DATE_ADDED, Field::DATE_UPDATED]);
+        return in_array($field, self::FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION, true);
     }
 }

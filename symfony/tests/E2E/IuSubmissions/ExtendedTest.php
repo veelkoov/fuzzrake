@@ -177,7 +177,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
 
     private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
     {
-        return '/iu_form/start'.($urlCreatorId ? '/'.$urlCreatorId : '');
+        return '/iu_form/start'.('' !== $urlCreatorId ? '/'.$urlCreatorId : '');
     }
 
     private static function verifyGeneratedIuFormFilledWithData(Creator $oldData, string $htmlBody): void
@@ -186,7 +186,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
             'Sanity check - checking field presence on page - failed.');
 
         foreach (Fields::all() as $field) {
-            if (in_array($field, self::NOT_IN_FORM)) {
+            if (in_array($field, self::NOT_IN_FORM, true)) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
                 self::assertFalse($field->isInIuForm());
@@ -196,7 +196,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
             self::assertTrue($field->isInIuForm());
             $value = $oldData->get($field);
 
-            if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM)) {
+            if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, true)) {
                 self::assertValueIsNotPresentInForm(Enforce::string($value), $field, $htmlBody);
             } else {
                 self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
@@ -210,11 +210,11 @@ class ExtendedTest extends IuSubmissionsAbstractTest
             $value = $value->value;
         }
 
-        if (in_array($field, self::EXPANDED_CHECKBOXES) || in_array($field, self::EXPANDED_RADIOS)) {
+        if (in_array($field, self::EXPANDED_CHECKBOXES, true) || in_array($field, self::EXPANDED_RADIOS, true)) {
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue(Enforce::string($value), $htmlBody);
-        } elseif (in_array($field, self::BOOLEAN)) {
+        } elseif (in_array($field, self::BOOLEAN, true)) {
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, $htmlBody);
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
@@ -238,7 +238,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
 
         $items = Enforce::strList($value);
 
-        $optionalArraySuffix = in_array($field, self::EXPANDED_CHECKBOXES) ? '[]' : '';
+        $optionalArraySuffix = in_array($field, self::EXPANDED_CHECKBOXES, true) ? '[]' : '';
         $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $optionalArraySuffix])
             ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
@@ -300,7 +300,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
      */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
-        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->value.");
+        self::assertTrue(null === $value || in_array($value, $choices, true), "'$value' is not one of the possible choices for $field->value.");
 
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
@@ -341,7 +341,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
     private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
-            if (in_array($field, self::NOT_IN_FORM)) {
+            if (in_array($field, self::NOT_IN_FORM, true)) {
                 continue;
             }
 
@@ -358,7 +358,7 @@ class ExtendedTest extends IuSubmissionsAbstractTest
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
                 self::setValuesInSinceField(Enforce::string($value), $fields);
-            } elseif (in_array($field, self::EXPANDED_CHECKBOXES)) {
+            } elseif (in_array($field, self::EXPANDED_CHECKBOXES, true)) {
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
                 self::setValuesInExpandedField(Enforce::strList($value), $fields);
@@ -414,7 +414,8 @@ class ExtendedTest extends IuSubmissionsAbstractTest
                 throw new InvalidArgumentException('Expected choice field');
             }
 
-            if (in_array($formField->availableOptionValues()[0], $value)) {
+            /* @phpstan-ignore method.internal (Don't know how to do that nicely) */
+            if (in_array($formField->availableOptionValues()[0], $value, true)) {
                 $formField->tick();
             } else {
                 $formField->untick();

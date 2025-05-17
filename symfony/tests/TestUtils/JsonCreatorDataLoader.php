@@ -51,7 +51,7 @@ class JsonCreatorDataLoader
         $result = new Creator();
 
         foreach (Fields::all() as $fieldName => $field) {
-            if (in_array($field, $skippedFields)) {
+            if (in_array($field, $skippedFields, true)) {
                 continue;
             }
 
@@ -65,7 +65,7 @@ class JsonCreatorDataLoader
                 $value = Ages::get(Enforce::nString($value));
             } elseif (Field::CONTACT_ALLOWED === $field) {
                 $value = ContactPermit::get(Enforce::nString($value));
-            } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
+            } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED], true)) {
                 $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
             }
 

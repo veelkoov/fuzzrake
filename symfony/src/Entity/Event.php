@@ -258,7 +258,7 @@ class Event
 
     public function isTypeCsUpdated(): bool
     {
-        return self::TYPE_CS_UPDATED == $this->type;
+        return self::TYPE_CS_UPDATED === $this->type;
     }
 
     public function isTypeDataUpdated(): bool
@@ -268,6 +268,6 @@ class Event
 
     public function isEditable(): bool
     {
-        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED]);
+        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED], true);
     }
 }
