@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
+use App\ValueObject\Messages\UpdateMiniaturesV1;
 use LogicException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -23,12 +24,14 @@ use Veelkoov\Debris\StringList;
 final class MessageCommand extends Command
 {
     private const string MSG_SPECIES = 'SPECIES';
+    private const string MSG_MINIATURES = 'MINIATURES';
+
     private readonly StringList $messageOptions;
 
     public function __construct(
         private readonly MessageBusInterface $messageBus,
     ) {
-        $this->messageOptions = StringList::of(self::MSG_SPECIES);
+        $this->messageOptions = StringList::of(self::MSG_SPECIES, self::MSG_MINIATURES);
 
         parent::__construct();
     }
@@ -57,6 +60,7 @@ final class MessageCommand extends Command
 
         $messageObject = match ($message) {
             self::MSG_SPECIES => new SpeciesSyncNotificationV1(),
+            self::MSG_MINIATURES => new UpdateMiniaturesV1(),
             default => throw new LogicException('Not implemented.'),
         };
 

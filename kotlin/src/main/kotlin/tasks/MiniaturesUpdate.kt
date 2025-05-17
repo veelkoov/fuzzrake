@@ -81,19 +81,6 @@ class MiniaturesUpdate(
         logger.info { "Successfully updated ${creator.lastCreatorId()}" }
     }
 
-    private fun getCreatorsWithPhotoOrMiniatureUrls(): List<Creator> {
-        return CreatorUrlEntity
-            .find {
-                CreatorUrls.type inList listOf(
-                    UrlType.URL_PHOTOS.name,
-                    UrlType.URL_MINIATURES.name,
-                )
-            }
-            .with(CreatorUrlEntity::creator)
-            .map { it.creator }
-            .toSet().toList()
-    }
-
     private fun checkUrlsSupportedLogUnsupported(pictureUrls: List<CreatorUrlEntity>): Boolean {
         var result = true
 
