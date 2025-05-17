@@ -18,7 +18,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -115,6 +114,7 @@ class CreatorRepository extends ServiceEntityRepository
         $queryBuilder = $this->getCreatorsQueryBuilder()
             ->where('d_c.inactiveReason = :empty')
             ->setParameter('empty', '')
+            ->orderBy('d_c.id')
         ;
 
         return $this->getPaged($queryBuilder);
@@ -152,6 +152,7 @@ class CreatorRepository extends ServiceEntityRepository
                     )),
             ))
             ->setParameters($parameters)
+            ->orderBy('d_c.id')
         ;
 
         return $this->getPaged($queryBuilder);
@@ -167,7 +168,7 @@ class CreatorRepository extends ServiceEntityRepository
             ->leftJoin('d_c.offerStatuses', 'd_cos')->addSelect('d_cos')
             ->leftJoin('d_c.creatorIds', 'd_ci')->addSelect('d_ci')
             ->leftJoin('d_c.values', 'd_cv')->addSelect('d_cv')
-            ->orderBy('d_c.name', 'ASC');
+        ;
     }
 
     /**
@@ -333,7 +334,7 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Paginator<array{0: Creator, lastUpdateDateTime: mixed}>
+     * @return Paginator<array{0: Creator}>
      */
     public function getFiltered(QueryChoicesAppender $appender): Paginator
     {
@@ -341,27 +342,6 @@ class CreatorRepository extends ServiceEntityRepository
 
         $appender->applyChoices($builder);
 
-        $query = $builder
-            // Retrieve datetime added for sorting by last update time
-            ->leftJoin('d_c.values', 'd_cv_add_date', Join::WITH,
-                'd_cv_add_date.creator = d_c AND d_cv_add_date.fieldName = :dateAddedFieldName')
-            ->setParameter('dateAddedFieldName', Field::DATE_ADDED->value)
-
-            // Retrieve datetime updated for sorting by last update time
-            ->leftJoin('d_c.values', 'd_cv_upd_date', Join::WITH,
-                'd_cv_upd_date.creator = d_c AND d_cv_upd_date.fieldName = :dateUpdatedFieldName')
-            ->setParameter('dateUpdatedFieldName', Field::DATE_UPDATED->value)
-
-            // FIXME: https://github.com/doctrine/orm/issues/5905
-            ->addSelect('COALESCE(d_cv_upd_date.value, d_cv_add_date.value, :beforeAddUpdateDates) AS lastUpdateDateTime')
-            ->setParameter('beforeAddUpdateDates', '2000-01-01 00:00:00')
-            ->orderBy('lastUpdateDateTime', 'DESC') // Put recently updated makers on top
-
-            ->addOrderBy('LOWER(d_c.name)') // Then sort by name as typical
-            ->getQuery();
-
-        $appender->applyPaging($query);
-
-        return new Paginator($query, fetchJoinCollection: true);
+        return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
     }
 }

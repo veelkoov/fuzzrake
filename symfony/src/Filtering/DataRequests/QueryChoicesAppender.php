@@ -14,9 +14,9 @@ use App\Utils\Collections\Arrays;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
 use Psl\Vec;
@@ -32,6 +32,13 @@ class QueryChoicesAppender
     }
 
     public function applyChoices(QueryBuilder $builder): void
+    {
+        $this->applyFilters($builder);
+        $this->applyOrder($builder);
+        $this->applyPaging($builder);
+    }
+
+    private function applyFilters(QueryBuilder $builder): void
     {
         $this->applyTextSearch($builder); // Text search should work in the creator mode
 
@@ -55,9 +62,45 @@ class QueryChoicesAppender
         $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
     }
 
-    public function applyPaging(Query $query): void // @phpstan-ignore missingType.generics
+    private function applyOrder(QueryBuilder $builder): void
     {
-        $query
+        $addedDateTime = $this->getUniqueId();
+        $updatedDateTime = $this->getUniqueId();
+        $addedDateTimeValue = $this->getUniqueId();
+        $updatedDateTimeValue = $this->getUniqueId();
+        $beforeDateTimesValue = $this->getUniqueId();
+
+        $builder
+            // Retrieve datetime added for sorting by the last update time
+            ->leftJoin('d_c.values', $addedDateTime, Join::WITH,
+                "$addedDateTime.creator = d_c AND $addedDateTime.fieldName = :$addedDateTimeValue")
+            ->setParameter($addedDateTimeValue, Field::DATE_ADDED->value)
+
+            // Retrieve datetime updated for sorting by the last update time
+            ->leftJoin('d_c.values', $updatedDateTime, Join::WITH,
+                "$updatedDateTime.creator = d_c AND $updatedDateTime.fieldName = :$updatedDateTimeValue")
+            ->setParameter($updatedDateTimeValue, Field::DATE_UPDATED->value)
+
+            // FIXME: https://github.com/doctrine/orm/issues/5905 grep-code-cannot-use-coalesce-in-doctrine-order-by
+            // Unable to sort despite EBNF/OrderByItem/ScalarExpression/CaseExpression/CoalesceExpression
+            // https://www.doctrine-project.org/projects/doctrine-orm/en/3.3/reference/dql-doctrine-query-language.html#ebnf
+            // The sorting column is added regardless of the creator mode, to have a concise return type.
+            // With the column added we get an array of entity and the column used for sorting (ignored later).
+            ->addSelect("COALESCE($updatedDateTime.value, $addedDateTime.value, :$beforeDateTimesValue) AS last_update_datetime")
+            ->setParameter($beforeDateTimesValue, '2000-01-01 00:00:00')
+        ;
+
+        if (!$this->choices->creatorMode) {
+            $builder->addOrderBy("CASE WHEN d_c.country = 'RU' THEN 1 ELSE 0 END"); // 1939-09-17 & 2022-02-24
+            $builder->addOrderBy('last_update_datetime', 'DESC'); // Put recently updated makers on top
+        }
+
+        $builder->addOrderBy('LOWER(d_c.name)'); // Then sort by name as typical
+    }
+
+    private function applyPaging(QueryBuilder $builder): void
+    {
+        $builder
             ->setFirstResult(Pagination::getFirstIdx($this->choices->pageSize, $this->choices->pageNumber))
             ->setMaxResults($this->choices->pageSize)
         ;

@@ -48,7 +48,10 @@ class FilteredDataProvider
             $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
         } while ($choices->pageNumber > $pagesCount);
 
-        $creators = Vec\map($paginator, static fn (array $creatorAndOrderColumn) => Creator::wrap($creatorAndOrderColumn[0]));
+        $creators = Vec\map($paginator,
+            // grep-code-cannot-use-coalesce-in-doctrine-order-by
+            static fn (array $creatorAndOrderColumns) => Creator::wrap($creatorAndOrderColumns[0]),
+        );
 
         return new ItemsPage(
             $creators,
