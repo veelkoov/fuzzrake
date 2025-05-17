@@ -3,51 +3,20 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Doctrine\Set\DoctrineSetList;
-use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
-use Rector\PHPUnit\PHPUnit60\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
-use Rector\PHPUnit\Set\PHPUnitLevelSetList;
-use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Symfony\Set\SymfonyLevelSetList;
-use Rector\Symfony\Set\SymfonySetList;
-use Rector\Symfony\Symfony62\Rector\MethodCall\SimplifyFormRenderingRector;
-use Rector\Transform\Rector\Attribute\AttributeKeyToClassConstFetchRector;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-    ]);
-
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_82,
-
-        SymfonyLevelSetList::UP_TO_SYMFONY_62,
-        SymfonySetList::SYMFONY_CODE_QUALITY,
-        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-
-        DoctrineSetList::DOCTRINE_CODE_QUALITY,
-        DoctrineSetList::DOCTRINE_DBAL_30,
-        DoctrineSetList::DOCTRINE_ORM_29,
-
-        PHPUnitLevelSetList::UP_TO_PHPUNIT_90,
-        PHPUnitSetList::PHPUNIT_91,
-    ]);
-
-    $rectorConfig->parallel();
-
-    $rectorConfig->skip([
-        ClassPropertyAssignToConstructorPromotionRector::class, // Breaks some annotations
-        AttributeKeyToClassConstFetchRector::class, // Ignores imports
-        AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
-        GetMockBuilderGetMockToCreateMockRector::class, // Using createPartialMock leaves uninitialized properties
-        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // Some assertions happen in called helper methods
-        SimplifyFormRenderingRector::class, // TODO
-        ReadOnlyClassRector::class, // Let me decide when
-    ]);
-};
+return RectorConfig::configure()
+    ->withPaths([__DIR__.'/migrations', __DIR__.'/src', __DIR__.'/tests'])
+    ->withPhpSets()
+    ->withComposerBased(
+        twig: true,
+        doctrine: true,
+        phpunit: true,
+        symfony: true,
+    )
+    ->withSkip([
+        NullToStrictStringFuncCallArgRector::class, // False-positives; allow PHPStan to take care of those
+        ReadOnlyClassRector::class, // Prefer to put readonly over data-primarily classes
+    ])
+;

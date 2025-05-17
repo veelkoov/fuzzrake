@@ -20,18 +20,18 @@ class FixerDifferValidator
         $this->differ = new Differ($this->printer);
     }
 
-    public function perform(ArtisanChanges $artisan): void
+    public function perform(CreatorChanges $creator): void
     {
         foreach (Fields::persisted() as $field) {
-            $this->printer->setCurrentContext($artisan);
+            $this->printer->setCurrentContext($creator);
 
-            $this->fixer->fix($artisan->getChanged(), $field);
+            $this->fixer->fix($creator->getChanged(), $field);
 
-            if (!$this->validator->isValid($artisan->getChanged(), $field)) {
-                $artisan->getChanged()->set($field, $artisan->getSubject()->get($field));
+            if (!$this->validator->isValid($creator->getChanged(), $field)) {
+                $creator->getChanged()->set($field, $creator->getSubject()->get($field));
             }
 
-            $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged());
+            $this->differ->showDiff($field, $creator->getSubject(), $creator->getChanged());
         }
     }
 }

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 
 /**
  * @medium
  */
-class CrawlersControllerTest extends WebTestCase
+class CrawlersControllerTest extends FuzzrakeWebTestCase
 {
     public function testSitemap(): void
     {
-        $client = static::createClient();
+        self::$client->request('GET', '/sitemap.txt');
 
-        $client->request('GET', '/sitemap.txt');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeIs(200);
     }
 }

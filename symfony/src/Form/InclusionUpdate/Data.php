@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
+use App\Captcha\Form\CaptchaType;
 use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\Validation;
 use App\Data\Definitions\OrderTypes;
@@ -13,12 +15,21 @@ use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
-use App\Form\Transformers\NullToEmptyArrayTransformer;
+use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\SinceTransformer;
+use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\Email;
+use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
+use App\ValueObject\Texts;
+use Override;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -26,14 +37,23 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class Data extends BaseForm
+/**
+ * @extends AbstractType<Creator>
+ */
+class Data extends AbstractType
 {
     use RouterDependentTrait;
 
-    final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
-    final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const FLD_MAKER_ID = 'makerId';
+    final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
+    final public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
+    final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    final public const string FLD_CREATOR_ID = 'creatorId';
+    final public const string FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
+    final public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
+    final public const string FLD_PASSWORD = 'password';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -42,7 +62,10 @@ class Data extends BaseForm
         $otherStylesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles']));
         $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
-        $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
+        $creatorIdsPagePath = htmlspecialchars($router->generate(RouteName::CREATOR_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
+        $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
+        $emailAddressRequired = $this->shouldRequireEmailAddress($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
+        $currentEmailAddressHtmlHelp = $this->getCurrentEmailAddressHtmlHelp($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
 
         $builder
             ->add('name', TextType::class, [
@@ -135,7 +158,7 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('currenciesAccepted', TextareaType::class, [
-                'label'      => 'What currencies do you accept?',
+                'label'      => 'What currencies are your prices in?',
                 'help'       => 'Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please. <strong>Note: using PayPal and similar systems doesn\'t mean you accept all currencies</strong> - those systems just convert the payments using some rates and possibly add conversion fees. Please list the <strong>target/primary</strong> currencies configured in your account.',
                 'help_html'  => true,
                 'required'   => false,
@@ -239,91 +262,131 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('fursuitReviewUrl', UrlType::class, [
-                'label'      => 'If you are listed on FursuitReview, please copy+paste full link:',
-                'help'       => '<a href="https://fursuitreview.com/m/" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'If you are listed on FursuitReview, please copy+paste full link:',
+                'help'             => '<a href="https://fursuitreview.com/m/" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('websiteUrl', UrlType::class, [
-                'label'      => 'If you have a regular website, please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'If you have a regular website, please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('faqUrl', UrlType::class, [
-                'label'      => 'Do you have a FAQ anywhere? Please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Do you have a FAQ anywhere? Please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('queueUrl', UrlType::class, [
-                'label'      => 'Do you keep your queue/progress information on-line (e.g. Trello board)? Please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Do you keep your queue/progress information on-line (e.g. Trello board)? Please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furAffinityUrl', UrlType::class, [
-                'label'      => 'Got FurAffinity? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got FurAffinity? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('deviantArtUrl', UrlType::class, [
-                'label'      => 'Got DeviantArt? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got DeviantArt? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('blueskyUrl', UrlType::class, [
+                'label'            => 'Got Bluesky? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('mastodonUrl', UrlType::class, [
-                'label'      => 'Got Mastodon? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Mastodon? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('telegramChannelUrl', UrlType::class, [
+                'label'            => 'Got a Telegram *channel*? Please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('twitterUrl', UrlType::class, [
-                'label'      => 'Got Twitter? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Twitter? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('facebookUrl', UrlType::class, [
-                'label'      => 'Got Facebook? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Facebook? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('tumblrUrl', UrlType::class, [
-                'label'      => 'Got Tumblr? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Tumblr? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('instagramUrl', UrlType::class, [
-                'label'      => 'Got Instagram? Please copy+paste full link to your page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Instagram? Please copy+paste full link to your page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('youtubeUrl', UrlType::class, [
-                'label'      => 'Got YouTube? Please copy+paste full link to your userpage:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got YouTube? Please copy+paste full link to your userpage:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('tikTokUrl', UrlType::class, [
+                'label'            => 'Got TikTok? Please copy+paste full link to your userpage:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('etsyUrl', UrlType::class, [
-                'label'      => 'Got Etsy? Please copy+paste full link to your store:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Etsy? Please copy+paste full link to your store:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('theDealersDenUrl', UrlType::class, [
-                'label'      => 'Got The Dealers Den? Please copy+paste full link to your store:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got The Dealers Den? Please copy+paste full link to your store:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
-            ->add('otherShopUrl', TextareaType::class, [
+            ->add('otherShopUrl', TextType::class, [
                 'label'      => 'Got any other on-line shop? Please copy+paste full link to your store:',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('linklistUrl', UrlType::class, [
-                'label'      => 'Got Linktree or similar link list? Please copy+paste full link here:',
+            ->add('donationsUrl', UrlType::class, [
+                'label'      => 'Do you have a thing for donations (recurring or not, Patreon, Ko-fi, other)? Please copy+paste full link to your profile:',
                 'required'   => false,
                 'empty_data' => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('linklistUrl', UrlType::class, [
+                'label'            => 'Got Linktree or similar link list? Please copy+paste full link here:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furryAminoUrl', UrlType::class, [
-                'label'      => 'Got Furry Amino? Please copy+paste full link to your profile here:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Furry Amino? Please copy+paste full link to your profile here:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Got any other websites/accounts? Please list them here:',
@@ -340,18 +403,20 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('scritchUrl', UrlType::class, [
-                'label'      => 'Got Scritch page? Please copy+paste full link to your maker page:',
-                'help'       => '<strong>You may already have one created for you.</strong> Go claim your page already if it\'s there.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Scritch page? Please copy+paste full link to your maker page:',
+                'help'             => '<strong>You may already have one created for you.</strong> Go claim your page already if it\'s there.',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furtrackUrl', UrlType::class, [
-                'label'      => 'Got Furtrack page? Please copy+paste full link to your maker page:',
-                'help'       => '<strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio\'s name already.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Furtrack page? Please copy+paste full link to your maker page:',
+                'help'             => '<strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio\'s name already.',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('photoUrls', TextareaType::class, [
                 'label'      => 'Choose up to 5 "featured" photos of your creations',
@@ -364,7 +429,7 @@ class Data extends BaseForm
                 'label'     => 'Copyright acknowledgement',
                 'help'      => 'Fact of the photos being published on Scritch or Furtrack <strong>doesn\'t necessarily mean the photographers agreed to repost/reuse it elsewhere</strong>, including getfursu.it. Please make sure you are allowed to link those photos here.',
                 'help_html' => true,
-                'data'      => $options[self::OPT_PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
+                'data'      => true === $options[self::OPT_PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
                 'required'  => false,
                 'mapped'    => false,
                 'expanded'  => true,
@@ -378,9 +443,9 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add(self::FLD_MAKER_ID, TextType::class, [
+            ->add(self::FLD_CREATOR_ID, TextType::class, [
                 'label'      => '"Maker ID"',
-                'help'       => '<a href="'.$makerIdPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
+                'help'       => '<a href="'.$creatorIdsPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
                 'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',
@@ -391,10 +456,52 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('notes', TextareaType::class, [
+                'label'      => 'Anything else? ("notes")',
+                'help'       => '<strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments/requests for getfursu.it maintainer or some additional information which might be added to the website in the future.',
+                'help_html'  => true,
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
+                'label'      => 'When is contact allowed?',
+                'required'   => true,
+                'choices'    => ContactPermit::getChoices(false),
+                'expanded'   => true,
+            ])
+            ->add('emailAddress', TextType::class, [
+                'label'      => 'Email address',
+                'help'       => $currentEmailAddressHtmlHelp.'<span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
+                'help_html'  => true,
+                'required'   => $emailAddressRequired,
+                'empty_data' => '',
+            ])
+            ->add(self::FLD_PASSWORD, PasswordType::class, [
+                'label'      => Texts::UPDATES_PASSWORD,
+                'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
+                'help_html'  => true,
+                'required'   => true,
+                'empty_data' => '',
+                'attr'       => [
+                    'autocomplete' => 'section-iuform current-password',
+                ],
+            ])
+            ->add(self::FLD_CHANGE_PASSWORD, CheckboxType::class, [
+                'label'     => Texts::WANT_TO_CHANGE_PASSWORD,
+                'required'  => false,
+                'mapped'    => false,
+            ])
+            ->add(self::FLD_VERIFICATION_ACKNOWLEDGEMENT, CheckboxType::class, [
+                'label'      => 'I acknowledge that I am required to <a href="'.$contactPath.'" target="_blank">contact the maintainer</a> to confirm the submission. I realize that not doing so will result in the submission being rejected.',
+                'required'   => false,
+                'mapped'     => false,
+                'label_html' => true,
+            ])
+            ->add('captcha', CaptchaType::class)
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
@@ -407,24 +514,41 @@ class Data extends BaseForm
 
         $builder->get('since')->addModelTransformer(new SinceTransformer());
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
+        $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
 
         foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
             $builder->get($field)->addModelTransformer(new BooleanTransformer());
         }
     }
 
+    #[Override]
+    public function getBlockPrefix(): string
+    {
+        return 'iu_form';
+    }
+
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
         self::configureRouterOption($resolver);
 
         $resolver
             ->define(self::OPT_PHOTOS_COPYRIGHT_OK)
             ->allowedTypes('boolean')
-            ->required()
-        ;
+            ->required();
 
-        $resolver->setDefault('validation_groups', ['Default', Validation::GRP_DATA]);
+        $resolver
+            ->define(self::OPT_CURRENT_EMAIL_ADDRESS)
+            ->allowedTypes('string')
+            ->required();
+
+        $resolver->setDefaults([
+            'validation_groups' => ['Default', Validation::GRP_DATA, Validation::GRP_CONTACT_AND_PASSWORD],
+            'error_mapping' => [
+                'privateData.password' => 'password',
+            ],
+            'data_class' => Creator::class,
+        ]);
     }
 
     /**
@@ -440,5 +564,26 @@ class Data extends BaseForm
         } while (--$year >= 1990);
 
         return $result;
+    }
+
+    private function getCurrentEmailAddressHtmlHelp(mixed $emailFromOptions): string
+    {
+        $currentEmailAddress = Enforce::string($emailFromOptions);
+
+        // LEGACY: grep-code-invalid-email-addresses
+        // Should just check if email address !== '' (displaying form for a new creator),
+        // but the email field was previously "contact method" and it allowed non-emails.
+        if (!Email::isValid($currentEmailAddress)) {
+            return '';
+        }
+
+        return 'Your current email address is '
+            .htmlspecialchars(Email::obfuscate($currentEmailAddress))
+            .'. To change, provide a new one in this field. To keep the old one, leave this field empty. ';
+    }
+
+    private function shouldRequireEmailAddress(mixed $emailFromOptions): bool
+    {
+        return !Email::isValid(Enforce::string($emailFromOptions)); // LEGACY: grep-code-invalid-email-addresses
     }
 }

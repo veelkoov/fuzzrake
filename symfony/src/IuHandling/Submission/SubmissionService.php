@@ -4,54 +4,70 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Submission;
 
+use App\Entity\Submission;
+use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\SchemaFixer;
-use App\IuHandling\Storage\LocalStorageService;
 use App\IuHandling\Submission\NotificationsGenerator as Generator;
-use App\Service\Notifications\MessengerInterface;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\SubmissionRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
-use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Random\RandomException;
+use Symfony\Component\Messenger\Exception\ExceptionInterface as MessengerException;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class SubmissionService
 {
     public function __construct(
+        private readonly SubmissionRepository $submissionRepository,
         private readonly LoggerInterface $logger,
-        private readonly LocalStorageService $local,
-        private readonly MessengerInterface $messenger,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
-    public function submit(Artisan $submission): bool
+    /**
+     * @throws SubmissionException
+     */
+    public function submit(Creator $submissionData): Submission
     {
         try {
-            $jsonData = self::asJson($submission);
-            $this->local->saveOnDiskGetRelativePath($jsonData);
+            $submission = self::getEntityForSubmission($submissionData);
 
-            $this->messenger->send(Generator::getMessage($submission, $jsonData)); // Ignoring result. Creators instructed to reach out to the maintainer if no change happens within X days.
+            $this->submissionRepository->add($submission, true);
+            $this->sendNotification($submissionData, $submission->getPayload());
 
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error('Failed to submit IU form data', ['exception' => $exception]);
-
-            return false;
+            return $submission;
+        } catch (JsonException|RandomException $exception) {
+            throw new SubmissionException(previous: $exception);
         }
+    }
+
+    /**
+     * @throws JsonException|RandomException
+     */
+    public static function getEntityForSubmission(Creator $submissionData): Submission
+    {
+        $result = new Submission();
+        $result->setPayload(self::asJson($submissionData));
+
+        return $result;
     }
 
     /**
      * @throws JsonException
      */
-    public static function asJson(Artisan $submission): string
+    private static function asJson(Creator $submission): string
     {
-        return Json::encode(self::asArray($submission), JSON_PRETTY_PRINT);
+        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()));
     }
 
-    /**
-     * @return array<string, psJsonFieldValue>
-     */
-    public static function asArray(Artisan $submission): array
+    private function sendNotification(Creator $submission, string $jsonData): void
     {
-        return SchemaFixer::appendSchemaVersion($submission->getAllData());
+        try {
+            $this->messageBus->dispatch(Generator::getMessage($submission, $jsonData));
+        } catch (MessengerException $exception) {
+            $this->logger->error('Failed sending notification.', ['exception' => $exception]);
+        }
     }
 }

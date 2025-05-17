@@ -1,6 +1,5 @@
 package e2e
 
-import config.Configuration
 import database.entities.Creator
 import database.entities.CreatorUrl
 import database.helpers.getState

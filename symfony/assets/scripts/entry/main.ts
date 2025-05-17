@@ -1,21 +1,17 @@
-import "../../3rd-party/flag-icon-css/css/flag-icon.css";
 import "../../styles/main.scss";
+import "htmx.org";
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checklist from "../main/Checklist";
 import ColumnsManager from "../main/ColumnsManager";
 import FiltersManager from "../main/FiltersManager";
-import { makerIdHashRegexp } from "../consts";
+import { creatorIdHashRegexp } from "../consts";
+import { localizeDateTimes } from "../datetimes";
 import { requireJQ, toggle } from "../jQueryUtils";
-
-import "htmx.org";
-
-// @ts-expect-error I am incompetent and I don't care to learn frontend
-global.jQuery = require("jquery");
 
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
-    AgeAndSfwConfig.getInstance().getMakerMode() ||
-    !window.location.hash.match(makerIdHashRegexp)
+    AgeAndSfwConfig.getInstance().getCreatorMode() ||
+    !window.location.hash.match(creatorIdHashRegexp)
   ) {
     return;
   }
@@ -42,7 +38,7 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   requireJQ("#open-creator-card-given-creator-id-anchor").trigger("click");
 });
 
-if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
   jQuery(() => {
     requireJQ("#creator-mode-banner").removeClass("d-none");
     requireJQ("#main-page-intro").addClass("d-none");
@@ -67,7 +63,6 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
       .parents(".subspecies")
       .prevAll(".specie");
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     $allParentSpecieDivs.each((_, div) => {
       const $subspeciesInputs = jQuery(div)
         .next("br")
@@ -102,7 +97,6 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
 
       const $inputs = $link.parents("fieldset").find("input:not(.special)");
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       $inputs.each((_, element) => {
         if (element instanceof HTMLInputElement) {
           element.checked = changeFunction(element.checked);
@@ -120,3 +114,12 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
 (function setUpColumnsManager(): void {
   new ColumnsManager("#creators-table", "#columns-visibility-links a");
 })();
+
+jQuery("#creator-card-modal").on("shown.bs.modal", function (): void {
+  localizeDateTimes(jQuery("#creator-card-modal"));
+});
+
+// @ts-expect-error I am incompetent, and I don't care to learn frontend
+window.goToPage = function (pageNumber: number): void {
+  requireJQ("#page-number").val(pageNumber).trigger("click");
+};

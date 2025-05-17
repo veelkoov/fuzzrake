@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Data\Fixer;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Fixer\Fixer;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
- * @small
+ * @medium
  */
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {
     private readonly Fixer $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = Enforce::objectOf(self::getContainer()->get(Fixer::class), Fixer::class);
@@ -34,7 +38,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
 
         $this->subject->fix($creator, $field);
 
-        $this->assertEquals($expected, $creator->get($field));
+        self::assertEquals($expected, $creator->get($field));
     }
 
     public function getFixedDataProvider(): DataProvider
@@ -42,7 +46,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
         return DataProvider::tuples(
             [Field::NAME, ' The name ', 'The name'],
 
-            // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated makers
+            // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated creators
             [Field::FORMERLY, ['N/A'], []],
             [Field::FORMERLY, ['n/a'], []],
 

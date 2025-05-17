@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\NewArtisan;
+use App\Data\Definitions\NewCreator;
+use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
-use App\Service\EnvironmentsService;
+use App\Service\DataService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\Completeness;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\Completeness;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
+use Override;
 use Psl\Vec;
 use TRegx\CleanRegex\Pattern;
 use Twig\Extension\AbstractExtension;
@@ -29,20 +31,21 @@ class AppExtensions extends AbstractExtension
     private int $uniqueInt = 1;
 
     public function __construct(
-        private readonly EnvironmentsService $environments,
+        private readonly DataService $dataService,
     ) {
         $this->friendly = new HumanFriendly();
         $this->itemExplanation = Pattern::of(' \([^)]+\)');
     }
 
+    #[Override]
     public function getFilters(): array
     {
         return [
             new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
             new TwigFilter('event_url', $this->friendly->shortUrl(...)),
-            new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
-            new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
-            new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
+            new TwigFilter('filter_items_matching', $this->filterItemsMatchingFilter(...)),
+            new TwigFilter('human_friendly_regexp', $this->friendly->regex(...)),
+            new TwigFilter('filter_by_query', $this->filterFilterByQuery(...)),
         ];
     }
 
@@ -55,17 +58,16 @@ class AppExtensions extends AbstractExtension
         }
     }
 
+    #[Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
-            new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
-
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),
             new TwigFunction('comma_separated_other', $this->commaSeparatedOther(...)),
             new TwigFunction('completeness_text', $this->completenessText(...)),
             new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
+            new TwigFunction('get_latest_event_timestamp', $this->getLatestEventTimestamp(...)),
             new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
             new TwigFunction('is_new', $this->isNew(...)),
             new TwigFunction('unique_int', fn () => $this->uniqueInt++),
@@ -73,14 +75,11 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
-    public function isDevEnvFunction(): bool
+    public function getLatestEventTimestamp(): ?string
     {
-        return $this->environments->isDev();
-    }
+        $timestamp = $this->dataService->getLatestEventTimestamp();
 
-    public function isDevOrTestEnvFunction(): bool
-    {
-        return $this->environments->isDevOrTest();
+        return $timestamp?->format('Y-m-d H:i:s P');
     }
 
     public function unknownValue(): string
@@ -105,7 +104,7 @@ class AppExtensions extends AbstractExtension
 
     public function isNew(Creator $creator): bool
     {
-        return NewArtisan::isNew($creator);
+        return NewCreator::isNew($creator);
     }
 
     public function hasGoodCompleteness(Creator $creator): bool
@@ -172,16 +171,11 @@ class AppExtensions extends AbstractExtension
         return $result;
     }
 
-    /**
-     * @param Item[] $items
-     *
-     * @return Item[]
-     */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array
+    public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (Item $item) => $pattern->test($item->label));
+        return $items->filter(static fn (Item $item) => $pattern->test($item->label));
     }
 
     /**

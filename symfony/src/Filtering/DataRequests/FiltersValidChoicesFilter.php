@@ -9,7 +9,8 @@ use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Service\DataService;
-use App\Service\SpeciesService;
+use App\Species\SpeciesService;
+use Veelkoov\Debris\StringSet;
 
 class FiltersValidChoicesFilter
 {
@@ -29,13 +30,13 @@ class FiltersValidChoicesFilter
             $this->dataService->getLanguages(), Consts::FILTER_VALUE_UNKNOWN);
 
         $styles = self::onlyValidValues($choices->styles,
-            Styles::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $features = self::onlyValidValues($choices->features,
-            Features::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(Features::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $orderTypes = self::onlyValidValues($choices->orderTypes,
-            OrderTypes::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+            new StringSet(OrderTypes::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $productionModels = self::onlyValidValues($choices->productionModels,
-            ProductionModels::getValues(), ProductionModels::getValues(), Consts::FILTER_VALUE_UNKNOWN);
+            new StringSet(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
             $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
@@ -44,7 +45,7 @@ class FiltersValidChoicesFilter
             $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
 
         return new Choices(
-            $choices->makerId,
+            $choices->creatorId,
             $choices->textSearch,
             $countries,
             $states,
@@ -62,29 +63,12 @@ class FiltersValidChoicesFilter
             $choices->wantsSfw,
             $choices->wantsInactive,
             $choices->creatorMode,
+            $choices->pageNumber,
         );
     }
 
-    /**
-     * @param list<string>        $givenOptions
-     * @param string|list<string> ...$validOptions
-     *
-     * @return list<string>
-     */
-    private static function onlyValidValues(array $givenOptions, string|array ...$validOptions): array
+    private static function onlyValidValues(StringSet $givenOptions, StringSet $validOptions, string ...$additionalValidOptions): StringSet
     {
-        $allowed = [];
-
-        foreach ($validOptions as $options) {
-            if (is_string($options)) {
-                $options = [$options];
-            }
-
-            foreach ($options as $option) {
-                $allowed[] = $option;
-            }
-        }
-
-        return array_intersect($givenOptions, $allowed);
+        return $givenOptions->intersect($validOptions->plusAll($additionalValidOptions));
     }
 }

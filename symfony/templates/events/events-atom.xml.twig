@@ -13,7 +13,7 @@
                 {%- if event.typeDataUpdated -%}
                     Data update
                 {%- elseif event.typeCsUpdated -%}
-                    {{ event.artisanName }} commissions status changed
+                    {{ event.creatorName }} commissions status changed
                 {%- else -%}
                     Generic update
                 {%- endif -%}
@@ -25,7 +25,7 @@
                 <div xmlns="http://www.w3.org/1999/xhtml">
                     {%- if event.typeDataUpdated -%}
 
-                        {{ eventDescription(event) }}
+                        {{ event_description(event) }}
 
                     {%- elseif event.typeCsUpdated -%}
                         {% if event.noLongerOpenFor %}

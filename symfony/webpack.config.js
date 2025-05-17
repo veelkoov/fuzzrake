@@ -24,7 +24,6 @@ Encore
   .addEntry("events", "./assets/scripts/entry/events.ts")
   .addEntry("feedback", "./assets/scripts/entry/feedback.ts")
   .addEntry("general", "./assets/scripts/entry/general.ts")
-  .addEntry("contact", "./assets/scripts/entry/contact.ts")
   .addEntry("iu_form", "./assets/scripts/entry/iu_form.ts")
   .addEntry("main", "./assets/scripts/entry/main.ts")
   .addEntry("toc", "./assets/scripts/entry/toc.ts")
@@ -51,6 +50,17 @@ Encore
   .enableSourceMaps(!Encore.isProduction())
   // enables hashed filenames (e.g. app.abc123.css)
   .enableVersioning(Encore.isProduction())
+
+  // configure Babel
+  // .configureBabel((config) => {
+  //     config.plugins.push('@babel/a-babel-plugin');
+  // })
+
+  // enables and configure @babel/preset-env polyfills
+  .configureBabelPresetEnv((config) => {
+    config.useBuiltIns = "usage";
+    config.corejs = "3.38";
+  })
 
   // enables Sass/SCSS support
   .enableSassLoader()

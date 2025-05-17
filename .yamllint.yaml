@@ -4,5 +4,5 @@ rules:
     max-spaces-after: -1 # Allow manual indentation of properties
 
   quoted-strings:
-    quote-type:          single
+    quote-type:          'single'
     allow-quoted-quotes: true

@@ -1,0 +1,31 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}URLs check: {{ creator.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {{ form_start(form) }}
+
+    <table class="table">
+        <tr>
+            <th>Link</th>
+            <th>Broken?</th>
+        </tr>
+        {% for url in urls.urls %}
+            <tr>
+                <td>
+                    <a class="text-decoration-none" href="{{ url.url }}" target="_blank">
+                        Open <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </td>
+                <td>{{ form_widget(form[url.id]) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {{ form_errors(form) }}
+    {{ form_row(form['review']) }}
+
+    {{ form_end(form) }}
+{% endblock %}

@@ -5,58 +5,41 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests;
 
 use App\Data\Definitions\Fields\Field;
-use App\Entity\Artisan;
-use App\Entity\ArtisanUrl;
+use App\Entity\Creator;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
+use App\Entity\CreatorUrl;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use App\Service\CacheDigestProvider;
+use App\Utils\Collections\Arrays;
+use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
-use Psl\Iter;
+use InvalidArgumentException;
 use Psl\Vec;
+use Veelkoov\Debris\StringSet;
 
-class QueryChoicesAppender implements CacheDigestProvider
+class QueryChoicesAppender
 {
-    private readonly Choices $choices;
+    private int $uniqueIdIndex = 1;
 
-    public function __construct(Choices $choices)
-    {
-        $this->choices = new Choices(
-            $choices->makerId,
-            $choices->textSearch,
-            $choices->countries,
-            $choices->states,
-            [], [], [], [], [], // Unused and should not impact the cache digest
-            $choices->openFor,
-            $choices->species,
-            $choices->wantsUnknownPaymentPlans,
-            $choices->wantsAnyPaymentPlans,
-            $choices->wantsNoPaymentPlans,
-            $choices->isAdult,
-            $choices->wantsSfw,
-            $choices->wantsInactive,
-            $choices->creatorMode,
-        );
-    }
-
-    public function getCacheDigest(): string
-    {
-        return $this->choices->getCacheDigest();
+    public function __construct(
+        private readonly Choices $choices,
+    ) {
     }
 
     public function applyChoices(QueryBuilder $builder): void
     {
-        $this->applyTextSearch($builder); // Text search should work in the maker mode
+        $this->applyTextSearch($builder); // Text search should work in the creator mode
 
         if ($this->choices->creatorMode) {
             return; // Just return everything
         }
 
-        $this->applyMakerId($builder);
+        $this->applyCreatorId($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
         $this->applyOpenFor($builder);
@@ -65,24 +48,41 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
+        $this->applyCreatorValuesCount($builder, $this->choices->productionModels, Field::PRODUCTION_MODELS);
+        $this->applyCreatorValuesCount($builder, $this->choices->styles, Field::STYLES, Field::OTHER_STYLES);
+        $this->applyCreatorValuesCount($builder, $this->choices->orderTypes, Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $this->applyCreatorValuesCount($builder, $this->choices->features, Field::FEATURES, Field::OTHER_FEATURES, true);
+        $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
+    }
+
+    public function applyPaging(Query $query): void // @phpstan-ignore missingType.generics
+    {
+        $query
+            ->setFirstResult(Pagination::getFirstIdx($this->choices->pageSize, $this->choices->pageNumber))
+            ->setMaxResults($this->choices->pageSize)
+        ;
     }
 
     private function createSubqueryBuilder(QueryBuilder $builder, string $alias): QueryBuilder
     {
-        return $builder->getEntityManager()->getRepository(Artisan::class)->createQueryBuilder($alias);
+        return $builder->getEntityManager()->getRepository(Creator::class)->createQueryBuilder($alias);
     }
 
-    private function applyMakerId(QueryBuilder $builder): void // TODO: Test https://github.com/veelkoov/fuzzrake/issues/183
+    private function applyCreatorId(QueryBuilder $builder): void // TODO: Test https://github.com/veelkoov/fuzzrake/issues/183
     {
-        if ('' !== $this->choices->makerId) {
+        if ('' !== $this->choices->creatorId) {
+            $creator = $this->getUniqueId();
+            $creatorId = $this->getUniqueId();
+            $creatorIdValue = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a4')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a4.makerIds', 'a4mi')
-                    ->where('a4.id = a.id')
-                    ->andWhere('a4mi.makerId = :makerId')
+                    ->join("$creator.creatorIds", $creatorId)
+                    ->where("$creator.id = d_c.id")
+                    ->andWhere("$creatorId.creatorId = :$creatorIdValue")
             ))
-                ->setParameter('makerId', $this->choices->makerId);
+                ->setParameter($creatorIdValue, $this->choices->creatorId);
         }
     }
 
@@ -99,78 +99,98 @@ class QueryChoicesAppender implements CacheDigestProvider
 
         $searchedText = '%'.mb_strtoupper($searchedText).'%';
 
+        $searchedTextValue = $this->getUniqueId();
+        $creator = $this->getUniqueId();
+        $creatorId = $this->getUniqueId();
+
         $builder->andWhere($builder->expr()->orX(
-            'UPPER(a.name) LIKE :searchedText',
-            'UPPER(a.formerly) LIKE :searchedText',
+            "UPPER(d_c.name) LIKE :$searchedTextValue",
+            "UPPER(d_c.formerly) LIKE :$searchedTextValue",
             $builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a5')
+                $this->createSubqueryBuilder($builder, $creator)
                 ->select('1')
-                ->join('a5.makerIds', 'a5mi1')
-                ->where('a5.id = a.id')
-                ->andWhere('a5mi1.makerId LIKE :searchedText')
+                ->join("$creator.creatorIds", $creatorId)
+                ->where("$creator.id = d_c.id")
+                ->andWhere("$creatorId.creatorId LIKE :$searchedTextValue")
             ),
         ))
-            ->setParameter('searchedText', $searchedText);
+            ->setParameter($searchedTextValue, $searchedText);
     }
 
     private function applyCountries(QueryBuilder $builder): void
     {
-        if ([] !== $this->choices->countries) {
-            $countries = Vec\map($this->choices->countries,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+        if ($this->choices->countries->isNotEmpty()) {
+            $countries = $this->choices->countries->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
-            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
+            $countriesValue = $this->getUniqueId();
+
+            $builder->andWhere("d_c.country IN (:$countriesValue)")->setParameter($countriesValue, $countries);
         }
     }
 
     private function applyStates(QueryBuilder $builder): void
     {
-        if ([] !== $this->choices->states) {
-            $states = Vec\map($this->choices->states,
-                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+        if ($this->choices->states->isNotEmpty()) {
+            $states = $this->choices->states->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
 
-            $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
+            $statesValue = $this->getUniqueId();
+
+            $builder->andWhere("d_c.state IN (:$statesValue)")->setParameter($statesValue, $states);
         }
     }
 
     private function applyWantsSfw(QueryBuilder $builder): void
     {
         if (true !== $this->choices->isAdult || false !== $this->choices->wantsSfw) {
+            $creator = $this->getUniqueId();
+            $creatorValue1 = $this->getUniqueId();
+            $creatorValue2 = $this->getUniqueId();
+            $cvFieldName1 = $this->getUniqueId();
+            $cvFieldName2 = $this->getUniqueId();
+            $cvValueFalse = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a3')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a3.values', 'a3v1')
-                    ->join('a3.values', 'a3v2')
-                    ->where('a3.id = a.id')
-                    ->andWhere('a3v1.fieldName = :nsfwWebsite')
-                    ->andWhere('a3v1.value = :a3vFalse')
-                    ->andWhere('a3v2.fieldName = :nsfwSocial')
-                    ->andWhere('a3v2.value = :a3vFalse')
+                    ->join("$creator.values", $creatorValue1)
+                    ->join("$creator.values", $creatorValue2)
+                    ->where("$creator.id = d_c.id")
+                    ->andWhere("$creatorValue1.fieldName = :$cvFieldName1")
+                    ->andWhere("$creatorValue1.value = :$cvValueFalse")
+                    ->andWhere("$creatorValue2.fieldName = :$cvFieldName2")
+                    ->andWhere("$creatorValue2.value = :$cvValueFalse")
             ))
-                ->setParameter('nsfwWebsite', Field::NSFW_WEBSITE->value)
-                ->setParameter('nsfwSocial', Field::NSFW_SOCIAL->value)
-                ->setParameter('a3vFalse', StrUtils::asStr(false));
+                ->setParameter($cvFieldName1, Field::NSFW_WEBSITE->value)
+                ->setParameter($cvFieldName2, Field::NSFW_SOCIAL->value)
+                ->setParameter($cvValueFalse, StrUtils::asStr(false));
         }
     }
 
     private function applyWorksWithMinors(QueryBuilder $builder): void
     {
         if (true !== $this->choices->isAdult) {
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldName = $this->getUniqueId();
+            $cvValueTrue = $this->getUniqueId();
+
             $builder->andWhere($builder->expr()->exists(
-                $this->createSubqueryBuilder($builder, 'a2')
+                $this->createSubqueryBuilder($builder, $creator)
                     ->select('1')
-                    ->join('a2.values', 'a2v')
-                    ->where('a2.id = a.id')
-                    ->andWhere('a2v.fieldName = :wwmFieldName')
-                    ->andWhere('a2v.value = :a2vTrue')
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = d_c.id")
+                    ->andWhere("$creatorValue.fieldName = :$cvFieldName")
+                    ->andWhere("$creatorValue.value = :$cvValueTrue")
             ))
-                ->setParameter('wwmFieldName', Field::WORKS_WITH_MINORS->value)
-                ->setParameter('a2vTrue', StrUtils::asStr(true));
+                ->setParameter($cvFieldName, Field::WORKS_WITH_MINORS->value)
+                ->setParameter($cvValueTrue, StrUtils::asStr(true));
         }
     }
 
     private function applyPaymentPlans(QueryBuilder $builder): void
     {
+        $paymentPlansValue = $this->getUniqueId();
+
         if ($this->choices->wantsUnknownPaymentPlans) {
             if ($this->choices->wantsAnyPaymentPlans) {
                 if ($this->choices->wantsNoPaymentPlans) {
@@ -178,17 +198,17 @@ class QueryChoicesAppender implements CacheDigestProvider
                     return;
                 } else {
                     // Unknown + ANY
-                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
                     $parameter = Consts::DATA_PAYPLANS_NONE;
                 }
             } else {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // Unknown + None
-                    $andWhere = 'a.paymentPlans IN (:paymentPlans)';
+                    $andWhere = "d_c.paymentPlans IN (:$paymentPlansValue)";
                     $parameter = [Consts::DATA_VALUE_UNKNOWN, Consts::DATA_PAYPLANS_NONE];
                 } else {
                     // Unknown
-                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
                     $parameter = Consts::DATA_VALUE_UNKNOWN;
                 }
             }
@@ -196,17 +216,17 @@ class QueryChoicesAppender implements CacheDigestProvider
             if ($this->choices->wantsAnyPaymentPlans) {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // ANY + None
-                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
                     $parameter = Consts::DATA_VALUE_UNKNOWN;
                 } else {
                     // ANY
-                    $andWhere = 'a.paymentPlans NOT IN (:paymentPlans)';
+                    $andWhere = "d_c.paymentPlans NOT IN (:$paymentPlansValue)";
                     $parameter = [Consts::DATA_PAYPLANS_NONE, Consts::DATA_VALUE_UNKNOWN];
                 }
             } else {
                 if ($this->choices->wantsNoPaymentPlans) {
                     // None
-                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
                     $parameter = Consts::DATA_PAYPLANS_NONE;
                 } else {
                     // Nothing selected
@@ -217,21 +237,23 @@ class QueryChoicesAppender implements CacheDigestProvider
 
         $builder
             ->andWhere($andWhere)
-            ->setParameter('paymentPlans', $parameter);
+            ->setParameter($paymentPlansValue, $parameter);
     }
 
     private function applyWantsInactive(QueryBuilder $builder): void
     {
         if (!$this->choices->wantsInactive) {
+            $inactiveReasonValue = $this->getUniqueId();
+
             $builder
-                ->andWhere('a.inactiveReason = :emptyInactiveReason')
-                ->setParameter('emptyInactiveReason', '');
+                ->andWhere("d_c.inactiveReason = :$inactiveReasonValue")
+                ->setParameter($inactiveReasonValue, '');
         }
     }
 
     private function applySpecies(QueryBuilder $builder): void
     {
-        if ([] === $this->choices->species) {
+        if ($this->choices->species->isEmpty()) {
             return;
         }
 
@@ -240,28 +262,34 @@ class QueryChoicesAppender implements CacheDigestProvider
         $items = new SpecialItemsExtractor($this->choices->species, Consts::FILTER_VALUE_UNKNOWN);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $creatorSpecie = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorSpecie::class)
-                    ->createQueryBuilder('cs1')
+                    ->createQueryBuilder($creatorSpecie)
                     ->select('1')
-                    ->join('cs1.specie', 'sp1')
-                    ->where('cs1.creator = a')
+                    ->join("$creatorSpecie.specie", $this->getUniqueId())
+                    ->where("$creatorSpecie.creator = d_c")
             ));
         }
 
-        if ([] !== $items->getCommon()) {
+        if ($items->common->isNotEmpty()) {
+            $creatorSpecie = $this->getUniqueId();
+            $specie = $this->getUniqueId();
+            $sNameValues = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorSpecie::class)
-                    ->createQueryBuilder('cs2')
+                    ->createQueryBuilder($creatorSpecie)
                     ->select('1')
-                    ->join('cs2.specie', 'sp2')
-                    ->where('sp2.name IN (:specieNames)')
-                    ->andWhere('cs2.creator = a')
+                    ->join("$creatorSpecie.specie", $specie)
+                    ->where("$specie.name IN (:$sNameValues)")
+                    ->andWhere("$creatorSpecie.creator = d_c")
             );
 
-            $builder->setParameter('specieNames', $items->getCommon());
+            $builder->setParameter($sNameValues, $items->common);
         }
 
         $this->addWheres($builder, $conditions);
@@ -275,38 +303,47 @@ class QueryChoicesAppender implements CacheDigestProvider
             Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
-            $conditions[] = $builder->expr()->eq('vd.csTrackerIssue', ':hasCsTrackerIssue');
+            $cvdCsTrackerIssueValueTrue = $this->getUniqueId();
 
-            $builder->setParameter('hasCsTrackerIssue', true, ParameterType::BOOLEAN);
+            $conditions[] = $builder->expr()->eq('d_cvd.csTrackerIssue', ":$cvdCsTrackerIssueValueTrue");
+
+            $builder->setParameter($cvdCsTrackerIssueValueTrue, true, ParameterType::BOOLEAN);
         }
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_NOT_TRACKED)) {
+            $creatorUrl = $this->getUniqueId();
+            $cuTypeValue = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->not($builder->expr()->exists(
                 $builder->getEntityManager()
-                    ->getRepository(ArtisanUrl::class)
-                    ->createQueryBuilder('au1')
+                    ->getRepository(CreatorUrl::class)
+                    ->createQueryBuilder($creatorUrl)
                     ->select('1')
-                    ->where('au1.artisan = a')
-                    ->andWhere('au1.type = :urlTypeCommissions')
+                    ->where("$creatorUrl.creator = d_c")
+                    ->andWhere("$creatorUrl.type = :$cuTypeValue")
             ));
 
-            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->value);
+            $builder->setParameter($cuTypeValue, Field::URL_COMMISSIONS->value);
         }
 
-        if ([] !== $items->getCommon()) {
+        if ($items->common->isNotEmpty()) {
+            $creatorOfferStatus = $this->getUniqueId();
+            $cosIsOpenValueTrue = $this->getUniqueId();
+            $cosOfferValues = $this->getUniqueId();
+
             $conditions[] = $builder->expr()->exists(
                 $builder->getEntityManager()
                     ->getRepository(CreatorOfferStatus::class)
-                    ->createQueryBuilder('cos1')
+                    ->createQueryBuilder($creatorOfferStatus)
                     ->select('1')
-                    ->where('cos1.isOpen = :isOpen')
-                    ->andWhere('cos1.offer IN (:openForOffers)')
-                    ->andWhere('cos1.artisan = a')
+                    ->where("$creatorOfferStatus.isOpen = :$cosIsOpenValueTrue")
+                    ->andWhere("$creatorOfferStatus.offer IN (:$cosOfferValues)")
+                    ->andWhere("$creatorOfferStatus.creator = d_c")
             );
 
             $builder
-                ->setParameter('openForOffers', $items->getCommon())
-                ->setParameter('isOpen', true, ParameterType::BOOLEAN);
+                ->setParameter($cosOfferValues, $items->common)
+                ->setParameter($cosIsOpenValueTrue, true, ParameterType::BOOLEAN);
         }
 
         $this->addWheres($builder, $conditions);
@@ -320,11 +357,87 @@ class QueryChoicesAppender implements CacheDigestProvider
         if ([] === $conditions) {
             return;
         } elseif (1 === count($conditions)) {
-            $condition = Iter\first($conditions);
+            $condition = Arrays::single($conditions);
         } else {
             $condition = $builder->expr()->orX(...$conditions);
         }
 
         $builder->andWhere($condition);
+    }
+
+    private function applyCreatorValuesCount(QueryBuilder $builder, StringSet $selectedItems, Field $primaryField,
+        ?Field $otherField = null, bool $allInsteadOfAny = false): void
+    {
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($selectedItems, Consts::FILTER_VALUE_OTHER, Consts::FILTER_VALUE_UNKNOWN);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_OTHER)) {
+            if (null === $otherField) {
+                throw new InvalidArgumentException('Other field not selected');
+            }
+
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldNameValue = $this->getUniqueId();
+
+            $conditions[] = $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creator)
+                    ->select('1')
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = d_c.id")
+                    ->andWhere("$creatorValue.fieldName = :$cvFieldNameValue")
+            );
+
+            $builder->setParameter($cvFieldNameValue, $otherField->value);
+        }
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldNameValue = $this->getUniqueId();
+
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creator)
+                    ->select('1')
+                    ->join("$creator.values", $creatorValue)
+                    ->where("$creator.id = d_c.id")
+                    ->andWhere("$creatorValue.fieldName IN (:$cvFieldNameValue)")
+            ));
+
+            $builder->setParameter($cvFieldNameValue, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
+        }
+
+        if ($items->common->isNotEmpty()) {
+            $creator = $this->getUniqueId();
+            $creatorValue = $this->getUniqueId();
+            $cvFieldName = $this->getUniqueId();
+            $cvValueValues = $this->getUniqueId();
+
+            $having = $allInsteadOfAny
+                ? $builder->expr()->eq("COUNT($creator)", $items->common->count())
+                : $builder->expr()->gt("COUNT($creator)", 0);
+
+            $conditions[] = $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creator)
+                ->select('1')
+                ->join("$creator.values", $creatorValue)
+                ->where("$creator.id = d_c.id")
+                ->andWhere("$creatorValue.fieldName = :$cvFieldName")
+                ->andWhere("$creatorValue.value IN (:$cvValueValues)")
+                ->groupBy("$creator.id")
+                ->having($having)
+            );
+
+            $builder->setParameter($cvFieldName, $primaryField->value);
+            $builder->setParameter($cvValueValues, $items->common);
+        }
+
+        $this->addWheres($builder, $conditions);
+    }
+
+    private function getUniqueId(): string
+    {
+        return 'd_uid'.((string) $this->uniqueIdIndex++);
     }
 }

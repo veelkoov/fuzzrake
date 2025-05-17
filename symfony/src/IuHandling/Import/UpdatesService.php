@@ -4,74 +4,79 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
+use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
-use App\Repository\ArtisanRepository;
-use App\Utils\Arrays\Arrays;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Collections\Arrays;
+use App\Utils\Collections\StringLists;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
-use App\Utils\StringList;
 use App\Utils\UnbelievableRuntimeException;
-
-use function Psl\Vec\concat;
-use function Psl\Vec\filter;
+use App\ValueObject\Messages\SpeciesSyncNotificationV1;
+use Psl\Vec;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class UpdatesService
 {
     public function __construct(
-        private readonly ArtisanRepository $artisans,
+        private readonly CreatorRepository $creatorRepository,
         private readonly Fixer $fixer,
+        private readonly MessageBusInterface $messageBus,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function getUpdateFor(UpdateInput $input): Update
+    public function getUpdateFor(Submission $submission): Update
     {
-        [$directivesError, $manager] = $this->getManager($input->submission);
-        $errors = filter([$directivesError]);
+        [$directivesError, $manager] = $this->getManager($submission);
+        $errors = Vec\filter([$directivesError]);
 
-        $originalInput = new Artisan();
-        $this->updateWith($originalInput, $input->submissionData, Fields::readFromSubmissionData());
+        $originalInput = new Creator();
+        $this->updateWith($originalInput, $submission->getReader(), Fields::readFromSubmissionData());
 
         $fixedInput = $this->fixer->getFixed($originalInput);
 
-        $matchedArtisans = $this->getArtisans($fixedInput, $manager->getMatchedMakerId());
+        $matchedCreators = $this->getCreators($fixedInput, $manager->getMatchedCreatorId());
 
-        if (1 === count($matchedArtisans)) {
-            $originalArtisan = Arrays::single($matchedArtisans);
+        if (1 === count($matchedCreators)) {
+            $originalCreator = Arrays::single($matchedCreators);
         } else {
-            $originalArtisan = new Artisan();
+            $originalCreator = new Creator();
 
-            if ([] !== $matchedArtisans) {
-                $errors[] = 'Single maker must get selected.';
+            if ([] !== $matchedCreators) {
+                $errors[] = 'Single creator must get selected.';
             }
         }
 
-        $this->handleSpecialFieldsInInput($fixedInput, $originalArtisan);
+        $this->handleSpecialFieldsInInput($originalInput, $originalCreator);
+        $this->handleSpecialFieldsInInput($fixedInput, $originalCreator);
 
-        $updatedArtisan = clone $originalArtisan;
-        $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
+        $updatedCreator = clone $originalCreator;
+        $this->updateWith($updatedCreator, $fixedInput, Fields::iuFormAffected());
 
-        $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
-        $manager->correctArtisan($updatedArtisan);
+        $this->handleSpecialFieldsInEntity($updatedCreator, $originalCreator);
+        $manager->correctCreator($updatedCreator);
 
-        $isNew = null === $originalArtisan->getId();
+        $isNew = null === $originalCreator->getId();
         $isAccepted = $manager->isAccepted();
 
-        if (!$isNew && $originalArtisan->getPassword() !== $updatedArtisan->getPassword() && !$isAccepted) {
+        if (!$isNew && $originalCreator->getPassword() !== $updatedCreator->getPassword() && !$isAccepted) {
             $errors[] = 'Password does not match.';
         }
 
         return new Update(
-            $input->submissionData,
-            $input->submission,
-            $matchedArtisans,
+            $submission,
+            $matchedCreators,
             $originalInput,
-            $originalArtisan,
-            $updatedArtisan,
+            $originalCreator,
+            $updatedCreator,
             $errors,
             $isAccepted,
             $isNew,
@@ -96,74 +101,78 @@ class UpdatesService
         }
     }
 
-    private function updateWith(Artisan $artisan, FieldReadInterface $source, FieldsList $fields): void
+    private function updateWith(Creator $creator, FieldReadInterface $source, FieldsList $fields): void
     {
         foreach ($fields as $field) {
-            $artisan->set($field, $source->get($field));
+            $creator->set($field, $source->get($field));
         }
 
-        $artisan->assureNsfwSafety();
+        $creator->assureNsfwSafety();
     }
 
     /**
-     * @return Artisan[]
+     * @return Creator[]
      */
-    private function getArtisans(Artisan $submissionData, ?string $matchedMakerId): array
+    private function getCreators(Creator $submissionData, ?string $matchedCreatorId): array
     {
-        if (null !== $matchedMakerId) {
-            $makerIds = [$matchedMakerId];
+        if (null !== $matchedCreatorId) {
+            $creatorIds = [$matchedCreatorId];
             $names = [];
         } else {
-            $makerIds = $submissionData->getAllMakerIds();
-            $names = concat([$submissionData->getName()], $submissionData->getFormerly());
+            $creatorIds = $submissionData->getAllCreatorIds();
+            $names = Vec\concat([$submissionData->getName()], $submissionData->getFormerly());
         }
 
-        $results = $this->artisans->findBestMatches($names, $makerIds);
+        $results = $this->creatorRepository->findBestMatches($names, $creatorIds);
 
-        return Artisan::wrapAll($results);
+        return Creator::wrapAll($results);
     }
 
-    private function handleSpecialFieldsInInput(Artisan $originalInput, Artisan $originalArtisan): void
+    private function handleSpecialFieldsInInput(Creator $submission, Creator $original): void
     {
-        $submittedContact = $originalInput->getContactInfoObfuscated();
-
-        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getContactInfoObfuscated()) {
-            $originalInput->updateContact($originalArtisan->getContactInfoOriginal());
-        } else {
-            $originalInput->updateContact($submittedContact);
+        if (ContactPermit::NO === $submission->getContactAllowed()) {
+            $submission->setEmailAddress('');
+        } elseif ('' === $submission->getEmailAddress()) {
+            $submission->setEmailAddress($original->getEmailAddress());
         }
 
-        if (null === $originalArtisan->getId()) {
-            $originalInput->setDateAdded(UtcClock::now());
+        if (null === $original->getId()) {
+            $submission->setDateAdded(UtcClock::now());
         } else {
-            $originalInput->setDateAdded($originalArtisan->getDateAdded());
-            $originalInput->setDateUpdated(UtcClock::now());
+            $submission->setDateAdded($original->getDateAdded());
+            $submission->setDateUpdated(UtcClock::now());
 
-            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) {
-                $originalInput->setFormerMakerIds($originalArtisan->getAllMakerIds());
+            if ($submission->getCreatorId() !== $original->getCreatorId()) {
+                $submission->setFormerCreatorIds($original->getAllCreatorIds());
             } else {
-                $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
+                $submission->setFormerCreatorIds($original->getFormerCreatorIds());
             }
         }
     }
 
-    private function handleSpecialFieldsInEntity(Artisan $updatedArtisan, Artisan $originalArtisan): void
+    private function handleSpecialFieldsInEntity(Creator $updatedCreator, Creator $originalCreator): void
     {
         // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
-        if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
-            $updatedArtisan->setMiniatureUrls([]); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
+        if (!StringLists::sameElements($updatedCreator->getPhotoUrls(), $originalCreator->getPhotoUrls())) {
+            $updatedCreator->setMiniatureUrls([]); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
         }
     }
 
     public function import(Update $update): void
     {
-        $existingEntity = $update->originalArtisan;
-        $cloneWithUpdates = $update->updatedArtisan;
+        $existingEntity = $update->originalCreator;
+        $cloneWithUpdates = $update->updatedCreator;
 
         foreach (Fields::persisted() as $field) {
             $existingEntity->set($field, $cloneWithUpdates->get($field));
         }
 
-        $this->artisans->add($existingEntity->getArtisan(), true);
+        $this->creatorRepository->add($existingEntity->getCreator(), true);
+
+        try {
+            $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
+        } catch (ExceptionInterface $exception) {
+            $this->logger->error("Failed dispatching species sync notification: {$exception->getMessage()}");
+        }
     }
 }

@@ -5,87 +5,74 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
+use App\Utils\Collections\StringList;
+use Override;
 
 readonly class ListChange implements ChangeInterface
 {
-    /**
-     * @var list<string>
-     */
-    public array $added;
+    public StringList $added;
+    public StringList $removed;
 
-    /**
-     * @var list<string>
-     */
-    public array $removed;
-
-    /**
-     * @param list<string> $old
-     * @param list<string> $new
-     */
     public function __construct(
         private Field $field,
-        private array $old,
-        private array $new,
+        private StringList $old,
+        private StringList $new,
     ) {
         [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
 
+    #[Override]
     public function getDescription(): string
     {
         $name = $this->field->value;
-        $added = $this->added;
-        $removed = $this->removed;
 
-        if (!empty($added)) {
-            $res = 'Added '.$name.': "'.implode('", "', $added).'"';
-        } else {
-            $res = '';
-        }
+        $res = $this->added->isNotEmpty()
+            ? 'Added '.$name.': "'.$this->added->join('", "').'"'
+            : '';
 
-        if (!empty($removed)) {
-            $res .= '' === $res ? "Removed {$name}" : ' and removed';
+        if ($this->removed->isNotEmpty()) {
+            $res .= '' === $res ? "Removed $name" : ' and removed';
 
-            $res .= ': "'.implode('", "', $removed).'"';
+            $res .= ': "'.$this->removed->join('", "').'"';
         } elseif ('' === $res) {
-            $res = "{$name} did not change";
+            $res = "$name did not change";
         }
 
         return $res;
     }
 
+    #[Override]
     public function isActuallyAChange(): bool
     {
-        return !empty($this->added) || !empty($this->removed);
+        return $this->added->isNotEmpty() || $this->removed->isNotEmpty();
     }
 
     /**
-     * @param string[] $new
-     * @param string[] $old
-     *
-     * @return array{string[], string[]}
+     * @return array{StringList, StringList}
      */
-    private static function calculateAddedRemoved(array $old, array $new): array
+    private static function calculateAddedRemoved(StringList $old, StringList $new): array
     {
-        $added = [];
-        $removed = [];
+        $added = new StringList();
+        $removed = new StringList();
 
-        $common = array_intersect($new, $old);
+        $common = $new->intersect($old);
 
         foreach ($old as $item) {
-            if (!in_array($item, $common)) {
-                $removed[] = $item;
+            if (!$common->contains($item)) {
+                $removed->add($item);
             }
         }
 
         foreach ($new as $item) {
-            if (!in_array($item, $common)) {
-                $added[] = $item;
+            if (!$common->contains($item)) {
+                $added->add($item);
             }
         }
 
-        return [$added, $removed];
+        return [$added->freeze(), $removed->freeze()];
     }
 
+    #[Override]
     public function getField(): Field
     {
         return $this->field;

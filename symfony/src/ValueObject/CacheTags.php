@@ -6,6 +6,6 @@ namespace App\ValueObject;
 
 final class CacheTags // grep-cache-tags
 {
-    public const ARTISANS = 'artisans';
-    public const TRACKING = 'tracking';
+    public const string CREATORS = 'creators';
+    public const string TRACKING = 'tracking';
 }

@@ -73,7 +73,7 @@ class Updater {
                 timestamp = UTC.Now.dateTime()
                 trackingIssues = encounteredIssues
                 type = "CS_UPDATED" // TODO: Enum
-                artisanName = creator.name
+                creatorName = creator.name
             }
         }
     }

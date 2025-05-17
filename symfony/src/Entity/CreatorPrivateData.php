@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Data\Definitions\Fields\Validation;
-use App\Entity\Artisan as Creator;
 use App\Repository\CreatorPrivateDataRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,11 +12,11 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * NOTE: Private information given exclusively to the DB maintainer, must not be shared without makers' approval.
+ * NOTE: Private information given exclusively to the DB maintainer, must not be shared without creators' approval.
  *       Must never be dumped, nor committed.
  */
 #[ORM\Entity(repositoryClass: CreatorPrivateDataRepository::class)]
-#[ORM\Table(name: 'artisans_private_data')] // TODO: Rename
+#[ORM\Table(name: 'creators_private_data')]
 class CreatorPrivateData
 {
     #[ORM\Id]
@@ -25,23 +24,17 @@ class CreatorPrivateData
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'privateData', targetEntity: Creator::class)]
-    #[ORM\JoinColumn(name: 'artisan_id', unique: true, nullable: false)] // TODO: Rename
+    #[ORM\OneToOne(targetEntity: Creator::class, inversedBy: 'privateData')]
+    #[ORM\JoinColumn(name: 'creator_id', unique: true, nullable: false)]
     private Creator $creator;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $contactAddress = '';
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you had a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[ORM\Column(type: Types::TEXT)]
     private string $password = '';
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $originalContactInfo = '';
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $notes = '';
+    #[ORM\Column(name: 'email_address', type: Types::TEXT)]
+    private string $emailAddress = '';
 
     public function getId(): ?int
     {
@@ -60,18 +53,6 @@ class CreatorPrivateData
         return $this;
     }
 
-    public function getContactAddress(): string
-    {
-        return $this->contactAddress;
-    }
-
-    public function setContactAddress(string $contactAddress): self
-    {
-        $this->contactAddress = $contactAddress;
-
-        return $this;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
@@ -84,26 +65,14 @@ class CreatorPrivateData
         return $this;
     }
 
-    public function getOriginalContactInfo(): string
+    public function getEmailAddress(): string
     {
-        return $this->originalContactInfo;
+        return $this->emailAddress;
     }
 
-    public function setOriginalContactInfo(string $originalContactInfo): self
+    public function setEmailAddress(string $emailAddress): self
     {
-        $this->originalContactInfo = $originalContactInfo;
-
-        return $this;
-    }
-
-    public function getNotes(): ?string
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(?string $notes): self
-    {
-        $this->notes = $notes;
+        $this->emailAddress = $emailAddress;
 
         return $this;
     }

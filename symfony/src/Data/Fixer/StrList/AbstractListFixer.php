@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\StrListFixerInterface;
-use App\Utils\Arrays\Arrays;
+use App\Utils\Collections\Arrays;
 use App\Utils\PackedStringList;
+use Override;
 use Psl\Vec;
 
 abstract class AbstractListFixer implements StrListFixerInterface
 {
+    #[Override]
     public function fix(array $subject): array
     {
         if (1 === count($subject) && null !== static::getSeparatorRegexp()) {

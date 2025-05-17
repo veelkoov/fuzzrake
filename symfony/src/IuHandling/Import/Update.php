@@ -7,47 +7,46 @@ namespace App\IuHandling\Import;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
 use App\IuHandling\Changes\Description;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 class Update
 {
     public readonly UpdateContact $contact;
 
     /**
-     * @param Artisan[] $matchedArtisans
+     * @param Creator[] $matchedCreators
      * @param string[]  $errors
      */
     public function __construct(
-        public readonly SubmissionData $submissionData,
         public readonly Submission $submission,
-        public readonly array $matchedArtisans,
-        public readonly Artisan $originalInput,
-        public readonly Artisan $originalArtisan,
-        public readonly Artisan $updatedArtisan,
+        public readonly array $matchedCreators,
+        public readonly Creator $originalInput,
+        public readonly Creator $originalCreator,
+        public readonly Creator $updatedCreator,
         public readonly array $errors,
         public readonly bool $isAccepted,
         public readonly bool $isNew,
     ) {
-        $this->contact = UpdateContact::from($this->originalArtisan, $this->updatedArtisan);
+        $this->contact = UpdateContact::from($this->originalCreator, $this->updatedCreator);
     }
 
     public function submittedDifferent(Field $field): bool
     {
-        return !$this->originalInput->equals($field, $this->originalArtisan);
+        return !$this->originalInput->equals($field, $this->originalCreator);
     }
 
     public function fixesApplied(Field $field): bool
     {
-        return !$this->originalInput->equals($field, $this->updatedArtisan);
+        return !$this->originalInput->equals($field, $this->updatedCreator);
     }
 
     public function isChanging(Field $field): bool
     {
-        return !$this->originalArtisan->equals($field, $this->updatedArtisan);
+        return !$this->originalCreator->equals($field, $this->updatedCreator);
     }
 
     public function getDescription(): Description
     {
-        return new Description($this->originalArtisan, $this->updatedArtisan);
+        return new Description($this->originalCreator, $this->updatedCreator);
     }
 }

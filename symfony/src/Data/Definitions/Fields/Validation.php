@@ -6,10 +6,10 @@ namespace App\Data\Definitions\Fields;
 
 use App\Utils\Traits\UtilityClass;
 
-class Validation
+class Validation // FIXME: https://github.com/veelkoov/fuzzrake/issues/284
 {
     use UtilityClass;
 
-    final public const GRP_DATA = 'iu_data';
-    final public const GRP_CONTACT_AND_PASSWORD = 'iu_contact_and_password';
+    final public const string GRP_DATA = 'iu_data';
+    final public const string GRP_CONTACT_AND_PASSWORD = 'iu_contact_and_password';
 }

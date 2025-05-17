@@ -7,13 +7,11 @@ namespace App\Twig;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Data\Validator\Validator;
-use App\Entity\Artisan as ArtisanE;
-use App\IuHandling\Import\SubmissionData;
-use App\Repository\SubmissionRepository;
+use App\Entity\Creator as CreatorE;
 use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
-use Doctrine\ORM\NonUniqueResultException;
+use Override;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 use Twig\Extension\AbstractExtension;
@@ -25,14 +23,13 @@ class AdminExtensions extends AbstractExtension
 {
     private readonly Pattern $linkPattern;
 
-    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: https://github.com/veelkoov/fuzzrake/issues/156 */
     public function __construct(
         private readonly Validator $validator,
-        private readonly SubmissionRepository $submissionRepository,
     ) {
         $this->linkPattern = pattern('(?<!title=")https?://[^ ,\n<>"]+', 'i');
     }
 
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -42,23 +39,23 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
             new TwigFilter('is_valid', $this->isValid(...)),
-            new TwigFilter('get_comments', $this->getComment(...)),
+            new TwigFilter('bluesky_at', $this->blueskyAt(...)),
             new TwigFilter('mastodon_at', $this->mastodonAt(...)),
             new TwigFilter('tumblr_at', $this->tumblrAt(...)),
         ];
     }
 
-    private function smartFilter(Artisan|ArtisanE $artisan): Artisan
+    private function smartFilter(Creator|CreatorE $creator): Creator
     {
-        if (!($artisan instanceof Artisan)) {
-            $artisan = Artisan::wrap($artisan);
+        if (!($creator instanceof Creator)) {
+            $creator = Creator::wrap($creator);
         }
 
-        return $artisan;
+        return $creator;
     }
 
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
     private function asStr(mixed $value): string
     {
@@ -70,7 +67,7 @@ class AdminExtensions extends AbstractExtension
         return Field::from($name);
     }
 
-    private function difference(Field $field, string $classSuffix, Artisan $subject, Artisan $other): string
+    private function difference(Field $field, string $classSuffix, Creator $subject, Creator $other): string
     {
         if (!$field->isList()) {
             $value = $this->getOptionallyRedactedValue($field, $subject);
@@ -106,29 +103,28 @@ class AdminExtensions extends AbstractExtension
         });
     }
 
-    private function isValid(Artisan $artisan, Field $field): bool
+    private function isValid(Creator $creator, Field $field): bool
     {
-        return $this->validator->isValid($artisan, $field);
+        return $this->validator->isValid($creator, $field);
     }
 
     /**
-     * @throws NonUniqueResultException
+     * @return psPhpFieldValue
      */
-    private function getComment(SubmissionData $submissionData): string
-    {
-        return $this->submissionRepository->findByStrId($submissionData->getId())?->getComment() ?? '';
-    }
-
-    /**
-     * @return psFieldValue
-     */
-    private function getOptionallyRedactedValue(Field $field, Artisan $subject): mixed
+    private function getOptionallyRedactedValue(Field $field, Creator $subject): mixed
     {
         if (SecureValues::hideOnAdminScreen($field)) {
             return '[redacted]';
         } else {
             return $subject->get($field);
         }
+    }
+
+    private function blueskyAt(string $blueskyUrl): string
+    {
+        return Pattern::of('^https://[^/]+/profile/([^/#?]+).*')
+            ->replace($blueskyUrl)
+            ->withReferences('@$1');
     }
 
     private function mastodonAt(string $mastodonUrl): string

@@ -1,4 +1,4 @@
-import DarnIt from "./DarnIt";
+import error from "./ErrorMessage";
 
 export function toggle(
   $elements: JQuery<HTMLElement> | string,
@@ -42,11 +42,13 @@ export function requireJQ(
   const result = jQuery(selector);
 
   if (result.length < min || (max !== null && result.length > max)) {
-    DarnIt.report(
+    error(
       "Failed matching HTML elements. Most probably this error happened because the maintainer introduced some changes on the website in a way which you would expect from an unskilled person.",
-      `Looked for: ${selector}, count: ${min}..${max}, matched: ${result.length}`,
-      true,
-    );
+    )
+      .withConsoleDetails(
+        `Looked for: ${selector}, count: ${min}..${max}, matched: ${result.length}.`,
+      )
+      .reportOnce();
   }
 
   return result;

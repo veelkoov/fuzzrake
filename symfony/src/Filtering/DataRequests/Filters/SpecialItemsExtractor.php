@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests\Filters;
 
 use InvalidArgumentException;
-
-use function Psl\Iter\contains;
-use function Psl\Vec\filter;
+use Veelkoov\Debris\StringSet;
 
 class SpecialItemsExtractor
 {
@@ -16,29 +14,15 @@ class SpecialItemsExtractor
      */
     private array $special = [];
 
-    /**
-     * @var list<string>
-     */
-    private array $common = [];
+    public readonly StringSet $common;
 
-    /**
-     * @param list<string> $items
-     */
-    public function __construct(array $items, string ...$allowedSpecialItems)
+    public function __construct(StringSet $items, string ...$allowedSpecialItems)
     {
         foreach ($allowedSpecialItems as $specialItem) {
-            $this->special[$specialItem] = contains($items, $specialItem);
+            $this->special[$specialItem] = $items->contains($specialItem);
         }
 
-        $this->common = filter($items, fn (string $item) => !contains($allowedSpecialItems, $item));
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getCommon(): array
-    {
-        return $this->common;
+        $this->common = $items->minusAll($allowedSpecialItems)->freeze();
     }
 
     public function hasSpecial(string $item): bool

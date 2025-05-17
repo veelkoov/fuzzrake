@@ -11,12 +11,12 @@ use Symfony\Component\Validator\Constraints\NotEqualTo;
 
 final class Feedback
 {
-    private const EXPLANATION_OPTIONS_ERROR_MESSAGE = 'The selected option serves only for explanation, you cannot use it.';
-    private const HELP_ME_GET_A_FURSUIT = 'Help me get a fursuit';
-    private const COMMISSIONS_INFO_INACCURATE = "Maker's commissions info (open/closed) is inaccurate";
-    private const OTHER_INFO_OUTDATED = "Other maker's information is (partially) outdated";
+    private const string EXPLANATION_OPTIONS_ERROR_MESSAGE = 'The selected option serves only for explanation, you cannot use it.';
+    private const string HELP_ME_GET_A_FURSUIT = 'Help me get a fursuit';
+    private const string COMMISSIONS_INFO_INACCURATE = "Maker's commissions info (open/closed) is inaccurate";
+    private const string OTHER_INFO_OUTDATED = "Other maker's information is (partially) outdated";
 
-    final public const OPTIONS = [
+    final public const array OPTIONS = [
         self::HELP_ME_GET_A_FURSUIT,
         self::COMMISSIONS_INFO_INACCURATE,
         "Maker's website/social account is no longer working",
@@ -37,7 +37,7 @@ final class Feedback
     public string $subject = '';
 
     #[Length(max: 100)]
-    public string $maker = '';
+    public string $creator = '';
 
     #[NotBlank(message: 'This is required.')]
     public string $details = '';

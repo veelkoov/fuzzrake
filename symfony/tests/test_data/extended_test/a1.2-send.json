@@ -1,26 +1,26 @@
 {
-    "MAKER_ID": "NWMKRI0",
+    "MAKER_ID": "TESTA03",
 
-    "NAME": "Name mkr1 after update",
+    "NAME": "Name creator1 after update",
     "FORMERLY": [
-        "Name mkr1 before update",
-        "Formerly mkr1 before update"
+        "Name creator1 before update",
+        "Formerly creator1 before update"
     ],
     "PASSWORD": "Password changed 1",
 
-    "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-email-update-after@ema.il",
+    "EMAIL_ADDRESS": "creator1-email-update-after@ema.il",
     "CONTACT_ALLOWED": "ANNOUNCEMENTS",
 
-    "INTRO": "Intro mkr1 after update",
+    "INTRO": "Intro creator1 after update",
     "SINCE": "2020-09",
     "LANGUAGES": [
         "Czech (limited)",
         "English",
-        "Mkr1 after update"
+        "Creator1 after update"
     ],
     "COUNTRY": "C1",
-    "STATE": "State mkr1 after update",
-    "CITY": "City mkr1 after update",
+    "STATE": "State creator1 after update",
+    "CITY": "City creator1 after update",
 
 
     "AGES": "ADULTS",
@@ -32,11 +32,11 @@
     "PAYMENT_PLANS": [
         "30% upfront, rest in 200 Eur/mth until fully paid",
         "50%/50%",
-        "Mkr1 after update"
+        "Creator1 after update"
     ],
     "PAYMENT_METHODS": [
         "Cash",
-        "After update mkr1",
+        "After update creator1",
         "Bank transfers",
         "PalPay"
     ],
@@ -60,7 +60,7 @@
     ],
     "OTHER_STYLES": [
         "Other styles",
-        "Maker 1",
+        "Creator 1",
         "After update"
     ],
 
@@ -74,7 +74,7 @@
     ],
     "OTHER_ORDER_TYPES": [
         "Other order",
-        "Types maker 1",
+        "Types creator 1",
         "After update"
     ],
 
@@ -92,7 +92,7 @@
     ],
     "OTHER_FEATURES": [
         "Other features",
-        "Maker 1",
+        "Creator 1",
         "After update"
     ],
 
@@ -106,38 +106,47 @@
 
     "NOTES": "Notes after update",
 
-    "URL_FURSUITREVIEW": "https://fursuitreview.com/maker1_after_update.html",
-    "URL_WEBSITE": "https://mywebsite.com/maker1_after_update.html",
+    "URL_FURSUITREVIEW": "https://fursuitreview.com/creator1_after_update.html",
+
+    "URL_WEBSITE": "https://mywebsite.com/creator1_after_update.html",
+    "URL_LINKLIST": "https://linklist.com/creator1_after_update.html",
     "URL_PRICES": [
-        "https://mywebsite.com/prices2-maker1_after_update.html",
-        "https://mywebsite.com/prices3-maker1_after_update.html"
+        "https://mywebsite.com/prices2-creator1_after_update.html",
+        "https://mywebsite.com/prices3-creator1_after_update.html"
     ],
-    "URL_FAQ": "https://mywebsite.com/faq_maker1_after_update.html",
-    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/maker1_after_update/",
-    "URL_DEVIANTART": "https://www.deviantart.com/maker1_after_update.html",
-    "URL_MASTODON": "https://mastodon.social/maker1_after_update.html",
-    "URL_TWITTER": "https://twitter.com/maker1_after_update.html",
-    "URL_FACEBOOK": "https://www.facebook.com/maker1_after_update.html/",
-    "URL_TUMBLR": "https://tumblr.com/maker1_after_update.html",
-    "URL_INSTAGRAM": "https://www.instagram.com/maker1_after_update.html/",
-    "URL_YOUTUBE": "https://youtube.com/maker1_after_update.html",
-    "URL_LINKLIST": "https://linklist.com/maker1_after_update.html",
-    "URL_FURRY_AMINO": "https://furryamino.com/maker1_after_update.html",
-    "URL_ETSY": "https://etsy.com/maker1_after_update.html",
-    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/maker1_after_update.html",
-    "URL_OTHER_SHOP": "https://othershop.com/maker1_after_update.html",
-    "URL_QUEUE": "https://queue.com/maker1_after_update.html",
-    "URL_SCRITCH": "https://scritch.es/maker1_after_update.html",
-    "URL_FURTRACK": "https://www.furtrack.com/maker1_after_update.html",
+    "URL_FAQ": "https://mywebsite.com/faq_creator1_after_update.html",
+    "URL_QUEUE": "https://queue.com/creator1_after_update.html",
+
+    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/creator1_after_update/",
+    "URL_DEVIANTART": "https://www.deviantart.com/creator1_after_update.html",
+    "URL_MASTODON": "https://mastodon.social/creator1_after_update.html",
+    "URL_BLUESKY": "https://bluesky.com/creator1_after_update.html",
+    "URL_FACEBOOK": "https://www.facebook.com/creator1_after_update.html/",
+    "URL_TUMBLR": "https://tumblr.com/creator1_after_update.html",
+    "URL_TWITTER": "https://twitter.com/creator1_after_update.html",
+    "URL_INSTAGRAM": "https://www.instagram.com/creator1_after_update.html/",
+    "URL_FURRY_AMINO": "https://furryamino.com/creator1_after_update.html",
+    "URL_YOUTUBE": "https://www.youtube.com/creator1_after_update.html",
+    "URL_TIKTOK": "https://tiktok.com/creator1_after_update.html",
+    "URL_TELEGRAM_CHANNEL": "https://telegram.com/creator1_after_update.html",
+
+    "URL_ETSY": "https://etsy.com/creator1_after_update.html",
+    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/creator1_after_update.html",
+    "URL_OTHER_SHOP": "https://othershop.com/creator1_after_update.html",
+    "URL_DONATIONS": "https://donations.example.com/creator1_after_update.html",
+
+    "URL_SCRITCH": "https://scritch.es/creator1_after_update.html",
+    "URL_FURTRACK": "https://www.furtrack.com/creator1_after_update.html",
+
     "URL_PHOTOS": [
-        "https://scritchphotos.com/url1-maker1_after_update.html",
-        "https://www.furtrack.com/url2-maker1_after_update.html"
+        "https://scritchphotos.com/url1-creator1_after_update.html",
+        "https://www.furtrack.com/url2-creator1_after_update.html"
     ],
     "URL_OTHER": [
-        "https://other.com/maker1_fater_update.html"
+        "https://other.com/creator1_fater_update.html"
     ],
     "URL_COMMISSIONS": [
-        "https://cst.com/cst1-maker1_after_update.html",
-        "https://cst2.com/cst2-maker1_after_update.html"
+        "https://cst.com/cst1-creator1_after_update.html",
+        "https://cst2.com/cst2-creator1_after_update.html"
     ]
 }

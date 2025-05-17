@@ -8,14 +8,14 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
-use App\Service\EnvironmentsService;
+use App\Repository\CreatorRepository;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/mx/events')]
 class EventsController extends FuzzrakeAbstractController
@@ -24,9 +24,9 @@ class EventsController extends FuzzrakeAbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $manager,
-        EnvironmentsService $environments,
+        CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($environments);
+        parent::__construct($creatorRepository);
     }
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
@@ -36,7 +36,9 @@ class EventsController extends FuzzrakeAbstractController
     {
         $event ??= new Event();
 
-        $this->authorize($event->isEditable());
+        if (!$event->isEditable()) {
+            throw $this->createAccessDeniedException();
+        }
 
         $form = $this->createForm(EventType::class, $event, [
             AbstractTypeWithDelete::OPT_DELETABLE => null !== $event->getId(),

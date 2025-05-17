@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Symfony\Component\BrowserKit\AbstractBrowser;
-
 trait AssertsTrait
 {
     /**
      * Error output of the default makes result analysis difficult because the whole response is compared instead of just the code.
      *
-     * @see BrowserKitAssertionsTrait::assertResponseStatusCodeIs()
+     * @see BrowserKitAssertionsTrait::assertResponseStatusCodeSame()
      */
-    public static function assertResponseStatusCodeIs(AbstractBrowser $client, int $expectedCode): void
+    public static function assertResponseStatusCodeIs(int $expectedCode): void
     {
-        self::assertEquals($expectedCode, $client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
+        self::assertSame($expectedCode, self::$client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
     }
 
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
@@ -25,7 +23,7 @@ trait AssertsTrait
         $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
         $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
 
-        self::assertEquals($expectedHtml, $actualHtml);
+        self::assertSame($expectedHtml, $actualHtml);
     }
 
     /**
@@ -36,9 +34,6 @@ trait AssertsTrait
     {
         sort($expected);
         sort($actual);
-
-        $expected = array_values($expected);
-        $actual = array_values($actual);
 
         self::assertEquals($expected, $actual, $message);
     }

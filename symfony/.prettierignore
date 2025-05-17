@@ -1,7 +1,9 @@
-# Only have Prettier control frontend/web files
+# Only have Prettier control frontend/web files and our config YAMLs
 composer.json
 composer.lock
-config/
+config/*
+!config/fuzzrake
+package.json
 tests/
 
 # Libraries

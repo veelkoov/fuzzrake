@@ -9,8 +9,7 @@ use DateTimeImmutable;
 readonly class MainPageStats
 {
     public function __construct(
-        public ?int $totalArtisansCount,
-        public ?int $activeArtisansCount,
+        public ?int $activeCreatorsCount,
         public ?int $countryCount,
         public ?DateTimeImmutable $lastDataUpdateTimeUtc,
     ) {

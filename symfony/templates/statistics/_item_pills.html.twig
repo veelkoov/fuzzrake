@@ -4,13 +4,13 @@
     {% endfor %}
 
     {% for match_word in matchWords %}
-        {% set items_filtered = items|filterItemsMatching(match_word) %}
+        {% set items_filtered = items|filter_items_matching(match_word) %}
 
         {% if items_filtered|length > 1 %}
             <br />
 
             <span class="badge bg-primary p-2 my-1">
-                {{ match_word|humanFriendlyRegexp }} ({{ items_filtered|length }}&times;):
+                {{ match_word|human_friendly_regexp }} ({{ items_filtered|length }}&times;):
             </span>
 
             {% for item in items_filtered %}

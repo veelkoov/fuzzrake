@@ -4,29 +4,22 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\DateTime;
 
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
-use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
  */
-class UtcClockTest extends TestCase
+class UtcClockTest extends FuzzrakeTestCase
 {
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        TestsBridge::reset();
-    }
-
     public function testGetUtc(): void
     {
         $subject = UtcClock::getUtc();
 
-        self::assertEquals('UTC', $subject->getName());
+        self::assertSame('UTC', $subject->getName());
     }
 
     public function testNow(): void
@@ -34,7 +27,7 @@ class UtcClockTest extends TestCase
         $subject = UtcClock::now();
 
         self::assertEqualsWithDelta(time(), $subject->getTimestamp(), 1.1);
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
+        self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
     /**
@@ -45,28 +38,30 @@ class UtcClockTest extends TestCase
         $subject = UtcClock::at('2022-01-07 13:01');
 
         self::assertEquals('2022-01-07T13:01:00.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
+        self::assertSame('UTC', $subject->getTimezone()->getName());
+    }
+
+    /**
+     * @dataProvider atThrowsOnInvalidDataProvider
+     */
+    public function testAtThrowsOnInvalid(string|int|bool|null $input): void
+    {
+        $this->expectNotToPerformAssertions();
 
         try {
-            UtcClock::at(false);
+            UtcClock::at((string) $input);
             self::fail();
         } catch (DateTimeException) {
             // Expected
         }
+    }
 
-        try {
-            UtcClock::at(null);
-            self::fail();
-        } catch (DateTimeException) {
-            // Expected
-        }
-
-        try {
-            UtcClock::at('some invalid info');
-            self::fail();
-        } catch (DateTimeException) {
-            // Expected
-        }
+    public function atThrowsOnInvalidDataProvider(): DataProvider
+    {
+        // The method will be used in some cases where data will be typehinted as many different things.
+        // Example: Doctrine's single scalar result. The simplest solution is to (string) cast.
+        // Below cases cover also the least possible.
+        return DataProvider::list('some invalid info', '', '0', '1', 0, 1, false, true, null);
     }
 
     public function testFromTimestamp(): void
@@ -74,38 +69,7 @@ class UtcClockTest extends TestCase
         $subject = UtcClock::fromTimestamp(1658658993);
 
         self::assertEquals('2022-07-24T10:36:33.000+00:00', $subject->format(DATE_RFC3339_EXTENDED));
-        self::assertEquals('UTC', $subject->getTimezone()->getName());
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testGetMonthLaterYmd(): void
-    {
-        UtcClockMock::start();
-
-        $daysInThisMonth = (int) UtcClock::now()->format('t');
-        self::forTestGetXyzLaterYmd(UtcClock::getMonthLaterYmd(), $daysInThisMonth);
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testGetWeekLaterYmd(): void
-    {
-        UtcClockMock::start();
-
-        self::forTestGetXyzLaterYmd(UtcClock::getWeekLaterYmd(), 7);
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testTomorrowYmd(): void
-    {
-        UtcClockMock::start();
-
-        self::forTestGetXyzLaterYmd(UtcClock::getTomorrowYmd(), 1);
+        self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
     /**
@@ -167,7 +131,7 @@ class UtcClockTest extends TestCase
         $expected = UtcClock::timems() + $millisecondsToPass;
         UtcClockMock::passMs($millisecondsToPass);
 
-        self::assertEquals($expected, UtcClock::timems());
+        self::assertSame($expected, UtcClock::timems());
     }
 
     public function testTime(): void
@@ -182,6 +146,6 @@ class UtcClockTest extends TestCase
         $expected = UtcClock::time() + $secondsToPass;
         UtcClockMock::passMs(1000 * $secondsToPass);
 
-        self::assertEquals($expected, UtcClock::time());
+        self::assertSame($expected, UtcClock::time());
     }
 }

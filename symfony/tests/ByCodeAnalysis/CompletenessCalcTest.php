@@ -7,9 +7,10 @@ namespace App\Tests\ByCodeAnalysis;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
-use App\Utils\Artisan\CompletenessCalc;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\CompletenessCalc;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 use function Psl\File\read;
 
@@ -32,11 +33,11 @@ class CompletenessCalcTest extends TestCase
         self::assertEmpty($wrongCount, 'Wrong number of appearances: '.implode(', ', $wrongCount));
     }
 
-    public function emptyArtisan0(): void
+    public function testEmptyCreatorGetsZero(): void
     {
-        $subject = new Artisan();
+        $subject = new Creator();
 
-        self::assertEquals(0, CompletenessCalc::count($subject));
+        self::assertSame(0, CompletenessCalc::count($subject));
     }
 
     /**
@@ -44,25 +45,25 @@ class CompletenessCalcTest extends TestCase
      */
     public function testJustRequiredGive50(Ages $ages, bool $nsfwWebsite, bool $nsfwSocial, ?bool $doesNsfw, ?bool $worksWithMinors): void
     {
-        $subject = new Artisan();
+        $subject = new Creator();
         $this->setRequired($subject, $ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    public function justRequiredGive50DataProvider(): array // @phpstan-ignore-line
+    public function justRequiredGive50DataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],
             [Ages::MINORS, false, true,  null,  null],
-        ];
+        );
     }
 
     public function testAllNonRequiredAndAllButOneRequiredCantGetPast50(): void
     {
-        $subject = new Artisan();
+        $subject = new Creator();
         $this->setAllNonRequired($subject);
         $this->setRequired($subject, Ages::ADULTS, false, false, false, null);
 
@@ -71,13 +72,13 @@ class CompletenessCalcTest extends TestCase
 
     public function testAllButRequiredGive50(): void
     {
-        $subject = new Artisan();
+        $subject = new Creator();
         $this->setAllNonRequired($subject);
 
-        self::assertEquals(50, CompletenessCalc::count($subject));
+        self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    private function setAllNonRequired(Artisan $subject): void
+    private function setAllNonRequired(Creator $subject): void
     {
         $subject
             ->setEtsyUrl('https://example.com/')
@@ -97,10 +98,10 @@ class CompletenessCalcTest extends TestCase
             ->setFurtrackUrl('https://example.com/');
     }
 
-    private function setRequired(Artisan $subject, Ages $ages, bool $nsfwWebsite, bool $nsfwSocial, ?bool $doesNsfw, ?bool $worksWithMinors): void
+    private function setRequired(Creator $subject, Ages $ages, bool $nsfwWebsite, bool $nsfwSocial, ?bool $doesNsfw, ?bool $worksWithMinors): void
     {
         $subject
-            ->setMakerId('MAKERID')
+            ->setCreatorId('TEST001')
             ->setCountry('FI')
             ->setAges($ages)
             ->setNsfwWebsite($nsfwWebsite)

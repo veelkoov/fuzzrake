@@ -47,11 +47,49 @@ span.utc_datetime {
 }
 
 .new-creator,
-#legend-modal .new-creator, // More precise selector, otherwise was overwritten by Bootstrap styles
+#legend-modal .new-creator // More precise selector, otherwise was overwritten by Bootstrap styles
 {
   color: #4cae4c;
 }
 
 .references :target {
   background-color: #ffec00;
+}
+
+.captcha {
+  margin-bottom: 1rem;
+
+  .card-header {
+    padding: 0 0.375rem;
+    font-weight: bold;
+  }
+
+  .options {
+    p {
+      margin-bottom: 0.375rem;
+    }
+
+    label {
+      font-size: 48px;
+      padding: 0 0.375rem;
+    }
+  }
+
+  .list-group-item {
+    padding: 1ex;
+  }
+}
+
+.путін-хуйло {
+  div:first-child {
+    height: 10px;
+    background-color: #0057b7;
+  }
+
+  div:last-child {
+    height: 10px;
+    background-color: #ffd700;
+  }
+
+  padding-bottom: 1.5em;
 }

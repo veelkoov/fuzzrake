@@ -6,119 +6,80 @@ namespace App\Tests\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
 use App\IuHandling\Import\UpdateContact;
-use App\Tests\TestUtils\Cases\TestCase;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Contact;
-use InvalidArgumentException;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 /**
  * @small
  */
-class UpdateContactTest extends TestCase
+class UpdateContactTest extends FuzzrakeTestCase
 {
     public function testPermissionAndDescription(): void
     {
-        // New artisan, NO
+        // New creator, NO
         $result = $this->getUpdateContactPermit(null, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertEquals('Never', $result->description);
+        self::assertSame('Never', $result->description);
 
-        // New artisan, FEEDBACK
+        // New creator, FEEDBACK
         $result = $this->getUpdateContactPermit(null, ContactPermit::FEEDBACK);
         self::assertTrue($result->isAllowed);
-        self::assertEquals('Feedback', $result->description);
+        self::assertSame('Feedback', $result->description);
 
-        // Existing artisan, NO ---> FEEDBACK
+        // Existing creator, NO ---> FEEDBACK
         $result = $this->getUpdateContactPermit(ContactPermit::NO, ContactPermit::FEEDBACK);
         self::assertFalse($result->isAllowed);
-        self::assertEquals('Never → Feedback', $result->description);
+        self::assertSame('Never → Feedback', $result->description);
 
-        // Existing artisan, FEEDBACK ---> NO
+        // Existing creator, FEEDBACK ---> NO
         $result = $this->getUpdateContactPermit(ContactPermit::FEEDBACK, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertEquals('Feedback → Never', $result->description);
+        self::assertSame('Feedback → Never', $result->description);
 
-        // Existing artisan, NO ---> NO
+        // Existing creator, NO ---> NO
         $result = $this->getUpdateContactPermit(ContactPermit::NO, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertEquals('Never', $result->description);
+        self::assertSame('Never', $result->description);
 
-        // Existing artisan, ANNOUNCEMENTS ---> FEEDBACK
+        // Existing creator, ANNOUNCEMENTS ---> FEEDBACK
         $result = $this->getUpdateContactPermit(ContactPermit::ANNOUNCEMENTS, ContactPermit::FEEDBACK);
         self::assertTrue($result->isAllowed);
-        self::assertEquals('Announcements → Feedback', $result->description);
+        self::assertSame('Announcements → Feedback', $result->description);
     }
 
-    public function testMethodAndAddress(): void
+    public function testAddress(): void
     {
-        // New maker with e-mail address
-        $result = $this->getUpdateContactAddress(null, null, Contact::E_MAIL, 'address@example.com');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
-        self::assertEquals('address@example.com', $result->address);
+        // Added creator with email address
+        $result = $this->getUpdateContact(null, 'address@example.com');
+        self::assertSame('address@example.com', $result->address);
 
-        // New maker with Telegram
-        $result = $this->getUpdateContactAddress(null, null, Contact::TELEGRAM, '@telegram');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
-        self::assertEquals('@telegram', $result->address);
+        // Creator update: added email
+        $result = $this->getUpdateContact('', 'address@example.com');
+        self::assertSame('', $result->address);
 
-        // Updated maker earlier with nothing, now with e-mail address
-        $result = $this->getUpdateContactAddress('', '', Contact::E_MAIL, 'address@example.com');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('', $result->method);
-        self::assertEquals('', $result->address);
+        // Creator update: changed email
+        $result = $this->getUpdateContact('addresso@example.com', 'addressn@example.com');
+        self::assertSame('addresso@example.com', $result->address);
 
-        // Updated maker earlier with nothing, now with Telegram
-        $result = $this->getUpdateContactAddress('', '', Contact::TELEGRAM, '@telegram');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('', $result->method);
-        self::assertEquals('', $result->address);
-
-        // Updated maker earlier with e-mail, now with e-mail address
-        $result = $this->getUpdateContactAddress(Contact::E_MAIL, 'addresso@example.com', Contact::E_MAIL, 'addressn@example.com');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
-        self::assertEquals('addresso@example.com', $result->address);
-
-        // Updated maker earlier with e-mail, now with Telegram
-        $result = $this->getUpdateContactAddress(Contact::E_MAIL, 'address@example.com', Contact::TELEGRAM, '@telegram');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
-        self::assertEquals('address@example.com', $result->address);
-
-        // Updated maker earlier with Telegram, now with e-mail
-        $result = $this->getUpdateContactAddress(Contact::TELEGRAM, '@telegram', Contact::E_MAIL, 'address@example.com');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
-        self::assertEquals('@telegram', $result->address);
-
-        // Updated maker earlier with Telegram, now with Telegram
-        $result = $this->getUpdateContactAddress(Contact::TELEGRAM, '@telegram', Contact::E_MAIL, '@username');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
-        self::assertEquals('@telegram', $result->address);
+        // Creator update: removed email
+        $result = $this->getUpdateContact('addresso@example.com', '');
+        self::assertSame('', $result->address);
     }
 
     private function getUpdateContactPermit(?ContactPermit $old, ContactPermit $new): UpdateContact
     {
-        $oldA = null === $old ? new Artisan() : self::getPersistedArtisanMock()->setContactAllowed($old);
-        $newA = Artisan::new()->setContactAllowed($new);
+        $oldA = null === $old ? new Creator() : self::getPersistedCreatorMock()->setContactAllowed($old);
+        $newA = Creator::new()->setContactAllowed($new);
 
         return UpdateContact::from($oldA, $newA);
     }
 
-    private function getUpdateContactAddress(?string $oldMethod, ?string $oldAddress, string $newMethod, string $newAddress): UpdateContact
+    private function getUpdateContact(?string $oldAddress, string $newAddress): UpdateContact
     {
-        if (null === $oldMethod && null === $oldAddress) {
-            $oldA = new Artisan();
-        } elseif (null !== $oldMethod && null !== $oldAddress) {
-            $oldA = self::getPersistedArtisanMock()->setContactMethod($oldMethod)->setContactAddressPlain($oldAddress);
-        } else {
-            throw new InvalidArgumentException();
-        }
-
-        $newA = Artisan::new()->setContactMethod($newMethod)->setContactAddressPlain($newAddress);
+        $oldA = null === $oldAddress ? new Creator() : self::getPersistedCreatorMock()->setEmailAddress($oldAddress)
+            ->setContactAllowed('' === $oldAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
+        $newA = Creator::new()->setEmailAddress($newAddress)
+            ->setContactAllowed('' === $newAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
 
         return UpdateContact::from($oldA, $newA);
     }

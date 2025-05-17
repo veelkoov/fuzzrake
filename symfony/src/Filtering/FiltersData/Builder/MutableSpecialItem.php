@@ -6,15 +6,12 @@ namespace App\Filtering\FiltersData\Builder;
 
 class MutableSpecialItem
 {
-    private int $count;
-
     public function __construct(
         public readonly string $value,
         public readonly string $label,
         public readonly string $faIcon,
-        int $count = 0,
+        private int $count = 0,
     ) {
-        $this->count = $count;
     }
 
     public function incCount(int $number = 1): void

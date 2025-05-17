@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>getfursu.it{% if isDevEnv() %} DEV{% endif %} - {% block title %}be true furry self{% endblock %}</title>
+    <title>
+        {%- if env_name != 'prod' %}
+            {{ env_name|upper }}
+        {% endif -%}
+
+        getfursu.it - {% block title %}be true furry self{% endblock -%}
+    </title>
 
     {% block add_meta %}{% endblock %}
 
@@ -13,13 +19,6 @@
     {% else %}
         <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
     {% endif %}
-
-    <script>
-        const DATA_BRIDGE = {
-            apiBaseUrl: '{{ url('api')|escape('js') }}',
-            googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-        };
-    </script>
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('general') }}
@@ -31,9 +30,6 @@
 
     <div class="container">
         {% block body %}{% endblock %}
-
-        <hr class="mt-5" />
-        <p class="small mb-5 text-end"><a class="text-light" href="https://open.spotify.com/track/4YhNnmiTEmluiMBJnI2YnF?si=e6e96666ac544ab9"><i class="fa-solid fa-music"></i></a></p>
 
         {{ include('_footer.html.twig') }}
     </div>

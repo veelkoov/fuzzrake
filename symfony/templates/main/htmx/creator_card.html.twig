@@ -75,13 +75,13 @@
     <div id="creator-card-modal-content" class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">
-                {% if creator.makerId %}
-                    <a id="makerId" href="#{{ creator.makerId }}"><span class="badge bg-secondary">
-                        <i class="fas fa-link"></i> {{ creator.makerId -}}
+                {% if creator.creatorId %}
+                    <a id="creator-id" href="#{{ creator.creatorId }}"><span class="badge bg-secondary">
+                        <i class="fas fa-link"></i> {{ creator.creatorId -}}
                     </span></a>
                 {% endif %}
 
-                <span id="artisanName">{{ creator.name }}</span>&nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
+                <span id="creator-name">{{ creator.name }}</span>&nbsp;<span class="fi fi-{{ creator.country|lower }}"></span>
 
                 &nbsp;
 
@@ -103,6 +103,18 @@
                 <div class="col-md-12 p-1 alert alert-warning" role="alert">
                     <strong>This maker has been hidden for the following reason:</strong> <br>
                     {{ creator.inactiveReason }}
+                </div>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="text-end p-0">
+                    <a class="btn btn-warning" href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <a class="btn btn-warning" href="{{ path('mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
+                        <i class="fas fa-link"></i>
+                    </a>
                 </div>
             {% endif %}
 
@@ -163,7 +175,7 @@
             <div class="col-md-6 p-1">
                 <h5>Species</h5>
 
-                <div id="artisanSpecies" class="small pb-2">
+                <div class="small pb-2">
                     {% if creator.speciesComment %}
                         <span class="nl2br">{{ creator.speciesComment }}</span><br>
                     {% endif %}
@@ -224,29 +236,36 @@
                 {# Unable to disable for the following lines only #}
                 <div>
                     {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
+                    {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview',              'fas fa-balance-scale', 'border border-primary') }}
 
-                    {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview',    'fas fa-balance-scale', 'border border-primary') }}
                     {{ _self.link(creator.websiteUrl,       'Official website', 'fas fa-link') }}
+                    {{ _self.link(creator.linklistUrl,      'List of links',    'fas fa-link') }}
                     {% for uri in creator.pricesUrls %}
                         {{ _self.link(uri, 'Prices', 'fas fa-dollar-sign') }}
                     {% endfor %}
                     {{ _self.link(creator.faqUrl,           'FAQ',              'fas fa-comments') }}
                     {{ _self.link(creator.queueUrl,         'Queue',            'fas fa-clipboard-list') }}
-                    {{ _self.link(creator.furAffinityUrl,   'FurAffinity',      'fas fa-image') }}
-                    {{ _self.link(creator.deviantArtUrl,    'DeviantArt',       'fab fa-deviantart') }}
-                    {{ _self.link(creator.mastodonUrl,      'Mastodon',         'fa-brands fa-mastodon') }}
-                    {{ _self.link(creator.twitterUrl,       'Twitter',          'fab fa-twitter') }}
-                    {{ _self.link(creator.facebookUrl,      'Facebook',         'fab fa-facebook') }}
-                    {{ _self.link(creator.tumblrUrl,        'Tumblr',           'fab fa-tumblr') }}
-                    {{ _self.link(creator.youtubeUrl,       'YouTube',          'fab fa-youtube') }}
-                    {{ _self.link(creator.instagramUrl,     'Instagram',        'fab fa-instagram') }}
-                    {{ _self.link(creator.etsyUrl,          'Etsy',             'fab fa-etsy') }}
-                    {{ _self.link(creator.theDealersDenUrl, 'The Dealers Den',  'fas fa-shopping-cart') }}
-                    {{ _self.link(creator.otherShopUrl,     'On-line shop',     'fas fa-shopping-cart') }}
-                    {{ _self.link(creator.furryAminoUrl,    'Furry Amino',      'fas fa-paw') }}
+
+                    {{ _self.link(creator.furAffinityUrl,     'Fur Affinity',     'fas fa-image') }}
+                    {{ _self.link(creator.deviantArtUrl,      'DeviantArt',       'fab fa-deviantart') }}
+                    {{ _self.link(creator.mastodonUrl,        'Mastodon',         'fab fa-mastodon') }}
+                    {{ _self.link(creator.blueskyUrl,         'Bluesky',          'fab fa-bluesky') }}
+                    {{ _self.link(creator.facebookUrl,        'Facebook',         'fab fa-facebook') }}
+                    {{ _self.link(creator.tumblrUrl,          'Tumblr',           'fab fa-tumblr') }}
+                    {{ _self.link(creator.twitterUrl,         'Twitter',          'fab fa-twitter') }}
+                    {{ _self.link(creator.instagramUrl,       'Instagram',        'fab fa-instagram') }}
+                    {{ _self.link(creator.furryAminoUrl,      'Furry Amino',      'fas fa-paw') }}
+                    {{ _self.link(creator.youtubeUrl,         'YouTube',          'fab fa-youtube') }}
+                    {{ _self.link(creator.tiktokUrl,          'TikTok',           'fab fa-tiktok') }}
+                    {{ _self.link(creator.telegramChannelUrl, 'Telegram channel', 'fab fa-telegram') }}
+
+                    {{ _self.link(creator.etsyUrl,          'Etsy',            'fab fa-etsy') }}
+                    {{ _self.link(creator.theDealersDenUrl, 'The Dealers Den', 'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.otherShopUrl,     'On-line shop',    'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.donationsUrl,     'Donations',       'fas fa-circle-dollar-to-slot') }}
+
                     {{ _self.link(creator.scritchUrl,       'Scritch',          'fas fa-camera') }}
                     {{ _self.link(creator.furtrackUrl,      'Furtrack',         'fas fa-camera') }}
-                    {{ _self.link(creator.linklistUrl,      'List of links',    'fas fa-link') }}
                 </div>
             </div>
 
@@ -333,7 +352,7 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-light border border-warning"
-                    {{ update_dialog_open_attrs(creator.lastMakerId) }}>
+                    {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
                 Data outdated/inaccurate? <!-- grep-updates-button -->
             </button>
 

@@ -4,16 +4,13 @@
         "M000003"
     ],
 
-    "NAME": "Maker name 3",
+    "NAME": "Creator name 3",
     "FORMERLY": [
     ],
     "PASSWORD": "",
 
     "CONTACT_ALLOWED": null,
-    "CONTACT_INFO_OBFUSCATED": "",
-    "CONTACT_INFO_ORIGINAL": "",
-    "CONTACT_ADDRESS_PLAIN": "",
-    "CONTACT_METHOD": "",
+    "EMAIL_ADDRESS": "",
 
     "INTRO": "",
     "SINCE": "",
@@ -71,26 +68,35 @@
     "INACTIVE_REASON": "",
 
     "URL_FURSUITREVIEW": "",
+
     "URL_WEBSITE": "",
+    "URL_LINKLIST": "",
     "URL_PRICES": [
     ],
     "URL_FAQ": "",
+    "URL_QUEUE": "",
+
     "URL_FUR_AFFINITY": "",
     "URL_DEVIANTART": "",
     "URL_MASTODON": "",
-    "URL_TWITTER": "",
+    "URL_BLUESKY": "",
     "URL_FACEBOOK": "",
     "URL_TUMBLR": "",
+    "URL_TWITTER": "",
     "URL_INSTAGRAM": "",
-    "URL_YOUTUBE": "",
-    "URL_LINKLIST": "",
     "URL_FURRY_AMINO": "",
+    "URL_YOUTUBE": "",
+    "URL_TIKTOK": "",
+    "URL_TELEGRAM_CHANNEL": "",
+
     "URL_ETSY": "",
     "URL_THE_DEALERS_DEN": "",
     "URL_OTHER_SHOP": "",
-    "URL_QUEUE": "",
+    "URL_DONATIONS": "",
+
     "URL_SCRITCH": "",
     "URL_FURTRACK": "",
+
     "URL_PHOTOS": [
     ],
     "URL_MINIATURES": [

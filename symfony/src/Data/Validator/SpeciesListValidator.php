@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
-use App\Service\SpeciesService;
+use App\Species\SpeciesService;
 use App\Utils\PackedStringList;
+use Override;
 
 class SpeciesListValidator implements ValidatorInterface
 {
@@ -15,10 +16,11 @@ class SpeciesListValidator implements ValidatorInterface
     ) {
     }
 
+    #[Override]
     public function isValid(Field $field, string $subject): bool
     {
         foreach (PackedStringList::unpack($subject) as $specie) {
-            if (!in_array($specie, $this->speciesService->getValidNames())) {
+            if (!$this->speciesService->getValidNames()->contains($specie)) {
                 return false;
             }
         }

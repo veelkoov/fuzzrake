@@ -1,19 +1,20 @@
 {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
+{% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
-{% for creator in creators %}
+{% for creator in creators_page.items %}
     {% set creator_idx = loop.index %}
-    <tr {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %} class="{{ html_classes({
+    <tr {% if creator.creatorId %}id="{{ creator.creatorId }}"{% endif %} class="{{ html_classes({
             inactive: creator.isHidden,
-            'matched-maker-id': creator.hasMakerId(searched_creator_id),
+            'matched-creator-id': creator.hasCreatorId(searched_creator_id),
         }) }}">
-        <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
-            <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>&nbsp;
+        <td class="name" {{ card_open_attrs(creator.lastCreatorId) }}>
+            <span class="fi fi-{{ creator.country|lower }}"></span>&nbsp;
 
             {{- creator.name -}}
 
             {%- if creator.isHidden -%}
-                &nbsp;[hidden]{# grep-inactive-mark #}
+                &nbsp;[hidden]
             {%- endif -%}
 
             <span class="text-nowrap">{{ ages_description(creator, false) }}</span>
@@ -23,35 +24,35 @@
             {% endif %}
         </td>
 
-        <td class="makerId column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
-            {{ creator.makerId }}
+        <td class="creator-id column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
+            {{ creator.creatorId }}
         </td>
 
-        <td class="state column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="state column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.state }}
         </td>
 
-        <td class="languages column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="languages column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.languages|join(', ') }}
         </td>
 
-        <td  class="productionModels column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td  class="production-models column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ creator.productionModels|join(', ') }}
         </td>
 
-        <td class="styles column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="styles column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.styles, creator.otherStyles) }}
         </td>
 
-        <td class="types column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="types column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.orderTypes, creator.otherOrderTypes) }}
         </td>
 
-        <td class="features column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="features column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {{ comma_separated_other(creator.features, creator.otherFeatures) }}
         </td>
 
-        <td class="species column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="species column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {% if creator.hasSpeciesInfo %}
                 <ul>
                     {% for item in creator.speciesDoes %}
@@ -65,7 +66,7 @@
             {% endif %}
         </td>
 
-        <td class="commissions column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
+        <td class="commissions column-toggleable" {{ card_open_attrs(creator.lastCreatorId) }}>
             {% if creator.isTracked %}
                 <ul>
                     {% if creator.csTrackerIssue %}
@@ -81,7 +82,6 @@
                     {% endfor %}
 
                     {% for item in creator.closedFor %}
-
                         <li class="no">
                             <i class="fas fa-times"></i>&nbsp;{{ item }}
                         </li>
@@ -91,13 +91,7 @@
         </td>
 
         <td class="links column-toggleable">
-            <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-                {% if isDevEnv() %}
-                    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                {% endif %}
-
+            <div class="btn-group" role="group" aria-label="Links to websites">
                 {% if creator.fursuitReviewUrl %}
                     <a class="btn btn-secondary" href="{{ creator.fursuitReviewUrl }}" target="_blank">
                         <i class="fas fa-balance-scale"></i>
@@ -124,25 +118,33 @@
                         {% set links = [
                             {uri: ab_search_uri(creator),   icon_class: 'fa-solid fa-spell-check', label: 'Check on Artists Beware'},
                             {uri: creator.fursuitReviewUrl, icon_class: 'fas fa-balance-scale',    label: 'FursuitReview'},
+
                             {uri: creator.websiteUrl,       icon_class: 'fas fa-link',             label: 'Official website'},
+                            {uri: creator.linklistUrl,      icon_class: 'fas fa-link',             label: 'List of links'},
                         ]|merge(creator.pricesUrls|map(u => {uri: u, icon_class: 'fas fa-dollar-sign', label: 'Prices'}))|merge([
                             {uri: creator.faqUrl,           icon_class: 'fas fa-comments',         label: 'FAQ'},
                             {uri: creator.queueUrl,         icon_class: 'fas fa-clipboard-list',   label: 'Queue'},
-                            {uri: creator.furAffinityUrl,   icon_class: 'fas fa-image',            label: 'FurAffinity'},
-                            {uri: creator.deviantArtUrl,    icon_class: 'fab fa-deviantart',       label: 'DeviantArt'},
-                            {uri: creator.mastodonUrl,      icon_class: 'fab fa-mastodon',         label: 'Mastodon'},
-                            {uri: creator.twitterUrl,       icon_class: 'fab fa-twitter',          label: 'Twitter'},
-                            {uri: creator.facebookUrl,      icon_class: 'fab fa-facebook',         label: 'Facebook'},
-                            {uri: creator.tumblrUrl,        icon_class: 'fab fa-tumblr',           label: 'Tumblr'},
-                            {uri: creator.youtubeUrl,       icon_class: 'fab fa-youtube',          label: 'YouTube'},
-                            {uri: creator.instagramUrl,     icon_class: 'fab fa-instagram',        label: 'Instagram'},
-                            {uri: creator.etsyUrl,          icon_class: 'fab fa-etsy',             label: 'Etsy'},
-                            {uri: creator.theDealersDenUrl, icon_class: 'fas fa-shopping-cart',    label: 'The Dealers Den'},
-                            {uri: creator.otherShopUrl,     icon_class: 'fas fa-shopping-cart',    label: 'On-line shop'},
-                            {uri: creator.furryAminoUrl,    icon_class: 'fas fa-paw',              label: 'Furry Amino'},
+
+                            {uri: creator.furAffinityUrl,     icon_class: 'fas fa-image',      label: 'Fur Affinity'},
+                            {uri: creator.deviantArtUrl,      icon_class: 'fab fa-deviantart', label: 'DeviantArt'},
+                            {uri: creator.mastodonUrl,        icon_class: 'fab fa-mastodon',   label: 'Mastodon'},
+                            {uri: creator.blueskyUrl,         icon_class: 'fab fa-bluesky',    label: 'Bluesky'},
+                            {uri: creator.facebookUrl,        icon_class: 'fab fa-facebook',   label: 'Facebook'},
+                            {uri: creator.tumblrUrl,          icon_class: 'fab fa-tumblr',     label: 'Tumblr'},
+                            {uri: creator.twitterUrl,         icon_class: 'fab fa-twitter',    label: 'Twitter'},
+                            {uri: creator.instagramUrl,       icon_class: 'fab fa-instagram',  label: 'Instagram'},
+                            {uri: creator.furryAminoUrl,      icon_class: 'fas fa-paw',        label: 'Furry Amino'},
+                            {uri: creator.youtubeUrl,         icon_class: 'fab fa-youtube',    label: 'YouTube'},
+                            {uri: creator.tiktokUrl,          icon_class: 'fab fa-tiktok',     label: 'TikTok'},
+                            {uri: creator.telegramChannelUrl, icon_class: 'fab fa-telegram',   label: 'Telegram channel'},
+
+                            {uri: creator.etsyUrl,          icon_class: 'fab fa-etsy',                  label: 'Etsy'},
+                            {uri: creator.theDealersDenUrl, icon_class: 'fas fa-shopping-cart',         label: 'The Dealers Den'},
+                            {uri: creator.otherShopUrl,     icon_class: 'fas fa-shopping-cart',         label: 'On-line shop'},
+                            {uri: creator.donationsUrl,     icon_class: 'fas fa-circle-dollar-to-slot', label: 'Donations'},
+
                             {uri: creator.scritchUrl,       icon_class: 'fas fa-camera',           label: 'Scritch'},
                             {uri: creator.furtrackUrl,      icon_class: 'fas fa-camera',           label: 'Furtrack'},
-                            {uri: creator.linklistUrl,      icon_class: 'fas fa-link',             label: 'List of links'},
                         ]) %}
 
                         {% for link in links|filter(link => link.uri) %}
@@ -154,7 +156,7 @@
                         {% endfor %}
 
                         <li>
-                            <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastMakerId) }}>
+                            <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
                                 <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
                             </a>
                         </li>
@@ -165,6 +167,6 @@
     </tr>
 {% endfor %}
 
-<p hx-swap-oob="true" id="artisans-table-count" class="small">
-    Displaying {{ creators|length }} out of {{ total_creators_count }} fursuit makers in the database.
-</p>
+<div hx-swap-oob="true" id="creators-table-pagination">
+    {{ pagination(creators_page, '#creators-table', 'matched fursuit makers', 'goToPage(1);') }}
+</div>

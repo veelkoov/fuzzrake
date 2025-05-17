@@ -2,7 +2,7 @@ package database.tables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object CreatorIds : IntIdTable("maker_ids") {
-    val creator = reference("artisan_id", Creators)
-    val creatorId = varchar("maker_id", 7)
+object CreatorIds : IntIdTable("creator_ids") {
+    val creator = reference("owner_creator_id", Creators)
+    val creatorId = varchar("creator_id", 7)
 }

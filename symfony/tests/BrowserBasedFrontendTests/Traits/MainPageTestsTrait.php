@@ -4,56 +4,63 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests\Traits;
 
-use App\Tests\TestUtils\FiltersData;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Symfony\Component\Panther\Client;
 
 trait MainPageTestsTrait
 {
     /**
      * @throws WebDriverException
      */
-    private static function skipCheckListAdultAllowNsfw(Client $client, int $numberOfArtisans, bool $expectFilled = false): void
+    private function skipCheckListAdultAllowNsfw(int $numberOfCreators, bool $expectFilled = false): void
     {
-        $infoText = "Currently $numberOfArtisans makers from $numberOfArtisans countries are listed here.";
-        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        $infoText = "Currently $numberOfCreators makers from $numberOfCreators countries are listed here.";
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        self::fillChecklist($client, true, false, $expectFilled);
-
-        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
+        $this->fillChecklist(true, false, $expectFilled);
+        $this->waitExpectLoadedCreatorsTable($numberOfCreators, $numberOfCreators); // Assumes no paging happening
     }
 
     /**
      * @throws WebDriverException
      */
-    private static function fillChecklist(Client $client, bool $isAdult, bool $wantsSfw, bool $expectFilled = false): void
+    private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
+    {
+        $locator = "//div[@id=\"creators-table-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
+
+        self::$client->waitFor($locator, 3);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function fillChecklist(bool $isAdult, bool $wantsSfw, bool $expectFilled = false): void
     {
         self::waitForLoadingIndicatorToDisappear();
 
         if (!$expectFilled) {
-            $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+            self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
             if ($isAdult) {
                 self::waitUntilShows('#aasImAdult');
-                $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+                self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
                 if ($wantsSfw) {
                     self::waitUntilShows('#aasKeepSfw');
-                    $client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
+                    self::$client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
                 } else {
                     self::waitUntilShows('#aasAllowNsfw');
-                    $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+                    self::$client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
                 }
             } else {
                 self::waitUntilShows('#aasImNotAdult');
-                $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+                self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
             }
         }
 
         self::waitUntilShows('#checklist-dismiss-btn');
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
     }
@@ -61,56 +68,47 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function waitForLoadingIndicatorToDisappear(bool $checkIfShowsUp = false): void
+    private function waitForLoadingIndicatorToDisappear(): void
     {
-        if ($checkIfShowsUp) {
-            self::waitUntilShows('#loading-indicator', 0);
-        }
-
         self::waitUntilHides('#loading-indicator', 550);
     }
 
     /**
      * @throws WebDriverException
      */
-    private static function openMakerCardByClickingOnTheirNameInTheTable(Client $client, string $makerName): void
+    private function openCreatorCardByClickingOnTheirNameInTheTable(string $creatorName): void
     {
-        $client->findElement(WebDriverBy::xpath('//td[contains(., "'.$makerName.'")]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
 
-        self::waitUntilShows('#artisanName');
-        self::assertSelectorTextSame('#artisanName', $makerName);
+        self::waitUntilShows('#creator-name');
+        self::assertSelectorTextSame('#creator-name', $creatorName);
     }
 
     /**
      * @throws WebDriverException
      */
-    private static function openDataOutdatedPopupFromTheMakerCard(Client $client): void
+    private function openDataOutdatedPopupFromTheCreatorCard(): void
     {
         $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
-        $client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
-        $client->waitForVisibility('#creator-updates-modal-content', 5);
+        self::$client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
+        self::waitUntilShows('#creator-updates-modal-content');
     }
 
     /**
      * @throws WebDriverException
      */
-    private static function closeDataOutdatedPopUpByClickingTheCloseButton(Client $client): void
+    private function closeDataOutdatedPopUpByClickingTheCloseButton(): void
     {
-        $client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
-        $client->waitForInvisibility('#creator-updates-modal-content', 5);
-    }
-
-    private static function setupMockSpeciesFilterData(): void
-    {
-        self::persistAndFlush(FiltersData::getMockSpecies());
+        self::$client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
+        self::$client->waitForInvisibility('#creator-updates-modal-content', 5);
     }
 
     /**
      * @param list<string> $visibleCreatorIds
      * @param list<string> $hiddenCreatorIds
      */
-    private function assertMakersVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
+    private function assertCreatorsVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
     {
         foreach ($visibleCreatorIds as $creatorId) {
             self::assertSelectorIsVisible("#$creatorId");
@@ -126,6 +124,6 @@ trait MainPageTestsTrait
      */
     private function clearTypeInTextSearch(string $searchedText): void
     {
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
+        self::$client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
     }
 }

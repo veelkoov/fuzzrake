@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *       would generate too much noise in the repo history.
  */
 #[ORM\Entity(repositoryClass: CreatorOfferStatusRepository::class)]
-#[ORM\Table(name: 'artisans_commissions_statuses')] // TODO: Rename
+#[ORM\Table(name: 'creators_offers_statuses')]
 class CreatorOfferStatus
 {
     #[ORM\Id]
@@ -21,9 +21,9 @@ class CreatorOfferStatus
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Artisan::class, inversedBy: 'commissions')]
+    #[ORM\ManyToOne(targetEntity: Creator::class, inversedBy: 'offerStatuses')]
     #[ORM\JoinColumn(nullable: false)]
-    private Artisan $artisan;
+    private Creator $creator;
 
     #[ORM\Column(type: Types::TEXT)]
     private string $offer = '';
@@ -36,14 +36,14 @@ class CreatorOfferStatus
         return $this->id;
     }
 
-    public function getArtisan(): Artisan
+    public function getCreator(): Creator
     {
-        return $this->artisan;
+        return $this->creator;
     }
 
-    public function setArtisan(Artisan $artisan): self
+    public function setCreator(Creator $creator): self
     {
-        $this->artisan = $artisan;
+        $this->creator = $creator;
 
         return $this;
     }

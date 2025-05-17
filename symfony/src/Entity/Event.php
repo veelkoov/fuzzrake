@@ -18,9 +18,9 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\Table(name: 'events')]
 class Event
 {
-    final public const TYPE_DATA_UPDATED = 'DATA_UPDATED';
-    final public const TYPE_CS_UPDATED = 'CS_UPDATED';
-    final public const TYPE_GENERIC = 'GENERIC';
+    final public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
+    final public const string TYPE_CS_UPDATED = 'CS_UPDATED';
+    final public const string TYPE_GENERIC = 'GENERIC';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,7 +46,7 @@ class Event
     private bool $trackingIssues = false;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $artisanName = '';
+    private string $creatorName = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $checkedUrls = '';
@@ -54,17 +54,17 @@ class Event
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $newMakersCount = 0;
+    private int $newCreatorsCount = 0;
 
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $updatedMakersCount = 0;
+    private int $updatedCreatorsCount = 0;
 
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
     #[ORM\Column(type: Types::INTEGER)]
-    private int $reportedUpdatedMakersCount = 0;
+    private int $reportedUpdatedCreatorsCount = 0;
 
     #[Length(max: 256)]
     #[ORM\Column(type: Types::TEXT)]
@@ -78,13 +78,6 @@ class Event
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getTimestamp(): DateTimeImmutable
@@ -175,14 +168,14 @@ class Event
         return $this;
     }
 
-    public function getArtisanName(): string
+    public function getCreatorName(): string
     {
-        return $this->artisanName;
+        return $this->creatorName;
     }
 
-    public function setArtisanName(string $artisanName): self
+    public function setCreatorName(string $creatorName): self
     {
-        $this->artisanName = $artisanName;
+        $this->creatorName = $creatorName;
 
         return $this;
     }
@@ -207,38 +200,38 @@ class Event
         return $this;
     }
 
-    public function getNewMakersCount(): int
+    public function getNewCreatorsCount(): int
     {
-        return $this->newMakersCount;
+        return $this->newCreatorsCount;
     }
 
-    public function setNewMakersCount(int $newMakersCount): self
+    public function setNewCreatorsCount(int $newCreatorsCount): self
     {
-        $this->newMakersCount = $newMakersCount;
+        $this->newCreatorsCount = $newCreatorsCount;
 
         return $this;
     }
 
-    public function getUpdatedMakersCount(): int
+    public function getUpdatedCreatorsCount(): int
     {
-        return $this->updatedMakersCount;
+        return $this->updatedCreatorsCount;
     }
 
-    public function setUpdatedMakersCount(int $updatedMakersCount): self
+    public function setUpdatedCreatorsCount(int $updatedCreatorsCount): self
     {
-        $this->updatedMakersCount = $updatedMakersCount;
+        $this->updatedCreatorsCount = $updatedCreatorsCount;
 
         return $this;
     }
 
-    public function getReportedUpdatedMakersCount(): int
+    public function getReportedUpdatedCreatorsCount(): int
     {
-        return $this->reportedUpdatedMakersCount;
+        return $this->reportedUpdatedCreatorsCount;
     }
 
-    public function setReportedUpdatedMakersCount(int $reportedUpdatedMakersCount): self
+    public function setReportedUpdatedCreatorsCount(int $reportedUpdatedCreatorsCount): self
     {
-        $this->reportedUpdatedMakersCount = $reportedUpdatedMakersCount;
+        $this->reportedUpdatedCreatorsCount = $reportedUpdatedCreatorsCount;
 
         return $this;
     }
@@ -265,7 +258,7 @@ class Event
 
     public function isTypeCsUpdated(): bool
     {
-        return self::TYPE_CS_UPDATED == $this->type;
+        return self::TYPE_CS_UPDATED === $this->type;
     }
 
     public function isTypeDataUpdated(): bool
@@ -275,6 +268,6 @@ class Event
 
     public function isEditable(): bool
     {
-        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED]);
+        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED], true);
     }
 }
