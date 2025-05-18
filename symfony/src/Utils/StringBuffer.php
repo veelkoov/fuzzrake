@@ -69,8 +69,8 @@ class StringBuffer
             $pattern = $this->terminatorPatternCache[$terminator] ??= pattern($terminator);
 
             $parts = $pattern->splitStart($this->buffer->toString(), 1);
-        } catch (MalformedPatternException $e) {
-            throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$e->getMessage()}");
+        } catch (MalformedPatternException $exception) {
+            throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$exception->getMessage()}", $exception->getCode(), $exception);
         }
 
         if (count($parts) < 2) {
