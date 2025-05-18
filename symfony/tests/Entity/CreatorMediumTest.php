@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Event\Doctrine;
+namespace App\Tests\Entity;
 
 use App\Data\Definitions\Ages;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
@@ -12,12 +12,12 @@ use Exception;
 /**
  * @medium
  */
-class CreatorListenerTest extends FuzzrakeKernelTestCase
+class CreatorMediumTest extends FuzzrakeKernelTestCase
 {
     /**
      * @throws Exception
      */
-    public function testPersistingCreatorsSetsSafeValues(): void
+    public function testPersistingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
             (new SmartAccessDecorator())
@@ -38,7 +38,7 @@ class CreatorListenerTest extends FuzzrakeKernelTestCase
     /**
      * @throws Exception
      */
-    public function testUpdatingCreatorsSetsSafeValues(): void
+    public function testUpdatingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
             (new SmartAccessDecorator())

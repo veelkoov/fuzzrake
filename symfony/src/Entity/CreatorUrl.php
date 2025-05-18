@@ -6,12 +6,14 @@ namespace App\Entity;
 
 use App\Repository\CreatorUrlRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
 use Stringable;
 
 #[ORM\Entity(repositoryClass: CreatorUrlRepository::class)]
 #[ORM\Table(name: 'creators_urls')]
+#[ORM\HasLifecycleCallbacks]
 class CreatorUrl implements Stringable
 {
     #[ORM\Id]
@@ -96,13 +98,16 @@ class CreatorUrl implements Stringable
         return $this;
     }
 
-    public function resetFetchResults(): void
+    #[ORM\PreUpdate]
+    public function preUpdate(PreUpdateEventArgs $event): void
     {
-        $this->getState()
-            ->setLastFailureUtc(null)
-            ->setLastSuccessUtc(null)
-            ->setLastFailureReason('')
-            ->setLastFailureCode(0);
+        if ($event->getNewValue('url') !== $event->getOldValue('url') && null !== $this->state) {
+            $this->getState()
+                ->setLastFailureUtc(null)
+                ->setLastSuccessUtc(null)
+                ->setLastFailureReason('')
+                ->setLastFailureCode(0);
+        }
     }
 
     #[Override]
