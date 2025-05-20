@@ -8,7 +8,7 @@ interface Url
 {
     public function getUrl(): string;
 
-    public function recordSuccessfulFetch();
+    public function recordSuccessfulFetch(): void;
 
-    public function recordFailedFetch(int $code, string $reason);
+    public function recordFailedFetch(int $code, string $reason): void;
 }

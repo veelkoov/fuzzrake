@@ -9,4 +9,8 @@ use Symfony\Component\Messenger\Attribute\AsMessage;
 #[AsMessage('async-msg-queue')]
 final readonly class UpdateMiniaturesV1
 {
+    public function __construct(
+        public ?int $creatorId = null,
+    ) {
+    }
 }

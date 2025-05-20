@@ -70,7 +70,8 @@
         "symfony/stopwatch": "*",
         "symfony/var-dumper": "*",
         "symfony/web-profiler-bundle": "*",
-        "vincentlanglet/twig-cs-fixer": "^3.4.0"
+        "vincentlanglet/twig-cs-fixer": "^3.4.0",
+        "zenstruck/messenger-test": "^1.11"
     },
     "config": {
         "preferred-install": {

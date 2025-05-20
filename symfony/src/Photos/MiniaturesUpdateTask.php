@@ -22,26 +22,24 @@ class MiniaturesUpdateTask
     }
 
     #[AsMessageHandler]
-    public function execute(UpdateMiniaturesV1 $_): void
+    public function execute(UpdateMiniaturesV1 $message): void
     {
-        $this->logger->info('Started miniatures update task.');
+        $this->logger->info('Started miniatures update task.', ['message' => $message]);
 
-        foreach ($this->creatorRepository->getAllPaged() as $creator) {
-            $creator = Creator::wrap($creator);
-
-            if (count($creator->getMiniatureUrls()) !== count($creator->getPhotoUrls())) {
-                $this->updateCreatorMiniatures($creator);
-            }
+        if (null !== $message->creatorId) {
+            $this->executeForSingleCreator($message->creatorId);
+        } else {
+            $this->executeForAllCreators();
         }
 
         $this->entityManager->flush();
         $this->logger->info('Finished miniatures update task.');
     }
 
-    private function updateCreatorMiniatures(Creator $creator): void
+    private function updateCreatorMiniaturesFor(Creator $creator): void
     {
         if (0 === count($creator->getPhotoUrls())) {
-            $this->logger->info("Removing miniatures of {$creator->getLastCreatorId()}");
+            $this->logger->info("Removing miniatures of {$creator->getLastCreatorId()}.");
 
             $creator->setMiniatureUrls([]);
 
@@ -58,6 +56,28 @@ class MiniaturesUpdateTask
 
         $creator->setMiniatureUrls($newMiniatureUrls);
 
-        $this->logger->info("Successfully updated miniatures for{$creator->getLastCreatorId()}");
+        $this->logger->info("Successfully updated miniatures for {$creator->getLastCreatorId()}.");
+    }
+
+    private function executeForSingleCreator(?int $creatorId): void
+    {
+        $creator = $this->creatorRepository->find($creatorId);
+
+        if (null !== $creator) {
+            $this->updateCreatorMiniaturesFor(Creator::wrap($creator));
+        } else {
+            $this->logger->info("Creator with ID $creatorId not found. Discarding message.");
+        }
+    }
+
+    private function executeForAllCreators(): void
+    {
+        foreach ($this->creatorRepository->getAllPaged() as $creator) {
+            $creator = Creator::wrap($creator);
+
+            if (count($creator->getMiniatureUrls()) !== count($creator->getPhotoUrls())) {
+                $this->updateCreatorMiniaturesFor($creator);
+            }
+        }
     }
 }
