@@ -23,20 +23,6 @@ class MiniaturesUpdate(
     private val scritch: ScritchMiniatureUrlResolver = ScritchMiniatureUrlResolver(),
     private val furtrack: FurtrackMiniatureUrlResolver = FurtrackMiniatureUrlResolver(),
 ) {
-    fun execute() {
-        database.transaction {
-            val creators: List<Creator> = getCreatorsWithPhotoOrMiniatureUrls()
-
-            creators.forEach { creator ->
-                try {
-                    updatePhotos(creator)
-                } catch (exception: MiniatureUrlResolverException) {
-                    logger.error { "Failed retrieving miniatures for ${creator.lastCreatorId()}" }
-                }
-            }
-        }
-    }
-
     private fun updatePhotos(creator: Creator) {
         val pictureUrls = creator.getPhotoUrls().associateBy { it.url }.values.toList() // Removing duplicate URLs
         val miniatureUrls = creator.getMiniatureUrls().associateBy { it.url }

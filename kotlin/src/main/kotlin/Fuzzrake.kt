@@ -44,22 +44,9 @@ class UrlInspectionCmd : CliktCommand(
     }
 }
 
-class MiniaturesUpdateCmd : CliktCommand(
-    name = "update-miniatures",
-    help = "Update miniatures URLs based on changes in images URLs",
-) {
-    override fun run() {
-        val config = ConfigLoader().locateAndLoad()
-        val updater = MiniaturesUpdate(config)
-
-        updater.execute()
-    }
-}
-
 fun main(args: Array<String>) = FuzzrakeCmd()
     .subcommands(
         TrackerCmd(),
         UrlInspectionCmd(),
-        MiniaturesUpdateCmd(),
     )
     .main(args)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\Snapshots;
 
+use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Url;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,7 +18,7 @@ class SnapshotsManager
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly string $storeDirPath,
-        private readonly HttpClientInterface $httpClient = new CookieEagerHttpClient(new GentleHttpClient(new FastHttpClient())),
+        private readonly HttpClientInterface $httpClient, // FIXME: There was a default
     ) {
         $this->filesystem = new Filesystem();
         $this->pathProvider = new FileSystemPathProvider();
@@ -31,12 +32,12 @@ class SnapshotsManager
             try {
                 return self::loadFrom($snapshotDirPath);
             } catch (IOException) {
-                // OK
+                // Treat as a cache miss, refetch
             }
         }
 
         $snapshot = $this->httpClient->fetch($url);
-        $snapshot->saveTo($snapshotDirPath);
+        $this->saveTo($snapshotDirPath, $snapshot);
 
         return $snapshot;
     }

@@ -15,7 +15,6 @@ readonly class SnapshotMetadata
      */
     public function __construct(
         public string $url,
-        public string $ownerCreatorId,
         public DateTimeImmutable $retrievedAtUtc,
         public int $httpCode,
         public array $headers,
@@ -25,6 +24,6 @@ readonly class SnapshotMetadata
 
     public static function forError(string $url, string $ownerCreatorId, string $error): self
     {
-        return new self($url, $ownerCreatorId, UtcClock::now(), 0, [], [$error]);
+        return new self($url, UtcClock::now(), 0, [], [$error]);
     }
 }

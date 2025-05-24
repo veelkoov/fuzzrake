@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Photos;
 
+use App\Photos\MiniaturesFinder\MiniatureFinderException;
+use App\Photos\MiniaturesFinder\MiniaturesFinder;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
@@ -17,7 +19,7 @@ class MiniaturesUpdateTask
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly CreatorRepository $creatorRepository,
-        private readonly PhotoMiniatureResolver $resolver,
+        private readonly MiniaturesFinder $resolver,
     ) {
     }
 
@@ -34,29 +36,6 @@ class MiniaturesUpdateTask
 
         $this->entityManager->flush();
         $this->logger->info('Finished miniatures update task.');
-    }
-
-    private function updateCreatorMiniaturesFor(Creator $creator): void
-    {
-        if (0 === count($creator->getPhotoUrls())) {
-            $this->logger->info("Removing miniatures of {$creator->getLastCreatorId()}.");
-
-            $creator->setMiniatureUrls([]);
-
-            return;
-        }
-
-        $this->logger->info("Updating miniatures for {$creator->getLastCreatorId()}...");
-
-        $newMiniatureUrls = [];
-
-        foreach ($creator->getPhotoUrlObjects() as $photoUrl) {
-            $newMiniatureUrls[] = $this->resolver->getMiniatureUrl($photoUrl);
-        }
-
-        $creator->setMiniatureUrls($newMiniatureUrls);
-
-        $this->logger->info("Successfully updated miniatures for {$creator->getLastCreatorId()}.");
     }
 
     private function executeForSingleCreator(?int $creatorId): void
@@ -79,5 +58,46 @@ class MiniaturesUpdateTask
                 $this->updateCreatorMiniaturesFor($creator);
             }
         }
+    }
+
+    private function updateCreatorMiniaturesFor(Creator $creator): void
+    {
+        if (0 === count($creator->getPhotoUrls())) {
+            $this->logger->info("Removing miniatures of {$creator->getLastCreatorId()}.");
+
+            $creator->setMiniatureUrls([]);
+
+            return;
+        }
+
+        if ($this->resolver->supportsAll($creator->getPhotoUrlObjects())) {
+            $this->logger->info("At least one unsupported URL for {$creator->getLastCreatorId()}. Discarding message.");
+
+            return;
+        }
+
+        $this->logger->info("Updating miniatures for {$creator->getLastCreatorId()}...");
+
+        try {
+            $creator->setMiniatureUrls($this->resolveMiniatureUrlsFor($creator));
+
+            $this->logger->info("Successfully updated miniatures for {$creator->getLastCreatorId()}.");
+        } catch (MiniatureFinderException $exception) {
+            $this->logger->error("Failed updating miniatures for {$creator->getLastCreatorId()}.", ['exception' => $exception]);
+        }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolveMiniatureUrlsFor(Creator $creator): array
+    {
+        $newMiniatureUrls = [];
+
+        foreach ($creator->getPhotoUrlObjects() as $photoUrl) {
+            $newMiniatureUrls[] = $this->resolver->getMiniatureUrl($photoUrl);
+        }
+
+        return $newMiniatureUrls;
     }
 }
