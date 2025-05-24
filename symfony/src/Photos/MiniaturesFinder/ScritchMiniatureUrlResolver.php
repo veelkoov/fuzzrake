@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Photos\MiniaturesFinder;
 
+use App\Utils\Collections\ArrayReader;
+use App\Utils\Json;
 use App\Utils\Web\FreeUrl;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url;
+use InvalidArgumentException;
+use JsonException;
 use Override;
 use TRegx\CleanRegex\Pattern;
 use Veelkoov\Debris\StringStringMap;
@@ -35,16 +39,16 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
 
         $response = $this->getResponseForPictureId($pictureId);
 
-        //        if (response.metadata.httpCode != 200) {
-        //            throw MiniatureUrlResolverException("Non-200 HTTP response code")
-        //        }
-        //
-        //        try {
-        //            return JsonNavigator(response.contents).getNonEmptyString("data/medium/thumbnail")
-        //        } catch (exception: JsonException) {
-        //            throw MiniatureUrlResolverException("Wrong JSON data", exception)
-        //        }
-        return ''; // FIXME
+        if (200 !== $response->metadata->httpCode) {
+            throw new MiniatureFinderException('Non-200 HTTP response code.');
+        }
+
+        try {
+            return ArrayReader::of(Json::decode($response->contents))
+                ->getNonEmptyString('[data][medium][thumbnail]');
+        } catch (InvalidArgumentException|JsonException $exception) {
+            throw new MiniatureFinderException('Wrong JSON data.', previous: $exception);
+        }
     }
 
     private function getResponseForPictureId(string $pictureId): Snapshot
