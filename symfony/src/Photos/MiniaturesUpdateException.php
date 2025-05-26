@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Photos;
 
-use RuntimeException;
+use Exception;
 
-class MiniaturesUpdateException extends RuntimeException
+class MiniaturesUpdateException extends Exception
 {
 }

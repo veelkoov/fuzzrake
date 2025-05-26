@@ -52,6 +52,9 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         }
     }
 
+    /**
+     * @throws MiniaturesUpdateException
+     */
     private function getResponseForPictureId(string $pictureId): Snapshot
     {
         $csrfToken = $this->getCsrfToken();
@@ -79,6 +82,9 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         GRAPHQL;
     }
 
+    /**
+     * @throws MiniaturesUpdateException
+     */
     private function getCsrfToken(): string
     {
         return $this->getOptionalCsrfToken() ?? $this->getFirstRequiredCsrfToken();
@@ -89,6 +95,9 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         return $this->httpClient->getSingleCookieValue('https://scritch.es/', 'csrf-token');
     }
 
+    /**
+     * @throws MiniaturesUpdateException
+     */
     private function getFirstRequiredCsrfToken(): string
     {
         $this->httpClient->fetch(new FreeUrl('https://scritch.es/'));

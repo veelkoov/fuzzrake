@@ -1,11 +1,17 @@
-package tasks.miniaturesUpdate
+<?php
 
-import testUtils.ExpectedHttpCall
-import testUtils.getHttpClientMock
-import web.url.FreeUrl
-import kotlin.test.*
+declare(strict_types=1);
 
-class ScritchMiniatureUrlResolverTest {
+namespace App\Tests\Photos\MiniatureUrlResolver;
+
+use PHPUnit\Framework\TestCase;
+
+class ScritchMiniatureUrlResolverTest extends TestCase
+{
+
+}
+
+/* TODO
     @Test
     fun `Test successful retrieval`() {
         val httpClient = getHttpClientMock(
@@ -59,4 +65,4 @@ class ScritchMiniatureUrlResolverTest {
 
         assertEquals(exception.message, "Missing csrf-token cookie")
     }
-}
+*/

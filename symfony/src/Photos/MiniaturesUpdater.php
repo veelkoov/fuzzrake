@@ -52,6 +52,8 @@ class MiniaturesUpdater
 
     /**
      * @return list<string>
+     *
+     * @throws MiniaturesUpdateException
      */
     private function resolveMiniatureUrlsFor(Creator $creator): array
     {
@@ -64,6 +66,9 @@ class MiniaturesUpdater
         return $newMiniatureUrls;
     }
 
+    /**
+     * @throws MiniaturesUpdateException
+     */
     public function getMiniatureUrl(Url $photoUrl): string
     {
         if ($this->furtrackResolver->supports($photoUrl->getUrl())) {
