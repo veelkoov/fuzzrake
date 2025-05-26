@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Photos\MiniaturesFinder;
+namespace App\Photos\MiniatureUrlResolver;
 
+use App\Photos\MiniaturesUpdateException;
 use App\Utils\Web\FreeUrl;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Url;
@@ -35,7 +36,7 @@ class FurtrackMiniatureUrlResolver implements MiniatureUrlResolver
         $response = $this->httpClient->fetch(new FreeUrl($miniatureUrl), 'HEAD');
 
         if (200 !== $response->metadata->httpCode) {
-            throw new MiniatureFinderException('Non-200 HTTP response code.');
+            throw new MiniaturesUpdateException('Non-200 HTTP response code.');
         }
 
         return $miniatureUrl;

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Photos\MiniaturesFinder;
+namespace App\Photos\MiniatureUrlResolver;
 
+use App\Photos\MiniaturesUpdateException;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Json;
 use App\Utils\Web\FreeUrl;
@@ -40,14 +41,14 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         $response = $this->getResponseForPictureId($pictureId);
 
         if (200 !== $response->metadata->httpCode) {
-            throw new MiniatureFinderException('Non-200 HTTP response code.');
+            throw new MiniaturesUpdateException('Non-200 HTTP response code.');
         }
 
         try {
             return ArrayReader::of(Json::decode($response->contents))
                 ->getNonEmptyString('[data][medium][thumbnail]');
         } catch (InvalidArgumentException|JsonException $exception) {
-            throw new MiniatureFinderException('Wrong JSON data.', previous: $exception);
+            throw new MiniaturesUpdateException('Wrong JSON data.', previous: $exception);
         }
     }
 
@@ -92,6 +93,6 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     {
         $this->httpClient->fetch(new FreeUrl('https://scritch.es/'));
 
-        return $this->getOptionalCsrfToken() ?? throw new MiniatureFinderException('Missing csrf-token cookie.');
+        return $this->getOptionalCsrfToken() ?? throw new MiniaturesUpdateException('Missing csrf-token cookie.');
     }
 }

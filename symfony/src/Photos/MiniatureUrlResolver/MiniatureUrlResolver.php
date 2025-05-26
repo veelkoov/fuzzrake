@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Photos\MiniaturesFinder;
+namespace App\Photos\MiniatureUrlResolver;
 
 use App\Utils\Web\Url;
 
