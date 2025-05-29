@@ -32,7 +32,7 @@ class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        $server = [...$addHeaders->mapKeys(static fn (string $headerName) => "HTTP_$headerName")];
+        $server = [...$addHeaders->mapKeys(static fn (string $headerName) => "HTTP_$headerName")]; // grep-code-debris-needs-improvements
 
         $this->browser->request($method, $url->getUrl(), server: $server, content: $content);
         $response = $this->browser->getInternalResponse();

@@ -25,7 +25,7 @@ trait HttpClientMockTrait
             self::assertIsArray($headers);
 
             foreach ($expected->requestHeaders as $key => $value) {
-                $expectedHeader = strtolower($key) . ": $value";
+                $expectedHeader = strtolower($key).": $value";
 
                 self::assertContains($expectedHeader, $headers, 'Missing expected header in the request.');
             }

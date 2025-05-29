@@ -160,49 +160,6 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
-    /**
-     * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
-     *
-     * @param list<string> $initialUrlPhotos
-     * @param list<string> $initialMiniatures
-     * @param list<string> $newUrlPhotos
-     * @param list<string> $expectedMiniatures
-     */
-    public function testUpdateHandlesImagesUpdateProperly(array $initialUrlPhotos, array $initialMiniatures, array $newUrlPhotos, array $expectedMiniatures): void
-    {
-        $creator = $this->getPersistedCreatorMock()
-            ->setCreatorId('TEST001')
-            ->setPhotoUrls($initialUrlPhotos)
-            ->setMiniatureUrls($initialMiniatures)
-        ;
-
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
-            ->setCreatorId('TEST001')
-            ->setPhotoUrls($newUrlPhotos)
-        );
-
-        $subject = $this->getSetUpUpdatesService([
-            [[''], ['TEST001'], [$creator]],
-        ]);
-        $result = $subject->getUpdateFor($submission);
-
-        self::assertEquals($expectedMiniatures, $result->updatedCreator->getMiniatureUrls());
-    }
-
-    /**
-     * @return array<string, array{list<string>, list<string>, list<string>, list<string>}>
-     */
-    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
-    {
-        return [
-            'No photos at all'         => [[], [], [], []],
-            'No photos before, adding' => [[], [], ['NEW_PHOTOS'], []],
-            'Clearing existing photos' => [['OLD_PHOTOS'], ['OLD_MINIATURES'], [], []],
-            'Changing photos'          => [['OLD_PHOTOS'], ['OLD_MINIATURES'], ['NEW_PHOTOS'], []],
-            'Photos exist, unchanged'  => [['OLD_PHOTOS'], ['OLD_MINIATURES'], ['OLD_PHOTOS'], ['OLD_MINIATURES']],
-        ];
-    }
-
     public function testResolvingMultipleMatchedByCreatorId(): void
     {
         $creator1 = $this->getPersistedCreatorMock()

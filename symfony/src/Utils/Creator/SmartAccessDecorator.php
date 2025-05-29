@@ -811,6 +811,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setMiniatureUrls(array $scritchMiniatureUrls): self
     {
+        if ($this->getMiniatureUrls() !== $scritchMiniatureUrls) {
+            // Reordering of miniatures: grep-code-order-support-workaround
+            $this->setUrls(Field::URL_MINIATURES, []);
+        }
+
         return $this->setUrls(Field::URL_MINIATURES, $scritchMiniatureUrls);
     }
 
