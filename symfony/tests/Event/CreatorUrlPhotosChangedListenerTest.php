@@ -14,6 +14,9 @@ use RuntimeException;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;
 
+/**
+ * @small
+ */
 class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 {
     use InteractsWithMessenger;
