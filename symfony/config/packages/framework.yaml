@@ -14,6 +14,13 @@ framework:
     #esi: true
     #fragments: true
 
+    http_client:
+        default_options:
+            headers:
+                'User-Agent': 'Mozilla/5.0 (compatible; GetFursuitBot/0.11; Symfony/PHP; +https://getfursu.it/)'
+            timeout: 30.0 # seconds
+            max_redirects: 5
+
 when@beta:
     framework:
         disallow_search_engine_index: true

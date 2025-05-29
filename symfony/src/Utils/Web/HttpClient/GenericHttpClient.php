@@ -13,7 +13,7 @@ use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\BrowserKit\Response;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Veelkoov\Debris\StringStringMap;
 
 class GenericHttpClient implements HttpClientInterface
@@ -22,14 +22,9 @@ class GenericHttpClient implements HttpClientInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        SymfonyHttpClientInterface $httpClient,
     ) {
-        $this->browser = new HttpBrowser(HttpClient::create([
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (compatible; GetFursuitBot/0.11; Symfony/PHP; +https://getfursu.it/)',
-            ],
-            'timeout' => 30.0, // seconds
-            'max_redirects' => 5,
-        ]));
+        $this->browser = new HttpBrowser($httpClient);
     }
 
     #[Override]
@@ -37,7 +32,9 @@ class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        $this->browser->request($method, $url->getUrl(), content: $content);
+        $server = [...$addHeaders->mapKeys(static fn (string $headerName) => "HTTP_$headerName")];
+
+        $this->browser->request($method, $url->getUrl(), server: $server, content: $content);
         $response = $this->browser->getInternalResponse();
 
         $this->logger->info("Got response: '{$url->getUrl()}'");
@@ -83,6 +80,6 @@ class GenericHttpClient implements HttpClientInterface
     #[Override]
     public function getSingleCookieValue(string $url, string $cookieName): ?string
     {
-        return $this->browser->getCookieJar()->get($cookieName, (new NetteUrl($url))->getDomain())?->getValue();
+        return $this->browser->getCookieJar()->get($cookieName, domain: (new NetteUrl($url))->getDomain())?->getValue();
     }
 }
