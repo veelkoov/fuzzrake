@@ -278,8 +278,11 @@ class CreatorRepository extends ServiceEntityRepository
 
         try {
             $resultData = $this->createQueryBuilder('d_c')
-                ->join('d_c.creatorIds', 'd_ci')
+                ->join('d_c.creatorIds', 'd_ci')->addSelect('d_ci')
+                ->join('d_c.urls', 'd_cu')->addSelect('d_cu')
+                ->join('d_cu.state', 'd_cus')->addSelect('d_cus')
                 ->where('d_ci.creatorId = :creatorId')
+                ->orderBy('d_cu.id') // grep-code-order-support-workaround
                 ->setParameter('creatorId', $creatorId)
                 ->getQuery()
                 ->getSingleResult();

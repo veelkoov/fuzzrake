@@ -793,6 +793,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setPhotoUrls(array $photoUrls): self
     {
+        if ($this->getPhotoUrls() !== $photoUrls) {
+            // grep-code-order-support-workaround
+            $this->setUrls(Field::URL_PHOTOS, []);
+        }
+
         return $this->setUrls(Field::URL_PHOTOS, $photoUrls);
     }
 
@@ -807,16 +812,16 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @param list<string> $scritchMiniatureUrls
+     * @param list<string> $miniatureUrls
      */
-    public function setMiniatureUrls(array $scritchMiniatureUrls): self
+    public function setMiniatureUrls(array $miniatureUrls): self
     {
-        if ($this->getMiniatureUrls() !== $scritchMiniatureUrls) {
+        if ($this->getMiniatureUrls() !== $miniatureUrls) {
             // Reordering of miniatures: grep-code-order-support-workaround
             $this->setUrls(Field::URL_MINIATURES, []);
         }
 
-        return $this->setUrls(Field::URL_MINIATURES, $scritchMiniatureUrls);
+        return $this->setUrls(Field::URL_MINIATURES, $miniatureUrls);
     }
 
     #[Length(max: 1024)]
