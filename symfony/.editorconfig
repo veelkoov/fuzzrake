@@ -7,3 +7,11 @@ indent_size = 4
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+# Fuzzrake code
+[/assets/**]
+indent_size = 2
+
+# Fuzzrake configuration
+[{/eslint.config.mjs,/tsconfig.json,/webpack.config.js}]
+indent_size = 2
