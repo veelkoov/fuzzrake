@@ -537,7 +537,7 @@
         "version": "v3.3.4"
     },
     "twig/extra-bundle": {
-        "version": "v3.3.8"
+        "version": "v3.21.0"
     },
     "twig/twig": {
         "version": "v3.3.4"
