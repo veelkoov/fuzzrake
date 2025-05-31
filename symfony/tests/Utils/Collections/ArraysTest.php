@@ -6,11 +6,10 @@ namespace App\Tests\Utils\Collections;
 
 use App\Utils\Collections\Arrays;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class ArraysTest extends TestCase
 {
     public function testSingle(): void

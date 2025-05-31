@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\StringBuffer;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-/**
- * @small
- */
+#[Small]
 class StringBufferTest extends TestCase
 {
     public function testIsEmpty(): void

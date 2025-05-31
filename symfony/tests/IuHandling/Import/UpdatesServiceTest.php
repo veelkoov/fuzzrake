@@ -15,13 +15,13 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * @small
- */
+#[Small]
 class UpdatesServiceTest extends FuzzrakeTestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void
@@ -161,13 +161,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
-     *
      * @param list<string> $initialUrlPhotos
      * @param list<string> $initialMiniatures
      * @param list<string> $newUrlPhotos
      * @param list<string> $expectedMiniatures
      */
+    #[DataProvider('imagesUpdateShouldResetMiniaturesDataProvider')]
     public function testUpdateHandlesImagesUpdateProperly(array $initialUrlPhotos, array $initialMiniatures, array $newUrlPhotos, array $expectedMiniatures): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -192,7 +191,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     /**
      * @return array<string, array{list<string>, list<string>, list<string>, list<string>}>
      */
-    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
+    public static function imagesUpdateShouldResetMiniaturesDataProvider(): array
     {
         return [
             'No photos at all'         => [[], [], [], []],

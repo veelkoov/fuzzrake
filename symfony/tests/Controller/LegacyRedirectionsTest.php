@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class LegacyRedirectionsTest extends FuzzrakeWebTestCase
 {
-    /**
-     * @dataProvider legacyRedirectionDataProvider
-     */
+    #[DataProvider('legacyRedirectionDataProvider')]
     public function testLegacyRedirection(string $oldUri, string $checkedSelector, string $expectedText): void
     {
         self::$client->followRedirects();
@@ -26,7 +24,7 @@ class LegacyRedirectionsTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{string, string, string}>
      */
-    public function legacyRedirectionDataProvider(): array
+    public static function legacyRedirectionDataProvider(): array
     {
         return [
             '/index.html'        => ['/index.html', '#main-page-intro h4', 'Fursuit makers database'],

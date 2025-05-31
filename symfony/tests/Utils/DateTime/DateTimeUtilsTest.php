@@ -7,11 +7,10 @@ namespace App\Tests\Utils\DateTime;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class DateTimeUtilsTest extends TestCase
 {
     /**

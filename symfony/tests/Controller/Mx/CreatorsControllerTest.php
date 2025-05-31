@@ -7,11 +7,11 @@ namespace App\Tests\Controller\Mx;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorsControllerTest extends FuzzrakeWebTestCase
 {
     use FormsChoicesValuesAndLabelsTestTrait;
@@ -29,9 +29,8 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
 
     /**
      * @param list<array{value: string, label: string}> $choices
-     *
-     * @dataProvider formsChoicesValuesAndLabelsDataProvider
      */
+    #[DataProvider('formsChoicesValuesAndLabelsDataProvider')]
     public function testFormsChoicesValuesAndLabels(array $choices): void
     {
         $crawler = self::$client->request('GET', '/mx/creators/new');
@@ -121,9 +120,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(422);
     }
 
-    /**
-     * @dataProvider contactUpdatesDataProvider
-     */
+    #[DataProvider('contactUpdatesDataProvider')]
     public function testContactUpdates(string $was, string $set, string $check): void
     {
         $creator = self::getCreator(creatorId: 'TEST001');
@@ -143,9 +140,9 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         self::assertSame($check, $creator->getEmailAddress());
     }
 
-    public function contactUpdatesDataProvider(): DataProvider
+    public static function contactUpdatesDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             ['',                         '',                          ''],
             ['garbage',                  'garbage',                   'garbage'],
             ['garbage',                  'some-email@somedomain.fi',  'some-email@somedomain.fi'],

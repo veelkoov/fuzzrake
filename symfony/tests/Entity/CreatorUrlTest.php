@@ -10,10 +10,9 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorUrlTest extends FuzzrakeKernelTestCase
 {
     /**

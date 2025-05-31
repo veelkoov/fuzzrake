@@ -9,11 +9,10 @@ use App\Entity\CreatorOfferStatus;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
+use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 
-/**
- * @small
- */
+#[Small]
 class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSet(): void

@@ -135,6 +135,21 @@
     "phpstan/phpstan": {
         "version": "1.2.0"
     },
+    "phpunit/phpunit": {
+        "version": "12.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "11.1",
+            "ref": "c6658a60fc9d594805370eacdf542c3d6b5c0869"
+        },
+        "files": [
+            ".env.test",
+            "phpunit.xml.dist",
+            "tests/bootstrap.php",
+            "bin/phpunit"
+        ]
+    },
     "psr/cache": {
         "version": "2.0.0"
     },
@@ -370,19 +385,14 @@
         "version": "v5.4.0"
     },
     "symfony/phpunit-bridge": {
-        "version": "7.0",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "6.3",
-            "ref": "a411a0480041243d97382cac7984f7dce7813c08"
+            "version": "7.3",
+            "ref": "dc13fec96bd527bd399c3c01f0aab915c67fd544"
         },
-        "files": [
-            ".env.test",
-            "bin/phpunit",
-            "phpunit.xml.dist",
-            "tests/bootstrap.php"
-        ]
+        "files": []
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.23.1"

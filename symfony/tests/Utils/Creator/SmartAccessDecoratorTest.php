@@ -8,11 +8,10 @@ use App\Data\Definitions\Fields\Field;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class SmartAccessDecoratorTest extends TestCase
 {
     /**

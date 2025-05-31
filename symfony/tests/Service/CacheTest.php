@@ -7,14 +7,13 @@ namespace App\Tests\Service;
 use App\Data\Definitions\Fields\Field;
 use App\Service\Cache;
 use Override;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
-/**
- * @small
- */
+#[Small]
 class CacheTest extends TestCase
 {
     private TagAwareAdapter $tagAwareAdapter;
