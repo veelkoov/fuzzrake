@@ -8,10 +8,10 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Fuzzrake code
-[/assets/**]
+# Fuzzrake code & configuration
+
+[/{assets,config/fuzzrake}/**]
 indent_size = 2
 
-# Fuzzrake configuration
 [/{eslint.config.mjs,tsconfig.json}]
 indent_size = 2
