@@ -17,15 +17,14 @@ use App\ValueObject\Messages\EmailNotificationV1;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @small
- */
+#[Small]
 class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 {
     private UrlRemovalService $subject;

@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Collections;
 
 use App\Utils\Collections\Lists;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class ListsTest extends TestCase
 {
     public function testIntersect(): void

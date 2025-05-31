@@ -10,11 +10,10 @@ use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * @medium
- */
+#[Medium]
 class StatisticsControllerTest extends FuzzrakeWebTestCase
 {
     public function testStatisticsPageLoads(): void

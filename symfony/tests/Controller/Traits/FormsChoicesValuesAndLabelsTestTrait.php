@@ -14,7 +14,7 @@ trait FormsChoicesValuesAndLabelsTestTrait
     /**
      * @return array<string, list<list<array{value: string, label: string}>>>
      */
-    public function formsChoicesValuesAndLabelsDataProvider(): array
+    public static function formsChoicesValuesAndLabelsDataProvider(): array
     {
         $choices = [
             ...Features::getValues(),

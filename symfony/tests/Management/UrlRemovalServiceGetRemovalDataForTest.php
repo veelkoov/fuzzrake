@@ -9,12 +9,11 @@ use App\Management\UrlRemovalService;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Mx\GroupedUrl;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 
-/**
- * @small
- */
+#[Small]
 class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 {
     public function testEmainNotSentWhenNoContactPermitted(): void

@@ -16,6 +16,7 @@ use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
 use Exception;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
@@ -23,10 +24,8 @@ use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
-/**
- * @medium
- */
-class ExtendedTest extends IuSubmissionsAbstractTest
+#[Medium]
+class ExtendedTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
 

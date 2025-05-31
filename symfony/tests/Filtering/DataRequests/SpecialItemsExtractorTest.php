@@ -6,12 +6,11 @@ namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\StringSet;
 
-/**
- * @small
- */
+#[Small]
 class SpecialItemsExtractorTest extends TestCase
 {
     public function testExtracting(): void

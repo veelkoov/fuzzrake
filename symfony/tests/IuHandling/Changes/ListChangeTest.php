@@ -7,11 +7,10 @@ namespace App\Tests\IuHandling\Changes;
 use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Changes\ListChange;
 use App\Utils\Collections\StringList;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class ListChangeTest extends TestCase
 {
     public function testNoChange(): void
