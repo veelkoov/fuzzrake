@@ -13,5 +13,5 @@ trim_trailing_whitespace = true
 indent_size = 2
 
 # Fuzzrake configuration
-[{/eslint.config.mjs,/tsconfig.json,/webpack.config.js}]
+[/{eslint.config.mjs,tsconfig.json}]
 indent_size = 2
