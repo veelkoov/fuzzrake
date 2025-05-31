@@ -10,11 +10,10 @@ use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Url;
+use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
 
-/**
- * @small
- */
+#[Small]
 class MiniaturesUpdaterTest extends FuzzrakeTestCase
 {
     private MiniaturesUpdater $subject;

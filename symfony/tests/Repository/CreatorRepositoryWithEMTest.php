@@ -9,20 +9,19 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
 {
     /**
-     * @dataProvider findByCreatorIdDataProvider
-     *
      * @param CreatorE[] $creators
      *
      * @throws ORMException
      */
+    #[DataProvider('findByCreatorIdDataProvider')]
     public function testFindByCreatorId(array $creators, string $creatorId, ?int $resultIdx): void
     {
         foreach ($creators as $key => $creator) {
@@ -40,13 +39,13 @@ class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
         static::assertEquals($creators[$resultIdx], $result);
     }
 
-    public function findByCreatorIdDataProvider(): DataProvider
+    public static function findByCreatorIdDataProvider(): TestDataProvider
     {
         Creator::wrap($m1 = new CreatorE())->setCreatorId('TESTI11');
         Creator::wrap($m2 = new CreatorE())->setCreatorId('TESTI21')->setFormerCreatorIds(['TESTI22']);
         Creator::wrap($m3 = new CreatorE())->setCreatorId('TESTI31')->setFormerCreatorIds(['TESTI32', 'TESTI33']);
 
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [[$m1], 'TESTI11', 0],
             [[$m1], 'TESTI12', null],
             [[$m1], 'TESTI',   null],

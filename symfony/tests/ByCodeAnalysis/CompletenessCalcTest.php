@@ -9,14 +9,14 @@ use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use App\Utils\Creator\CompletenessCalc;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 use function Psl\File\read;
 
-/**
- * @small
- */
+#[Small]
 class CompletenessCalcTest extends TestCase
 {
     public function testAllFieldsCovered(): void
@@ -40,9 +40,7 @@ class CompletenessCalcTest extends TestCase
         self::assertSame(0, CompletenessCalc::count($subject));
     }
 
-    /**
-     * @dataProvider justRequiredGive50DataProvider
-     */
+    #[DataProvider('justRequiredGive50DataProvider')]
     public function testJustRequiredGive50(Ages $ages, bool $nsfwWebsite, bool $nsfwSocial, ?bool $doesNsfw, ?bool $worksWithMinors): void
     {
         $subject = new Creator();
@@ -51,9 +49,9 @@ class CompletenessCalcTest extends TestCase
         self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    public function justRequiredGive50DataProvider(): DataProvider
+    public static function justRequiredGive50DataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],

@@ -8,11 +8,10 @@ use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 
-/**
- * @small
- */
+#[Small]
 class SmartUrlAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSetSingleAndMultiple(): void

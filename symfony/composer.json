@@ -26,14 +26,14 @@
         "phpoffice/phpspreadsheet": "^3.7.0",
         "rawr/t-regx": "0.41.*",
         "symfony/apache-pack": "^1.0",
-        "symfony/browser-kit": "7.2.*",
+        "symfony/browser-kit": "*",
         "symfony/console": "*",
         "symfony/doctrine-messenger": "*",
         "symfony/dotenv": "*",
         "symfony/flex": "*",
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
-        "symfony/http-client": "7.2.*",
+        "symfony/http-client": "*",
         "symfony/mailer": "*",
         "symfony/messenger": "*",
         "symfony/monolog-bundle": "^3.6",
@@ -62,8 +62,10 @@
         "phpstan/phpstan-phpunit": "^2.0.3",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0.1",
+        "phpunit/phpunit": "^12.1",
         "rawr/phpunit-data-provider": "^3.0",
         "rector/rector": "*",
+        "symfony/browser-kit": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
         "symfony/maker-bundle": "*",
@@ -110,7 +112,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*"
+            "require": "7.3.*"
         }
     }
 }

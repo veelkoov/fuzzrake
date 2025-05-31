@@ -7,11 +7,10 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
-class PhotosOrderingTest extends IuSubmissionsAbstractTest
+#[Medium]
+class PhotosOrderingTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
 

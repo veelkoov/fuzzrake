@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\Email;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class EmailTest extends TestCase
 {
-    /**
-     * @dataProvider isValidDataProvider
-     */
+    #[DataProvider('isValidDataProvider')]
     public function testIsValid(string $input, bool $isValid): void
     {
         self::assertSame($isValid, Email::isValid($input));
     }
 
-    public function isValidDataProvider(): DataProvider
+    public static function isValidDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             ['', false],
             ['@example', false],
             ['example:@example', false],
@@ -32,17 +30,15 @@ class EmailTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider obfuscateDataProvider
-     */
+    #[DataProvider('obfuscateDataProvider')]
     public function testObfuscate(string $input, string $expected): void
     {
         self::assertSame($expected, Email::obfuscate($input));
     }
 
-    public function obfuscateDataProvider(): DataProvider
+    public static function obfuscateDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             ['@example.com', '@e*********m'],
             ['e@example.com', 'e@e*********m'],
             ['ex@example.com', 'e*@e*********m'],

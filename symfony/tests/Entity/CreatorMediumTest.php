@@ -8,10 +8,9 @@ use App\Data\Definitions\Ages;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator;
 use Exception;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class CreatorMediumTest extends FuzzrakeKernelTestCase
 {
     /**

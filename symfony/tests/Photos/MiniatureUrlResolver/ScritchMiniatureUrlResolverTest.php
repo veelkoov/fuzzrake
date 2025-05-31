@@ -9,12 +9,11 @@ use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Tests\TestUtils\Http\ExpectedHttpCall;
 use App\Tests\TestUtils\Http\HttpClientMockTrait;
 use App\Utils\Web\FreeUrl;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\StringStringMap;
 
-/**
- * @small
- */
+#[Small]
 class ScritchMiniatureUrlResolverTest extends TestCase
 {
     use HttpClientMockTrait;

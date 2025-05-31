@@ -9,11 +9,10 @@ use App\Photos\MiniatureUrlResolver\FurtrackMiniatureUrlResolver;
 use App\Tests\TestUtils\Http\ExpectedHttpCall;
 use App\Tests\TestUtils\Http\HttpClientMockTrait;
 use App\Utils\Web\FreeUrl;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class FurtrackMiniatureUrlResolverTest extends TestCase
 {
     use HttpClientMockTrait;

@@ -15,13 +15,12 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * @small
- */
+#[Small]
 class UpdatesServiceTest extends FuzzrakeTestCase
 {
     public function testUpdateHandlesNewEmailProperly(): void

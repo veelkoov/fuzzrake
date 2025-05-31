@@ -11,13 +11,12 @@ use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Base\DSet;
 
-/**
- * @small
- */
+#[Small]
 class UpdateMiniaturesMessageHandlerTest extends TestCase
 {
     public function testSingleCreatorUpdateMessageHandling(): void

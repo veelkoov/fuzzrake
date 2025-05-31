@@ -12,24 +12,23 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use JsonException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 
-/**
- * @large
- */
+#[Large]
 class FiltersTest extends FuzzrakePantherTestCase
 {
     use FiltersTestTrait;
     use MainPageTestsTrait;
 
     /**
-     * @dataProvider filterChoicesDataProvider
-     *
      * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedCreatorIds
      *
      * @throws WebDriverException|JsonException
      */
+    #[DataProvider('filterChoicesDataProvider')]
     public function testFiltersInBrowser(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
         self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));

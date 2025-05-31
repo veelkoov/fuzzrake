@@ -7,7 +7,7 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
 
-abstract class IuSubmissionsAbstractTest extends FuzzrakeWebTestCase
+abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
 {
     #[Override]
     protected function setUp(): void

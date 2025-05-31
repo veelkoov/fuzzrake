@@ -10,13 +10,12 @@ use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
+use PHPUnit\Framework\Attributes\Small;
 use RuntimeException;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;
 
-/**
- * @small
- */
+#[Small]
 class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 {
     use InteractsWithMessenger;
