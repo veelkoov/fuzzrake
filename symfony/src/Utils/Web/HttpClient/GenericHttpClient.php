@@ -32,6 +32,8 @@ final class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
+        sleep(1); // TODO: Implement proper domain-based throttling
+
         $allHeaders = $addHeaders
             ->plus('User-Agent', self::HEADER_USER_AGENT)
             ->mapKeys(static fn (string $headerName) => "HTTP_$headerName");
