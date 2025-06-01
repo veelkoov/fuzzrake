@@ -57,7 +57,7 @@ final class DbSpeciesService
     public function removeSpeciesExceptForGivenNames(StringSet $specieNames): void
     {
         $obsoleteSpecieNames = $this->getNameToSpecie()->getKeys()->minusAll($specieNames);
-        $this->logger->info('Removing obsolete species from the DB.', ['missingSpecieNames' => $obsoleteSpecieNames]);
+        $this->logger->info('Removing obsolete species from the DB.', ['obsoleteSpecieNames' => $obsoleteSpecieNames]);
 
         foreach ($obsoleteSpecieNames as $obsoleteSpecieName) {
             $this->logger->info("Removing '$obsoleteSpecieName' specie...");
