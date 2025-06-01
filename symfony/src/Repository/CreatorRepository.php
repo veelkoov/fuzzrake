@@ -281,6 +281,11 @@ class CreatorRepository extends ServiceEntityRepository
                 ->join('d_c.creatorIds', 'd_ci')
                 ->where('d_ci.creatorId = :creatorId')
                 ->setParameter('creatorId', $creatorId)
+
+                // Keep photos in the same order in the I/U form; grep-code-order-support-workaround
+                ->leftJoin('d_c.urls', 'd_cu')
+                ->orderBy('d_cu.id')
+
                 ->getQuery()
                 ->getSingleResult();
         } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart

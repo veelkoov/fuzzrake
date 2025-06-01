@@ -95,7 +95,10 @@ class QueryChoicesAppender
             $builder->addOrderBy('last_update_datetime', 'DESC'); // Put recently updated makers on top
         }
 
-        $builder->addOrderBy('LOWER(d_c.name)'); // Then sort by name as typical
+        $builder
+            ->addOrderBy('LOWER(d_c.name)') // Then sort by name as typical
+            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
+        ;
     }
 
     private function applyPaging(QueryBuilder $builder): void

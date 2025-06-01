@@ -25,12 +25,14 @@
         "phpoffice/phpspreadsheet": "^3.7.0",
         "rawr/t-regx": "0.41.*",
         "symfony/apache-pack": "^1.0",
+        "symfony/browser-kit": "*",
         "symfony/console": "*",
         "symfony/doctrine-messenger": "*",
         "symfony/dotenv": "*",
         "symfony/flex": "*",
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
+        "symfony/http-client": "*",
         "symfony/mailer": "*",
         "symfony/messenger": "*",
         "symfony/monolog-bundle": "^3.6",
@@ -71,7 +73,8 @@
         "symfony/stopwatch": "*",
         "symfony/var-dumper": "*",
         "symfony/web-profiler-bundle": "*",
-        "vincentlanglet/twig-cs-fixer": "^3.4.0"
+        "vincentlanglet/twig-cs-fixer": "^3.4.0",
+        "zenstruck/messenger-test": "^1.11"
     },
     "config": {
         "preferred-install": {
