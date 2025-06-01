@@ -72,11 +72,11 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     private function getGraphQlJsonPayload(string $pictureId): string
     {
         return <<<GRAPHQL
-            {   
+            {
                 "operationName": "Medium",
                 "variables": {"id": "$pictureId"},
                 "query": "query Medium(\$id: ID!, \$tagging: Boolean) {
-                    medium(id: \$id, tagging: \$tagging) { thumbnail } 
+                    medium(id: \$id, tagging: \$tagging) { thumbnail }
                 }"
             }
         GRAPHQL;
@@ -92,7 +92,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
 
     private function getOptionalCsrfToken(): ?string
     {
-        return $this->httpClient->getSingleCookieValue('https://scritch.es/', 'csrf-token');
+        return $this->httpClient->getSingleCookieValue('csrf-token', 'scritch.es');
     }
 
     /**

@@ -17,5 +17,5 @@ interface HttpClientInterface
         ?string $content = null,
     ): Snapshot;
 
-    public function getSingleCookieValue(string $url, string $cookieName): ?string;
+    public function getSingleCookieValue(string $cookieName, string $domain): ?string;
 }

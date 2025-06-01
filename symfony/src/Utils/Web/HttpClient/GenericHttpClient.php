@@ -8,7 +8,6 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url;
-use Nette\Http\Url as NetteUrl;
 use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -82,8 +81,8 @@ final class GenericHttpClient implements HttpClientInterface
     }
 
     #[Override]
-    public function getSingleCookieValue(string $url, string $cookieName): ?string
+    public function getSingleCookieValue(string $cookieName, string $domain): ?string
     {
-        return $this->browser->getCookieJar()->get($cookieName, domain: (new NetteUrl($url))->getDomain())?->getValue();
+        return $this->browser->getCookieJar()->get($cookieName, domain: $domain)?->getValue();
     }
 }
