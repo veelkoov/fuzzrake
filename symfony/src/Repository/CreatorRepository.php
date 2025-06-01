@@ -280,7 +280,6 @@ class CreatorRepository extends ServiceEntityRepository
             $resultData = $this->createQueryBuilder('d_c')
                 ->join('d_c.creatorIds', 'd_ci')
                 ->leftJoin('d_c.urls', 'd_cu')
-                ->leftJoin('d_cu.state', 'd_cus')
                 ->where('d_ci.creatorId = :creatorId')
                 ->orderBy('d_cu.id') // Keep photos in the same order in the I/U form; grep-code-order-support-workaround
                 ->setParameter('creatorId', $creatorId)
