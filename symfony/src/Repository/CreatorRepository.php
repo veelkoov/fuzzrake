@@ -279,10 +279,13 @@ class CreatorRepository extends ServiceEntityRepository
         try {
             $resultData = $this->createQueryBuilder('d_c')
                 ->join('d_c.creatorIds', 'd_ci')
-                ->leftJoin('d_c.urls', 'd_cu')
                 ->where('d_ci.creatorId = :creatorId')
-                ->orderBy('d_cu.id') // Keep photos in the same order in the I/U form; grep-code-order-support-workaround
                 ->setParameter('creatorId', $creatorId)
+
+                // Keep photos in the same order in the I/U form; grep-code-order-support-workaround
+                ->leftJoin('d_c.urls', 'd_cu')
+                ->orderBy('d_cu.id')
+
                 ->getQuery()
                 ->getSingleResult();
         } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart
