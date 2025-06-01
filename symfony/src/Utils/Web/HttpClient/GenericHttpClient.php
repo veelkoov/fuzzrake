@@ -16,8 +16,9 @@ use Symfony\Component\BrowserKit\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Veelkoov\Debris\StringStringMap;
 
-class GenericHttpClient implements HttpClientInterface
+final class GenericHttpClient implements HttpClientInterface
 {
+    private const string HEADER_USER_AGENT = 'Mozilla/5.0 (compatible; getfursu.it_bot/0.11; +https://getfursu.it/)';
     private readonly HttpBrowser $browser;
 
     public function __construct(
@@ -32,7 +33,10 @@ class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        $server = [...$addHeaders->mapKeys(static fn (string $headerName) => "HTTP_$headerName")]; // grep-code-debris-needs-improvements
+        $allHeaders = $addHeaders
+            ->plus('User-Agent', self::HEADER_USER_AGENT)
+            ->mapKeys(static fn (string $headerName) => "HTTP_$headerName");
+        $server = [...$allHeaders]; // grep-code-debris-needs-improvements
 
         $this->browser->request($method, $url->getUrl(), server: $server, content: $content);
         $response = $this->browser->getInternalResponse();
