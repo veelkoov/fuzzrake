@@ -97,7 +97,7 @@ class QueryChoicesAppender
 
         $builder
             ->addOrderBy('LOWER(d_c.name)') // Then sort by name as typical
-            ->addOrderBy('d_cu.id') // Make sure miniatures are ordered on creator cards; grep-code-order-support-workaround
+            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
         ;
     }
 

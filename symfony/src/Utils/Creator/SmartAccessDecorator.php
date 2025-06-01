@@ -794,7 +794,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setPhotoUrls(array $photoUrls): self
     {
         if ($this->getPhotoUrls() !== $photoUrls) {
-            // grep-code-order-support-workaround
+            // Make sure the photos are properly ordered in the I/U form; grep-code-order-support-workaround
             $this->setUrls(Field::URL_PHOTOS, []);
         }
 
@@ -817,7 +817,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setMiniatureUrls(array $miniatureUrls): self
     {
         if ($this->getMiniatureUrls() !== $miniatureUrls) {
-            // Reordering of miniatures: grep-code-order-support-workaround
+            // Make sure the miniatures are properly ordered on the creator card; grep-code-order-support-workaround
             $this->setUrls(Field::URL_MINIATURES, []);
         }
 

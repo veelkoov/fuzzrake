@@ -36,7 +36,7 @@ final class SmartUrlAccessor
      */
     public static function setList(Creator $creator, string $type, array $newUrls): void
     {
-        // Note reordering of miniatures: grep-code-order-support-workaround
+        // Note reordering of miniatures; grep-code-order-support-workaround
         $existingObjects = self::getObjects($creator, $type);
 
         foreach ($existingObjects as $existingObject) {
