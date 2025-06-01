@@ -18,7 +18,7 @@ trait HttpClientMockTrait
             $expected = array_shift($expectedHttpCalls);
             self::assertNotNull($expected);
 
-            self::assertSame($expected->method, $method, 'Unexpected different HTTP method to be used.');
+            self::assertSame($expected->method, $method, 'Expected different HTTP method to be used.');
             self::assertSame($expected->url, $url, 'Expected different URL to be requested.');
 
             $headers = $options['headers'] ?? [];

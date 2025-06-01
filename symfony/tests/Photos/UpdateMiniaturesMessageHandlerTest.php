@@ -46,7 +46,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
 
         $creatorRepositoryMock = $this->createMock(CreatorRepository::class);
         $creatorRepositoryMock->expects(self::once())->method('getAllPaged')
-            ->willReturnCallback(function () use ($creators) {yield from $creators; });
+            ->willReturnCallback(function () use ($creators) { yield from $creators; });
 
         $updaterMock = $this->createMock(MiniaturesUpdater::class);
 
@@ -63,7 +63,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
 
         $subject->handle(new UpdateMiniaturesV1(null));
 
-        self::assertSame(0, $creators->count(), 'Sanity check failed.');
+        self::assertTrue($creators->isEmpty(), 'Sanity check failed.');
     }
 
     private function getSubject(CreatorRepository $creatorRepositoryMock, MiniaturesUpdater $updaterMock): UpdateMiniaturesMessageHandler
