@@ -7,10 +7,9 @@ namespace App\Tests\Utils\Creator;
 use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
 {
     /**

@@ -18,10 +18,6 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -37,17 +33,3 @@ services:
             - { name: 'doctrine.event_subscriber' }
         arguments:
             - '@cache.app'
-
-    App\Event\Doctrine\CreatorListener:
-        tags:
-            - name: 'doctrine.orm.entity_listener'
-              event: 'preFlush'
-              entity: 'App\Entity\Creator'
-              lazy: true
-
-    App\Event\Doctrine\CreatorUrlListener:
-        tags:
-            - name: 'doctrine.orm.entity_listener'
-              event: 'preUpdate'
-              entity: 'App\Entity\CreatorUrl'
-              lazy: true

@@ -10,18 +10,16 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\FieldValue;
 use DateTimeImmutable;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Throwable;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class FieldValueTest extends TestCase
 {
-    /**
-     * @dataProvider validateTypeDataProvider
-     */
+    #[DataProvider('validateTypeDataProvider')]
     public function testValidateType(Field $field, mixed $value, bool $isOk): void
     {
         if (!$isOk) {
@@ -33,11 +31,11 @@ class FieldValueTest extends TestCase
         FieldValue::validateType($field, $value);
     }
 
-    public function validateTypeDataProvider(): DataProvider
+    public static function validateTypeDataProvider(): TestDataProvider
     {
         $date = new DateTimeImmutable();
 
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [Field::NAME, null,     false],
             [Field::NAME, '',       true],
             [Field::NAME, 'Name',   true],
@@ -79,10 +77,9 @@ class FieldValueTest extends TestCase
     }
 
     /**
-     * @dataProvider fromStringDataProvider
-     *
      * @param Throwable|list<string>|string|bool $expected
      */
+    #[DataProvider('fromStringDataProvider')]
     public function testFromString(Field $field, string $value, Throwable|array|string|bool $expected): void
     {
         if ($expected instanceof Throwable) {
@@ -92,11 +89,11 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::fromString($field, $value));
     }
 
-    public function fromStringDataProvider(): DataProvider
+    public static function fromStringDataProvider(): TestDataProvider
     {
         $iae = new InvalidArgumentException();
 
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [Field::NAME, '', ''],
             [Field::NAME, 'OK', 'OK'],
 
@@ -115,9 +112,7 @@ class FieldValueTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider isProvidedDataProvider
-     */
+    #[DataProvider('isProvidedDataProvider')]
     public function testIsProvided(Field $field, mixed $value, Throwable|bool $expected): void
     {
         if ($expected instanceof Throwable) {
@@ -127,12 +122,12 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::isProvided($field, $value));
     }
 
-    public function isProvidedDataProvider(): DataProvider
+    public static function isProvidedDataProvider(): TestDataProvider
     {
         $iae = new InvalidArgumentException();
         $date = new DateTimeImmutable();
 
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [Field::NAME, null,     $iae],
             [Field::NAME, '',       false],
             [Field::NAME, 'Name',   true],

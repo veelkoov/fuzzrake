@@ -14,6 +14,7 @@ use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
 use App\Entity\CreatorPrivateData;
+use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
 use App\Utils\Collections\Lists;
@@ -780,10 +781,23 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
+     * @return list<CreatorUrl>
+     */
+    public function getPhotoUrlObjects(): array
+    {
+        return $this->getUrlObjects(Field::URL_PHOTOS);
+    }
+
+    /**
      * @param list<string> $photoUrls
      */
     public function setPhotoUrls(array $photoUrls): self
     {
+        if ($this->getPhotoUrls() !== $photoUrls) {
+            // Make sure the photos are properly ordered in the I/U form; grep-code-order-support-workaround
+            $this->setUrls(Field::URL_PHOTOS, []);
+        }
+
         return $this->setUrls(Field::URL_PHOTOS, $photoUrls);
     }
 
@@ -798,11 +812,16 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @param list<string> $scritchMiniatureUrls
+     * @param list<string> $miniatureUrls
      */
-    public function setMiniatureUrls(array $scritchMiniatureUrls): self
+    public function setMiniatureUrls(array $miniatureUrls): self
     {
-        return $this->setUrls(Field::URL_MINIATURES, $scritchMiniatureUrls);
+        if ($this->getMiniatureUrls() !== $miniatureUrls) {
+            // Make sure the miniatures are properly ordered on the creator card; grep-code-order-support-workaround
+            $this->setUrls(Field::URL_MINIATURES, []);
+        }
+
+        return $this->setUrls(Field::URL_MINIATURES, $miniatureUrls);
     }
 
     #[Length(max: 1024)]
@@ -860,6 +879,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getUrls(Field $urlField): array
     {
         return SmartUrlAccessor::getList($this, $urlField->value);
+    }
+
+    /**
+     * @return list<CreatorUrl>
+     */
+    private function getUrlObjects(Field $urlField): array
+    {
+        return SmartUrlAccessor::getObjects($this, $urlField->value);
     }
 
     private function setUrl(Field $urlField, string $newUrl): self

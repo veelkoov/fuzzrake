@@ -6,10 +6,9 @@ namespace App\Tests\Controller\Traits;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class ButtonClickedTraitTest extends FuzzrakeWebTestCase
 {
     #[Override]

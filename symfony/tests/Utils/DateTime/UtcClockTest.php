@@ -8,11 +8,11 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class UtcClockTest extends FuzzrakeTestCase
 {
     public function testGetUtc(): void
@@ -41,9 +41,7 @@ class UtcClockTest extends FuzzrakeTestCase
         self::assertSame('UTC', $subject->getTimezone()->getName());
     }
 
-    /**
-     * @dataProvider atThrowsOnInvalidDataProvider
-     */
+    #[DataProvider('atThrowsOnInvalidDataProvider')]
     public function testAtThrowsOnInvalid(string|int|bool|null $input): void
     {
         $this->expectNotToPerformAssertions();
@@ -56,12 +54,12 @@ class UtcClockTest extends FuzzrakeTestCase
         }
     }
 
-    public function atThrowsOnInvalidDataProvider(): DataProvider
+    public static function atThrowsOnInvalidDataProvider(): TestDataProvider
     {
         // The method will be used in some cases where data will be typehinted as many different things.
         // Example: Doctrine's single scalar result. The simplest solution is to (string) cast.
         // Below cases cover also the least possible.
-        return DataProvider::list('some invalid info', '', '0', '1', 0, 1, false, true, null);
+        return TestDataProvider::list('some invalid info', '', '0', '1', 0, 1, false, true, null);
     }
 
     public function testFromTimestamp(): void

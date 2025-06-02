@@ -12,7 +12,6 @@ use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\CreatorRepository;
 use App\Utils\Collections\Arrays;
-use App\Utils\Collections\StringLists;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
@@ -61,7 +60,6 @@ class UpdatesService
         $updatedCreator = clone $originalCreator;
         $this->updateWith($updatedCreator, $fixedInput, Fields::iuFormAffected());
 
-        $this->handleSpecialFieldsInEntity($updatedCreator, $originalCreator);
         $manager->correctCreator($updatedCreator);
 
         $isNew = null === $originalCreator->getId();
@@ -147,14 +145,6 @@ class UpdatesService
             } else {
                 $submission->setFormerCreatorIds($original->getFormerCreatorIds());
             }
-        }
-    }
-
-    private function handleSpecialFieldsInEntity(Creator $updatedCreator, Creator $originalCreator): void
-    {
-        // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
-        if (!StringLists::sameElements($updatedCreator->getPhotoUrls(), $originalCreator->getPhotoUrls())) {
-            $updatedCreator->setMiniatureUrls([]); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
         }
     }
 

@@ -13,13 +13,13 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 use Random\RandomException;
 use RuntimeException;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @medium
- */
+#[Medium]
 class SubmissionsControllerTest extends FuzzrakeWebTestCase
 {
     #[Override]
@@ -351,9 +351,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
-    /**
-     * @dataProvider passwordHandlingAndAcceptingWorksDataProvider
-     */
+    #[DataProvider('passwordHandlingAndAcceptingWorksDataProvider')]
     public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
         if (!$new) {
@@ -390,7 +388,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{0: bool, 1: bool}>
      */
-    public function passwordHandlingAndAcceptingWorksDataProvider(): array
+    public static function passwordHandlingAndAcceptingWorksDataProvider(): array
     {
         return [
             'New creator, not accepted'                => [true,  true,  false],
@@ -415,9 +413,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextContains('p.text-body', 'Changed NAME from "Old name" to "New name"');
     }
 
-    /**
-     * @dataProvider contactInfoWorksDataProvider
-     */
+    #[DataProvider('contactInfoWorksDataProvider')]
     public function testContactInfoWorks(bool $allowed): void
     {
         $address = 'getfursu.it@example.com';
@@ -447,7 +443,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{bool}>
      */
-    public function contactInfoWorksDataProvider(): array
+    public static function contactInfoWorksDataProvider(): array
     {
         return [
             'Contact allowed'    => [true],
@@ -463,9 +459,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(404);
     }
 
-    /**
-     * @dataProvider passwordIsRedactedDataProvider
-     */
+    #[DataProvider('passwordIsRedactedDataProvider')]
     public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
     {
         if (!$isNew) {
@@ -494,7 +488,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{bool, bool}>
      */
-    public function passwordIsRedactedDataProvider(): array
+    public static function passwordIsRedactedDataProvider(): array
     {
         return [
             'New creator'                          => [true, false],

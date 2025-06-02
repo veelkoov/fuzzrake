@@ -188,7 +188,6 @@ Available actions:
     prettier     Symfony: run Prettier
 
     gradle       Kotlin: run Gradle command
-    miniatures   Kotlin: set miniatures data for changed photos
 EOF
 }
 
@@ -245,12 +244,10 @@ function action() {
         'release-beta') action_release_beta ;;
         'release-prod') action_release_prod ;;
 
-        'get-snapshots')   action_get_snapshots ;;
+        'get-snapshots') action_get_snapshots ;;
 
-        # Ugly but should be temporary
+        # Work in progress on moving all into Symfony
         'gradle')       run_gradle "$@" ;;
-        'miniatures')   run_gradle run --args update-miniatures "$@" ;;
-        'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

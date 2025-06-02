@@ -9,12 +9,13 @@ use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 
 /**
  * @see \App\Tests\Controller\FeedbackControllerTest
- *
- * @large
  */
+#[Large]
 class FeedbackControllerTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
@@ -22,7 +23,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
     /**
      * @return array<array{string, Creator}>
      */
-    public function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
+    public static function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
     {
         $official = Creator::new()->setCountry('FI')->setName('Modern creator')
             ->setCreatorId('TEST001');
@@ -38,9 +39,8 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
 
     /**
      * @throws WebDriverException
-     *
-     * @dataProvider feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider
      */
+    #[DataProvider('feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider')]
     public function testFeedbackFromCreatorCardCarriesCreatorIdOverToTheForm(string $expectedCreatorId, Creator $creator): void
     {
         self::persistAndFlush($creator);

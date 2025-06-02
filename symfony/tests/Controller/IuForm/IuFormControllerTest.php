@@ -12,11 +12,10 @@ use App\Entity\Submission;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class IuFormControllerTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
@@ -45,9 +44,8 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
     /**
      * @param list<array{value: string, label: string}> $choices
-     *
-     * @dataProvider formsChoicesValuesAndLabelsDataProvider
      */
+    #[DataProvider('formsChoicesValuesAndLabelsDataProvider')]
     public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
         self::$client->request('GET', '/iu_form/start');

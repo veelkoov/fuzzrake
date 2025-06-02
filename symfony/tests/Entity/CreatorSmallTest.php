@@ -15,15 +15,14 @@ use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
 use App\Entity\Specie;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
 
-/**
- * @small
- */
-class CreatorTest extends TestCase
+#[Small]
+class CreatorSmallTest extends TestCase
 {
     /**
      * @var list<string>

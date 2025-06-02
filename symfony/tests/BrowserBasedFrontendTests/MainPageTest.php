@@ -16,10 +16,9 @@ use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
+use PHPUnit\Framework\Attributes\Large;
 
-/**
- * @large
- */
+#[Large]
 class MainPageTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;

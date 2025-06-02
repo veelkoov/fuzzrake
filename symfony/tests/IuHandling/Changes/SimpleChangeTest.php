@@ -8,17 +8,15 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Changes\SimpleChange;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class SimpleChangeTest extends TestCase
 {
-    /**
-     * @dataProvider simpleChangeDataProvider
-     */
+    #[DataProvider('simpleChangeDataProvider')]
     public function testSimpleChange(Field $field,
         DateTimeImmutable|Ages|string|bool|null $old,
         DateTimeImmutable|Ages|string|bool|null $new,
@@ -30,12 +28,12 @@ class SimpleChangeTest extends TestCase
         self::assertSame($description, $subject->getDescription());
     }
 
-    public function simpleChangeDataProvider(): DataProvider
+    public static function simpleChangeDataProvider(): TestDataProvider
     {
         $date = new DateTimeImmutable('2024-05-19 20:46:00');
         $chdt = new DateTimeImmutable('2024-05-19 20:47:00');
 
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [Field::NAME, 'Name', 'Name', false, 'NAME did not change'],
             [Field::NAME, '',     'Name', true,  'Added NAME: "Name"'],
             [Field::NAME, 'Name', '',     true,  'Removed NAME: "Name"'],

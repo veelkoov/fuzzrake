@@ -114,6 +114,7 @@ class CreatorRepository extends ServiceEntityRepository
         $queryBuilder = $this->getCreatorsQueryBuilder()
             ->where('d_c.inactiveReason = :empty')
             ->setParameter('empty', '')
+            ->orderBy('d_c.id')
         ;
 
         return $this->getPaged($queryBuilder);
@@ -151,6 +152,7 @@ class CreatorRepository extends ServiceEntityRepository
                     )),
             ))
             ->setParameters($parameters)
+            ->orderBy('d_c.id')
         ;
 
         return $this->getPaged($queryBuilder);
@@ -166,7 +168,7 @@ class CreatorRepository extends ServiceEntityRepository
             ->leftJoin('d_c.offerStatuses', 'd_cos')->addSelect('d_cos')
             ->leftJoin('d_c.creatorIds', 'd_ci')->addSelect('d_ci')
             ->leftJoin('d_c.values', 'd_cv')->addSelect('d_cv')
-            ->orderBy('d_c.name', 'ASC');
+        ;
     }
 
     /**
@@ -279,6 +281,11 @@ class CreatorRepository extends ServiceEntityRepository
                 ->join('d_c.creatorIds', 'd_ci')
                 ->where('d_ci.creatorId = :creatorId')
                 ->setParameter('creatorId', $creatorId)
+
+                // Keep photos in the same order in the I/U form; grep-code-order-support-workaround
+                ->leftJoin('d_c.urls', 'd_cu')
+                ->orderBy('d_cu.id')
+
                 ->getQuery()
                 ->getSingleResult();
         } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart
@@ -332,7 +339,7 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Paginator<Creator>
+     * @return Paginator<array{0: Creator}>
      */
     public function getFiltered(QueryChoicesAppender $appender): Paginator
     {
@@ -340,12 +347,6 @@ class CreatorRepository extends ServiceEntityRepository
 
         $appender->applyChoices($builder);
 
-        $query = $builder
-            ->orderBy('LOWER(d_c.name)')
-            ->getQuery();
-
-        $appender->applyPaging($query);
-
-        return new Paginator($query, fetchJoinCollection: true);
+        return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
     }
 }

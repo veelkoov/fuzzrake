@@ -7,11 +7,11 @@ namespace App\Tests\Controller\IuForm;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @medium
- */
+#[Medium]
 class IuFormValidationTest extends FuzzrakeWebTestCase
 {
     use IuFormTrait;
@@ -78,9 +78,8 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
 
     /**
      * @param array<string, string> $expectedErrors
-     *
-     * @dataProvider ageStuffFieldsDataProvider
      */
+    #[DataProvider('ageStuffFieldsDataProvider')]
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
     {
         self::$client->request('GET', '/iu_form/start');
@@ -117,9 +116,9 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         }
     }
 
-    public function ageStuffFieldsDataProvider(): DataProvider
+    public static function ageStuffFieldsDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
             //         WEB.   SOCIAL  NSFW   W/MINORS  ERRORS
             ['MINORS', 'NO',  'NO',   null,  null,     [
@@ -170,9 +169,9 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         );
     }
 
-    public function iuFormContactAndPasswordValidationDataProvider(): DataProvider
+    public static function iuFormContactAndPasswordValidationDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [
                 null, // No pre-existing creator
                 'new-password', // Setting a new password
@@ -286,9 +285,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         );
     }
 
-    /**
-     * @dataProvider iuFormContactAndPasswordValidationDataProvider
-     */
+    #[DataProvider('iuFormContactAndPasswordValidationDataProvider')]
     public function testIuFormContactAndPasswordValidation(
         ?ContactPermit $previousContactPermit,
         ?string $password,

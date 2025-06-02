@@ -6,15 +6,18 @@ namespace App\Entity;
 
 use App\Data\Definitions\ContactPermit;
 use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
 use Stringable;
 
 #[ORM\Entity(repositoryClass: CreatorRepository::class)]
 #[ORM\Table(name: 'creators')]
+#[ORM\HasLifecycleCallbacks]
 class Creator implements Stringable
 {
     #[ORM\Id]
@@ -594,5 +597,12 @@ class Creator implements Stringable
         $this->species->removeElement($specie);
 
         return $this;
+    }
+
+    /** @noinspection PhpUnusedParameterInspection */
+    #[ORM\PreFlush]
+    public function preFlush(PreFlushEventArgs $event): void
+    {
+        SmartAccessDecorator::wrap($this)->assureNsfwSafety();
     }
 }

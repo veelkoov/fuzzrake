@@ -17,10 +17,10 @@ final class SmartUrlAccessor
     /**
      * @return list<ItemType>
      */
-    private static function getObjects(Creator $creator, string $type): array
+    public static function getObjects(Creator $creator, string $type): array
     {
         return Vec\filter($creator->getCreator()->getUrls(),
-            fn (ItemType $url) => $url->getType() === $type);
+            fn (ItemType $url): bool => $url->getType() === $type);
     }
 
     /**
@@ -36,6 +36,7 @@ final class SmartUrlAccessor
      */
     public static function setList(Creator $creator, string $type, array $newUrls): void
     {
+        // Note reordering of miniatures; grep-code-order-support-workaround
         $existingObjects = self::getObjects($creator, $type);
 
         foreach ($existingObjects as $existingObject) {

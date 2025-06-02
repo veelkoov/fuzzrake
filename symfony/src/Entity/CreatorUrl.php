@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CreatorUrlRepository;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\Web\Url;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
 use Stringable;
 
 #[ORM\Entity(repositoryClass: CreatorUrlRepository::class)]
 #[ORM\Table(name: 'creators_urls')]
-class CreatorUrl implements Stringable
+#[ORM\HasLifecycleCallbacks]
+class CreatorUrl implements Stringable, Url
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -96,18 +100,35 @@ class CreatorUrl implements Stringable
         return $this;
     }
 
-    public function resetFetchResults(): void
+    #[ORM\PreUpdate]
+    public function preUpdate(PreUpdateEventArgs $event): void
     {
-        $this->getState()
-            ->setLastFailureUtc(null)
-            ->setLastSuccessUtc(null)
-            ->setLastFailureReason('')
-            ->setLastFailureCode(0);
+        if ($event->getNewValue('url') !== $event->getOldValue('url') && null !== $this->state) {
+            $this->getState()
+                ->setLastFailureUtc(null)
+                ->setLastSuccessUtc(null)
+                ->setLastFailureReason('')
+                ->setLastFailureCode(0);
+        }
     }
 
     #[Override]
     public function __toString(): string
     {
         return self::class.":$this->id:$this->url";
+    }
+
+    #[Override]
+    public function recordSuccessfulFetch(): void
+    {
+        $this->getState()->setLastSuccessUtc(UtcClock::now());
+    }
+
+    #[Override]
+    public function recordFailedFetch(int $code, string $reason): void
+    {
+        $this->getState()->setLastFailureUtc(UtcClock::now());
+        $this->getState()->setLastFailureCode($code);
+        $this->getState()->setLastFailureReason($reason);
     }
 }

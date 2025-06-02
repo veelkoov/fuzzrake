@@ -8,10 +8,9 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Collections\ArrayReader;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
+use PHPUnit\Framework\Attributes\Medium;
 
-/**
- * @medium
- */
+#[Medium]
 class RestApiControllerTest extends FuzzrakeWebTestCase
 {
     /**
