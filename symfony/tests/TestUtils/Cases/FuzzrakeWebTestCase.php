@@ -8,8 +8,6 @@ use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\CaptchaTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use App\Tests\TestUtils\Cases\Traits\FormsTrait;
-use App\Utils\TestUtils\TestsBridge;
-use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -28,13 +26,5 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
 
         self::$client = static::createClient();
         self::resetDB();
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        TestsBridge::reset();
     }
 }

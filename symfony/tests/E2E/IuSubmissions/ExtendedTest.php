@@ -11,12 +11,12 @@ use App\Tests\TestUtils\JsonCreatorDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
-use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Medium;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
@@ -28,6 +28,7 @@ use TRegx\CleanRegex\Pattern;
 class ExtendedTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
+    use ClockSensitiveTrait;
 
     private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::EMAIL_ADDRESS,
@@ -86,7 +87,7 @@ class ExtendedTest extends IuSubmissionsTestCase
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         self::sanityChecks();
 

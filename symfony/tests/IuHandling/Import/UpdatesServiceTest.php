@@ -14,15 +14,19 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\UtcClockMock;
+use App\Utils\StrUtils;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Small]
 class UpdatesServiceTest extends FuzzrakeTestCase
 {
+    use ClockSensitiveTrait;
+
     public function testUpdateHandlesNewEmailProperly(): void
     {
         $submission = SubmissionService::getEntityForSubmission((new Creator())
@@ -105,7 +109,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testAddedDateIsHandledProperly(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         $submission = SubmissionService::getEntityForSubmission((new Creator())
             ->setCreatorId('TEST001')
@@ -116,14 +120,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         ]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals(null, $result->originalCreator->getDateAdded());
-        self::assertEquals(null, $result->originalCreator->getDateUpdated());
+        self::assertNull($result->originalCreator->getDateAdded());
+        self::assertNull($result->originalCreator->getDateUpdated());
 
-        self::assertEquals(UtcClock::now(), $result->originalInput->getDateAdded());
-        self::assertEquals(null, $result->originalInput->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->originalInput->getDateAdded());
+        self::assertNull($result->originalInput->getDateUpdated());
 
-        self::assertEquals(UtcClock::now(), $result->updatedCreator->getDateAdded());
-        self::assertEquals(null, $result->updatedCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateAdded());
+        self::assertNull($result->updatedCreator->getDateUpdated());
     }
 
     /**
@@ -131,7 +135,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
      */
     public function testUpdatedDateIsHandledProperly(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         $dateAdded = UtcClock::at('2022-09-09 09:09:09');
 
@@ -149,14 +153,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         ]);
         $result = $subject->getUpdateFor($submission);
 
-        self::assertEquals($dateAdded, $result->originalCreator->getDateAdded());
-        self::assertEquals(null, $result->originalCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->originalCreator->getDateAdded());
+        self::assertNull($result->originalCreator->getDateUpdated());
 
-        self::assertEquals($dateAdded, $result->originalInput->getDateAdded());
-        self::assertEquals(UtcClock::now(), $result->originalInput->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->originalInput->getDateAdded());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->originalInput->getDateUpdated());
 
-        self::assertEquals($dateAdded, $result->updatedCreator->getDateAdded());
-        self::assertEquals(UtcClock::now(), $result->updatedCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->updatedCreator->getDateAdded());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
     public function testResolvingMultipleMatchedByCreatorId(): void
@@ -253,5 +257,11 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $loggerStub = self::createStub(LoggerInterface::class);
 
         return new UpdatesService($creatorRepoMock, $fixerMock, $messageBusStub, $loggerStub);
+    }
+
+    private static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
+    {
+        self::assertSame($expected->getTimezone()->getName(), $actual->getTimezone()->getName());
+        self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
 }

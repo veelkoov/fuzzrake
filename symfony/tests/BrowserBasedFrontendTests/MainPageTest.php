@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\UtcClockMock;
 use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
@@ -17,11 +16,13 @@ use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\Attributes\Large;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 #[Large]
 class MainPageTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
+    use ClockSensitiveTrait;
 
     /**
      * @throws Exception
@@ -130,7 +131,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testNewlyAddedIndicators(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
         $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));

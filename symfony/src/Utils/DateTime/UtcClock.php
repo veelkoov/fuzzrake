@@ -4,17 +4,30 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
-use App\Utils\TestUtils\TestsBridge;
-use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\Traits\UtilityClass;
 use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use RuntimeException;
+use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\DatePoint;
 
 final class UtcClock
 {
     use UtilityClass;
+
+    public static function get(): ClockInterface
+    {
+        $result = Clock::get();
+
+        if ('UTC' !== $result->now()->getTimezone()->getName()) {
+            throw new RuntimeException('Global clock is not set to UTC.');
+        }
+
+        return $result;
+    }
 
     public static function getUtc(): DateTimeZone
     {
@@ -23,7 +36,12 @@ final class UtcClock
 
     public static function now(): DateTimeImmutable
     {
-        return self::fromTimestamp(self::time());
+        return self::get()->now();
+    }
+
+    public static function sleep(int $seconds): void
+    {
+        self::get()->sleep($seconds);
     }
 
     /**
@@ -43,10 +61,10 @@ final class UtcClock
     public static function fromTimestamp(int $timestamp): DateTimeImmutable
     {
         try {
-            return (new DateTimeImmutable("@$timestamp"))->setTimezone(self::getUtc());
-        } catch (Exception $exception) { // @codeCoverageIgnoreStart
+            return DatePoint::createFromTimestamp($timestamp)->setTimezone(self::getUtc());
+        } catch (Exception $exception) {
             throw new UnbelievableRuntimeException($exception); // Each timestamp can be converted to a date
-        } // @codeCoverageIgnoreEnd
+        }
     }
 
     public static function passed(DateTimeImmutable $dateTime): bool
@@ -54,13 +72,8 @@ final class UtcClock
         return self::now() > $dateTime;
     }
 
-    public static function timems(): int
-    {
-        return TestsBridge::isTest() ? UtcClockMock::timems() : (int) (microtime(true) * 1000);
-    }
-
     public static function time(): int
     {
-        return TestsBridge::isTest() ? UtcClockMock::time() : time();
+        return self::get()->now()->getTimestamp();
     }
 }

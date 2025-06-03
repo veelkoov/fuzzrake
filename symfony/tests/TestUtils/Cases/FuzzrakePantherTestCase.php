@@ -7,7 +7,6 @@ namespace App\Tests\TestUtils\Cases;
 use App\Tests\TestUtils\Cases\Traits\BrowserTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
-use App\Utils\TestUtils\TestsBridge;
 use Facebook\WebDriver\WebDriverDimension;
 use Override;
 use Symfony\Component\Panther\Client;
@@ -32,13 +31,5 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         self::$client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
 
         self::resetDB();
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        TestsBridge::reset();
     }
 }
