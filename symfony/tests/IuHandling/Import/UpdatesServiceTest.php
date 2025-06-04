@@ -14,8 +14,6 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\StrUtils;
-use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Small;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
@@ -257,11 +255,5 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $loggerStub = self::createStub(LoggerInterface::class);
 
         return new UpdatesService($creatorRepoMock, $fixerMock, $messageBusStub, $loggerStub);
-    }
-
-    private static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
-    {
-        self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
-        self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
 }
