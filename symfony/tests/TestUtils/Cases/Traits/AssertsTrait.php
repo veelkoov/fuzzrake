@@ -4,18 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
+use App\Utils\StrUtils;
+use DateTimeImmutable;
+
 trait AssertsTrait
 {
-    /**
-     * Error output of the default makes result analysis difficult because the whole response is compared instead of just the code.
-     *
-     * @see BrowserKitAssertionsTrait::assertResponseStatusCodeSame()
-     */
-    public static function assertResponseStatusCodeIs(int $expectedCode): void
-    {
-        self::assertSame($expectedCode, self::$client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
-    }
-
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
     {
         $pattern = pattern('\s+');
@@ -36,5 +29,11 @@ trait AssertsTrait
         sort($actual);
 
         self::assertEquals($expected, $actual, $message);
+    }
+
+    protected static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
+    {
+        self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
+        self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
 }

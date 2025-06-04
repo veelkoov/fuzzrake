@@ -8,12 +8,14 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\UtcClockMock;
 use PHPUnit\Framework\Attributes\Medium;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 #[Medium]
 class MainControllerTest extends FuzzrakeWebTestCase
 {
+    use ClockSensitiveTrait;
+
     public function testMainPageLoads(): void
     {
         self::addSimpleCreator();
@@ -29,7 +31,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
      */
     public function testRecentlyAddedPage(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setDateAdded(UtcClock::at('-43 days'));
         $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setDateAdded(UtcClock::at('-41 days'));

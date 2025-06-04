@@ -8,14 +8,16 @@ use App\Entity\Event;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\TestUtils\UtcClockMock;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class EventsControllerTest extends FuzzrakeWebTestCase
 {
+    use ClockSensitiveTrait;
+
     public function testPageLoads(): void
     {
         self::$client->request('GET', '/events');
@@ -98,7 +100,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
      */
     public function testAtomFeedShowsOnlyEventsYoungerThan4Days(): void
     {
-        UtcClockMock::start();
+        self::mockTime();
 
         $fourDaysInSeconds = 4 * 24 * 60 * 60;
         $older = UtcClock::time() - $fourDaysInSeconds - 1;

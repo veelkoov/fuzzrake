@@ -12,13 +12,12 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\Utils\TestUtils\UtcClockMock;
 use App\ValueObject\Messages\EmailNotificationV1;
-use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -27,8 +26,9 @@ use Symfony\Component\Routing\RouterInterface;
 #[Small]
 class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 {
+    use ClockSensitiveTrait;
+
     private UrlRemovalService $subject;
-    private DateTimeInterface $now;
     private MessageBusInterface&MockObject $messengerBusMock;
 
     #[Override]
@@ -46,8 +46,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         $this->subject = new UrlRemovalService($entityManagerMock, 'ShortWebsiteName',
             'https://website.base.address.example.com', $routerMock, $this->messengerBusMock);
 
-        UtcClockMock::start();
-        $this->now = UtcClock::now();
+        self::mockTime();
     }
 
     /**
@@ -65,8 +64,9 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
         $this->subject->handleRemoval($creator, $data);
 
+        $dateTime = UtcClock::now()->format('Y-m-d H:i');
         self::assertEquals(<<<EXPECTED
-            On {$this->now->format('Y-m-d H:i')} UTC the following links have been found to no longer work or to be inactive and have been removed:
+            On $dateTime UTC the following links have been found to no longer work or to be inactive and have been removed:
             - https://example.com/
             - http://example.net/
             EXPECTED, $creator->getNotes());
@@ -86,8 +86,9 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
         $this->subject->handleRemoval($creator, $data);
 
+        $dateTime = UtcClock::now()->format('Y-m-d H:i');
         self::assertEquals(<<<EXPECTED
-            On {$this->now->format('Y-m-d H:i')} UTC the following links have been found to no longer work or to be inactive and have been removed:
+            On $dateTime UTC the following links have been found to no longer work or to be inactive and have been removed:
             - https://example.com/
 
             -----
