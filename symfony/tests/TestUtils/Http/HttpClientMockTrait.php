@@ -7,13 +7,18 @@ namespace App\Tests\TestUtils\Http;
 use App\Utils\Web\HttpClient\GenericHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 trait HttpClientMockTrait
 {
+    use ClockSensitiveTrait; // FIXME: Remove; grep-workaround-throttling
+
     public function getHttpClientMock(ExpectedHttpCall ...$expectedHttpCalls): HttpClientInterface
     {
+        self::mockTime();
+
         $factory = function (string $method, string $url, array $options) use (&$expectedHttpCalls): MockResponse {
             $expected = array_shift($expectedHttpCalls);
             self::assertNotNull($expected);
@@ -37,7 +42,7 @@ trait HttpClientMockTrait
         };
 
         return new GenericHttpClient(
-            $this->createStub(LoggerInterface::class),
+            self::createStub(LoggerInterface::class),
             new MockHttpClient($factory),
         );
     }

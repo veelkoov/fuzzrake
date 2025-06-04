@@ -261,7 +261,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     private static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
     {
-        self::assertSame($expected->getTimezone()->getName(), $actual->getTimezone()->getName());
+        self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
         self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
 }

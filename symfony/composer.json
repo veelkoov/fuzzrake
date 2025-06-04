@@ -95,8 +95,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/",
-            "PHPUnit\\": "vendor/bin/.phpunit/phpunit/src/"
+            "App\\Tests\\": "tests/"
         }
     },
     "scripts": {
