@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Cases\Traits\CaptchaTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use DOMElement;
 use LogicException;
+use Override;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -24,6 +25,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
 
     protected static KernelBrowser $client;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
