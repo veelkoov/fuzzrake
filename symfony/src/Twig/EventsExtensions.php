@@ -6,24 +6,15 @@ namespace App\Twig;
 
 use App\Entity\Event;
 use InvalidArgumentException;
-use Override;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\Attribute\AsTwigFunction;
 
-class EventsExtensions extends AbstractExtension
+class EventsExtensions
 {
-    #[Override]
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('event_description', $this->eventDescriptionFunction(...)),
-        ];
-    }
-
+    #[AsTwigFunction('event_description')]
     public function eventDescriptionFunction(Event $event): string
     {
         if (Event::TYPE_DATA_UPDATED !== $event->getType()) {
-            throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__FUNCTION__);
+            throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__METHOD__);
         }
 
         $n = $event->getNewCreatorsCount();

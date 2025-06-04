@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Twig;
 
-use App\Data\Validator\Validator;
 use App\Twig\AdminExtensions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
@@ -16,8 +15,7 @@ class AdminExtensionsTest extends TestCase
     #[DataProvider('linkUrlsDataProvider')]
     public function testLinkUrls(string $input, string $expectedOutput): void
     {
-        $validatorMock = $this->createMock(Validator::class);
-        $subject = new AdminExtensions($validatorMock);
+        $subject = new AdminExtensions();
 
         self::assertSame($expectedOutput, $subject->linkUrls($input));
     }
