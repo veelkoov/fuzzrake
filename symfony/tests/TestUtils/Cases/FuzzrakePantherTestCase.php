@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases;
 
-use App\Tests\TestUtils\Cases\Traits\BrowserTrait;
+use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
-use App\Utils\TestUtils\TestsBridge;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 use Override;
 use Symfony\Component\Panther\Client;
@@ -15,7 +17,7 @@ use Symfony\Component\Panther\PantherTestCase;
 
 abstract class FuzzrakePantherTestCase extends PantherTestCase
 {
-    use BrowserTrait;
+    use AssertsTrait;
     use CacheTrait;
     use EntityManagerTrait;
 
@@ -34,11 +36,67 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         self::resetDB();
     }
 
-    #[Override]
-    protected function tearDown(): void
+    /**
+     * @throws NoSuchElementException|TimeoutException
+     */
+    protected static function waitUntilShows(string $locator, int $millisecondsForAnimation = 500): void
     {
-        parent::tearDown();
+        usleep($millisecondsForAnimation * 1000);
+        self::assertSelectorExists($locator);
 
-        TestsBridge::reset();
+        try {
+            self::$client->waitForVisibility($locator, 5);
+        } catch (TimeoutException) {
+            self::fail("$locator did not become visible");
+        }
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    protected static function waitUntilHides(string $locator, int $millisecondsForAnimation = 500): void
+    {
+        usleep($millisecondsForAnimation * 1000);
+        self::assertSelectorExists($locator);
+
+        try {
+            self::$client->waitForInvisibility($locator, 5);
+        } catch (TimeoutException) {
+            self::fail("$locator did not become invisible");
+        }
+    }
+
+    protected static function assertVisible(string $locator, string $message = null): void
+    {
+        $exception = null;
+
+        try {
+            self::$client->waitForVisibility($locator, 5);
+        } catch (NoSuchElementException|TimeoutException $caught) {
+            $exception = $caught;
+        }
+
+        self::assertNull($exception, $message ?? "Element '$locator' is not visible.");
+    }
+
+    protected static function assertInvisible(string $locator, string $message = null): void
+    {
+        $exception = null;
+
+        try {
+            self::$client->waitForInvisibility($locator, 5);
+        } catch (NoSuchElementException|TimeoutException $caught) {
+            $exception = $caught;
+        }
+
+        self::assertNull($exception, $message ?? "Element '$locator' is visible.");
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    protected function selectRightCaptchaSolution(): void
+    {
+        self::$client->findElement(WebDriverBy::xpath('//label[text()="right"]'))->click();
     }
 }

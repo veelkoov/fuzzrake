@@ -32,7 +32,7 @@ final class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        sleep(1); // TODO: Implement proper domain-based throttling
+        UtcClock::sleep(1); // TODO: Implement proper domain-based throttling grep-workaround-throttling
 
         $allHeaders = $addHeaders
             ->plus('User-Agent', self::HEADER_USER_AGENT)

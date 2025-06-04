@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
-use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -17,7 +16,6 @@ use Symfony\Component\DomCrawler\Crawler;
 #[Medium]
 class MainControllerFiltersTest extends FuzzrakeWebTestCase
 {
-    use AssertsTrait;
     use FiltersTestTrait;
 
     /**
