@@ -9,23 +9,23 @@ use App\Entity\Submission;
 use App\IuHandling\Changes\Description;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
-class Update
+final readonly class Update
 {
-    public readonly UpdateContact $contact;
+    public UpdateContact $contact;
 
     /**
      * @param Creator[] $matchedCreators
      * @param string[]  $errors
      */
     public function __construct(
-        public readonly Submission $submission,
-        public readonly array $matchedCreators,
-        public readonly Creator $originalInput,
-        public readonly Creator $originalCreator,
-        public readonly Creator $updatedCreator,
-        public readonly array $errors,
-        public readonly bool $isAccepted,
-        public readonly bool $isNew,
+        public Submission $submission,
+        public array $matchedCreators,
+        public Creator $originalInput,
+        public Creator $originalCreator,
+        public Creator $updatedCreator,
+        public array $errors,
+        public bool $isAccepted,
+        public bool $isNew,
     ) {
         $this->contact = UpdateContact::from($this->originalCreator, $this->updatedCreator);
     }

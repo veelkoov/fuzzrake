@@ -21,6 +21,8 @@ class Event
     final public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
     final public const string TYPE_CS_UPDATED = 'CS_UPDATED';
     final public const string TYPE_GENERIC = 'GENERIC';
+    final public const string TYPE_CREATOR_ADDED = 'CREATOR_ADDED';
+    final public const string TYPE_CREATOR_UPDATED = 'CREATOR_UPDATED';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -47,6 +49,9 @@ class Event
 
     #[ORM\Column(type: Types::TEXT)]
     private string $creatorName = '';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $creatorId = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $checkedUrls = '';
@@ -176,6 +181,18 @@ class Event
     public function setCreatorName(string $creatorName): self
     {
         $this->creatorName = $creatorName;
+
+        return $this;
+    }
+
+    public function getCreatorId(): string
+    {
+        return $this->creatorId;
+    }
+
+    public function setCreatorId(string $creatorId): self
+    {
+        $this->creatorId = $creatorId;
 
         return $this;
     }

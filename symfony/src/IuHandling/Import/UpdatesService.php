@@ -8,6 +8,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
+use App\Entity\Event;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\CreatorRepository;
@@ -17,6 +18,7 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\UnbelievableRuntimeException;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
+use Doctrine\ORM\EntityManagerInterface;
 use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -26,6 +28,7 @@ class UpdatesService
 {
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly Fixer $fixer,
         private readonly MessageBusInterface $messageBus,
         private readonly LoggerInterface $logger,
@@ -157,12 +160,21 @@ class UpdatesService
             $existingEntity->set($field, $cloneWithUpdates->get($field));
         }
 
-        $this->creatorRepository->add($existingEntity->getCreator(), true);
+        $this->entityManager->persist($existingEntity);
+        $this->entityManager->persist($this->getEventFor($update));
+        $this->entityManager->flush();
 
         try {
             $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
         } catch (ExceptionInterface $exception) {
             $this->logger->error("Failed dispatching species sync notification: {$exception->getMessage()}");
         }
+    }
+
+    private function getEventFor(Update $update): Event
+    {
+        return (new Event())
+            ->setType($update->isNew ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED)
+            ->setCreatorId($update->updatedCreator->getCreatorId());
     }
 }
