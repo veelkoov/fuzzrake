@@ -23,6 +23,12 @@ class Event
     final public const string TYPE_GENERIC = 'GENERIC';
     final public const string TYPE_CREATOR_ADDED = 'CREATOR_ADDED';
     final public const string TYPE_CREATOR_UPDATED = 'CREATOR_UPDATED';
+    final public const array EDITABLE_TYPES = [
+        self::TYPE_GENERIC,
+        self::TYPE_DATA_UPDATED,
+        Event::TYPE_CREATOR_ADDED,
+        Event::TYPE_CREATOR_UPDATED,
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -283,8 +289,18 @@ class Event
         return self::TYPE_DATA_UPDATED === $this->type;
     }
 
+    public function isTypeCreatorAdded(): bool
+    {
+        return Event::TYPE_CREATOR_ADDED===$this->type;
+    }
+
+    public function isTypeCreatorUpdated(): bool
+    {
+        return Event::TYPE_CREATOR_UPDATED===$this->type;
+    }
+
     public function isEditable(): bool
     {
-        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED], true);
+        return in_array($this->type, self::EDITABLE_TYPES, true);
     }
 }
