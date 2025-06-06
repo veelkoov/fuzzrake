@@ -26,8 +26,8 @@ class Event
     final public const array EDITABLE_TYPES = [
         self::TYPE_GENERIC,
         self::TYPE_DATA_UPDATED,
-        Event::TYPE_CREATOR_ADDED,
-        Event::TYPE_CREATOR_UPDATED,
+        self::TYPE_CREATOR_ADDED,
+        self::TYPE_CREATOR_UPDATED,
     ];
 
     #[ORM\Id]
@@ -291,12 +291,12 @@ class Event
 
     public function isTypeCreatorAdded(): bool
     {
-        return Event::TYPE_CREATOR_ADDED===$this->type;
+        return self::TYPE_CREATOR_ADDED === $this->type;
     }
 
     public function isTypeCreatorUpdated(): bool
     {
-        return Event::TYPE_CREATOR_UPDATED===$this->type;
+        return self::TYPE_CREATOR_UPDATED === $this->type;
     }
 
     public function isEditable(): bool
