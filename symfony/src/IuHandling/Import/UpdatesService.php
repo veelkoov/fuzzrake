@@ -175,6 +175,6 @@ class UpdatesService
     {
         return (new Event())
             ->setType($update->isNew ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED)
-            ->setCreatorId($update->updatedCreator->getCreatorId());
+            ->setCreatorId($update->originalCreator->getCreatorId());
     }
 }

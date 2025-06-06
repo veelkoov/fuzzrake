@@ -45,6 +45,8 @@ class EventType extends AbstractTypeWithDelete
             ])
             ->add('creatorId', TextType::class, [
                 'label' => 'Maker ID',
+                'empty_data' => '',
+                'required' => false,
             ])
             ->add('updatedCreatorsCount', NumberType::class, [
             ])
