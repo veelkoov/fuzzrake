@@ -13,7 +13,7 @@ class EventsExtensions
     #[AsTwigFunction('event_description')]
     public function eventDescriptionFunction(Event $event): string
     {
-        if (Event::TYPE_DATA_UPDATED !== $event->getType()) {
+        if (!$event->isTypeDataUpdated()) {
             throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__METHOD__);
         }
 

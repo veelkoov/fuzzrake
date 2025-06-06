@@ -21,6 +21,14 @@ class Event
     final public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
     final public const string TYPE_CS_UPDATED = 'CS_UPDATED';
     final public const string TYPE_GENERIC = 'GENERIC';
+    final public const string TYPE_CREATOR_ADDED = 'CREATOR_ADDED';
+    final public const string TYPE_CREATOR_UPDATED = 'CREATOR_UPDATED';
+    final public const array EDITABLE_TYPES = [
+        self::TYPE_GENERIC,
+        self::TYPE_DATA_UPDATED,
+        self::TYPE_CREATOR_ADDED,
+        self::TYPE_CREATOR_UPDATED,
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -47,6 +55,9 @@ class Event
 
     #[ORM\Column(type: Types::TEXT)]
     private string $creatorName = '';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $creatorId = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $checkedUrls = '';
@@ -180,6 +191,18 @@ class Event
         return $this;
     }
 
+    public function getCreatorId(): string
+    {
+        return $this->creatorId;
+    }
+
+    public function setCreatorId(string $creatorId): self
+    {
+        $this->creatorId = $creatorId;
+
+        return $this;
+    }
+
     public function getCheckedUrls(): string
     {
         return $this->checkedUrls;
@@ -266,8 +289,18 @@ class Event
         return self::TYPE_DATA_UPDATED === $this->type;
     }
 
+    public function isTypeCreatorAdded(): bool
+    {
+        return self::TYPE_CREATOR_ADDED === $this->type;
+    }
+
+    public function isTypeCreatorUpdated(): bool
+    {
+        return self::TYPE_CREATOR_UPDATED === $this->type;
+    }
+
     public function isEditable(): bool
     {
-        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED], true);
+        return in_array($this->type, self::EDITABLE_TYPES, true);
     }
 }
