@@ -32,7 +32,7 @@ final class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        UtcClock::sleep(1); // TODO: Implement proper domain-based throttling grep-workaround-throttling
+        UtcClock::sleep(1); // FIXME: Implement proper domain-based throttling grep-workaround-throttling
 
         $allHeaders = $addHeaders
             ->plus('User-Agent', self::HEADER_USER_AGENT)
@@ -78,6 +78,14 @@ final class GenericHttpClient implements HttpClientInterface
         $originalCode = $response->getStatusCode();
 
         // TODO: Implement correction
+        // val originalCode = response.status.value
+        // val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
+        //
+        // if (correctedCode != originalCode) {
+        //     logger.info { "Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}" }
+        // }
+        //
+        // return correctedCode
 
         return $originalCode;
     }
