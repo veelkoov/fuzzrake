@@ -6,7 +6,6 @@ namespace App\Utils\Web\HttpClient;
 
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
-use App\Utils\Web\UrlStrategy\Strategies;
 use Override;
 use Veelkoov\Debris\StringSet;
 use Veelkoov\Debris\StringStringMap;
@@ -24,7 +23,7 @@ class CookieEagerHttpClient implements HttpClientInterface
     #[Override]
     public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
     {
-        $cookieInitUrl = Strategies::getFor($url->getUrl())->getCookieInitUrl();
+        $cookieInitUrl = $url->getStrategy()->getCookieInitUrl();
 
         if (null !== $cookieInitUrl && !$this->prefetched->contains($cookieInitUrl->getUrl())) {
             $this->client->fetch($cookieInitUrl);
