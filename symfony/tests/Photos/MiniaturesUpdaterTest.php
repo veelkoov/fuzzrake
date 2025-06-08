@@ -9,7 +9,7 @@ use App\Photos\MiniatureUrlResolver\FurtrackMiniatureUrlResolver;
 use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
 

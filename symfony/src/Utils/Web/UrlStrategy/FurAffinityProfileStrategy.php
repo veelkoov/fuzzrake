@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Web\UrlStrategy;
 
 use App\Utils\Regexp\Patterns;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 use Override;
 use Symfony\Component\DomCrawler\Crawler;
 

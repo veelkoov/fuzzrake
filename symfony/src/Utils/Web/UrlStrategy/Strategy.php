@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\UrlStrategy;
 
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 
 abstract class Strategy
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Web\UrlStrategy;
 
-use App\Utils\Web\FreeUrl;
+use App\Utils\Web\Url\FreeUrl;
 use App\Utils\Web\UrlStrategy\InstagramProfileStrategy;
 use Override;
 use PHPUnit\Framework\Attributes\Small;

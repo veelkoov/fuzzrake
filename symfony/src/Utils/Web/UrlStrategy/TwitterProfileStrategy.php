@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Utils\Web\UrlStrategy;
 
 use App\Utils\Regexp\Patterns;
-use App\Utils\Web\FreeUrl;
-use App\Utils\Web\Url;
-use App\Utils\Web\UrlForTracking;
+use App\Utils\Web\Url\FreeUrl;
+use App\Utils\Web\Url\Url;
+use App\Utils\Web\Url\UrlForTracking;
 use Override;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -25,9 +25,10 @@ class TwitterProfileStrategy extends Strategy
         return Patterns::get(self::profileUrlRegex)->test($url);
     }
 
+    #[Override]
     public function getUrlForTracking(Url $url): Url
     {
-        return new UrlForTracking($url, str_replace('https://twitter.com/', 'https://x.com/', $url->getUrl())); // Space Karen
+        return new UrlForTracking(str_replace('https://twitter.com/', 'https://x.com/', $url->getUrl()), $url); // Space Karen
     }
 
     #[Override]

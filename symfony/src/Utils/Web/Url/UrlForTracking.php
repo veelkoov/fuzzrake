@@ -2,22 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\Url;
 
+use App\Utils\Web\UrlStrategy\Strategy;
 use Override;
 
-readonly class UrlForTracking implements Url
+readonly class UrlForTracking extends AbstractUrl
 {
     public function __construct(
+        string $url,
         public Url $original,
-        private string $url,
+        ?Strategy $strategy = null,
     ) {
+        parent::__construct($url, $strategy);
     }
 
     #[Override]
-    public function getUrl(): string
+    public function getOriginalUrl(): string
     {
-        return $this->url;
+        return $this->original->getUrl();
     }
 
     #[Override]

@@ -7,13 +7,15 @@ namespace App\Photos\MiniatureUrlResolver;
 use App\Photos\MiniaturesUpdateException;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Json;
-use App\Utils\Web\FreeUrl;
+use App\Utils\Web\HttpClient\GenericHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Snapshots\Snapshot;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\FreeUrl;
+use App\Utils\Web\Url\Url;
 use InvalidArgumentException;
 use JsonException;
 use Override;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TRegx\CleanRegex\Pattern;
 use Veelkoov\Debris\StringStringMap;
 
@@ -22,6 +24,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     private readonly Pattern $pattern;
 
     public function __construct(
+        #[Autowire(service: GenericHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
     ) {
         $this->pattern = Pattern::of('^https://scritch\.es/pictures/(?<pictureId>[-a-f0-9]{36})$');

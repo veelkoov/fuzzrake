@@ -7,7 +7,7 @@ namespace App\Utils\Web\HttpClient;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -15,7 +15,7 @@ use Symfony\Component\BrowserKit\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Veelkoov\Debris\StringStringMap;
 
-final class GenericHttpClient implements HttpClientInterface
+class GenericHttpClient implements HttpClientInterface
 {
     private const string HEADER_USER_AGENT = 'Mozilla/5.0 (compatible; getfursu.it_bot/0.11; +https://getfursu.it/)';
     private readonly HttpBrowser $browser;

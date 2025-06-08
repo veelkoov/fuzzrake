@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Web\UrlStrategy;
 
 use App\Utils\Regexp\Patterns;
-use App\Utils\Web\Url;
-use App\Utils\Web\UrlForTracking;
+use App\Utils\Web\Url\Url;
+use App\Utils\Web\Url\UrlForTracking;
 use Override;
 
 class TrelloStrategy extends Strategy
@@ -31,9 +31,9 @@ class TrelloStrategy extends Strategy
         $detail = $match->first();
 
         if ('b' === $detail->get('type')) {
-            return new UrlForTracking($url, "https://trello.com/1/boards/{$detail->get('id')}?fields=name%2Cdesc&cards=visible&card_fields=name%2Cdesc");
+            return new UrlForTracking("https://trello.com/1/boards/{$detail->get('id')}?fields=name%2Cdesc&cards=visible&card_fields=name%2Cdesc", $url);
         } else {
-            return new UrlForTracking($url, "https://trello.com/1/cards/{$detail->get('id')}?fields=name%2Cdesc");
+            return new UrlForTracking("https://trello.com/1/cards/{$detail->get('id')}?fields=name%2Cdesc", $url);
         }
     }
 }

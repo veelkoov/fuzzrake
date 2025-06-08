@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Web\UrlStrategy;
 
 use App\Utils\Regexp\Patterns;
-use App\Utils\Web\Url;
-use App\Utils\Web\UrlForTracking;
+use App\Utils\Web\Url\Url;
+use App\Utils\Web\Url\UrlForTracking;
 use Override;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -29,7 +29,7 @@ class InstagramProfileStrategy extends Strategy
             return $url;
         }
 
-        return new UrlForTracking($url, "https://www.instagram.com/{$match->first()->get('username')}/profilecard/");
+        return new UrlForTracking("https://www.instagram.com/{$match->first()->get('username')}/profilecard/", $url);
     }
 
     #[Override]
