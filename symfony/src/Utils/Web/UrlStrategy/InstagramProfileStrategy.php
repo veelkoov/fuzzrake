@@ -29,7 +29,7 @@ class InstagramProfileStrategy extends Strategy
             return $url;
         }
 
-        return new UrlForTracking($url, "https://www.instagram.com/{$match->first()->get('username')}}/profilecard/");
+        return new UrlForTracking($url, "https://www.instagram.com/{$match->first()->get('username')}/profilecard/");
     }
 
     #[Override]
