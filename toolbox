@@ -5,7 +5,6 @@ set -euo pipefail
 readonly PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
 readonly SYMFONY_DIR_REL_PATH='symfony'
-readonly KOTLIN_DIR_REL_PATH='kotlin'
 readonly SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
 readonly DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
 readonly DB_DUMP_DIR_REL_PATH='db_dump'
@@ -51,10 +50,6 @@ function run_yarn() {
     pushd "$SYMFONY_DIR_REL_PATH"
     run_command yarn "$@"
     popd
-}
-
-function run_gradle() {
-    run_command "$KOTLIN_DIR_REL_PATH/gradlew" -p "$KOTLIN_DIR_REL_PATH" "$@"
 }
 
 function action_release_prod() {
@@ -157,37 +152,31 @@ Usage:
     $0 ACTION [arguments ...]
 
 Available actions:
+    branch       docker-up + composer install + yarn install + yep
 
-    branch       Symfony:
-                     composer install
-                     yarn install
-                     yep
+    docker-up    "ups" the Docker Compose project
+    docker-down  "downs" the Docker Compose project
 
-    docker-up    Symfony: "ups" the Docker Compose project
-    docker-down  Symfony: "downs" the Docker Compose project
+    composer     run Composer
+    yarn         run Yarn (needs to be installed locally)
 
-    composer     Symfony: run Composer
-    yarn         Symfony: run Yarn (needs to be installed locally)
+    yep          execute 'yarn encore production'
 
-    yep          Symfony: execute 'yarn encore production'
+    console      run Symfony console command
 
-    console      Symfony: run Symfony console command
+    cc           clear cache
 
-    cc           Symfony: clear cache
+    pu           run PHPUnit tests
+    pus          run PHPUnit tests, "small" group
+    pum          run PHPUnit tests, "medium" group
+    pul          run PHPUnit tests, "large" group
 
-    pu           Symfony: run PHPUnit tests
-    pus          Symfony: run PHPUnit tests, "small" group
-    pum          Symfony: run PHPUnit tests, "medium" group
-    pul          Symfony: run PHPUnit tests, "large" group
-
-    pcf          Symfony: run PHP CS Fixer
-    tcf          Symfony: run Twig CS Fixer
-    ps           Symfony: run PHPStan
-    rector       Symfony: run Rector
-    el           Symfony: run ESLint
-    prettier     Symfony: run Prettier
-
-    gradle       Kotlin: run Gradle command
+    pcf          run PHP CS Fixer
+    tcf          run Twig CS Fixer
+    ps           run PHPStan
+    rector       run Rector
+    el           run ESLint
+    prettier     run Prettier
 EOF
 }
 
@@ -245,9 +234,6 @@ function action() {
         'release-prod') action_release_prod ;;
 
         'get-snapshots') action_get_snapshots ;;
-
-        # Work in progress on moving all into Symfony
-        'gradle')       run_gradle "$@" ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

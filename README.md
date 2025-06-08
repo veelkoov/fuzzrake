@@ -18,17 +18,8 @@ See [getfursu.it/info](https://getfursu.it/info)
 
 ## Quickstart
 
-
 * Clone
-* `./toolbox docker-up`
-* `./toolbox composer install`
-* `./toolbox yarn install`
-* `./toolbox yep`
+* `./toolbox branch`
 * `./toolbox console doctrine:schema:create`
 * http://localhost:8080/ should now respond
 * Tests should now pass: `./toolbox pu` (or `pus` - short, `pum` - medium, `pul` - large)
-
-
-## Known issues ("gotchas")
-
-* Some extra functionalities rely on Kotlin parts, and there are no docs
