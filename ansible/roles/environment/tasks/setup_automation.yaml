@@ -1,16 +1,4 @@
 ---
-- name: 'Setup the tracking cronjob'
-  ansible.builtin.cron:
-    hour:   '0,12'
-    name:   'tracker - commissions'
-    minute: 0
-    # TODO: https://github.com/veelkoov/fuzzrake/issues/251 cache:pool:invalidate-tags creators
-    value:  >-
-      cd {{ backend_deployment_path | quote }}
-      && fuzzrake-git-HEAD/bin/fuzzrake tracker -r > /dev/null 2>&1
-      && docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear > /dev/null 2>&1
-      && docker exec {{ php_fpm_container_name | quote }} bin/console app:precompute-data > /dev/null 2>&1
-
 - name: 'Setup messenger worker service'
   ansible.builtin.template:
     dest: '{{ systemd_service_conf_path }}'

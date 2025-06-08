@@ -7,7 +7,7 @@ namespace App\ValueObject\Messages;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 
 #[AsMessage('async-msg-queue')]
-readonly class EmailNotificationV1
+final readonly class EmailNotificationV1
 {
     public function __construct(
         public string $subject,

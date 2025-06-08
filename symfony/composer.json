@@ -40,6 +40,7 @@
         "symfony/process": "*",
         "symfony/rate-limiter": "*",
         "symfony/runtime": "*",
+        "symfony/scheduler": "7.3.*",
         "symfony/security-bundle": "*",
         "symfony/security-csrf": "*",
         "symfony/serializer": "*",
