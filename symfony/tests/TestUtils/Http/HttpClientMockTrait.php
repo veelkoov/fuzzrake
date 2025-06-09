@@ -6,6 +6,8 @@ namespace App\Tests\TestUtils\Http;
 
 use App\Utils\Web\HttpClient\GenericHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -15,8 +17,29 @@ trait HttpClientMockTrait
 {
     use ClockSensitiveTrait; // FIXME: Remove; grep-workaround-throttling
 
+    /**
+     * @var list<array<ExpectedHttpCall>>
+     */
+    private array $unusedResponses;
+
+    #[Before]
+    public function resetUnusedResponses(): void
+    {
+        $this->unusedResponses = [];
+    }
+
+    #[After]
+    public function checkIfAllResponsesHaveBeenUsed(): void
+    {
+        foreach ($this->unusedResponses as $mockUnusedResponses) {
+            self::assertEmpty($mockUnusedResponses, 'Not all expected HTTP calls have been performed.');
+        }
+    }
+
     public function getHttpClientMock(ExpectedHttpCall ...$expectedHttpCalls): HttpClientInterface
     {
+        $this->unusedResponses[] = &$expectedHttpCalls;
+
         self::mockTime();
 
         $factory = function (string $method, string $url, array $options) use (&$expectedHttpCalls): MockResponse {

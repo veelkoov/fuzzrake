@@ -7,6 +7,7 @@ namespace App\Utils\Web\HttpClient;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
 use Override;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\StringSet;
 use Veelkoov\Debris\StringStringMap;
 
@@ -15,7 +16,8 @@ class CookieEagerHttpClient implements HttpClientInterface
     private readonly StringSet $prefetched;
 
     public function __construct(
-        private readonly GenericHttpClient $client,
+        #[Autowire(service: GenericHttpClient::class)]
+        private readonly HttpClientInterface $client,
     ) {
         $this->prefetched = new StringSet();
     }
