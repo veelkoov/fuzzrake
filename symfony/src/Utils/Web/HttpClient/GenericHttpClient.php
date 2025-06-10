@@ -32,8 +32,6 @@ class GenericHttpClient implements HttpClientInterface
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
-        UtcClock::sleep(1); // FIXME: Implement proper domain-based throttling grep-workaround-throttling
-
         $allHeaders = $addHeaders
             ->plus('User-Agent', self::HEADER_USER_AGENT)
             ->mapKeys(static fn (string $headerName) => "HTTP_$headerName");

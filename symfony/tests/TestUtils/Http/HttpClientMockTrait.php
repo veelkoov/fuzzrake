@@ -9,14 +9,11 @@ use App\Utils\Web\HttpClient\HttpClientInterface;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 trait HttpClientMockTrait
 {
-    use ClockSensitiveTrait; // FIXME: Remove; grep-workaround-throttling
-
     /**
      * @var list<array<ExpectedHttpCall>>
      */
@@ -39,8 +36,6 @@ trait HttpClientMockTrait
     public function getHttpClientMock(ExpectedHttpCall ...$expectedHttpCalls): HttpClientInterface
     {
         $this->unusedResponses[] = &$expectedHttpCalls;
-
-        self::mockTime();
 
         $factory = function (string $method, string $url, array $options) use (&$expectedHttpCalls): MockResponse {
             $expected = array_shift($expectedHttpCalls);

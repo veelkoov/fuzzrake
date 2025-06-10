@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Photos\MiniatureUrlResolver;
 
 use App\Photos\MiniaturesUpdateException;
-use App\Utils\Web\HttpClient\GenericHttpClient;
+use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Url\FreeUrl;
 use App\Utils\Web\Url\Url;
@@ -18,7 +18,7 @@ class FurtrackMiniatureUrlResolver implements MiniatureUrlResolver
     private readonly Pattern $pattern;
 
     public function __construct(
-        #[Autowire(service: GenericHttpClient::class)]
+        #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
     ) {
         $this->pattern = Pattern::of('^https://www\.furtrack\.com/p/(?<pictureId>\d+)$');

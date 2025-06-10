@@ -7,7 +7,7 @@ namespace App\Photos\MiniatureUrlResolver;
 use App\Photos\MiniaturesUpdateException;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Json;
-use App\Utils\Web\HttpClient\GenericHttpClient;
+use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\FreeUrl;
@@ -24,7 +24,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     private readonly Pattern $pattern;
 
     public function __construct(
-        #[Autowire(service: GenericHttpClient::class)]
+        #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
     ) {
         $this->pattern = Pattern::of('^https://scritch\.es/pictures/(?<pictureId>[-a-f0-9]{36})$');
