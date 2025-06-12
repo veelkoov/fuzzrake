@@ -30,7 +30,7 @@ class HostCallsQueue
      */
     public function patiently(Url $url, callable $callback): mixed
     {
-        $host = $this->getHost($url);
+        $host = UrlUtils::getHost($url->getUrl());
 
         $this->waitUtilCallAllowed($host);
         $result = $callback();
@@ -48,12 +48,5 @@ class HostCallsQueue
         if ($secondsToWait > 0) {
             UtcClock::sleep($secondsToWait);
         }
-    }
-
-    private function getHost(Url $url): string
-    {
-        $result = parse_url($url->getUrl(), PHP_URL_HOST);
-
-        return is_string($result) ? $result : '<parsing failed>';
     }
 }

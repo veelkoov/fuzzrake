@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\Url;
 
-use App\Utils\Web\UrlStrategy\Strategy;
 use Override;
 
-readonly class UrlForTracking extends AbstractUrl
+readonly class UrlForTracking extends AbstractBaseUrl
 {
     public function __construct(
         string $url,
         public Url $original,
-        ?Strategy $strategy = null,
     ) {
-        parent::__construct($url, $strategy);
+        parent::__construct($url);
     }
 
     #[Override]

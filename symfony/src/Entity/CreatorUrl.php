@@ -9,6 +9,7 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Url\Url;
 use App\Utils\Web\UrlStrategy\Strategies;
 use App\Utils\Web\UrlStrategy\Strategy;
+use App\Utils\Web\UrlUtils;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -144,5 +145,11 @@ class CreatorUrl implements Stringable, Url
     public function getStrategy(): Strategy
     {
         return Strategies::getFor($this->url);
+    }
+
+    #[Override]
+    public function getHost(): string
+    {
+        return UrlUtils::getHost($this->url);
     }
 }
