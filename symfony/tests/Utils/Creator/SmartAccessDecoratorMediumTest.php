@@ -10,7 +10,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-class SmartAccessDecoratorWithEMTest extends FuzzrakeKernelTestCase
+class SmartAccessDecoratorMediumTest extends FuzzrakeKernelTestCase
 {
     /**
      * This test assures that boolean field values are properly persisted. This is more like an end-to-end test,

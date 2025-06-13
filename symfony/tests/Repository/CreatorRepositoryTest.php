@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Medium;
 use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
-class CreatorRepositoryWithEMTest extends FuzzrakeKernelTestCase
+class CreatorRepositoryTest extends FuzzrakeKernelTestCase
 {
     /**
      * @param CreatorE[] $creators
