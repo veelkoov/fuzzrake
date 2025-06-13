@@ -17,6 +17,6 @@ final class UrlUtils
 
         return is_string($result)
             ? $result
-            : throw new InvalidArgumentException("Failed to parse the host name from the URL: $url.");
+            : throw new InvalidArgumentException("Failed to parse the host name from the URL: '$url'.");
     }
 }
