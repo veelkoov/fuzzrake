@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
 #[Small]
-class SmartAccessDecoratorTest extends TestCase
+class SmartAccessDecoratorSmallTest extends TestCase
 {
     /**
      * @throws DateTimeException

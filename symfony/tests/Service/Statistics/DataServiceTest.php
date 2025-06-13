@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\Medium;
 use Psr\Log\LoggerInterface;
 
 #[Medium]
-class DataServiceWithEMTest extends FuzzrakeKernelTestCase
+class DataServiceTest extends FuzzrakeKernelTestCase
 {
     public function testUnknownAndEuCreatorsDontCountTowardsTotalCountries(): void
     {

@@ -11,7 +11,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-class CreatorValueRepositoryWithEMTest extends FuzzrakeKernelTestCase
+class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {

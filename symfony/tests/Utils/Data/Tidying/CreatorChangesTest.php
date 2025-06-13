@@ -15,7 +15,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-class CreatorChangesWithEMTest extends FuzzrakeKernelTestCase
+class CreatorChangesTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void
     {
