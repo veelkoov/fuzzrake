@@ -7,7 +7,7 @@ namespace App\Utils\Web\HttpClient;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -15,7 +15,7 @@ use Symfony\Component\BrowserKit\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Veelkoov\Debris\StringStringMap;
 
-final class GenericHttpClient implements HttpClientInterface
+class GenericHttpClient implements HttpClientInterface
 {
     private const string HEADER_USER_AGENT = 'Mozilla/5.0 (compatible; getfursu.it_bot/0.11; +https://getfursu.it/)';
     private readonly HttpBrowser $browser;
@@ -31,8 +31,6 @@ final class GenericHttpClient implements HttpClientInterface
     public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
-
-        UtcClock::sleep(1); // TODO: Implement proper domain-based throttling grep-workaround-throttling
 
         $allHeaders = $addHeaders
             ->plus('User-Agent', self::HEADER_USER_AGENT)
@@ -78,6 +76,14 @@ final class GenericHttpClient implements HttpClientInterface
         $originalCode = $response->getStatusCode();
 
         // TODO: Implement correction
+        // val originalCode = response.status.value
+        // val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
+        //
+        // if (correctedCode != originalCode) {
+        //     logger.info { "Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}" }
+        // }
+        //
+        // return correctedCode
 
         return $originalCode;
     }

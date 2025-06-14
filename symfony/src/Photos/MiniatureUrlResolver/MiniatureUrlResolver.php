@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Photos\MiniatureUrlResolver;
 
 use App\Photos\MiniaturesUpdateException;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 
 interface MiniatureUrlResolver
 {
