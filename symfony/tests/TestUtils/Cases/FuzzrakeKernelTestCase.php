@@ -6,7 +6,7 @@ namespace App\Tests\TestUtils\Cases;
 
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
-use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
+use App\Tests\TestUtils\Cases\Traits\ContainerTrait;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -14,7 +14,7 @@ abstract class FuzzrakeKernelTestCase extends KernelTestCase
 {
     use AssertsTrait;
     use CacheTrait;
-    use EntityManagerTrait;
+    use ContainerTrait;
 
     #[Override]
     protected function setUp(): void

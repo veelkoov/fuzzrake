@@ -28,8 +28,7 @@ class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
 
         self::persistAndFlush($creator);
 
-        $subject = self::getContainer()->get(FiltersValidChoicesFilter::class);
-        self::assertInstanceOf(FiltersValidChoicesFilter::class, $subject);
+        $subject = self::getContainerService(FiltersValidChoicesFilter::class);
 
         $choices = new Choices(
             '',

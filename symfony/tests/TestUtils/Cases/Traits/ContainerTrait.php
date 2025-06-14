@@ -14,32 +14,33 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
-use Exception;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-trait EntityManagerTrait
+trait ContainerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
 
-    protected static function getEM(): EntityManagerInterface
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     *
+     * @return T
+     */
+    protected static function getContainerService(string $className, string $alias = ''): object
     {
-        return self::$entityManager ??= self::retrieveEM(self::getContainer());
+        $result = self::getContainer()->get('' !== $alias ? $alias : $className);
+
+        if (!$result instanceof $className) {
+            throw new RuntimeException('Received service of wrong type.');
+        }
+
+        return $result;
     }
 
-    private static function retrieveEM(ContainerInterface $container): EntityManagerInterface
+    protected static function getEM(): EntityManagerInterface
     {
-        try {
-            $entityManager = $container->get('doctrine.orm.default_entity_manager');
-        } catch (Exception $caught) {
-            throw new RuntimeException(message: $caught->getMessage(), code: $caught->getCode(), previous: $caught);
-        }
-
-        if (!($entityManager instanceof EntityManagerInterface)) {
-            throw new RuntimeException('Expected '.EntityManagerInterface::class.' but received something else');
-        }
-
-        return $entityManager;
+        return self::$entityManager ??= self::getContainerService(EntityManagerInterface::class, 'doctrine.orm.default_entity_manager');
     }
 
     protected static function resetDB(): void
