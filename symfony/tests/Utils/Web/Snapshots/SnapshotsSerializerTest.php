@@ -4,18 +4,39 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Web\Snapshots;
 
-use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\Cases\Traits\ContainerTrait;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Snapshots\SnapshotsSerializer;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Medium;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Medium] // Use serializer from the container, I don't want to try instantiating one now
-class SnapshotsSerializerTest extends FuzzrakeKernelTestCase
+class SnapshotsSerializerTest extends KernelTestCase
 {
+    use ContainerTrait; // FIXME: Should not use any of EM-related stuff
+
+    private string $snapshotDirPath = '';
+
+    #[Before]
+    protected function setUpTemporaryDirectory(): void
+    {
+        $this->snapshotDirPath = $this->getTempDirForTestsUnsafe();
+    }
+
+    #[After]
+    protected function cleanupTemporaryDirectory(): void
+    {
+        if ('' !== $this->snapshotDirPath) {
+            (new Filesystem())->remove($this->snapshotDirPath);
+        }
+    }
+
     public function testSavingAndLoading(): void
     {
         $subject = new SnapshotsSerializer(self::getContainerService(SerializerInterface::class));
@@ -28,10 +49,8 @@ class SnapshotsSerializerTest extends FuzzrakeKernelTestCase
             ['Error1', 'Error2', 'Error3'],
         ));
 
-        $snapshotDirPath = $this->getTempDirForTestsUnsafe();
-
-        $subject->save($snapshotDirPath, $input);
-        $result = $subject->load($snapshotDirPath);
+        $subject->save($this->snapshotDirPath, $input);
+        $result = $subject->load($this->snapshotDirPath);
 
         self::assertNotSame($input, $result);
         self::assertEquals($input, $result);
