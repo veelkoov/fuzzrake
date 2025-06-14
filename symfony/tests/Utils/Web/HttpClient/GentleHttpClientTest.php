@@ -9,9 +9,11 @@ use App\Tests\TestUtils\Http\HttpClientMockTrait;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\Url\FreeUrl;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
+#[Small]
 class GentleHttpClientTest extends TestCase
 {
     use ClockSensitiveTrait;

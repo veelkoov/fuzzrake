@@ -7,17 +7,23 @@ namespace App\Tests\Utils\Web\Snapshots;
 use App\Tests\TestUtils\Cases\Traits\FilesystemTrait;
 use App\Tests\TestUtils\Http\ExpectedHttpCall;
 use App\Tests\TestUtils\Http\HttpClientMockTrait;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotsManager;
 use App\Utils\Web\Snapshots\SnapshotsSerializer;
 use App\Utils\Web\Url\FreeUrl;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\StringStringMap;
 
+#[Small]
 class SnapshotsManagerTest extends TestCase
 {
     use FilesystemTrait;
     use HttpClientMockTrait;
+    use ClockSensitiveTrait;
 
     public function testSnapshotsBeingSavedInTheRightDirectory(): void
     {
@@ -77,5 +83,41 @@ class SnapshotsManagerTest extends TestCase
         self::assertNotSame($infoSnapshot1, $infoSnapshot3);
         self::assertSame('first', $infoSnapshot1->contents);
         self::assertSame('second', $infoSnapshot3->contents);
+    }
+
+    public function testRightDataBeingReturnedInSnapshot(): void
+    {
+        self::mockTime();
+
+        $url = 'https://getfursu.it/';
+        $statusCode = 200;
+        $headers = [
+            'content-type' => 'text/html',
+            'testing-header' => 'header-value-1',
+        ];
+        $expectedHeaders = [ // grep-code-debris-needs-improvements StringToStringList
+            'content-type' => ['text/html'],
+            'testing-header' => ['header-value-1'],
+        ];
+        $contents = '<h1>Test contents</h1>';
+
+        $httpClientMock = self::getHttpClientMock(new ExpectedHttpCall('GET', $url, responseCode: $statusCode,
+            responseBody: $contents, responseHeaders: new StringStringMap($headers)));
+        $serializerStub = self::createStub(SnapshotsSerializer::class);
+
+        $subject = new SnapshotsManager(
+            $serializerStub,
+            $httpClientMock,
+            $this->testsTempDir,
+        );
+
+        $result = $subject->get(new FreeUrl('https://getfursu.it/'), false);
+
+        self::assertSame($contents, $result->contents);
+        self::assertSame($url, $result->metadata->url);
+        self::assertSame($statusCode, $result->metadata->httpCode);
+        self::assertEquals($expectedHeaders, $result->metadata->headers);
+        self::assertEquals(UtcClock::now(), $result->metadata->retrievedAtUtc);
+        self::assertEquals([], $result->metadata->errors);
     }
 }

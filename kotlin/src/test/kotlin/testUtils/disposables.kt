@@ -24,15 +24,3 @@ fun disposableDatabase(block: (database: Database, transaction: Transaction) -> 
         block(database, it)
     }
 }
-
-fun <T>disposableDirectory(block: (tempDirectoryPath: Path) -> T): T {
-    val tempDirectoryPath: Path = createTempDirectory()
-
-    try {
-        return block(tempDirectoryPath)
-    } finally {
-        if (!tempDirectoryPath.toFile().deleteRecursively()) {
-            throw RuntimeException("Failed to cleanup '$tempDirectoryPath'")
-        }
-    }
-}
