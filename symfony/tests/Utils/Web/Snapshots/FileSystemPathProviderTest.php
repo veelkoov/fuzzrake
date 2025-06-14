@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class FileSystemPathProviderTest extends TestCase
 {
     /**
-     * @return list<array{string, string}>
+     * @return list<array{string, non-empty-string}>
      */
     public static function getSnapshotDirPathDataProvider(): array
     {
@@ -26,6 +26,9 @@ class FileSystemPathProviderTest extends TestCase
         ];
     }
 
+    /**
+     * @param non-empty-string $expectedPrefix
+     */
     #[DataProvider('getSnapshotDirPathDataProvider')]
     public function testGetSnapshotDirPath(string $inputUrl, string $expectedPrefix): void
     {
