@@ -7,7 +7,7 @@ namespace App\Tests\TestUtils\Cases;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\CaptchaTrait;
-use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
+use App\Tests\TestUtils\Cases\Traits\ContainerTrait;
 use DOMElement;
 use LogicException;
 use Override;
@@ -21,7 +21,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
     use AssertsTrait;
     use CacheTrait;
     use CaptchaTrait;
-    use EntityManagerTrait;
+    use ContainerTrait;
 
     protected static KernelBrowser $client;
 

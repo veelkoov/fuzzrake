@@ -6,8 +6,8 @@ namespace App\Tests\Data\Fixer;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Fixer\Fixer;
+use App\Tests\TestUtils\Cases\Traits\ContainerTrait;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Enforce;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
@@ -17,12 +17,14 @@ use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 #[Medium]
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {
+    use ContainerTrait; // FIXME: Should not use any of EM-related stuff
+
     private readonly Fixer $subject;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->subject = Enforce::objectOf(self::getContainer()->get(Fixer::class), Fixer::class);
+        $this->subject = self::getContainerService(Fixer::class);
     }
 
     /**
