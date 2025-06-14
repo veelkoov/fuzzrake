@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\Snapshots;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class SnapshotsSerializer
@@ -17,6 +19,9 @@ class SnapshotsSerializer
         $this->filesystem = new Filesystem();
     }
 
+    /**
+     * @throws ExceptionInterface|IOException
+     */
     public function save(string $snapshotDirPath, Snapshot $snapshot): void
     {
         $this->filesystem->mkdir($snapshotDirPath);
@@ -27,19 +32,32 @@ class SnapshotsSerializer
         $this->filesystem->dumpFile(self::getMetadataPath($snapshotDirPath), $metadataJsonString);
     }
 
-    public function load(string $snapshotDirPath): Snapshot
+    /**
+     * @throws ExceptionInterface|IOException
+     */
+    public function load(string $snapshotDirPath): ?Snapshot
     {
+        if (!$this->filesystem->exists($snapshotDirPath)) {
+            return null;
+        }
+
         $contents = $this->loadContents($snapshotDirPath);
         $metadata = $this->loadMetadata($snapshotDirPath);
 
         return new Snapshot($contents, $metadata);
     }
 
+    /**
+     * @throws IOException
+     */
     private function loadContents(string $snapshotDirPath): string
     {
         return $this->filesystem->readFile(self::getContentsPath($snapshotDirPath));
     }
 
+    /**
+     * @throws ExceptionInterface|IOException
+     */
     private function loadMetadata(string $snapshotDirPath): SnapshotMetadata
     {
         $jsonString = $this->filesystem->readFile(self::getMetadataPath($snapshotDirPath));
