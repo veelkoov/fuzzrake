@@ -42,15 +42,11 @@
                 <div class="col-sm-10">
                     <p>
                         {% if event.typeDataUpdated %}
-
                             {{ event_description(event) }}
-
-                        {% elseif event.typeCreatorAdded or event.typeCreatorUpdated %}
-
-                            {% if event.typeCreatorAdded %}Added new{% else %}Updated{% endif %}
-
-                            maker/studio: <a href="{{ path('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
-
+                        {% elseif event.typeCreatorAdded %}
+                            Added new maker/studio: <a href="{{ path('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
+                        {% elseif event.typeCreatorUpdated %}
+                            Updated maker/studio: <a href="{{ path('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
                         {% elseif event.typeCsUpdated %}
 
                             <strong>{{ event.creatorName }}</strong> commissions status changed.
