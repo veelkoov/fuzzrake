@@ -28,6 +28,8 @@ See [getfursu.it/info](https://getfursu.it/info)
 * http://localhost:8080/ should now respond
 * Tests should now pass: `./toolbox pu` (or `pus` - short, `pum` - medium, `pul` - large)
 
+TODO: Make sure DKIM setup does not break clean setup testing
+
 
 ## Known issues ("gotchas")
 

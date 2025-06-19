@@ -30,3 +30,5 @@
     mode:  '0644'
     owner: 'root'
     src:   '.env.local.j2'
+
+# TODO: Setup the DKIM private key
