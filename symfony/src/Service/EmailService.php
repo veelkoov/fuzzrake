@@ -12,6 +12,10 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Email;
 
+/**
+ * TODO: With messenger installed, mailer can be async (some config required?). Check; remove unnecessary overhead.
+ *       https://symfony.com/doc/current/mailer.html#sending-messages-async
+ */
 final class EmailService
 {
     public function __construct(
