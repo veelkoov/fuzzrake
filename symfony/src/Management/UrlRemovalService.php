@@ -7,20 +7,19 @@ namespace App\Management;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
+use App\Service\EmailService;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Psl\Iter;
 use Psl\Vec;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -43,7 +42,7 @@ final class UrlRemovalService
         #[Autowire(env: 'PRIMARY_BASE_URL')]
         private readonly string $primaryBaseUrl,
         private readonly RouterInterface $router,
-        private readonly MessageBusInterface $messageBus,
+        private readonly EmailService $emailService,
     ) {
     }
 
@@ -68,7 +67,7 @@ final class UrlRemovalService
         // If there are no remaining valid URLs, hide the creator.
         $hide = [] === Vec\filter(
             $remainingUrls->urls,
-            fn (GroupedUrl $url): bool => !Iter\contains(self::IGNORED_URL_TYPES, $url->type),
+            static fn (GroupedUrl $url): bool => !Iter\contains(self::IGNORED_URL_TYPES, $url->type),
         );
 
         $sendEmail = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
@@ -77,7 +76,7 @@ final class UrlRemovalService
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function handleRemoval(Creator $creator, CreatorUrlsRemovalData $data): void
     {
@@ -117,7 +116,7 @@ final class UrlRemovalService
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
@@ -155,14 +154,14 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->messageBus->dispatch(new EmailNotificationV1($subject, $contents, recipient: $creator->getEmailAddress()));
+        $this->emailService->send($subject, $contents, $creator->getEmailAddress());
     }
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string
     {
         return implode("\n", array_unique(Vec\map(
             $data->removedUrls->urls,
-            fn (GroupedUrl $url): string => "- $url->url",
+            static fn (GroupedUrl $url): string => "- $url->url",
         )));
     }
 }

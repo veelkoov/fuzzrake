@@ -6,21 +6,19 @@ namespace App\Tests\Management;
 
 use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
+use App\Service\EmailService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\ValueObject\Messages\EmailNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 #[Small]
@@ -29,7 +27,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     use ClockSensitiveTrait;
 
     private UrlRemovalService $subject;
-    private MessageBusInterface&MockObject $messengerBusMock;
+    private EmailService&MockObject $emailServiceMock;
 
     #[Override]
     protected function setUp(): void
@@ -41,16 +39,16 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         $routerMock->expects(self::atMost(3))->method('generate')
             ->willReturnOnConsecutiveCalls('/#TEST001', '/ui/update', '/contact');
 
-        $this->messengerBusMock = $this->createMock(MessageBusInterface::class);
+        $this->emailServiceMock = $this->createMock(EmailService::class);
 
         $this->subject = new UrlRemovalService($entityManagerMock, 'ShortWebsiteName',
-            'https://website.base.address.example.com', $routerMock, $this->messengerBusMock);
+            'https://website.base.address.example.com', $routerMock, $this->emailServiceMock);
 
         self::mockTime();
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testEmptyNotesGetSet(): void
     {
@@ -73,7 +71,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testNonEmptyNotesGetUpdated(): void
     {
@@ -98,7 +96,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testCreatorGettingHiddenWhenDesired(): void
     {
@@ -112,7 +110,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testCreatorNotGettingHiddenWhenNotDesired(): void
     {
@@ -125,7 +123,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testUrlsAreUpdatedAsDesired(): void
     {
@@ -159,11 +157,11 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testMessageNotSentWhenNotDesired(): void
     {
-        $this->messengerBusMock->expects(self::never())->method('dispatch');
+        $this->emailServiceMock->expects(self::never())->method('send');
 
         $creator = new Creator();
         $data = new CreatorUrlsRemovalData(new GroupedUrls([]), new GroupedUrls([]), false, false);
@@ -172,13 +170,13 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testProperHidingMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects(self::once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): Envelope {
-                self::assertSame('Your card at ShortWebsiteName has been hidden', $notification->subject);
+        $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
+            function (string $subject, string $contents, string $recipient, string $attachedJsonData): void {
+                self::assertSame('Your card at ShortWebsiteName has been hidden', $subject);
                 self::assertSame(<<<'CONTENTS'
                     Hello The Hidden Creator!
 
@@ -192,9 +190,9 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
-                    CONTENTS, $notification->contents);
-
-                return new Envelope($notification);
+                    CONTENTS, $contents);
+                self::assertSame('', $recipient);
+                self::assertSame('', $attachedJsonData);
             });
 
         $creator = Creator::new()->setName('The Hidden Creator')->setCreatorId('TEST001');
@@ -209,13 +207,13 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects(self::once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): Envelope {
-                self::assertSame('Your information at ShortWebsiteName may require your attention', $notification->subject);
+        $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
+            function (string $subject, string $contents, string $recipient, string $attachedJsonData): void {
+                self::assertSame('Your information at ShortWebsiteName may require your attention', $subject);
                 self::assertSame(<<<'CONTENTS'
                     Hello The Updated Creator!
 
@@ -229,9 +227,9 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
-                    CONTENTS, $notification->contents);
-
-                return new Envelope($notification);
+                    CONTENTS, $contents);
+                self::assertSame('', $recipient);
+                self::assertSame('', $attachedJsonData);
             });
 
         $creator = Creator::new()->setName('The Updated Creator')->setCreatorId('TEST001');

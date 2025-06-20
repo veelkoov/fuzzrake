@@ -11,7 +11,7 @@ use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
-use App\IuHandling\Submission\SubmissionService;
+use App\IuHandling\SubmissionService;
 use App\Repository\CreatorRepository;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;

@@ -12,7 +12,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Email;
 
-final class EmailService
+class EmailService
 {
     public function __construct(
         #[Autowire(env: 'CONTACT_EMAIL')]
