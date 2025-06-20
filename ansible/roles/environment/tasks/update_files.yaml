@@ -27,7 +27,7 @@
   ansible.builtin.template:
     dest:  '{{ symfony_dir_path }}/.env.local'
     group: 'root'
-    mode:  '0640'
+    mode:  '0644'
     owner: 'root'
     src:   '.env.local.j2'
 
@@ -35,6 +35,6 @@
   ansible.builtin.copy:
     dest:  '{{ dkim_private_key_path }}'
     group: 'root'
-    mode:  '0640'
+    mode:  '0644'
     owner: 'root'
     src:   '{{ dkim_private_key_src }}'
