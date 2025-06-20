@@ -25,10 +25,9 @@ See [getfursu.it/info](https://getfursu.it/info)
 * `./toolbox yarn install`
 * `./toolbox yep`
 * `./toolbox console doctrine:schema:create`
+* `openssl genrsa -out symfony/var/dkim_testing_private_key.pem -aes256 -passout pass:dkim-testing-private-key-passphrase 2048`
 * http://localhost:8080/ should now respond
 * Tests should now pass: `./toolbox pu` (or `pus` - short, `pum` - medium, `pul` - large)
-
-TODO: Make sure DKIM setup does not break clean setup testing
 
 
 ## Known issues ("gotchas")
