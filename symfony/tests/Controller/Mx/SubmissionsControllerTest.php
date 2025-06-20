@@ -8,7 +8,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
-use App\IuHandling\Submission\SubmissionService;
+use App\IuHandling\SubmissionService;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use JsonException;

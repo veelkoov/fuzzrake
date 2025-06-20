@@ -6,6 +6,9 @@ namespace App\ValueObject\Messages;
 
 use Symfony\Component\Messenger\Attribute\AsMessage;
 
+/**
+ * @deprecated Use \App\Service\EmailService::send() directly
+ */
 #[AsMessage('async-msg-queue')]
 readonly class EmailNotificationV1
 {

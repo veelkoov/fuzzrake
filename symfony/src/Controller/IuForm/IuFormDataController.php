@@ -10,7 +10,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
 use App\IuHandling\Exception\SubmissionException;
-use App\IuHandling\Submission\SubmissionService;
+use App\IuHandling\SubmissionService;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Password;

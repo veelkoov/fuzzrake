@@ -27,6 +27,14 @@
   ansible.builtin.template:
     dest:  '{{ symfony_dir_path }}/.env.local'
     group: 'root'
-    mode:  '0644'
+    mode:  '0640'
     owner: 'root'
     src:   '.env.local.j2'
+
+- name: 'Update the DKIM private key file'
+  ansible.builtin.copy:
+    dest:  '{{ dkim_private_key_path }}'
+    group: 'root'
+    mode:  '0640'
+    owner: 'root'
+    src:   '{{ dkim_private_key_src }}'
