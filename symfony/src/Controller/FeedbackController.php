@@ -6,8 +6,8 @@ namespace App\Controller;
 
 use App\Captcha\CaptchaService;
 use App\Form\FeedbackType;
+use App\Service\EmailService;
 use App\ValueObject\Feedback;
-use App\ValueObject\Messages\EmailNotificationV1;
 use App\ValueObject\Routing\RouteName;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +15,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -24,7 +23,7 @@ class FeedbackController extends AbstractController
 {
     public function __construct(
         private readonly RouterInterface $router,
-        private readonly MessageBusInterface $messageBus,
+        private readonly EmailService $emailService,
         private readonly CaptchaService $captcha,
         private readonly LoggerInterface $logger,
     ) {
@@ -49,7 +48,7 @@ class FeedbackController extends AbstractController
                 $this->sendFeedback($feedback);
 
                 return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
-            } catch (ExceptionInterface $exception) {
+            } catch (TransportExceptionInterface $exception) {
                 $this->logger->error('Exception while sending feedback.', ['exception' => $exception]);
 
                 $errorMessage = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
@@ -69,7 +68,7 @@ class FeedbackController extends AbstractController
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     private function sendFeedback(Feedback $feedback): void
     {
@@ -80,6 +79,6 @@ class FeedbackController extends AbstractController
             $feedback->details
             contents;
 
-        $this->messageBus->dispatch(new EmailNotificationV1('Feedback submitted', $contents));
+        $this->emailService->send('Feedback submitted', $contents);
     }
 }
