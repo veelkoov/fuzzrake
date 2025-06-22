@@ -68,7 +68,7 @@ class CreatorUrlRepository extends ServiceEntityRepository
             ->andWhere('d_c.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->getArrayResult();
+            ->getSingleColumnResult();
 
         return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
