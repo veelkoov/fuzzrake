@@ -13,6 +13,7 @@ use App\ValueObject\Messages\InitiateTrackingV1;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -31,6 +32,7 @@ final class TrackCreatorsTask
         private readonly CreatorRepository $creatorRepository,
         private readonly MessageBusInterface $messageBus,
         private readonly OfferStatusTracker $tracker,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -58,20 +60,41 @@ final class TrackCreatorsTask
     {
         $creators = $this->creatorRepository->getWithIds($message->idsOfCreators);
 
-        $failedIds = (new DList($creators))
-            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator)))
-            ->mapInto(
-                static fn (CreatorE $creator) => Enforce::int($creator->getId()),
-                new IntList(),
-            );
-
-        if ($failedIds->isNotEmpty() && $message->retryNumber < self::MAX_RETRIES) {
-            $this->messageBus->dispatch(
-                new TrackCreatorsV1($failedIds, $message->retryNumber + 1),
-                [DelayStamp::delayFor(new DateInterval('2 hours'))], // grep-code-tracking-frequency
-            );
+        if (count($creators) !== $message->idsOfCreators->count()) {
+            // A maker could have been removed between message dispatch and handling.
+            $this->logger->warning('Retrieved less creators than given IDs. Unless commonly happening, this can be ignored.');
         }
 
+        $failedIds = (new DList($creators))
+            // Tracking happens here.
+            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator)))
+            ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
+
+        $this->handleFailedIds($failedIds, $message);
+
         $this->entityManager->flush();
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    private function handleFailedIds(IntList $failedIds, TrackCreatorsV1 $message): void
+    {
+        if ($failedIds->isEmpty()) {
+            return;
+        }
+
+        if ($message->retryNumber >= self::MAX_RETRIES) {
+            $this->logger->warning("Maximum retries reached for {$failedIds->count()} creators tracking.");
+
+            return;
+        }
+
+        $this->logger->warning("Scheduling retry of {$failedIds->count()} out of {$message->idsOfCreators->count()} track jobs.");
+
+        $this->messageBus->dispatch(
+            new TrackCreatorsV1($failedIds, $message->retryNumber + 1),
+            [DelayStamp::delayFor(new DateInterval('PT2H'))], // grep-code-tracking-frequency
+        );
     }
 }

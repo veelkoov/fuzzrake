@@ -8,17 +8,16 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator;
 use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\Attributes\Medium;
 use RuntimeException;
-use Zenstruck\Messenger\Test\InteractsWithMessenger;
-use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;
 
 #[Medium]
 class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 {
-    use InteractsWithMessenger;
+    use MessageBusTrait;
 
     public function testUpdateMessageGetsSentAfterAddingPhotoUrl(): void
     {
@@ -91,7 +90,7 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 
         self::flush();
 
-        $this->assertNoUpdateMiniaturesV1HasBeenSent();
+        $this->assertMessageBusQueueEmpty();
     }
 
     public function testMessagesAreNotDuplicated(): void
@@ -131,20 +130,8 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 
     private function assertSingleUpdateMiniaturesV1HasBeenSentFor(int $creatorId): void
     {
-        $this->getQueue()->assertContains(UpdateMiniaturesV1::class, 1);
+        $queued = $this->getQueued(UpdateMiniaturesV1::class);
 
-        $message = $this->getQueue()->first()->getMessage();
-        self::assertInstanceOf(UpdateMiniaturesV1::class, $message);
-        self::assertSame($creatorId, $message->creatorId);
-    }
-
-    private function assertNoUpdateMiniaturesV1HasBeenSent(): void
-    {
-        $this->getQueue()->assertEmpty();
-    }
-
-    private function getQueue(): TransportEnvelopeCollection
-    {
-        return $this->transport('async-msg-queue')->queue();
+        self::assertSame($creatorId, $queued->single()->creatorId);
     }
 }
