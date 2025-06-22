@@ -1113,16 +1113,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.4.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "4664373bd0668d71b40cc368b950de95e1dba2f8"
+                "reference": "92e2f6db831be44bc041fdfbc49402a063ec33cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/4664373bd0668d71b40cc368b950de95e1dba2f8",
-                "reference": "4664373bd0668d71b40cc368b950de95e1dba2f8",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/92e2f6db831be44bc041fdfbc49402a063ec33cc",
+                "reference": "92e2f6db831be44bc041fdfbc49402a063ec33cc",
                 "shasum": ""
             },
             "require": {
@@ -1197,9 +1197,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.4.0"
+                "source": "https://github.com/doctrine/orm/tree/3.4.1"
             },
-            "time": "2025-06-14T11:47:14+00:00"
+            "time": "2025-06-21T10:44:26+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -8186,12 +8186,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/veelkoov/Debris.git",
-                "reference": "eff68e05a5d95aba669c3f42b204b71ab4d18831"
+                "reference": "b0c747c4f920f5f7864c0ac1f1ed9fbb0238fd7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/eff68e05a5d95aba669c3f42b204b71ab4d18831",
-                "reference": "eff68e05a5d95aba669c3f42b204b71ab4d18831",
+                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/b0c747c4f920f5f7864c0ac1f1ed9fbb0238fd7c",
+                "reference": "b0c747c4f920f5f7864c0ac1f1ed9fbb0238fd7c",
                 "shasum": ""
             },
             "require": {
@@ -8244,7 +8244,7 @@
                 "source": "https://github.com/veelkoov/Debris/tree/develop",
                 "issues": "https://github.com/veelkoov/Debris/issues"
             },
-            "time": "2025-05-28T18:05:25+00:00"
+            "time": "2025-06-21T12:44:45+00:00"
         }
     ],
     "packages-dev": [
