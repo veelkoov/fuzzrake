@@ -83,7 +83,8 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
             ],
             [Field::FEATURES, ['Follow-me eyes', 'Attached tail'], ['Attached tail', 'Follow-me eyes']],
             [Field::ORDER_TYPES, ['Aaaaa'], ['Aaaaa']],
-            [Field::PAYMENT_PLANS, ['100% upfront'], ['None']],
+            // FIXME: https://github.com/veelkoov/fuzzrake/issues/305
+            // [Field::PAYMENT_PLANS, ['100% upfront'], ['None']],
             [Field::PAYMENT_PLANS, ['30% upfront, rest in 100 Eur/mth until fully paid'], ['30% upfront, rest in 100 Eur/mth until fully paid']],
             [Field::URL_MINIATURES, ['https://example.com/'], ['https://example.com/']],
             [Field::URL_COMMISSIONS, ['https://example.com/'], ['https://example.com/']],

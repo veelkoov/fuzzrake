@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling\Changes;
+namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
-use App\Utils\Collections\StringList;
 use Override;
+use Veelkoov\Debris\StringList;
 
 readonly class ListChange implements ChangeInterface
 {
@@ -70,11 +70,5 @@ readonly class ListChange implements ChangeInterface
         }
 
         return [$added->freeze(), $removed->freeze()];
-    }
-
-    #[Override]
-    public function getField(): Field
-    {
-        return $this->field;
     }
 }

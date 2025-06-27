@@ -2,14 +2,15 @@ parameters:
   noPayPlans:
     regex_prefix: "^"
     regex_suffix: "$"
-    replacements: # grep-payment-plans-none
-      "None/100% up ?front": "None"
-      '"None, 100% upfront"': "None"
-      "None": "None"
-      "No payment plans/100% upfront": "None"
-      "100% upfront every part": "None"
-      '100% Up ?Front\.?': "None"
-      "1 complete payment": "None"
+    replacements: [] # grep-payment-plans-none
+      # FIXME: https://github.com/veelkoov/fuzzrake/issues/305
+      # "None/100% up ?front": "None"
+      # '"None, 100% upfront"': "None"
+      # "None": "None"
+      # "No payment plans/100% upfront": "None"
+      # "100% upfront every part": "None"
+      # '100% Up ?Front\.?': "None"
+      # "1 complete payment": "None"
 
   currencies:
     regex_prefix: '(?<=^|\n)'

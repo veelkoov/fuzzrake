@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\IuHandling\Changes;
+namespace App\Tests\Utils\Creator\Changes;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Field;
-use App\IuHandling\Changes\SimpleChange;
+use App\Utils\Creator\Changes\SimpleChange;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;

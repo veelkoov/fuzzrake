@@ -42,7 +42,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $messageBusMock = $this->createMock(MessageBusInterface::class);
         $messageBusMock->expects(self::once())->method('dispatch')
             ->willReturnCallback(function (TrackCreatorsV1 $message) use ($expectedIds): Envelope {
-                self::assertSame(3, $message->idsOfCreators->count());
+                self::assertCount(3, $message->idsOfCreators);
                 self::assertEqualsCanonicalizing($expectedIds, $message->idsOfCreators->getValuesArray());
 
                 return new Envelope($message);
@@ -77,7 +77,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
             $creator3->getId() ?? 0,
             $creator4->getId() ?? 0,
         ]))->unique();
-        self::assertSame(4, $intList->count());
+        self::assertCount(4, $intList);
 
         // Tracker which will "fail" every second creator (by ID)
         $trackerMock = self::createMock(OfferStatusTracker::class);
@@ -97,7 +97,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $message = self::getQueued(TrackCreatorsV1::class)->single();
         self::clearQueue();
 
-        self::assertSame(2, $message->idsOfCreators->count());
+        self::assertCount(2, $message->idsOfCreators);
         self::assertEqualsCanonicalizing(
             $intList->filter(static fn (int $id) => 1 === $id % 2)->getValuesArray(),
             $message->idsOfCreators->getValuesArray(),

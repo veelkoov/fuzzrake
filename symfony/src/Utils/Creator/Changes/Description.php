@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling\Changes;
+namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Utils\Collections\StringList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
+use Veelkoov\Debris\StringList;
 
 class Description
 {
@@ -30,14 +30,6 @@ class Description
     public function getText(): string
     {
         return StringList::mapFrom($this->changes, static fn (ChangeInterface $change) => $change->getDescription())->join("\n");
-    }
-
-    /**
-     * @return ChangeInterface[]
-     */
-    public function getChanges(): array
-    {
-        return $this->changes;
     }
 
     /**
