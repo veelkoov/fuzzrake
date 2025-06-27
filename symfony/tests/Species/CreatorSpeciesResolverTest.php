@@ -42,7 +42,7 @@ class CreatorSpeciesResolverTest extends TestCase
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
         $result = $subject->resolveDoes(new StringList(), new StringList());
-        self::assertSame(0, $result->count());
+        self::assertCount(0, $result);
     }
 
     public function testEmptyDoesAndUnknownDoesntReturnMostSpeciesOnly(): void

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling\Changes;
+namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\FieldValue;
@@ -11,16 +11,16 @@ use App\Utils\StrUtils;
 use DateTimeImmutable;
 use Override;
 
-class SimpleChange implements ChangeInterface
+readonly class SimpleChange implements ChangeInterface
 {
     /**
      * @param psPhpFieldValue $old
      * @param psPhpFieldValue $new
      */
     public function __construct(
-        private readonly Field $field,
-        private readonly mixed $old,
-        private readonly mixed $new,
+        private Field $field,
+        private mixed $old,
+        private mixed $new,
     ) {
     }
 
@@ -72,11 +72,5 @@ class SimpleChange implements ChangeInterface
         } else {
             return '"'.StrUtils::asStr($value).'"';
         }
-    }
-
-    #[Override]
-    public function getField(): Field
-    {
-        return $this->field;
     }
 }

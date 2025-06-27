@@ -6,7 +6,7 @@ namespace App\IuHandling\Import;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
-use App\IuHandling\Changes\Description;
+use App\Utils\Creator\Changes\Description;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 final readonly class Update

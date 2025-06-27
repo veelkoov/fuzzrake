@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\IuHandling\Changes;
+namespace App\Tests\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
-use App\IuHandling\Changes\ListChange;
 use App\Utils\Collections\StringList;
+use App\Utils\Creator\Changes\ListChange;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 

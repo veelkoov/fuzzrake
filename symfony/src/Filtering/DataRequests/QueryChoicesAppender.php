@@ -234,7 +234,7 @@ class QueryChoicesAppender
     }
 
     /**
-     * FIXME: https://github.com/veelkoov/fuzzrake/issues/305
+     * FIXME: https://github.com/veelkoov/fuzzrake/issues/305.
      *
      * This is absolute garbage.
      */
