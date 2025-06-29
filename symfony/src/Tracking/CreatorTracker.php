@@ -12,6 +12,7 @@ class CreatorTracker
     public function __construct(
         private readonly SnapshotsManager $snapshotsManager,
         private readonly SnapshotProcessor $snapshotProcessor,
+        private readonly AnalysisAggregator $analysisAggregator,
         private readonly CreatorUpdater $creatorUpdater,
     ) {
     }
@@ -37,6 +38,6 @@ class CreatorTracker
             $results[] = $this->snapshotProcessor->analyse($snapshot);
         }
 
-        return AnalysisAggregator::aggregate($results);
+        return $this->analysisAggregator->aggregate($results);
     }
 }

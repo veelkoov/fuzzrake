@@ -11,7 +11,7 @@ class AnalysisAggregator
     /**
      * @param list<AnalysisResult> $results
      */
-    public static function aggregate(array $results): AnalysisResults
+    public function aggregate(array $results): AnalysisResults
     {
         return new AnalysisResults(new StringList(), new StringList(), true); // TODO
     }
