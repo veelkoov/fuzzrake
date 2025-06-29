@@ -6,7 +6,8 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object Events : IntIdTable("events") {
     val timestamp = datetime("timestamp")
     val type = varchar("type", 16).default("")
-    val creatorName = varchar("creator_name", 256)
+    val creatorName = varchar("creator_name", 256).default("")
+    val creatorId = varchar("creator_id", 256).default("")
     val newCreatorsCount = integer("new_creators_count").default(0)
     val updatedCreatorsCount = integer("updated_creators_count").default(0)
     val reportedUpdatedCreatorsCount = integer("reported_updated_creators_count").default(0)
