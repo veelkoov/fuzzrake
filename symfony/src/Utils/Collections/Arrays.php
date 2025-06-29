@@ -6,8 +6,7 @@ namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
-
-use function Psl\Iter\first;
+use Psl\Iter;
 
 final class Arrays
 {
@@ -24,7 +23,7 @@ final class Arrays
      */
     public static function single(array $input): mixed
     {
-        if (1 !== count($input) || null === $result = first($input)) {
+        if (1 !== count($input) || null === $result = Iter\first($input)) {
             throw new InvalidArgumentException('Given array does not have exactly one elements');
         }
 

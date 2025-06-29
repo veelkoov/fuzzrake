@@ -4,12 +4,12 @@
     group: 'root'
     mode:  '0755'
     owner: 'root'
-    path:  '{{ frontend_deployment_path }}'
+    path:  '{{ deployment_path }}'
     state: 'directory'
 
 - name: 'Checkout sources'
   ansible.builtin.git:
-    dest:    '{{ frontend_deployment_path }}'
+    dest:    '{{ deployment_path }}'
     force:   true
     repo:    'https://github.com/veelkoov/fuzzrake.git'
     version: '{{ branch }}'

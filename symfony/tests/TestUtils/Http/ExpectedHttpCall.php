@@ -12,7 +12,7 @@ final readonly class ExpectedHttpCall
         public string $method,
         public string $url,
         public ?string $requestBody = null,
-        public StringStringMap $requestHeaders = new StringStringMap(),
+        public StringStringMap $requestHeaders = new StringStringMap(), // grep-code-debris-needs-improvements StringToStringList
         public int $responseCode = 200,
         public string $responseBody = '',
         public StringStringMap $responseHeaders = new StringStringMap(),
