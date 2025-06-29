@@ -12,10 +12,12 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\PackedStringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CreatorUpdater
 {
     public function __construct(
+        #[Autowire(service: 'monolog.logger.tracking')]
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
     ) {

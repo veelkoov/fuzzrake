@@ -10,9 +10,12 @@ use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url\Url;
 use Override;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\BrowserKit\Exception\ExceptionInterface as BrowserKitExceptionInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\BrowserKit\Response;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
+use Throwable;
 use Veelkoov\Debris\StringStringMap;
 
 class GenericHttpClient implements HttpClientInterface
@@ -25,6 +28,7 @@ class GenericHttpClient implements HttpClientInterface
         SymfonyHttpClientInterface $httpClient,
     ) {
         $this->browser = new HttpBrowser($httpClient);
+        $this->browser->setMaxRedirects(2);
     }
 
     #[Override]
@@ -37,14 +41,24 @@ class GenericHttpClient implements HttpClientInterface
             ->mapKeys(static fn (string $headerName) => "HTTP_$headerName");
         $server = [...$allHeaders]; // grep-code-debris-needs-improvements
 
-        $this->browser->request($method, $url->getUrl(), server: $server, content: $content);
-        $response = $this->browser->getInternalResponse();
+        $errors = [];
+        $response = null;
 
-        $this->logger->info("Got response: '{$url->getUrl()}'");
+        try {
+            $this->browser->request($method, $url->getUrl(), server: $server, content: $content);
+            $this->logger->info("Got response: '{$url->getUrl()}'");
+            $response = $this->browser->getInternalResponse();
+        } catch (BrowserKitExceptionInterface|HttpClientExceptionInterface $exception) {
+            $this->logger->info("Retrieval failed: '{$url->getUrl()}'", ['exception' => $exception]);
+            $errors[] = $exception->getMessage();
+        } catch (Throwable $exception) {
+            $this->logger->info("RETRIEVAL FAILED A LOT: '{$url->getUrl()}'", ['exception' => $exception]);
+            $errors[] = $exception->getMessage();
+        }
 
-        $contents = $response->getContent();
-        $headers = $response->getHeaders();
-        $httpCode = $this->correctHttpCode($url, $contents, $response);
+        $contents = $response?->getContent() ?? '';
+        $headers = $response?->getHeaders() ?? [];
+        $httpCode = $this->correctHttpCode($url, $response?->getStatusCode() ?? 0, $contents);
 
         $errors = [];
 
@@ -71,9 +85,9 @@ class GenericHttpClient implements HttpClientInterface
         return new Snapshot($contents, $metadata);
     }
 
-    private function correctHttpCode(Url $url, string $contents, Response $response): int
+    private function correctHttpCode(Url $url, int $statusCode, string $contents): int
     {
-        $originalCode = $response->getStatusCode();
+        $originalCode = $statusCode;
 
         // TODO: Implement correction
         // val originalCode = response.status.value

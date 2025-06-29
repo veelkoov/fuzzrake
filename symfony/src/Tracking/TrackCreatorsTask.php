@@ -14,6 +14,7 @@ use App\ValueObject\Messages\TrackCreatorsV1;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -27,12 +28,13 @@ final class TrackCreatorsTask
     private const int MAX_RETRIES = 1;
 
     public function __construct(
+        #[Autowire(service: 'monolog.logger.tracking')]
+        private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly CreatorUrlRepository $creatorUrlRepository,
         private readonly CreatorRepository $creatorRepository,
         private readonly MessageBusInterface $messageBus,
         private readonly CreatorTracker $tracker,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -46,6 +48,8 @@ final class TrackCreatorsTask
             $this->creatorUrlRepository->getIdsOfActiveCreatorsHavingAnyTrackedUrl(),
             self::NUMBER_OF_TRACKED_CREATORS_PER_CHUNK,
         );
+
+        $this->logger->info('Dispatching '.count($idChunks).' '.TrackCreatorsV1::class.' messages.');
 
         foreach ($idChunks as $idChunk) {
             $this->messageBus->dispatch(new TrackCreatorsV1(new IntList($idChunk)));

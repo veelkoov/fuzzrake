@@ -6,10 +6,14 @@ namespace App\Tracking;
 
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Snapshots\SnapshotsManager;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CreatorTracker
 {
     public function __construct(
+        #[Autowire(service: 'monolog.logger.tracking')]
+        private readonly LoggerInterface $logger,
         private readonly SnapshotsManager $snapshotsManager,
         private readonly SnapshotProcessor $snapshotProcessor,
         private readonly AnalysisAggregator $analysisAggregator,

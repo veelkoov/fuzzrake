@@ -11,7 +11,6 @@ use App\Tracking\AnalysisResults;
 use App\Tracking\CreatorTracker;
 use App\Tracking\CreatorUpdater;
 use App\Tracking\SnapshotProcessor;
-use App\Utils\Collections\StringList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
@@ -20,7 +19,9 @@ use App\Utils\Web\Snapshots\SnapshotsManager;
 use App\Utils\Web\Url\Url;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Throwable;
+use Veelkoov\Debris\StringList;
 
 #[Small]
 class CreatorTrackerTest extends FuzzrakeTestCase
@@ -41,7 +42,13 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->analysisAggregatorMock = self::createMock(AnalysisAggregator::class);
         $this->creatorUpdaterMock = self::createMock(CreatorUpdater::class);
 
-        $this->subject = new CreatorTracker($this->snapshotsManagerMock, $this->snapshotProcessorMock, $this->analysisAggregatorMock, $this->creatorUpdaterMock);
+        $this->subject = new CreatorTracker(
+            self::createStub(LoggerInterface::class),
+            $this->snapshotsManagerMock,
+            $this->snapshotProcessorMock,
+            $this->analysisAggregatorMock,
+            $this->creatorUpdaterMock,
+        );
     }
 
     public function testChangesNotAppliedOnFailureAndRetryPossible(): void
@@ -93,7 +100,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
             ->willReturnCallback(static fn (Url $url) => new Snapshot('', new SnapshotMetadata($url->getUrl(),
                 UtcClock::now(), 200, [], [])));
 
-        $analysisResult = new AnalysisResult(/* TODO */);
+        $analysisResult = new AnalysisResult(new StringList(), new StringList(), false); // FIXME
 
         $this->snapshotProcessorMock
             ->expects(self::exactly(2))

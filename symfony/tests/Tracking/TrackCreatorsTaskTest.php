@@ -48,12 +48,13 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
                 return new Envelope($message);
             });
 
-        $subject = new TrackCreatorsTask(self::getEM(),
+        $subject = new TrackCreatorsTask(
+            self::createStub(LoggerInterface::class),
+            self::getEM(),
             self::getEM()->getRepository(CreatorUrl::class),
             self::getEM()->getRepository(CreatorE::class),
             $messageBusMock,
             self::createStub(CreatorTracker::class),
-            self::createStub(LoggerInterface::class),
         );
 
         $subject->initiateTrackingMessageHandler(new InitiateTrackingV1());
@@ -84,12 +85,13 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $trackerMock->method('update')->willReturnCallback(
             static fn (Creator $creator) => ($creator->getId() ?? 0) % 2 === 0);
 
-        $subject = new TrackCreatorsTask(self::getEM(),
+        $subject = new TrackCreatorsTask(
+            self::createStub(LoggerInterface::class),
+            self::getEM(),
             self::getEM()->getRepository(CreatorUrl::class),
             self::getEM()->getRepository(CreatorE::class),
             self::getContainerService(MessageBusInterface::class),
             $trackerMock,
-            self::createStub(LoggerInterface::class),
         );
 
         $subject->trackCreatorsMessageHandler(new TrackCreatorsV1($intList));

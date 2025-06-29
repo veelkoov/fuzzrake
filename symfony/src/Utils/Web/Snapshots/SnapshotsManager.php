@@ -20,9 +20,13 @@ class SnapshotsManager
         private readonly SnapshotsSerializer $serializer,
         #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
-        #[Autowire(env: 'SNAPSHOTS_STORAGE_PATH')]
+        #[Autowire(env: 'resolve:SNAPSHOTS_STORAGE_PATH')]
         private readonly string $storagePath,
     ) {
+        if (!is_dir($storagePath)) {
+            throw new RuntimeException("Storage path '$storagePath' is not an existing directory.");
+        }
+
         $this->pathProvider = new FileSystemPathProvider();
     }
 
