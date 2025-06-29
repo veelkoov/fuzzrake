@@ -11,6 +11,7 @@ class Event(id: EntityID<Int>) : IntEntity(id) {
     var timestamp by Events.timestamp
     var type by Events.type
     var creatorName by Events.creatorName
+    var creatorId by Events.creatorId
     var newCreatorsCount by Events.newCreatorsCount
     var updatedCreatorsCount by Events.updatedCreatorsCount
     var reportedUpdatedCreatorsCount by Events.reportedUpdatedCreatorsCount
