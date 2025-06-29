@@ -31,7 +31,7 @@ final class TrackCreatorsTask
         private readonly CreatorUrlRepository $creatorUrlRepository,
         private readonly CreatorRepository $creatorRepository,
         private readonly MessageBusInterface $messageBus,
-        private readonly OfferStatusTracker $tracker,
+        private readonly CreatorTracker $tracker,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -67,7 +67,7 @@ final class TrackCreatorsTask
 
         $failedIds = (new DList($creators))
             // Tracking happens here.
-            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator)))
+            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator), self::retryPossible($message)))
             ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
 
         $this->handleFailedIds($failedIds, $message);
@@ -84,7 +84,7 @@ final class TrackCreatorsTask
             return;
         }
 
-        if ($message->retryNumber >= self::MAX_RETRIES) {
+        if (!self::retryPossible($message)) {
             $this->logger->warning("Maximum retries reached for {$failedIds->count()} creators tracking.");
 
             return;
@@ -96,5 +96,10 @@ final class TrackCreatorsTask
             new TrackCreatorsV1($failedIds, $message->retryNumber + 1),
             [DelayStamp::delayFor(new DateInterval('PT2H'))], // grep-code-tracking-frequency
         );
+    }
+
+    private static function retryPossible(TrackCreatorsV1 $message): bool
+    {
+        return $message->retryNumber < self::MAX_RETRIES;
     }
 }

@@ -609,6 +609,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
+     * @return list<CreatorUrl>
+     */
+    public function getCommissionsUrlObjects(): array
+    {
+        return $this->getUrlObjects(Field::URL_COMMISSIONS);
+    }
+
+    /**
      * @param list<string> $commissionsUrls
      */
     public function setCommissionsUrls(array $commissionsUrls): self

@@ -8,7 +8,7 @@ use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
-use App\Tracking\OfferStatusTracker;
+use App\Tracking\CreatorTracker;
 use App\Tracking\TrackCreatorsTask;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Messages\InitiateTrackingV1;
@@ -52,7 +52,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
             self::getEM()->getRepository(CreatorUrl::class),
             self::getEM()->getRepository(CreatorE::class),
             $messageBusMock,
-            self::createStub(OfferStatusTracker::class),
+            self::createStub(CreatorTracker::class),
             self::createStub(LoggerInterface::class),
         );
 
@@ -80,7 +80,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         self::assertCount(4, $intList);
 
         // Tracker which will "fail" every second creator (by ID)
-        $trackerMock = self::createMock(OfferStatusTracker::class);
+        $trackerMock = self::createMock(CreatorTracker::class);
         $trackerMock->method('update')->willReturnCallback(
             static fn (Creator $creator) => ($creator->getId() ?? 0) % 2 === 0);
 

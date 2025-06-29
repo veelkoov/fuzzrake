@@ -19,7 +19,7 @@ final class SmartOfferStatusAccessor
     private static function getObjects(Creator $creator, bool $isOpen): array
     {
         return Vec\filter($creator->getCreator()->getOfferStatuses(),
-            fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
+            static fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
     }
 
     /**
@@ -27,7 +27,7 @@ final class SmartOfferStatusAccessor
      */
     public static function getList(Creator $creator, bool $isOpen): array
     {
-        return array_map(fn (ItemType $item) => $item->getOffer(), self::getObjects($creator, $isOpen));
+        return array_map(static fn (ItemType $item) => $item->getOffer(), self::getObjects($creator, $isOpen));
     }
 
     /**

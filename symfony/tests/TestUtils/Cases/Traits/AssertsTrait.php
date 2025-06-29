@@ -36,4 +36,19 @@ trait AssertsTrait
         self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
         self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
+
+    /**
+     * @param iterable<mixed> $expected
+     * @param iterable<mixed> $actual
+     */
+    protected static function assertSameItems(iterable $expected, iterable $actual, string $message = ''): void
+    {
+        $expected = [...$expected];
+        $actual = [...$actual];
+
+        sort($expected);
+        sort($actual);
+
+        self::assertSame($expected, $actual, $message);
+    }
 }
