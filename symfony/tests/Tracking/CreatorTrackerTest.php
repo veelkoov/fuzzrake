@@ -60,7 +60,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::never())->method('applyResults');
 
-        $this->subject->update($creator, true);
+        $this->subject->update($creator, true, true);
     }
 
     public function testChangesAppliedOnFailureWithoutRetryPossibility(): void
@@ -72,7 +72,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
 
-        $this->subject->update($creator, false);
+        $this->subject->update($creator, false, true);
     }
 
     public function testChangesAppliedEvenOnPartialSuccess(): void
@@ -84,7 +84,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
 
-        $this->subject->update($creator, true);
+        $this->subject->update($creator, true, true);
     }
 
     public function testAllRetrievedSnapshotAnalysedAndResultsAggregated(): void
@@ -113,6 +113,6 @@ class CreatorTrackerTest extends FuzzrakeTestCase
             ->with([$analysisResult, $analysisResult])
             ->willReturn(new AnalysisResults(new StringList(), new StringList(), false));
 
-        $this->subject->update($creator, true);
+        $this->subject->update($creator, true, true);
     }
 }

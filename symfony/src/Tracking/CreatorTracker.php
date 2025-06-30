@@ -21,9 +21,9 @@ class CreatorTracker
     ) {
     }
 
-    public function update(Creator $creator, bool $retryPossible): bool
+    public function update(Creator $creator, bool $retryPossible, bool $refetchPages): bool
     {
-        $analysisResults = $this->getAnalysisResults($creator);
+        $analysisResults = $this->getAnalysisResults($creator, $refetchPages);
 
         if ($analysisResults->anySuccess() || !$retryPossible) {
             $this->creatorUpdater->applyResults($creator, $analysisResults);
@@ -32,12 +32,12 @@ class CreatorTracker
         return $analysisResults->anySuccess();
     }
 
-    private function getAnalysisResults(Creator $creator): AnalysisResults
+    private function getAnalysisResults(Creator $creator, bool $refetchPages): AnalysisResults
     {
         $results = [];
 
         foreach ($creator->getCommissionsUrlObjects() as $url) {
-            $snapshot = $this->snapshotsManager->get($url, true);
+            $snapshot = $this->snapshotsManager->get($url, $refetchPages);
 
             $results[] = $this->snapshotProcessor->analyse($snapshot);
         }

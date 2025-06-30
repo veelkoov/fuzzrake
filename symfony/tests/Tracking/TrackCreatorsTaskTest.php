@@ -94,7 +94,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
             $trackerMock,
         );
 
-        $subject->trackCreatorsMessageHandler(new TrackCreatorsV1($intList));
+        $subject->trackCreatorsMessageHandler(new TrackCreatorsV1($intList, TrackCreatorsTask::MAX_RETRIES, true));
 
         $message = self::getQueued(TrackCreatorsV1::class)->single();
         self::clearQueue();
@@ -104,7 +104,8 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
             $intList->filter(static fn (int $id) => 1 === $id % 2)->getValuesArray(),
             $message->idsOfCreators->getValuesArray(),
         );
-        self::assertSame(1, $message->retryNumber);
+        self::assertSame(0, $message->retriesLimit);
+        self::assertTrue($message->refetchPages);
 
         $subject->trackCreatorsMessageHandler($message);
 

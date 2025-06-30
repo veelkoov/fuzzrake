@@ -12,7 +12,13 @@ final readonly class TrackCreatorsV1
 {
     public function __construct(
         public IntList $idsOfCreators,
-        public int $retryNumber = 0,
+        public int $retriesLimit,
+        public bool $refetchPages,
     ) {
+    }
+
+    public function retryAllowed(): bool
+    {
+        return $this->retriesLimit > 0;
     }
 }

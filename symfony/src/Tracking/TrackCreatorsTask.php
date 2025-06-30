@@ -25,7 +25,7 @@ use Veelkoov\Debris\IntList;
 final class TrackCreatorsTask
 {
     private const int NUMBER_OF_TRACKED_CREATORS_PER_CHUNK = 50;
-    private const int MAX_RETRIES = 1;
+    public const int MAX_RETRIES = 1;
 
     public function __construct(
         #[Autowire(service: 'monolog.logger.tracking')]
@@ -42,7 +42,7 @@ final class TrackCreatorsTask
      * @throws ExceptionInterface
      */
     #[AsMessageHandler]
-    public function initiateTrackingMessageHandler(InitiateTrackingV1 $_): void
+    public function initiateTrackingMessageHandler(InitiateTrackingV1 $message): void
     {
         $idChunks = array_chunk(
             $this->creatorUrlRepository->getIdsOfActiveCreatorsHavingAnyTrackedUrl(),
@@ -52,7 +52,11 @@ final class TrackCreatorsTask
         $this->logger->info('Dispatching '.count($idChunks).' '.TrackCreatorsV1::class.' messages.');
 
         foreach ($idChunks as $idChunk) {
-            $this->messageBus->dispatch(new TrackCreatorsV1(new IntList($idChunk)));
+            $this->messageBus->dispatch(new TrackCreatorsV1(
+                new IntList($idChunk),
+                $message->retriesLimit,
+                $message->refetchPages,
+            ));
         }
     }
 
@@ -71,7 +75,8 @@ final class TrackCreatorsTask
 
         $failedIds = (new DList($creators))
             // Tracking happens here.
-            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator), self::retryPossible($message)))
+            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator),
+                $message->retryAllowed(), $message->refetchPages))
             ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
 
         $this->handleFailedIds($failedIds, $message);
@@ -88,7 +93,7 @@ final class TrackCreatorsTask
             return;
         }
 
-        if (!self::retryPossible($message)) {
+        if (!$message->retryAllowed()) {
             $this->logger->warning("Maximum retries reached for {$failedIds->count()} creators tracking.");
 
             return;
@@ -97,13 +102,8 @@ final class TrackCreatorsTask
         $this->logger->warning("Scheduling retry of {$failedIds->count()} out of {$message->idsOfCreators->count()} track jobs.");
 
         $this->messageBus->dispatch(
-            new TrackCreatorsV1($failedIds, $message->retryNumber + 1),
+            new TrackCreatorsV1($failedIds, $message->retriesLimit - 1, $message->refetchPages),
             [DelayStamp::delayFor(new DateInterval('PT2H'))], // grep-code-tracking-frequency
         );
-    }
-
-    private static function retryPossible(TrackCreatorsV1 $message): bool
-    {
-        return $message->retryNumber < self::MAX_RETRIES;
     }
 }
