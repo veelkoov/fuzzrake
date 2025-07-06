@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
+use App\Tracking\Patterns\Patterns;
 use Veelkoov\Debris\StringList;
 
 class Preprocessor

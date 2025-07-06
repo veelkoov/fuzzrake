@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tracking;
+namespace App\Tests\Tracking\Patterns;
 
 use App\Tests\TestUtils\DataDefinitions;
-use App\Tracking\RegexesLoader;
+use App\Tracking\Patterns\RegexesLoader;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 

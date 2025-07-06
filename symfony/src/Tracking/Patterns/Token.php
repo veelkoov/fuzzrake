@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tracking;
+namespace App\Tracking\Patterns;
 
 use App\Utils\ConfigurationException;
 use App\Utils\Traits\UtilityClass;
