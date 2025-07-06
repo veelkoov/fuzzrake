@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace App\Tests\Tracking;
 
 use App\Tests\TestUtils\DataDefinitions;
-use App\Tracking\PatternsLoader;
+use App\Tracking\RegexesLoader;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
 #[Small]
-class PatternsLoaderTest extends TestCase
+class RegexesLoaderTest extends TestCase
 {
     public function testBuiltInConfigurationLoads(): void
     {
         $this->expectNotToPerformAssertions();
 
         $trackingDefinitions = DataDefinitions::get('tracking.yaml', 'tracking');
-        new PatternsLoader($trackingDefinitions); // @phpstan-ignore argument.type
+        new RegexesLoader($trackingDefinitions); // @phpstan-ignore argument.type
     }
 
-    public function testPlaceholders(): void
+    public function testTokensReplacements(): void
     {
         $input = [
-            'placeholders' => [
+            'tokens_replacements' => [
                 'OPEN_TAG' => ['<tag>'],
                 'END_TAG' => ['</tag>'],
                 'END_OPEN_TAGS' => ['END_TAG\s*OPEN_TAG'],
@@ -42,7 +42,7 @@ class PatternsLoaderTest extends TestCase
             '((</tag>)\s*(<tag>)) ((?P<Commissions>commissions)|(?P<Quotes>quotes)): (?P<Status>open|closed) (</tag>)',
         ];
 
-        $subject = new PatternsLoader($input);
+        $subject = new RegexesLoader($input);
         $result = $subject->offersStatuses->getValuesArray();
 
         self::assertEqualsCanonicalizing($expectedOffersStatuses, $result);

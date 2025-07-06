@@ -12,6 +12,7 @@ use Veelkoov\Debris\StringSet;
 class AnalysisAggregator
 {
     public function __construct(
+        /* @phpstan-ignore property.onlyWritten (TODO: Use) */
         #[Autowire(service: 'monolog.logger.tracking')]
         private readonly LoggerInterface $logger,
     ) {

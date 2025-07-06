@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class SnapshotProcessor
 {
     public function __construct(
+        /* @phpstan-ignore property.onlyWritten (TODO: Use) */
         #[Autowire(service: 'monolog.logger.tracking')]
         private readonly LoggerInterface $logger,
     ) {

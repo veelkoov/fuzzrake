@@ -1,7 +1,7 @@
 ---
 parameters:
   tracking:
-    placeholders:
+    tokens_replacements:
       'OPEN_TAG':
         - '<(h[123456]|p|div)[^>]*>'
       'END_TAG':
@@ -191,7 +191,7 @@ parameters:
       - 'next\ COMMISSIONS\ opening'
 
       # "art commissions"
-      - '[^a-z]art(work)?\ COMMISSIONS'
+      - '(?<=[^a-z])art(work)?\ COMMISSIONS'
 
     offers_statuses:
       # Short and to the point first
