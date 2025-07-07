@@ -4,103 +4,106 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\Cases\WebTestCase;
-use App\Utils\TestUtils\TestsBridge;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Medium;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @medium
- */
-class FeedbackControllerTest extends WebTestCase
+#[Medium]
+class FeedbackControllerTest extends FuzzrakeWebTestCase
 {
     public function testSimpleFeedbackSubmission(): void
     {
-        $client = $this->createClient();
-        $client->request('GET', '/feedback');
+        self::$client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeIs($client, 200);
+        self::assertResponseStatusCodeIs(200);
 
-        $form = $client->getCrawler()->selectButton('Send')->form([
+        $form = self::$client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
-        TestsBridge::setSkipSingleCaptcha();
-        $client->submit($form);
-        self::assertResponseStatusCodeIs($client, 302);
-        $client->followRedirect();
+        self::$client->submit($form);
+        self::assertResponseStatusCodeIs(302);
+        self::$client->followRedirect();
 
         self::assertSelectorTextSame('h1', 'Feedback submitted');
         self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
-    public function testCaptchaFailure(): void
+    public function testCaptchaWorksBySimpleSubmission(): void
     {
-        $client = $this->createClient();
-        $client->request('GET', '/feedback');
+        self::$client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeIs($client, 200);
+        self::assertResponseStatusCodeIs(200);
 
-        $form = $client->getCrawler()->selectButton('Send')->form([
+        $form = self::$client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('wrong') => 'wrong',
         ]);
+        self::submitInvalid($form);
+        self::assertCaptchaSolutionRejected();
 
-        $client->submit($form);
-        self::assertResponseStatusCodeIs($client, 200);
+        $form = self::$client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => '', // To cause 422 and see if the captcha does not show again
+            $this->getCaptchaFieldName('right') => 'right',
+        ]);
+        self::submitInvalid($form);
 
-        self::assertSelectorTextSame('h1', 'Feedback form');
-        self::assertSelectorTextContains('div.alert', 'Captcha failed. Please retry submitting.');
+        $form = self::$client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]' => 'Testing details',
+            // Captcha solved previously, not needed again
+        ]);
+        self::submitValid($form);
+
+        self::assertSelectorTextSame('h1', 'Feedback submitted');
+        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 
     public function testSimpleValidationErrors(): void
     {
-        $client = $this->createClient();
-        $client->request('GET', '/feedback');
+        self::$client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeIs($client, 200);
+        self::assertResponseStatusCodeIs(200);
 
-        $form = $client->getCrawler()->selectButton('Send')->form();
-        $client->submit($form);
+        $form = self::$client->getCrawler()->selectButton('Send')->form();
+        self::$client->submit($form);
 
-        self::assertResponseStatusCodeIs($client, 422);
+        self::assertResponseStatusCodeIs(422);
         self::assertSelectorTextSame('#feedback_subject + .invalid-feedback', 'This is required.');
         self::assertSelectorTextSame('#feedback_noContactBack_help + .invalid-feedback', 'This is required.');
         self::assertSelectorTextSame('#feedback_details + .invalid-feedback', 'This is required.');
     }
 
-    /**
-     * @dataProvider blockedOptionsDataProvider
-     */
+    #[DataProvider('blockedOptionsDataProvider')]
     public function testBlockedOptions(string $optionToSelect, bool $shouldBlock): void
     {
-        $client = $this->createClient();
-        $client->request('GET', '/feedback');
+        self::$client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeIs($client, 200);
+        self::assertResponseStatusCodeIs(200);
 
-        $form = $client->getCrawler()->selectButton('Send')->form([
+        $form = self::$client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
-            'feedback[maker]'         => 'MAKERID',
+            'feedback[creator]'       => 'TEST001',
             'feedback[subject]'       => $optionToSelect,
             'feedback[noContactBack]' => true,
+            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
-        if (!$shouldBlock) {
-            TestsBridge::setSkipSingleCaptcha();
-        }
-        $client->submit($form);
+        self::$client->submit($form);
 
-        self::assertResponseStatusCodeIs($client, $shouldBlock ? 422 : 302);
+        self::assertResponseStatusCodeIs($shouldBlock ? 422 : 302);
     }
 
-    public function blockedOptionsDataProvider(): DataProvider
+    public static function blockedOptionsDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             ['Help me get a fursuit', true],
             ["Maker's commissions info (open/closed) is inaccurate", true],
             ["Maker's website/social account is no longer working", false],

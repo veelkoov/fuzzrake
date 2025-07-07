@@ -20,13 +20,6 @@
         <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
     {% endif %}
 
-    <script>
-        const DATA_BRIDGE = {
-            apiBaseUrl: '{{ url('api')|escape('js') }}',
-            googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-        };
-    </script>
-
     {% block stylesheets %}
         {{ encore_entry_link_tags('general') }}
     {% endblock %}
@@ -37,9 +30,6 @@
 
     <div class="container">
         {% block body %}{% endblock %}
-
-        <hr class="mt-5" />
-        <p class="small mb-5 text-end"><a class="text-light" href="https://open.spotify.com/track/4YhNnmiTEmluiMBJnI2YnF?si=e6e96666ac544ab9"><i class="fa-solid fa-music"></i></a></p>
 
         {{ include('_footer.html.twig') }}
     </div>

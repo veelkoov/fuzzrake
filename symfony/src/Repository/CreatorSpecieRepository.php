@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\CreatorSpecie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringIntMap;
 
 /**
  * @method CreatorSpecie|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,5 +22,36 @@ class CreatorSpecieRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CreatorSpecie::class);
+    }
+
+    public function getActiveCreatorsSpecieNamesToCount(): StringIntMap
+    {
+        $result = $this->getEntityManager()->createQuery('
+                SELECT d_s.name AS name
+                    , COUNT(d_cs) AS count
+                FROM App\Entity\CreatorSpecie AS d_cs
+                JOIN d_cs.creator AS d_c
+                JOIN d_cs.specie AS d_s
+                WHERE d_c.inactiveReason = :empty
+                GROUP BY name
+            ')
+            ->setParameter('empty', '')
+            ->getArrayResult();
+
+        return StringIntMap::fromRows($result, 'name', 'count');
+    }
+
+    public function countActiveCreatorsHavingSpeciesDefined(): int
+    {
+        $result = $this->getEntityManager()->createQuery('
+                SELECT COUNT (DISTINCT d_c)
+                FROM App\Entity\CreatorSpecie d_cs
+                JOIN d_cs.creator AS d_c
+                WHERE d_c.inactiveReason = :empty
+            ')
+            ->setParameter('empty', '')
+            ->getSingleScalarResult();
+
+        return (int) $result;
     }
 }

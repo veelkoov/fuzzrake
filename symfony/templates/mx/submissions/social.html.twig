@@ -2,7 +2,7 @@
 
 {% block title %}Social{% endblock %}
 
-{% set maker_s = artisans|length > 1 ? 'makers' : 'maker' %}
+{% set creator_s = creators|length > 1 ? 'makers' : 'maker' %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
@@ -14,14 +14,14 @@
             <h5>Markdown text</h5>
 
             <p class="user-select-all">
-                # Fursuit {{ maker_s }} added
+                # Fursuit {{ creator_s }} added
 
                 <br><br>
 
-                {% for artisan in artisans %}
-                    - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})
-                    {% if '' != artisan.tumblrUrl %}
-                        {{ artisan.tumblrUrl|tumblr_at }}
+                {% for creator in creators %}
+                    - [getfursu.it/#{{ creator.creatorId }}](https://getfursu.it/#{{ creator.creatorId }})
+                    {% if '' != creator.tumblrUrl %}
+                        {{ creator.tumblrUrl|tumblr_at }}
                     {% endif %}
                     <br><br>
                 {% endfor %}
@@ -37,13 +37,13 @@
             <h4>Mastodon</h4>
 
             <p class="user-select-all">
-                Fursuit {{ maker_s }} added:<br>
+                Fursuit {{ creator_s }} added:<br>
 
-                {% for artisan in artisans %}
-                    - https://getfursu.it/#{{ artisan.makerId }}
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
 
-                    {% if '' != artisan.mastodonUrl %}
-                        {{ artisan.mastodonUrl|mastodon_at }}
+                    {% if '' != creator.mastodonUrl %}
+                        {{ creator.mastodonUrl|mastodon_at }}
                     {% endif %}
 
                     <br>
@@ -63,10 +63,16 @@
             <h4>Bluesky</h4>
 
             <p class="user-select-all">
-                Fursuit {{ maker_s }} added:<br>
+                Fursuit {{ creator_s }} added:<br>
 
-                {% for artisan in artisans %}
-                    - https://getfursu.it/#{{ artisan.makerId }} <br>
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
+
+                    {% if '' != creator.blueskyUrl %}
+                        {{ creator.blueskyUrl|bluesky_at }}
+                    {% endif %}
+
+                    <br>
                 {% endfor %}
 
                 &nbsp;<br>
@@ -81,13 +87,13 @@
             <h4>Twitter</h4>
 
             <p class="user-select-all">
-                Fursuit {{ maker_s }} added:<br>
+                Fursuit {{ creator_s }} added:<br>
 
-                {% for artisan in artisans %}
-                    - https://getfursu.it/#{{ artisan.makerId }}
+                {% for creator in creators %}
+                    - https://getfursu.it/#{{ creator.creatorId }}
 
-                    {% if '' != artisan.twitterUrl %}
-                        <span class="user-select-all">@{{ artisan.twitterUrl|split('/')[3] }}</span>
+                    {% if '' != creator.twitterUrl %}
+                        <span class="user-select-all">@{{ creator.twitterUrl|split('/')[3] }}</span>
                     {% endif %}
 
                     <br>
@@ -106,9 +112,9 @@
 
             <h5>Tags and hashtags</h5>
             <p class="user-select-all">
-                {% for artisan in artisans %}
-                    {% if '' != artisan.instagramUrl %}
-                        @{{ artisan.instagramUrl|split('/')[3] }}
+                {% for creator in creators %}
+                    {% if '' != creator.instagramUrl %}
+                        @{{ creator.instagramUrl|split('/')[3] }}
                     {% endif %}
                 {% endfor %}
 

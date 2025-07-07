@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<CreatorUrlsRemovalData>
+ */
 class CreatorUrlsRemovalType extends AbstractType
 {
     #[Override]
@@ -19,13 +22,13 @@ class CreatorUrlsRemovalType extends AbstractType
     {
         $builder
             ->add('hide', CheckboxType::class, [
-                'label'    => 'Hide the maker',
+                'label'    => 'Hide the creator',
                 'required' => false,
             ])
             ->add('sendEmail', CheckboxType::class, [
                 'label'    => 'Send email',
                 'required' => false,
-                'disabled' => !$options['is_contact_allowed'],
+                'disabled' => true !== $options['is_contact_allowed'],
             ])
             ->add('confirm', SubmitType::class, [
                 'label' => 'Confirm',

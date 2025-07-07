@@ -5,82 +5,35 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\NewArtisan;
+use App\Data\Definitions\NewCreator;
+use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
-use App\Service\DataService;
-use App\Twig\Utils\HumanFriendly;
-use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\Completeness;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
-use App\Utils\DataQuery;
+use App\Utils\Creator\Completeness;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
-use Override;
 use Psl\Vec;
-use TRegx\CleanRegex\Pattern;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
-class AppExtensions extends AbstractExtension
+class AppExtensions
 {
-    private readonly HumanFriendly $friendly;
-    private readonly Pattern $itemExplanation;
     private int $uniqueInt = 1;
 
-    public function __construct(
-        private readonly DataService $dataService,
-    ) {
-        $this->friendly = new HumanFriendly();
-        $this->itemExplanation = Pattern::of(' \([^)]+\)');
-    }
-
-    #[Override]
-    public function getFilters(): array
+    #[AsTwigFilter('fragile_int')]
+    public function fragileIntFilter(mixed $input): string
     {
-        return [
-            new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
-            new TwigFilter('event_url', $this->friendly->shortUrl(...)),
-            new TwigFilter('filter_items_matching', $this->filterItemsMatchingFilter(...)),
-            new TwigFilter('human_friendly_regexp', $this->friendly->regex(...)),
-            new TwigFilter('filter_by_query', $this->filterFilterByQuery(...)),
-        ];
+        return is_int($input) ? (string) $input : 'unknown/error';
     }
 
-    private function fragileIntFilter(mixed $input): string
+    #[AsTwigFunction('unique_int')]
+    public function getUniqueInt(): int
     {
-        if (is_int($input)) {
-            return (string) $input;
-        } else {
-            return 'unknown/error';
-        }
+        return $this->uniqueInt++;
     }
 
-    #[Override]
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
-            new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),
-            new TwigFunction('comma_separated_other', $this->commaSeparatedOther(...)),
-            new TwigFunction('completeness_text', $this->completenessText(...)),
-            new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
-            new TwigFunction('get_latest_event_timestamp', $this->getLatestEventTimestamp(...)),
-            new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
-            new TwigFunction('is_new', $this->isNew(...)),
-            new TwigFunction('unique_int', fn () => $this->uniqueInt++),
-            new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
-        ];
-    }
-
-    public function getLatestEventTimestamp(): ?string
-    {
-        $timestamp = $this->dataService->getLatestEventTimestamp();
-
-        return $timestamp?->format('Y-m-d H:i:s P');
-    }
-
+    #[AsTwigFunction('unknown_value', isSafe: ['html'])]
     public function unknownValue(): string
     {
         return '<i class="fas fa-question-circle" title="Unknown"></i>';
@@ -90,6 +43,7 @@ class AppExtensions extends AbstractExtension
      * @param string[] $primary
      * @param string[] $other
      */
+    #[AsTwigFunction('comma_separated_other')]
     public function commaSeparatedOther(array $primary, array $other): string
     {
         $items = $primary;
@@ -98,19 +52,24 @@ class AppExtensions extends AbstractExtension
             $items[] = 'Other'; // grep-special-label-other
         }
 
-        return implode(', ', Vec\map($items, fn (string $item): string => $this->itemExplanation->prune($item)));
+        $explanation = Patterns::get(' \([^)]+\)');
+
+        return implode(', ', Vec\map($items, static fn (string $item): string => $explanation->prune($item)));
     }
 
+    #[AsTwigFunction('is_new')]
     public function isNew(Creator $creator): bool
     {
-        return NewArtisan::isNew($creator);
+        return NewCreator::isNew($creator);
     }
 
+    #[AsTwigFunction('has_good_completeness')]
     public function hasGoodCompleteness(Creator $creator): bool
     {
         return Completeness::hasGood($creator);
     }
 
+    #[AsTwigFunction('completeness_text')]
     public function completenessText(Creator $creator): string
     {
         return Completeness::getCompletenessText($creator);
@@ -119,6 +78,7 @@ class AppExtensions extends AbstractExtension
     /**
      * @throws JsonException
      */
+    #[AsTwigFunction('ab_search_uri')]
     public function abSearchUri(Creator $creator): string
     {
         $names = [$creator->getName(), ...$creator->getFormerly()];
@@ -126,6 +86,7 @@ class AppExtensions extends AbstractExtension
         return 'https://bewares.getfursu.it/#search:'.Json::encode($names);
     }
 
+    #[AsTwigFunction('get_cst_issue_text')]
     public function getCstIssueText(Creator $creator): string
     {
         if (!$creator->isTracked() || !$creator->getCsTrackerIssue()) {
@@ -135,6 +96,7 @@ class AppExtensions extends AbstractExtension
         return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
     }
 
+    #[AsTwigFunction('ages_description', isSafe: ['html'])]
     public function agesDescription(Creator $creator, bool $addText): string
     {
         $result = '';
@@ -170,23 +132,11 @@ class AppExtensions extends AbstractExtension
         return $result;
     }
 
-    /**
-     * @param Item[] $items
-     *
-     * @return Item[]
-     */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array
+    #[AsTwigFilter('filter_items_matching')]
+    public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (Item $item) => $pattern->test($item->label));
-    }
-
-    /**
-     * @param list<string> $input
-     */
-    public function filterFilterByQuery(array $input, DataQuery $query): string
-    {
-        return implode(', ', $query->filterList($input));
+        return $items->filter(static fn (Item $item) => $pattern->test($item->label));
     }
 }

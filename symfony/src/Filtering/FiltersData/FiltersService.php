@@ -7,30 +7,29 @@ namespace App\Filtering\FiltersData;
 use App\Data\Definitions\Fields\Field;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use App\Filtering\FiltersData\Builder\SpecialItems;
-use App\Repository\ArtisanRepository;
-use App\Repository\ArtisanVolatileDataRepository;
+use App\Filtering\FiltersData\Data\ItemList;
+use App\Filtering\FiltersData\Data\SpecialItemList;
 use App\Repository\CreatorOfferStatusRepository;
-use App\Repository\KotlinDataRepository;
+use App\Repository\CreatorRepository;
+use App\Repository\CreatorVolatileDataRepository;
 use App\Service\Cache;
 use App\Service\CountriesDataService;
 use App\Service\DataService;
-use App\Utils\Enforce;
+use App\Species\SpeciesFilterService;
 use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Dict;
 use Psl\Vec;
 
 class FiltersService
 {
     public function __construct(
-        private readonly ArtisanRepository $artisanRepository,
+        private readonly CreatorRepository $creatorRepository,
         private readonly CreatorOfferStatusRepository $offerStatusRepository,
-        private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
+        private readonly CreatorVolatileDataRepository $creatorVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
-        private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly DataService $dataService,
+        private readonly SpeciesFilterService $speciesFilterService,
         private readonly Cache $cache,
     ) {
     }
@@ -50,9 +49,9 @@ class FiltersService
             $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
             $this->getStatesFilterData(),
-            $this->getSpeciesFilterData(),
+            $this->speciesFilterService->getFilterData(),
             $this->getInactiveFilterData(),
-        ), CacheTags::ARTISANS, __METHOD__);
+        ), CacheTags::CREATORS, __METHOD__);
     }
 
     public function getCountriesFilterData(): FilterData
@@ -105,65 +104,13 @@ class FiltersService
         return FilterData::from($result);
     }
 
-    private function getSpeciesFilterData(): FilterData
-    {
-        $rawFilterData = $this->kotlinDataRepository->getArray(KotlinDataRepository::SPECIES_FILTER);
-
-        return $this->rawToFilterData($rawFilterData);
-    }
-
-    /**
-     * @param array<mixed> $rawFilterData
-     */
-    private function rawToFilterData(array $rawFilterData): FilterData
-    {
-        $specialItems = [];
-
-        foreach (Enforce::array($rawFilterData['specialItems'] ?? []) as $rawSpecialItem) {
-            $rawSpecialItem = Enforce::array($rawSpecialItem);
-
-            $value = Enforce::string($rawSpecialItem['value'] ?? '');
-            $label = Enforce::string($rawSpecialItem['label'] ?? '');
-            $count = Enforce::int($rawSpecialItem['count'] ?? 0);
-
-            $specialItems[] = new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
-        }
-
-        $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
-
-        return new FilterData($items, $specialItems);
-    }
-
-    /**
-     * @param array<mixed> $rawItems
-     *
-     * @return list<Item>
-     */
-    private function rawToItems(array $rawItems): array
-    {
-        $result = [];
-
-        foreach ($rawItems as $rawItem) {
-            $rawItem = Enforce::array($rawItem);
-
-            $result[] = new Item(
-                Enforce::string($rawItem['value'] ?? ''),
-                Enforce::string($rawItem['label'] ?? ''),
-                Enforce::int($rawItem['count'] ?? 0),
-                $this->rawToItems(Enforce::array($rawItem['subItems'] ?? [])),
-            );
-        }
-
-        return $result;
-    }
-
     /**
      * @throws UnexpectedResultException
      */
     private function getOpenFor(): FilterData
     {
-        $trackedCount = $this->artisanRepository->getCsTrackedCount();
-        $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
+        $trackedCount = $this->creatorRepository->getCsTrackedCount();
+        $issuesCount = $this->creatorVolatileDataRepository->getCsTrackingIssuesCount();
         $activeCount = $this->dataService->countActiveCreators();
         $nonTrackedCount = $activeCount - $trackedCount;
 
@@ -172,7 +119,7 @@ class FiltersService
         $result = new MutableFilterData($trackingIssues, $notTracked);
 
         foreach ($this->offerStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->items->addComplexItem($offer, $offer, (int) $openCount);
+            $result->items->addComplexItem($offer, $offer, $openCount);
         }
 
         return FilterData::from($result);
@@ -183,7 +130,7 @@ class FiltersService
         $unknown = SpecialItems::newUnknown();
         $result = new MutableFilterData($unknown);
 
-        foreach ($this->artisanRepository->getPaymentPlans() as $paymentPlan) {
+        foreach ($this->creatorRepository->getPaymentPlans() as $paymentPlan) {
             if (Consts::DATA_VALUE_UNKNOWN === $paymentPlan) {
                 $unknown->incCount();
             } elseif (Consts::DATA_PAYPLANS_NONE === $paymentPlan) {
@@ -201,7 +148,7 @@ class FiltersService
      */
     private function getInactiveFilterData(): FilterData
     {
-        $inactiveCount = $this->artisanRepository->countAll() - $this->dataService->countActiveCreators();
+        $inactiveCount = $this->creatorRepository->countAll() - $this->dataService->countActiveCreators();
 
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }
@@ -218,11 +165,12 @@ class FiltersService
             $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
         }
 
-        $specialItems = Vec\map($specialItems, fn (MutableSpecialItem $item): SpecialItem => SpecialItem::from($item));
+        $specialItems = SpecialItemList::mapFrom($specialItems, SpecialItem::from(...));
 
-        $items = $this->dataService->countDistinctInActiveCreatorsHaving($primaryField);
-        $items = Dict\map_with_key($items, fn (string $item, int $count): Item => new Item($item, $item, $count));
-        $items = Vec\values($items);
+        $items = ItemList::mapFrom(
+            $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),
+            fn (int $count, string $item): Item => new Item($item, $item, $count),
+        );
 
         return new FilterData($items, $specialItems);
     }

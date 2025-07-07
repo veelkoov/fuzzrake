@@ -1,6 +1,7 @@
 parameters:
   level: 10
   paths:
+    - migrations
     - src
     - tests
 
@@ -10,55 +11,51 @@ parameters:
     consoleApplicationLoader: tests/console-application.php
 
   typeAliases:
-    psFieldValue:              'App\Data\Definitions\Ages|App\Data\Definitions\ContactPermit|DateTimeImmutable|list<string>|string|int|bool|null'
-    psJsonFieldValue:          'list<string>|string|int|bool|null'
-    psArtisanStatsArray:       'array{open_for_anything: int, closed_for_anything: int, successfully_tracked: int, partially_tracked: int, tracking_failed: int, tracking_issues: int, tracked: int, total: int}'
-
-    psSubspecies:              'null|array<string, psNextLevelSubspecies>'
-    psNextLevelSubspecies:     'null|array<string, mixed>' # No recursion allowed, use mixed
-
-    psFixerConfig:             'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string}'
-    psLanguagesFixerConfig:    'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string}'
+    psPhpFieldValue:  'App\Data\Definitions\Ages|App\Data\Definitions\ContactPermit|DateTimeImmutable|list<string>|string|int|bool|null'
+    psJsonFieldsData: 'array<string, list<string>|string|int|bool|null>'
+    psFixerConfig:    'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string}'
 
   ignoreErrors:
     -
       message: '#^Method App\\Controller\\[^ ]+ has parameter \$form with generic interface Symfony\\Component\\Form\\FormInterface but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 9
+      count: 8
       path: src/Controller/*
 
     -
       message: '#^Class App\\Form\\[^ ]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types\: TData$#'
       identifier: missingType.generics
-      count: 8
+      count: 4
       path: src/Form/*
 
     -
       message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
       identifier: missingType.iterableValue
-      count: 13
+      count: 12
       path: src/Repository/*
 
     -
       message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
       identifier: missingType.iterableValue
-      count: 13
+      count: 12
       path: src/Repository/*
 
     -
       message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
       identifier: missingType.iterableValue
-      count: 13
+      count: 12
       path: src/Repository/*
 
     -
       message: '#^Class App\\Repository\\[^ ]+ has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
       identifier: missingType.iterableValue
-      count: 13
+      count: 12
       path: src/Repository/*
 
     - # This is from a recipe
-      message: '#^Call to function method_exists\(\) with ''Symfony\\\\Component\\\\Dotenv\\\\Dotenv'' and ''bootEnv'' will always evaluate to true\.$#'
-      identifier: function.alreadyNarrowedType
-      count: 1
+      message: '#.#'
+      count: 2
       path: tests/bootstrap.php
+
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon

@@ -9,8 +9,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
 {
-    private ?ArtisanChanges $lastContext = null;
-    private ?ArtisanChanges $currentContext = null;
+    private ?CreatorChanges $lastContext = null;
+    private ?CreatorChanges $currentContext = null;
 
     public function __construct(
         private readonly SymfonyStyle $io,
@@ -18,9 +18,9 @@ class Printer
         Formatter::setup($io->getFormatter());
     }
 
-    public function setCurrentContext(ArtisanChanges $artisan): void
+    public function setCurrentContext(CreatorChanges $creator): void
     {
-        $this->currentContext = $artisan;
+        $this->currentContext = $creator;
     }
 
     /**
@@ -28,32 +28,32 @@ class Printer
      */
     public function writeln(string|iterable $messages): void
     {
-        $this->showArtisanNameIfContextChanged();
+        $this->showCreatorNameIfContextChanged();
         $this->io->writeln($messages);
     }
 
     public function note(string $message): void
     {
-        $this->showArtisanNameIfContextChanged();
+        $this->showCreatorNameIfContextChanged();
         $this->io->note($message);
     }
 
     public function warning(string $message): void
     {
-        $this->showArtisanNameIfContextChanged();
+        $this->showCreatorNameIfContextChanged();
         $this->io->warning($message);
     }
 
     public function success(string $message): void
     {
-        $this->showArtisanNameIfContextChanged();
+        $this->showCreatorNameIfContextChanged();
         $this->io->success($message);
     }
 
-    private function showArtisanNameIfContextChanged(): void
+    private function showCreatorNameIfContextChanged(): void
     {
         if ($this->lastContext !== $this->currentContext && null !== $this->currentContext) {
-            $this->io->section(StrUtils::artisanNamesSafeForCli(
+            $this->io->section(StrUtils::creatorNamesSafeForCli(
                 $this->currentContext->getSubject(),
                 $this->currentContext->getChanged()
             ));

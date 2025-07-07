@@ -39,14 +39,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for artisan in query.result %}
+                {% for creator in query.result %}
                     <tr>
-                        <td><a href="{{ path('mx_artisan_edit', {makerId: artisan.lastMakerId}) }}">{{ artisan.lastMakerId }}</a></td>
-                        <td>{{ artisan.allowsFeedback ? 'YES' : 'NO' }}</td>
-                        <td>{% if artisan.allowsFeedback %}{{ artisan.emailAddress }}{% endif %}</td>
-                        <td>{{ artisan.otherStyles|filter_by_query(query) }}</td>
-                        <td>{{ artisan.otherOrderTypes|filter_by_query(query) }}</td>
-                        <td>{{ artisan.otherFeatures|filter_by_query(query) }}</td>
+                        <td><a href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">{{ creator.lastCreatorId }}</a></td>
+                        <td>{{ creator.allowsFeedback ? 'YES' : 'NO' }}</td>
+                        <td>{% if creator.allowsFeedback %}{{ creator.emailAddress }}{% endif %}</td>
+                        <td>{{ creator.otherStyles|filter_by_query(query) }}</td>
+                        <td>{{ creator.otherOrderTypes|filter_by_query(query) }}</td>
+                        <td>{{ creator.otherFeatures|filter_by_query(query) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

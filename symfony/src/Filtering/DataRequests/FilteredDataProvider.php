@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\Entity\Artisan as CreatorE;
-use App\Repository\ArtisanRepository;
+use App\Repository\CreatorRepository;
 use App\Service\Cache;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use App\ValueObject\CacheTags;
@@ -16,7 +15,7 @@ use Psl\Vec;
 class FilteredDataProvider
 {
     public function __construct(
-        private readonly ArtisanRepository $repository,
+        private readonly CreatorRepository $repository,
         private readonly Cache $cache,
     ) {
     }
@@ -28,7 +27,7 @@ class FilteredDataProvider
     {
         return $this->cache->get(
             fn () => $this->filterCreatorsBy($choices),
-            CacheTags::ARTISANS,
+            CacheTags::CREATORS,
             [__METHOD__, $choices->getCacheDigest()],
         );
     }
@@ -49,7 +48,10 @@ class FilteredDataProvider
             $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
         } while ($choices->pageNumber > $pagesCount);
 
-        $creators = Vec\map($paginator, fn (CreatorE $creator) => Creator::wrap($creator));
+        $creators = Vec\map($paginator,
+            // grep-code-cannot-use-coalesce-in-doctrine-order-by
+            static fn (array $creatorAndOrderColumns) => Creator::wrap($creatorAndOrderColumns[0]),
+        );
 
         return new ItemsPage(
             $creators,

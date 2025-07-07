@@ -4,33 +4,26 @@ declare(strict_types=1);
 
 namespace App\Tests\Twig;
 
-use App\Data\Validator\Validator;
-use App\Repository\SubmissionRepository;
 use App\Twig\AdminExtensions;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- */
+#[Small]
 class AdminExtensionsTest extends TestCase
 {
-    /**
-     * @dataProvider linkUrlsDataProvider
-     */
+    #[DataProvider('linkUrlsDataProvider')]
     public function testLinkUrls(string $input, string $expectedOutput): void
     {
-        $validatorMock = $this->createMock(Validator::class);
-        $repoMock = $this->createMock(SubmissionRepository::class);
+        $subject = new AdminExtensions();
 
-        $subject = new AdminExtensions($validatorMock, $repoMock);
-
-        self::assertEquals($expectedOutput, $subject->linkUrls($input));
+        self::assertSame($expectedOutput, $subject->linkUrls($input));
     }
 
     /**
      * @return array<array{string, string}>
      */
-    public function linkUrlsDataProvider(): array
+    public static function linkUrlsDataProvider(): array
     {
         return [
             [

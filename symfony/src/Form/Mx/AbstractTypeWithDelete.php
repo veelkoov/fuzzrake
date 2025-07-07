@@ -24,7 +24,7 @@ class AbstractTypeWithDelete extends AbstractType
             'attr' => ['class' => 'btn btn-primary'],
         ]);
 
-        if ($options[self::OPT_DELETABLE]) {
+        if (true === $options[self::OPT_DELETABLE]) {
             $builder->add(self::BTN_DELETE, SubmitType::class, [
                 'attr' => [
                     'class'   => 'btn btn-danger',

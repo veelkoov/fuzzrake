@@ -5,44 +5,43 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use JsonException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 
-/**
- * @large
- */
-class FiltersTest extends PantherTestCaseWithEM
+#[Large]
+class FiltersTest extends FuzzrakePantherTestCase
 {
     use FiltersTestTrait;
     use MainPageTestsTrait;
 
     /**
-     * @dataProvider filterChoicesDataProvider
-     *
-     * @param list<Artisan>                    $artisans
+     * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
-     * @param list<string>                     $expectedMakerIds
+     * @param list<string>                     $expectedCreatorIds
      *
      * @throws WebDriverException|JsonException
      */
-    public function testFiltersInBrowser(array $artisans, array $filtersSet, array $expectedMakerIds): void
+    #[DataProvider('filterChoicesDataProvider')]
+    public function testFiltersInBrowser(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
+        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
 
         $isAdult = (bool) ($filtersSet['isAdult'] ?? true);
         $wantsSfw = (bool) ($filtersSet['wantsSfw'] ?? false);
 
         $this->fillChecklist($isAdult, $wantsSfw);
 
-        $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
+        self::$client->findElement(WebDriverBy::id('open-filters-button'))->click();
         self::waitUntilShows('#filters-title');
 
         foreach ($filtersSet as $filter => $values) {
@@ -50,7 +49,7 @@ class FiltersTest extends PantherTestCaseWithEM
                 continue;
             }
 
-            $this->client->findElement(WebDriverBy::cssSelector("#filter-ctrl-$filter > button"))->click();
+            self::$client->findElement(WebDriverBy::cssSelector("#filter-ctrl-$filter > button"))->click();
             self::waitUntilShows("#filter-body-$filter");
 
             if ('species' === $filter) {
@@ -58,18 +57,18 @@ class FiltersTest extends PantherTestCaseWithEM
             }
 
             foreach ($values as $value) {
-                $this->client->findElement(WebDriverBy::xpath("//input[@name=\"{$filter}[]\"][@value=\"$value\"]"))->click();
+                self::$client->findElement(WebDriverBy::xpath("//input[@name=\"{$filter}[]\"][@value=\"$value\"]"))->click();
             }
         }
 
-        $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
+        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
         self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
-        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedMakerIds).' out of');
+        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedCreatorIds).' out of');
 
-        foreach ($expectedMakerIds as $makerId) {
-            self::assertSelectorIsVisible("tr#$makerId");
+        foreach ($expectedCreatorIds as $creatorId) {
+            self::assertSelectorIsVisible("tr#$creatorId");
         }
     }
 
@@ -80,7 +79,7 @@ class FiltersTest extends PantherTestCaseWithEM
     {
         foreach ($specieNames as $specieName) {
             $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/span[contains(@class, "toggle")]';
-            $this->client->findElement(WebDriverBy::xpath($xpath))->click();
+            self::$client->findElement(WebDriverBy::xpath($xpath))->click();
 
             $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/following-sibling::fieldset';
             self::waitUntilShows($xpath);

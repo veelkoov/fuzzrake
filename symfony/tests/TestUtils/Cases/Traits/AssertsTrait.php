@@ -4,24 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Symfony\Component\BrowserKit\AbstractBrowser;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Utils\StrUtils;
+use DateTimeImmutable;
 
 trait AssertsTrait
 {
-    /**
-     * Error output of the default makes result analysis difficult because the whole response is compared instead of just the code.
-     *
-     * @param AbstractBrowser<Request, Response> $client
-     *
-     * @see BrowserKitAssertionsTrait::assertResponseStatusCodeIs()
-     */
-    public static function assertResponseStatusCodeIs(AbstractBrowser $client, int $expectedCode): void
-    {
-        self::assertEquals($expectedCode, $client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
-    }
-
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
     {
         $pattern = pattern('\s+');
@@ -29,7 +16,7 @@ trait AssertsTrait
         $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
         $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
 
-        self::assertEquals($expectedHtml, $actualHtml);
+        self::assertSame($expectedHtml, $actualHtml);
     }
 
     /**
@@ -42,5 +29,11 @@ trait AssertsTrait
         sort($actual);
 
         self::assertEquals($expected, $actual, $message);
+    }
+
+    protected static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
+    {
+        self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
+        self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
 }

@@ -1,0 +1,15 @@
+---
+- name: 'Backup the DB'
+  ansible.builtin.copy:
+    dest: '{{ database_path }}{{ now(utc=True, fmt="-backup-%Y%m%d%H%M%S") }}'
+    mode: '600'
+    remote_src: true
+    src: '{{ database_path }}'
+
+- name: 'Perform DB schema migrations'
+  ansible.builtin.command:
+    cmd: 'docker exec {{ php_fpm_container_name | quote }} bin/console doctrine:migrations:migrate --no-interaction'
+  register: 'command_result'
+  changed_when:
+    - 'not ansible_check_mode'
+    - '"[OK] Already at the latest version" not in command_result.stdout'

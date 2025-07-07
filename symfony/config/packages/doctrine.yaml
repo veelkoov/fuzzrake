@@ -26,8 +26,6 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: false
-        hydrators:
-            COLUMN_HYDRATOR: App\Doctrine\Hydrators\ColumnHydrator
 
 when@test:
     doctrine:

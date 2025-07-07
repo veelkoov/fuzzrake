@@ -6,17 +6,15 @@ namespace App\Tests\Utils;
 
 use App\Utils\Parse;
 use App\Utils\ParseException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class ParseTest extends TestCase
 {
-    /**
-     * @dataProvider intDataProvider
-     */
+    #[DataProvider('intDataProvider')]
     public function testInt(float|int|string|null $input, int|false $expectedInt): void
     {
         try {
@@ -26,9 +24,9 @@ class ParseTest extends TestCase
         }
     }
 
-    public function intDataProvider(): DataProvider
+    public static function intDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [null,   false],
             [0,      0],
             [1,      1],
@@ -51,17 +49,15 @@ class ParseTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider nBoolDataProvider
-     */
+    #[DataProvider('nBoolDataProvider')]
     public function testNBool(string $input, ?bool $expected): void
     {
-        self::assertEquals($expected, Parse::nBool($input));
+        self::assertSame($expected, Parse::nBool($input));
     }
 
-    public function nBoolDataProvider(): DataProvider
+    public static function nBoolDataProvider(): TestDataProvider
     {
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             ['1',       true],
             ['true',    true],
             ['tRue',    true],

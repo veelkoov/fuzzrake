@@ -6,73 +6,44 @@ namespace App\Twig;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Data\Validator\Validator;
-use App\Entity\Artisan as ArtisanE;
-use App\IuHandling\Import\SubmissionData;
-use App\Repository\SubmissionRepository;
-use App\Twig\Utils\SafeFor;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Entity\Creator as CreatorE;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\DataQuery;
+use App\Utils\Regexp\Patterns;
 use App\Utils\StrUtils;
-use Doctrine\ORM\NonUniqueResultException;
-use Override;
+use Psl\Iter;
 use TRegx\CleanRegex\Match\Detail;
-use TRegx\CleanRegex\Pattern;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Twig\Attribute\AsTwigFilter;
 
-use function Psl\Iter\contains;
-
-class AdminExtensions extends AbstractExtension
+class AdminExtensions
 {
-    private readonly Pattern $linkPattern;
-
-    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: https://github.com/veelkoov/fuzzrake/issues/156 */
-    public function __construct(
-        private readonly Validator $validator,
-        private readonly SubmissionRepository $submissionRepository,
-    ) {
-        $this->linkPattern = pattern('(?<!title=")https?://[^ ,\n<>"]+', 'i');
-    }
-
-    #[Override]
-    public function getFilters(): array
+    #[AsTwigFilter('smart')]
+    public function smartFilter(Creator|CreatorE $creator): Creator
     {
-        return [
-            new TwigFilter('smart', $this->smartFilter(...)),
-            new TwigFilter('as_str', $this->asStr(...)),
-            new TwigFilter('as_field', $this->asField(...)),
-            new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
-            new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
-            new TwigFilter('is_valid', $this->isValid(...)),
-            new TwigFilter('get_comments', $this->getComment(...)),
-            new TwigFilter('mastodon_at', $this->mastodonAt(...)),
-            new TwigFilter('tumblr_at', $this->tumblrAt(...)),
-        ];
-    }
-
-    private function smartFilter(Artisan|ArtisanE $artisan): Artisan
-    {
-        if (!($artisan instanceof Artisan)) {
-            $artisan = Artisan::wrap($artisan);
+        if (!($creator instanceof Creator)) {
+            $creator = Creator::wrap($creator);
         }
 
-        return $artisan;
+        return $creator;
     }
 
     /**
-     * @param psFieldValue $value
+     * @param psPhpFieldValue $value
      */
-    private function asStr(mixed $value): string
+    #[AsTwigFilter('as_str')]
+    public function asStr(mixed $value): string
     {
         return StrUtils::asStr($value);
     }
 
-    private function asField(string $name): Field
+    #[AsTwigFilter('as_field')]
+    public function asField(string $name): Field
     {
         return Field::from($name);
     }
 
-    private function difference(Field $field, string $classSuffix, Artisan $subject, Artisan $other): string
+    #[AsTwigFilter('difference', isSafe: ['html'])]
+    public function difference(Field $field, string $classSuffix, Creator $subject, Creator $other): string
     {
         if (!$field->isList()) {
             $value = $this->getOptionallyRedactedValue($field, $subject);
@@ -90,7 +61,7 @@ class AdminExtensions extends AbstractExtension
         $otherItems = $other->getStringList($field);
 
         foreach ($subjectItems as $item) {
-            $itemClass = contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
+            $itemClass = Iter\contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
             $result .= " <span class=\"submission-list-item badge $itemClass\" title=\"$text\">$text</span> ";
@@ -99,32 +70,10 @@ class AdminExtensions extends AbstractExtension
         return $result;
     }
 
-    public function linkUrls(string $input): string
-    {
-        return $this->linkPattern->replace($input)->callback(function (Detail $detail): string {
-            $url = $detail->text();
-
-            return "<a href=\"$url\" target=\"_blank\">$url</a>";
-        });
-    }
-
-    private function isValid(Artisan $artisan, Field $field): bool
-    {
-        return $this->validator->isValid($artisan, $field);
-    }
-
     /**
-     * @throws NonUniqueResultException
+     * @return psPhpFieldValue
      */
-    private function getComment(SubmissionData $submissionData): string
-    {
-        return $this->submissionRepository->findByStrId($submissionData->getId())?->getComment() ?? '';
-    }
-
-    /**
-     * @return psFieldValue
-     */
-    private function getOptionallyRedactedValue(Field $field, Artisan $subject): mixed
+    private function getOptionallyRedactedValue(Field $field, Creator $subject): mixed
     {
         if (SecureValues::hideOnAdminScreen($field)) {
             return '[redacted]';
@@ -133,17 +82,48 @@ class AdminExtensions extends AbstractExtension
         }
     }
 
-    private function mastodonAt(string $mastodonUrl): string
+    #[AsTwigFilter('link_urls', isSafe: ['html'])]
+    public function linkUrls(string $input): string
     {
-        return Pattern::of('^https://([^/]+)/([^/#?]+).*')
+        $urls = Patterns::getI('(?<!title=")https?://[^ ,\n<>"]+');
+
+        return $urls->replace($input)->callback(function (Detail $detail): string {
+            $url = $detail->text();
+
+            return "<a href=\"$url\" target=\"_blank\">$url</a>";
+        });
+    }
+
+    #[AsTwigFilter('bluesky_at')]
+    public function blueskyAt(string $blueskyUrl): string
+    {
+        return Patterns::get('^https://[^/]+/profile/([^/#?]+).*')
+            ->replace($blueskyUrl)
+            ->withReferences('@$1');
+    }
+
+    #[AsTwigFilter('mastodon_at')]
+    public function mastodonAt(string $mastodonUrl): string
+    {
+        return Patterns::get('^https://([^/]+)/([^/#?]+).*')
             ->replace($mastodonUrl)
             ->withReferences('$2@$1');
     }
 
-    private function tumblrAt(string $mastodonUrl): string
+    #[AsTwigFilter('tumblr_at')]
+    public function tumblrAt(string $mastodonUrl): string
     {
-        return Pattern::of('^https://www\.tumblr\.com/([^/#?]+).*')
+        return Patterns::get('^https://www\.tumblr\.com/([^/#?]+).*')
             ->replace($mastodonUrl)
             ->withReferences('@$1 _FIX_');
+    }
+
+    /**
+     * @param list<string> $input
+     */
+    #[AsTwigFilter('filter_by_query')]
+    public function filterFilterByQuery(array $input, DataQuery $query): string
+    {
+        return implode(', ', $query->filterList($input));
     }
 }

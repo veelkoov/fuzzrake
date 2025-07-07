@@ -6,7 +6,7 @@ namespace App\Data\Tidying;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\PackedStringList;
 use App\Utils\StrUtils;
 
@@ -17,7 +17,7 @@ class Differ
     ) {
     }
 
-    public function showDiff(Field $field, Artisan $old, Artisan $new): void
+    public function showDiff(Field $field, Creator $old, Creator $new): void
     {
         $newVal = StrUtils::asStr($new->get($field) ?? '');
         $oldVal = StrUtils::asStr($old->get($field) ?? '');
@@ -41,7 +41,7 @@ class Differ
         $newValItems = PackedStringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
-            if (!in_array($item, $newValItems)) {
+            if (!in_array($item, $newValItems, true)) {
                 $item = Formatter::deleted($item);
             }
 
@@ -49,7 +49,7 @@ class Differ
         }
 
         foreach ($newValItems as &$item) {
-            if (!in_array($item, $oldValItems)) {
+            if (!in_array($item, $oldValItems, true)) {
                 $item = Formatter::added($item);
             }
 
@@ -59,7 +59,7 @@ class Differ
         $q = Formatter::shy('"');
         $n = Formatter::shy('\n');
 
-        if ($oldVal) { // In case order changed or duplicates got removed, etc.
+        if ('' !== $oldVal) { // In case order changed or duplicates got removed, etc.
             $this->printer->writeln("OLD $fieldName $q".implode($n, $oldValItems).$q);
         }
 
@@ -70,12 +70,12 @@ class Differ
     {
         $q = Formatter::shy('"');
 
-        if ($oldVal) {
+        if ('' !== $oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
             $this->printer->writeln("OLD $field->value $q".Formatter::deleted($oldVal).$q);
         }
 
-        if ($newVal) {
+        if ('' !== $newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
             $this->printer->writeln("NEW $field->value $q".Formatter::added($newVal).$q);
         }

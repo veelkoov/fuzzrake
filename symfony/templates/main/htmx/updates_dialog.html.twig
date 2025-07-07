@@ -10,10 +10,10 @@
 
         <div class="modal-body">
             <p>
-                <strong>If you are the maker - please</strong> <a href="{{ path('iu_form_step_start', {makerId: creator.lastMakerId}) }}">fill the update form</a>.
+                <strong>If you are the maker - please</strong> <a href="{{ path('iu_form_step_start', {creatorId: creator.lastCreatorId}) }}">fill the update form</a>.
             </p>
             <p>
-                Otherwise, you can <a href="{{ path('feedback_form', {maker: creator.lastMakerId}) }}" target="_blank">submit the feedback form</a>. {# grep-maker-query-parameter #}
+                Otherwise, you can <a href="{{ path('feedback_form', {creator: creator.lastCreatorId}) }}" target="_blank">submit the feedback form</a>. {# grep-creator-query-parameter #}
             </p>
         </div>
 

@@ -75,13 +75,13 @@
     <div id="creator-card-modal-content" class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">
-                {% if creator.makerId %}
-                    <a id="makerId" href="#{{ creator.makerId }}"><span class="badge bg-secondary">
-                        <i class="fas fa-link"></i> {{ creator.makerId -}}
+                {% if creator.creatorId %}
+                    <a id="creator-id" href="#{{ creator.creatorId }}"><span class="badge bg-secondary">
+                        <i class="fas fa-link"></i> {{ creator.creatorId -}}
                     </span></a>
                 {% endif %}
 
-                <span id="artisanName">{{ creator.name }}</span>&nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
+                <span id="creator-name">{{ creator.name }}</span>&nbsp;<span class="fi fi-{{ creator.country|lower }}"></span>
 
                 &nbsp;
 
@@ -108,11 +108,11 @@
 
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="text-end p-0">
-                    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}" role="button">
+                    <a class="btn btn-warning" href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-edit"></i>
                     </a>
 
-                    <a class="btn btn-warning" href="{{ path('mx_creator_urls_selection', {creatorId: creator.lastMakerId}) }}" role="button">
+                    <a class="btn btn-warning" href="{{ path('mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-link"></i>
                     </a>
                 </div>
@@ -175,7 +175,7 @@
             <div class="col-md-6 p-1">
                 <h5>Species</h5>
 
-                <div id="artisanSpecies" class="small pb-2">
+                <div class="small pb-2">
                     {% if creator.speciesComment %}
                         <span class="nl2br">{{ creator.speciesComment }}</span><br>
                     {% endif %}
@@ -352,7 +352,7 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-light border border-warning"
-                    {{ update_dialog_open_attrs(creator.lastMakerId) }}>
+                    {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
                 Data outdated/inaccurate? <!-- grep-updates-button -->
             </button>
 

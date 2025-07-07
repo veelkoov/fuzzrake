@@ -5,64 +5,63 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 
 /**
  * @see \App\Tests\Controller\FeedbackControllerTest
- *
- * @large
  */
-class FeedbackControllerTest extends PantherTestCaseWithEM
+#[Large]
+class FeedbackControllerTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 
     /**
-     * @return array<array{string, Artisan}>
+     * @return array<array{string, Creator}>
      */
-    public function feedbackFromMakersCardCarriesMakerIdOverToTheFormDataProvider(): array
+    public static function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
     {
-        $official = Artisan::new()->setCountry('FI')->setName('Modern maker')
-            ->setMakerId('FDBCKMR');
+        $official = Creator::new()->setCountry('FI')->setName('Modern creator')
+            ->setCreatorId('TEST001');
 
-        $placeholder = Artisan::new()->setCountry('CZ')->setName('Early maker')
-            ->setFormerMakerIds(['M000000']);
+        $placeholder = Creator::new()->setCountry('CZ')->setName('Early creator')
+            ->setFormerCreatorIds(['M000000']);
 
         return [
-            'With an official maker ID' => ['FDBCKMR', $official],
-            'With placeholder maker ID' => ['M000000', $placeholder],
+            'With an official creator ID' => ['TEST001', $official],
+            'With placeholder creator ID' => ['M000000', $placeholder],
         ];
     }
 
     /**
      * @throws WebDriverException
-     *
-     * @dataProvider feedbackFromMakersCardCarriesMakerIdOverToTheFormDataProvider
      */
-    public function testFeedbackFromMakersCardCarriesMakerIdOverToTheForm(string $expectedMakerId, Artisan $artisan): void
+    #[DataProvider('feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider')]
+    public function testFeedbackFromCreatorCardCarriesCreatorIdOverToTheForm(string $expectedCreatorId, Creator $creator): void
     {
-        self::setupMockSpeciesFilterData();
-        self::persistAndFlush($artisan);
+        self::persistAndFlush($creator);
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1);
 
-        $this->openMakerCardByClickingOnTheirNameInTheTable($artisan->getName());
-        $this->openDataOutdatedPopupFromTheMakerCard();
+        $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());
+        $this->openDataOutdatedPopupFromTheCreatorCard();
 
-        $this->client->clickLink('submit the feedback form');
+        self::$client->clickLink('submit the feedback form');
 
-        self::assertCount(2, $this->client->getWindowHandles());
-        $handle = $this->client->getWindowHandles()[1];
+        self::assertCount(2, self::$client->getWindowHandles());
+        $handle = self::$client->getWindowHandles()[1];
         self::assertIsString($handle);
-        $this->client->switchTo()->window($handle);
+        self::$client->switchTo()->window($handle);
 
-        $this->client->waitForVisibility('h1', 10);
-        self::assertSelectorTExtSame('h1', 'Feedback form');
-        self::assertSelectorExists('//input[@id="feedback_maker" and @value="'.$expectedMakerId.'"]');
+        self::$client->waitForVisibility('h1', 10);
+        self::assertSelectorTextSame('h1', 'Feedback form');
+        self::assertSelectorExists('//input[@id="feedback_creator" and @value="'.$expectedCreatorId.'"]');
     }
 
     /**
@@ -70,9 +69,9 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
      */
     public function testExplanationsShowingUpAndFormBlocksForSpecialOptions(): void
     {
-        $this->client->request('GET', '/index.php/feedback');
+        self::$client->request('GET', '/index.php/feedback');
 
-        $crawler = $this->client->getCrawler();
+        $crawler = self::$client->getCrawler();
 
         self::assertCount(8, $crawler->filter('input[name="feedback[subject]"]'));
 
@@ -80,68 +79,46 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         $noticeCssSel = '#feedback-subject-notice';
 
         // 1st option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'getfursu.it maintainer does not assist individuals');
 
         // 3rd option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 2nd option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'This cannot be adjusted manually.');
 
         // 5th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 4th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'All the information needs to be updated by the makers themselves.');
 
         // 6th option
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 7th option, no visual change
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 8th option, no visual change
-        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    public function testCaptchaWorksBySimpleSubmission(): void
-    {
-        $this->client->request('GET', '/index.php/feedback');
-
-        $this->client->waitForVisibility('h1', 10);
-
-        $this->client->getCrawler()->selectButton('Send')->form([
-            'feedback[details]'       => 'Testing details',
-            'feedback[subject]'       => 'Other (please provide adequate details and context)',
-            'feedback[noContactBack]' => true,
-        ]);
-
-        $this->client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
-        $this->client->waitForVisibility('div.alert', 10);
-
-        self::assertSelectorTextSame('h1', 'Feedback submitted');
-        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 }

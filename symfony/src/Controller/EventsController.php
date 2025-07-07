@@ -6,10 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
-use App\Utils\Arrays\Lists;
+use App\Utils\Collections\StringList;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,19 +55,14 @@ class EventsController extends AbstractController
         return $result;
     }
 
-    /**
-     * @return array<string>
-     */
-    private function getChosenEventTypes(Request $request): array
+    private function getChosenEventTypes(Request $request): StringList
     {
-        $requestedTypes = explode(',', (string) $request->query->get('types', ''));
+        $requestedTypes = StringList::split(',', $request->query->get('types', ''));
 
-        $result = Lists::intersect([
+        return $requestedTypes->intersect([
             Event::TYPE_DATA_UPDATED,
             Event::TYPE_GENERIC,
             Event::TYPE_CS_UPDATED,
-        ], $requestedTypes);
-
-        return Enforce::strList($result);
+        ]);
     }
 }

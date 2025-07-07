@@ -6,17 +6,17 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Large;
 use Psl\Iter;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 
-/**
- * @large
- */
-class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
+#[Large]
+class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 
@@ -54,14 +54,11 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
     }
 
     /**
-     * @dataProvider ageAndSfwFiltersDataProvider
-     *
      * @throws Exception
      */
+    #[DataProvider('ageAndSfwFiltersDataProvider')]
     public function testAgeAndSfwFilters(bool $userIsMinor, ?bool $userWantsSfw): void
     {
-        self::setupMockSpeciesFilterData();
-
         self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
 
         $creators = [];
@@ -84,7 +81,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
             $creators[$creatorId] = (new Creator())
-                ->setMakerId($creatorId)
+                ->setCreatorId($creatorId)
                 ->setName($name)
                 ->setAges($ages)
                 ->setNsfwWebsite($nsfwWebsite)
@@ -96,33 +93,33 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                 $expected[$creatorId] = $creators[$creatorId];
             }
         }
-        $this->persistAndFlush(...$creators);
+        self::persistAndFlush(...$creators);
 
         $this->clearCache();
 
-        $this->client->request('GET', '/index.php/');
+        self::$client->request('GET', '/index.php/');
 
         $infoText = 'Currently '.count($creators).' makers from 0 countries are listed here.';
-        $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
         if ($userIsMinor) {
             self::waitUntilShows('#aasImNotAdult');
-            $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         } else {
             self::waitUntilShows('#aasImAdult');
-            $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            self::$client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-            $lastChoiceId = $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
+            $lastChoiceId = true === $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
             self::waitUntilShows("#$lastChoiceId");
-            $this->client->findElement(WebDriverBy::id($lastChoiceId))->click();
+            self::$client->findElement(WebDriverBy::id($lastChoiceId))->click();
         }
 
-        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         $displayedCreatorIds = [];
-        $crawler = $this->client->getCrawler();
+        $crawler = self::$client->getCrawler();
 
         while (true) { // Handle multiple pages
             self::waitForLoadingIndicatorToDisappear();
@@ -134,14 +131,14 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
             ];
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {
-                $this->client->findElement(WebDriverBy::id('next-items-page-link'))->click();
+                self::$client->findElement(WebDriverBy::id('next-items-page-link'))->click();
             } else {
                 break;
             }
         }
 
         foreach ($expected as $creator) {
-            self::assertContains($creator->getMakerId(), $displayedCreatorIds, "Should display {$creator->getName()}");
+            self::assertContains($creator->getCreatorId(), $displayedCreatorIds, "Should display {$creator->getName()}");
         }
 
         foreach ($displayedCreatorIds as $creatorId) {
@@ -153,7 +150,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
     /**
      * @return array<array{0: bool, 1: ?bool}>
      */
-    public function ageAndSfwFiltersDataProvider(): array
+    public static function ageAndSfwFiltersDataProvider(): array
     {
         return [
             'Minor'    => [true,  null],

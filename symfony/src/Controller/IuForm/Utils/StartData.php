@@ -10,7 +10,7 @@ class StartData
     public ?string $confirmAddingANewOne = null;
     public ?string $confirmUpdatingTheRightOne = null;
     public ?string $ensureStudioIsNotThereAlready = null;
-    public ?string $confirmYouAreTheMaker = null;
+    public ?string $confirmYouAreTheCreator = null;
     public ?string $confirmNoPendingUpdates = null;
     public ?string $decisionOverPreviousUpdates = null;
 }

@@ -1,13 +1,13 @@
 {
-    "MAKER_ID": "MAKERI2",
+    "MAKER_ID": "TESTB01",
 
-    "NAME": "Maker name a2_2",
+    "NAME": "Creator name a2_2",
     "FORMERLY": [
         "Formerly a2_2"
     ],
     "PASSWORD": "Password a2_2",
 
-    "EMAIL_ADDRESS_OBFUSCATED": "2emaa2_2il2@ema.il",
+    "EMAIL_ADDRESS": "2emaa2_2il2@ema.il",
     "CONTACT_ALLOWED": "FEEDBACK",
 
     "INTRO": "Le intro a2_2",

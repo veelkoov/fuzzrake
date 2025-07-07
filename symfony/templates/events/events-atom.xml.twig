@@ -12,8 +12,12 @@
             <title>
                 {%- if event.typeDataUpdated -%}
                     Data update
+                {%- elseif event.typeCreatorAdded -%}
+                    Added new maker/studio
+                {%- elseif event.typeCreatorUpdated -%}
+                    Updated new maker/studio
                 {%- elseif event.typeCsUpdated -%}
-                    {{ event.artisanName }} commissions status changed
+                    {{ event.creatorName }} commissions status changed
                 {%- else -%}
                     Generic update
                 {%- endif -%}
@@ -24,9 +28,11 @@
             <summary type="xhtml">
                 <div xmlns="http://www.w3.org/1999/xhtml">
                     {%- if event.typeDataUpdated -%}
-
                         {{ event_description(event) }}
-
+                    {% elseif event.typeCreatorAdded %}
+                        Added new maker/studio: <a href="{{ url('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
+                    {% elseif event.typeCreatorUpdated %}
+                        Updated maker/studio: <a href="{{ url('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
                     {%- elseif event.typeCsUpdated -%}
                         {% if event.noLongerOpenFor %}
                             No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.

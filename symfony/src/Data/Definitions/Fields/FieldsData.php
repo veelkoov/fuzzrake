@@ -32,8 +32,8 @@ final class FieldsData
                     throw new UnexpectedValueException('name !== value');
                 }
 
-                self::$fields[(string) $value] = new FieldData(
-                    (string) $value,
+                self::$fields[$value] = new FieldData(
+                    $value,
                     $data->modelName,
                     $data->type,
                     $data->validationRegex,

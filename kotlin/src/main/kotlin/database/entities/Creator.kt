@@ -37,13 +37,11 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     var notes by Creators.notes
 
     var contactAllowed by Creators.contactAllowed
-    var emailAddressObfuscated by Creators.emailAddressObfuscated
 
     val creatorIds by CreatorId referrersOn CreatorIds.creator
     val creatorUrls by CreatorUrl referrersOn CreatorUrls.creator
     val offersStatuses by CreatorOfferStatus referrersOn CreatorOffersStatuses.creator
     val volatileData by CreatorVolatileData referrersOn CreatorVolatileDatas.creator // TODO: 1:1
-    val species by CreatorSpecie referrersOn CreatorSpecies.creator
 
     override fun toString(): String {
         return "${lastCreatorId()}[${id.value}]"

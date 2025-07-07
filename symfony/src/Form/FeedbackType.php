@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Captcha\Form\CaptchaType;
 use App\Form\Transformers\NullToEmptyStringTransformer;
 use App\ValueObject\Feedback;
 use App\ValueObject\Routing\RouteName;
@@ -16,9 +17,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<Feedback>
+ */
 class FeedbackType extends AbstractType
 {
     use RouterDependentTrait;
+
+    public const string FLD_DETAILS = 'details';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -32,7 +38,7 @@ class FeedbackType extends AbstractType
                 'help'      => "If you need a response, please contact me using any means listed on <a href=\"$contactPageUrl\">this page</a>.",
                 'help_html' => true,
             ])
-            ->add('maker', TextType::class, [
+            ->add('creator', TextType::class, [
                 'label'      => 'Maker (if applicable)',
                 'required'   => false,
                 'empty_data' => '',
@@ -43,10 +49,11 @@ class FeedbackType extends AbstractType
                 'choice_label' => fn ($item) => $item,
                 'expanded'     => true,
             ])
-            ->add('details', TextareaType::class, [
+            ->add(self::FLD_DETAILS, TextareaType::class, [
                 'label'      => 'Please provide any necessary details',
                 'empty_data' => '',
             ])
+            ->add('captcha', CaptchaType::class)
         ;
 
         $builder->get('subject')->addModelTransformer(new NullToEmptyStringTransformer());

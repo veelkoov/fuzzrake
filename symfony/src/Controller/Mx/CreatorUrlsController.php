@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Fields;
 use App\Form\Mx\CreatorUrlsRemovalType;
 use App\Form\Mx\CreatorUrlsSelectionType;
 use App\Management\UrlRemovalService;
+use App\Repository\CreatorUrlRepository;
 use App\Utils\Mx\CreatorUrlsSelectionData;
 use App\Utils\Mx\GroupedUrls;
 use App\ValueObject\Routing\RouteName;
@@ -19,6 +21,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/mx/creator_urls')]
 class CreatorUrlsController extends FuzzrakeAbstractController
 {
+    #[Route(path: '/', name: RouteName::MX_CREATORS_URLS)]
+    #[Cache(maxage: 0, public: false)]
+    public function index(CreatorUrlRepository $repository): Response
+    {
+        $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
+
+        return $this->render('mx/creator_urls/index.html.twig', [
+            'urls' => $urls,
+        ]);
+    }
+
     #[Route('/{creatorId}', name: RouteName::MX_CREATOR_URLS_SELECTION)]
     #[Cache(maxage: 0, public: false)]
     public function check(Request $request, string $creatorId): Response

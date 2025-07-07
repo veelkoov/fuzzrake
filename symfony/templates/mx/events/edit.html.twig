@@ -7,22 +7,25 @@
 
     {{ form_start(form) }}
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 {{ form_row(form.timestamp) }}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 {{ form_row(form.type) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.creatorId) }}
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                {{ form_row(form.newMakersCount) }}
+                {{ form_row(form.newCreatorsCount) }}
             </div>
             <div class="col-md-4">
-                {{ form_row(form.updatedMakersCount) }}
+                {{ form_row(form.updatedCreatorsCount) }}
             </div>
             <div class="col-md-4">
-                {{ form_row(form.reportedUpdatedMakersCount) }}
+                {{ form_row(form.reportedUpdatedCreatorsCount) }}
             </div>
         </div>
         <div class="row">

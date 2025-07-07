@@ -7,10 +7,10 @@ namespace App\Repository;
 use App\Entity\Event;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Enforce;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Veelkoov\Debris\StringList;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,22 +28,20 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $types
-     *
      * @return Event[]
      *
      * @throws DateTimeException
      */
-    public function getRecent(array $types = []): array
+    public function getRecent(?StringList $types = null): array
     {
-        $query = $this->createQueryBuilder('e')
-            ->where('e.timestamp >= :oldest')
-            ->orderBy('e.timestamp', 'DESC')
+        $query = $this->createQueryBuilder('d_e')
+            ->where('d_e.timestamp >= :oldest')
+            ->orderBy('d_e.timestamp', 'DESC')
             ->setParameter('oldest', UtcClock::at('-31 days'));
 
-        if ([] !== $types) {
+        if (true === $types?->isNotEmpty()) {
             $query
-                ->andWhere('e.type IN (:types)')
+                ->andWhere('d_e.type IN (:types)')
                 ->setParameter('types', $types);
         }
 
@@ -55,15 +53,11 @@ class EventRepository extends ServiceEntityRepository
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
         $resultData = $this
-            ->createQueryBuilder('e')
-            ->select('MAX(e.timestamp)')
+            ->createQueryBuilder('d_e')
+            ->select('MAX(d_e.timestamp)')
             ->getQuery()
             ->getSingleScalarResult();
 
-        if (null === $resultData) {
-            return null;
-        }
-
-        return UtcClock::at(Enforce::string($resultData));
+        return null === $resultData ? null : UtcClock::at((string) $resultData);
     }
 }

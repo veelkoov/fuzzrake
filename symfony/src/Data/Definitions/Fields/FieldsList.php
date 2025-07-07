@@ -4,81 +4,29 @@ declare(strict_types=1);
 
 namespace App\Data\Definitions\Fields;
 
-use ArrayIterator;
-use Closure;
-use Iterator;
-use IteratorAggregate;
 use Override;
-
-use function Psl\Vec\concat;
-use function Psl\Vec\values;
+use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\StringSet;
 
 /**
- * @implements IteratorAggregate<string, Field>
+ * @extends DStringMap<Field>
  */
-class FieldsList implements IteratorAggregate
+final class FieldsList extends DStringMap
 {
-    /**
-     * @var array<string, Field>
-     */
-    private array $fields = [];
-
-    /**
-     * @param Field[] $fields
-     */
-    public function __construct(
-        array $fields,
-    ) {
-        foreach ($fields as $field) {
-            $this->fields[$field->value] = $field;
-        }
-    }
-
-    /**
-     * @param list<Field> $fields
-     */
-    public function plus(array $fields): self
+    public function names(): StringSet
     {
-        return new FieldsList(concat(values($this->fields), $fields));
+        return $this->getKeys();
     }
 
-    public function filtered(Closure $filter): self
-    {
-        return new FieldsList(array_filter($this->fields, $filter));
-    }
-
-    /**
-     * @return Iterator<string, Field>
-     */
     #[Override]
-    public function getIterator(): Iterator
+    protected static function isValidValue(mixed $value): bool
     {
-        return new ArrayIterator($this->fields);
+        return $value instanceof Field;
     }
 
-    /**
-     * @return array<string, Field> ['FIELD_NAME' => Field, ...]
-     */
-    public function asArray(): array
+    #[Override]
+    protected static function enforceValueType(mixed $value): Field
     {
-        return $this->fields;
-    }
-
-    /**
-     * @return list<string> ['FIELD_NAME', ...]
-     */
-    public function names(): array
-    {
-        return array_keys($this->fields);
-    }
-
-    public function has(Field $field): bool
-    {
-        return array_key_exists($field->value, $this->fields);
-    }
-
-    public function empty(): bool
-    {
-        return 0 === count($this->fields);
+        return $value;
     }
 }

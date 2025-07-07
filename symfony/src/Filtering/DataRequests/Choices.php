@@ -6,32 +6,22 @@ namespace App\Filtering\DataRequests;
 
 use App\Utils\Pagination\Pagination;
 use Psl\Json;
+use Veelkoov\Debris\StringSet;
 
 readonly class Choices
 {
-    /**
-     * @param list<string> $countries
-     * @param list<string> $states
-     * @param list<string> $languages
-     * @param list<string> $styles
-     * @param list<string> $features
-     * @param list<string> $orderTypes
-     * @param list<string> $productionModels
-     * @param list<string> $openFor
-     * @param list<string> $species
-     */
     public function __construct(
-        public string $makerId,
+        public string $creatorId,
         public string $textSearch,
-        public array $countries,
-        public array $states,
-        public array $languages,
-        public array $styles,
-        public array $features,
-        public array $orderTypes,
-        public array $productionModels,
-        public array $openFor,
-        public array $species,
+        public StringSet $countries,
+        public StringSet $states,
+        public StringSet $languages,
+        public StringSet $styles,
+        public StringSet $features,
+        public StringSet $orderTypes,
+        public StringSet $productionModels,
+        public StringSet $openFor,
+        public StringSet $species,
         public bool $wantsUnknownPaymentPlans,
         public bool $wantsAnyPaymentPlans,
         public bool $wantsNoPaymentPlans,
@@ -47,7 +37,7 @@ readonly class Choices
     public function changePage(int $newPageNumber): self
     {
         return new self(
-            $this->makerId,
+            $this->creatorId,
             $this->textSearch,
             $this->countries,
             $this->states,

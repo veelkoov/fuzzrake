@@ -1,63 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Management;
 
 use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Service\EmailService;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\Utils\TestUtils\TestsBridge;
-use App\Utils\TestUtils\UtcClockMock;
-use App\ValueObject\Messages\EmailNotificationV1;
-use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @small
- */
-class UrlRemovalServiceHandleRemovalTest extends TestCase
+#[Small]
+class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
 {
+    use ClockSensitiveTrait;
+
     private UrlRemovalService $subject;
-    private DateTimeInterface $now;
-    private MessageBusInterface&MockObject $messengerBusMock;
+    private EmailService&MockObject $emailServiceMock;
 
     #[Override]
     protected function setUp(): void
     {
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $entityManagerMock->expects($this->once())->method('flush');
+        $entityManagerMock->expects(self::once())->method('flush');
 
         $routerMock = $this->createMock(RouterInterface::class);
-        $routerMock->expects($this->atMost(3))->method('generate')
-            ->willReturnOnConsecutiveCalls('/#CREATOR', '/ui/update', '/contact');
+        $routerMock->expects(self::atMost(3))->method('generate')
+            ->willReturnOnConsecutiveCalls('/#TEST001', '/ui/update', '/contact');
 
-        $this->messengerBusMock = $this->createMock(MessageBusInterface::class);
+        $this->emailServiceMock = $this->createMock(EmailService::class);
 
         $this->subject = new UrlRemovalService($entityManagerMock, 'ShortWebsiteName',
-            'https://website.base.address.example.com', $routerMock, $this->messengerBusMock);
+            'https://website.base.address.example.com', $routerMock, $this->emailServiceMock);
 
-        UtcClockMock::start();
-        $this->now = UtcClock::now();
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        TestsBridge::reset();
+        self::mockTime();
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testEmptyNotesGetSet(): void
     {
@@ -71,15 +62,16 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $this->subject->handleRemoval($creator, $data);
 
+        $dateTime = UtcClock::now()->format('Y-m-d H:i');
         self::assertEquals(<<<EXPECTED
-            On {$this->now->format('Y-m-d H:i')} UTC the following links have been found to no longer work or to be inactive and have been removed:
+            On $dateTime UTC the following links have been found to no longer work or to be inactive and have been removed:
             - https://example.com/
             - http://example.net/
             EXPECTED, $creator->getNotes());
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testNonEmptyNotesGetUpdated(): void
     {
@@ -92,8 +84,9 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $this->subject->handleRemoval($creator, $data);
 
+        $dateTime = UtcClock::now()->format('Y-m-d H:i');
         self::assertEquals(<<<EXPECTED
-            On {$this->now->format('Y-m-d H:i')} UTC the following links have been found to no longer work or to be inactive and have been removed:
+            On $dateTime UTC the following links have been found to no longer work or to be inactive and have been removed:
             - https://example.com/
 
             -----
@@ -103,7 +96,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testCreatorGettingHiddenWhenDesired(): void
     {
@@ -112,12 +105,12 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('All previously known websites/social accounts are no longer working or are inactive',
+        self::assertSame('All previously known websites/social accounts are no longer working or are inactive',
             $creator->getInactiveReason());
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testCreatorNotGettingHiddenWhenNotDesired(): void
     {
@@ -126,11 +119,11 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('', $creator->getInactiveReason());
+        self::assertSame('', $creator->getInactiveReason());
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testUrlsAreUpdatedAsDesired(): void
     {
@@ -157,18 +150,18 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
         $this->subject->handleRemoval($creator, $data);
 
-        self::assertEquals('https://getfursu.it/info', $creator->getWebsiteUrl());
+        self::assertSame('https://getfursu.it/info', $creator->getWebsiteUrl());
         self::assertEquals(['https://example.com/prices0'], $creator->getPricesUrls());
         self::assertEquals(['https://example.com/commissions1'], $creator->getCommissionsUrls());
-        self::assertEquals('', $creator->getFaqUrl());
+        self::assertSame('', $creator->getFaqUrl());
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testMessageNotSentWhenNotDesired(): void
     {
-        $this->messengerBusMock->expects($this->never())->method('dispatch');
+        $this->emailServiceMock->expects(self::never())->method('send');
 
         $creator = new Creator();
         $data = new CreatorUrlsRemovalData(new GroupedUrls([]), new GroupedUrls([]), false, false);
@@ -177,17 +170,17 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testProperHidingMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): Envelope {
-                $this->assertEquals('Your card at ShortWebsiteName has been hidden', $notification->subject);
-                $this->assertEquals(<<<'CONTENTS'
+        $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
+            function (string $subject, string $contents, string $recipient, string $attachedJsonData): void {
+                self::assertSame('Your card at ShortWebsiteName has been hidden', $subject);
+                self::assertSame(<<<'CONTENTS'
                     Hello The Hidden Creator!
 
-                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#CREATOR ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
+                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
                     - https://getfursu.it/info
 
                     Since the remaining information+links on your card are not sufficient, your card has been hidden.
@@ -197,12 +190,12 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
-                    CONTENTS, $notification->contents);
-
-                return new Envelope($notification);
+                    CONTENTS, $contents);
+                self::assertSame('', $recipient);
+                self::assertSame('', $attachedJsonData);
             });
 
-        $creator = Creator::new()->setName('The Hidden Creator')->setMakerId('CREATOR');
+        $creator = Creator::new()->setName('The Hidden Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),
@@ -214,17 +207,17 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
-        $this->messengerBusMock->expects($this->once())->method('dispatch')->willReturnCallback(
-            function (EmailNotificationV1 $notification): Envelope {
-                $this->assertEquals('Your information at ShortWebsiteName may require your attention', $notification->subject);
-                $this->assertEquals(<<<'CONTENTS'
+        $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
+            function (string $subject, string $contents, string $recipient, string $attachedJsonData): void {
+                self::assertSame('Your information at ShortWebsiteName may require your attention', $subject);
+                self::assertSame(<<<'CONTENTS'
                     Hello The Updated Creator!
 
-                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#CREATOR ) may require your attention. The following links were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
+                    Your information at ShortWebsiteName ( https://website.base.address.example.com/#TEST001 ) may require your attention. The following links were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
                     - https://getfursu.it/info
                     - https://example.com/prices
                     - https://example.com/commissions
@@ -234,12 +227,12 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
 
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
-                    CONTENTS, $notification->contents);
-
-                return new Envelope($notification);
+                    CONTENTS, $contents);
+                self::assertSame('', $recipient);
+                self::assertSame('', $attachedJsonData);
             });
 
-        $creator = Creator::new()->setName('The Updated Creator')->setMakerId('CREATOR');
+        $creator = Creator::new()->setName('The Updated Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),

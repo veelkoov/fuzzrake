@@ -30,3 +30,11 @@
     mode:  '0644'
     owner: 'root'
     src:   '.env.local.j2'
+
+- name: 'Update the DKIM private key file'
+  ansible.builtin.copy:
+    dest:  '{{ dkim_private_key_path }}'
+    group: 'root'
+    mode:  '0644'
+    owner: 'root'
+    src:   '{{ dkim_private_key_src }}'

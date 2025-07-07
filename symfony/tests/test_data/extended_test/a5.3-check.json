@@ -1,16 +1,15 @@
 {
-    "MAKER_ID": "A52TEST",
+    "MAKER_ID": "TESTE02",
     "FORMER_MAKER_IDS": [
-        "A51TEST"
+        "TESTE01"
     ],
 
-    "NAME": "Some completely different maker name",
+    "NAME": "Some completely different creator name",
     "FORMERLY": [
-        "Some old maker name, but changed a little"
+        "Some old creator name, but changed a little"
     ],
-    "PASSWORD": "Maker 5 password",
+    "PASSWORD": "Creator 5 password",
 
-    "EMAIL_ADDRESS_OBFUSCATED": "",
     "EMAIL_ADDRESS": "",
     "CONTACT_ALLOWED": "NO",
 

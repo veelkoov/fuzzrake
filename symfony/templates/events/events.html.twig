@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block body %}
-    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_artisans') }}">See all recently added makers</a></p>
+    <p class="text-end"><a class="btn-secondary btn btn-sm" href="{{ path('new_creators') }}">See all recently added makers</a></p>
 
     <p class="small">All times are UTC</p>
 
@@ -42,12 +42,14 @@
                 <div class="col-sm-10">
                     <p>
                         {% if event.typeDataUpdated %}
-
                             {{ event_description(event) }}
-
+                        {% elseif event.typeCreatorAdded %}
+                            Added new maker/studio: <a href="{{ path('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
+                        {% elseif event.typeCreatorUpdated %}
+                            Updated maker/studio: <a href="{{ path('main', {_fragment: event.creatorId}) }}">{{ event.creatorId }}</a>
                         {% elseif event.typeCsUpdated %}
 
-                            <strong>{{ event.artisanName }}</strong> commissions status changed.
+                            <strong>{{ event.creatorName }}</strong> commissions status changed.
 
                             {% if event.noLongerOpenFor %}
                                 No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.

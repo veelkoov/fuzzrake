@@ -1,10 +1,9 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}inclusion/update request{% endblock %}
+{% block title %}{% if is_new %}inclusion{% else %}update{% endif %} request{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('iu_form') }}
 {% endblock %}
 
@@ -14,9 +13,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ block('title')|capitalize }}</h1>
-
-    {{ include('shared_parts/ooo_notice.html.twig') }}
+    <h1 id="iu-form-data" data-step="start">{{ block('title')|capitalize }}</h1>
 
     <p class="mt-3">
         <a class="disable-filters-goto-main-page text-decoration-none" href="{{ path('main') }}" target="_blank">
@@ -24,8 +21,6 @@
             Temporarily disable all the filters and <strong>open the main page</strong>
         </a>
     </p>
-
-    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
@@ -57,8 +52,8 @@
         </ol>
     </div>
 
-    <div id="confirmYouAreTheMaker">
-        {{ form_row(form.confirmYouAreTheMaker) }}
+    <div id="confirmYouAreTheCreator">
+        {{ form_row(form.confirmYouAreTheCreator) }}
     </div>
 
     <div class="alert alert-danger" id="doNotFillTheForm">
@@ -81,15 +76,6 @@
 
     <div id="rulesAndContinueButton">
         {{ include('shared_parts/guidelines.html.twig') }}
-
-        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
-
-        <div class="d-none g-recaptcha"
-             data-sitekey="{{ google_recaptcha_site_key }}"
-             data-callback="formRecaptchaValidationCallback"
-             data-action="iu_form_captcha"
-             data-size="invisible"
-        ></div>
 
         <input type="submit" class="btn btn-primary btn-lg" value="Agree and continue" />
     </div>

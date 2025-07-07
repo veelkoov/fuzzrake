@@ -5,36 +5,29 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Repository\CreatorRepository;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
-use Override;
-use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand('app:data:export', 'Export data to XLSX')]
-class DataExportCommand extends Command
+#[AsCommand(
+    name: 'app:data:export',
+    description: 'Export data to XLSX',
+)]
+final class DataExportCommand
 {
     public function __construct(
-        private readonly ArtisanRepository $artisans,
+        private readonly CreatorRepository $creatorRepository,
     ) {
-        parent::__construct();
     }
 
-    /**
-     * @throws Exception
-     */
-    #[Override]
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $io = new SymfonyStyle($input, $output);
-
+    public function __invoke(
+        SymfonyStyle $io,
+    ): int {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -46,12 +39,12 @@ class DataExportCommand extends Command
 
         $row = 2;
 
-        foreach ($this->artisans->getActivePaged() as $artisanE) {
-            $artisan = Artisan::wrap($artisanE);
+        foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
+            $creator = Creator::wrap($creatorE);
             $col = 1;
 
             foreach (Fields::public() as $field) {
-                $value = $artisan->get($field);
+                $value = $creator->get($field);
 
                 $sheet->getCell([$col++, $row])
                     ->setValue(StrUtils::asStr($value));

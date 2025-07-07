@@ -2,6 +2,8 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 
+@import "../../node_modules/flag-icons/css/flag-icons.min.css";
+
 .intro-updated-info {
   color: #6c757d;
   font-size: 0.7em;
@@ -22,10 +24,10 @@
 }
 
 div#data-table-container {
-  table .makerId,
+  table .creator-id,
   table .state,
   table .languages,
-  table .productionModels,
+  table .production-models,
   table .styles,
   table .types,
   table .features,
@@ -35,10 +37,10 @@ div#data-table-container {
     display: none;
   }
 
-  table.show-makerId .makerId,
+  table.show-creator-id .creator-id,
   table.show-state .state,
   table.show-languages .languages,
-  table.show-productionModels .productionModels,
+  table.show-production-models .production-models,
   table.show-styles .styles,
   table.show-types .types,
   table.show-features .features,
@@ -73,7 +75,7 @@ table#creators-table {
       display: none;
     }
 
-    tr.matched-maker-id td {
+    tr.matched-creator-id td {
       background-color: #99cb84;
     }
 
@@ -85,7 +87,7 @@ table#creators-table {
     td.features,
     td.types,
     td.styles,
-    td.productionModels,
+    td.production-models,
     td.languages,
     td.species,
     td.commissions {
@@ -121,7 +123,7 @@ table#creators-table {
       text-align: center;
     }
 
-    td.makerId {
+    td.creator-id {
       font-family: monospace;
     }
 
@@ -137,14 +139,14 @@ table#creators-table {
 }
 
 #creator-card-modal {
-  #makerId {
+  #creator-id {
     font-size: 80%;
     font-family: monospace;
     font-style: italic;
     color: #aaa;
   }
 
-  #makerId:empty {
+  #creator-id:empty {
     display: none;
   }
 

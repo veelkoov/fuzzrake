@@ -2,18 +2,25 @@
 
 set -euo pipefail
 
-PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
+readonly PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
-SYMFONY_DIR_REL_PATH='symfony'
-KOTLIN_DIR_REL_PATH='kotlin'
-SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-path
-SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
-DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
-DB_DUMP_DIR_REL_PATH='db_dump'
-DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_REL_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
+readonly SYMFONY_DIR_REL_PATH='symfony'
+readonly KOTLIN_DIR_REL_PATH='kotlin'
+readonly SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
+readonly DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
+readonly DB_DUMP_DIR_REL_PATH='db_dump'
+readonly DB_DUMP_COPY_DIR_REL_PATH="$DB_DUMP_DIR_REL_PATH/$(date -u '+%Y-%m-%d_%H-%M-%S')"
 
-PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
-BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
+readonly PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
+readonly BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
+
+readonly DOCKER_EXEC_EXTRA_ARGS=(
+    --user "$(echo -n "$(id -u):www-data")"
+    --interactive
+    --tty
+    # Uncomment below to debug tests
+    # --env XDEBUG_TRIGGER=1
+)
 
 function run_command() {
     echo "Executing: $*"
@@ -26,7 +33,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" --interactive --tty php "$@"
+    run_docker_compose exec "${DOCKER_EXEC_EXTRA_ARGS[@]}" php "$@"
 }
 
 function run_composer() {
@@ -48,29 +55,6 @@ function run_yarn() {
 
 function run_gradle() {
     run_command "$KOTLIN_DIR_REL_PATH/gradlew" -p "$KOTLIN_DIR_REL_PATH" "$@"
-}
-
-function assure_line_in_file() {
-    local filepath="$1"
-    local pattern="$2"
-    local default="$3"
-
-    grep -q "$pattern" "$filepath" || {
-        echo "Appending '$default' to '$filepath'"
-        echo "$default" >> "$filepath"
-    }
-}
-
-function action_run_setup() {  # TODO: Ansible this
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
-
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
-}
-
-function backup_private_data() {
-    run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
 }
 
 function action_release_prod() {
@@ -99,11 +83,6 @@ function action_get_snapshots() {
         "$PROD_ENV_SSH_PATH/$SNAPSHOTS_REL_PATH/" "$SNAPSHOTS_REL_PATH"
 }
 
-function action_get_submissions() {
-    run_command rsync --recursive --progress --human-readable --compress --checksum \
-        "$PROD_ENV_SSH_PATH/$SUBMISSIONS_DIR_REL_PATH/" "$SUBMISSIONS_DIR_REL_PATH/"
-}
-
 function action_dbcommit() {
     pushd "$DB_DUMP_DIR_REL_PATH"
 
@@ -116,8 +95,6 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-    backup_private_data
-
     run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$DATABASE_REL_PATH"
     run_command chmod a+w "$DATABASE_REL_PATH"
 }
@@ -138,21 +115,31 @@ function action_dbdump() {
     # shellcheck disable=SC2207 # Yes, split by whitespace
     TABLE_NAMES=($(sqlite3 "$DATABASE_REL_PATH" .tables))
 
-    backup_private_data
+    mkdir "$DB_DUMP_COPY_DIR_REL_PATH"
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
-        run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+        local SQL_DUMP_PATH="$DB_DUMP_COPY_DIR_REL_PATH/$TABLE_NAME.sql"
+        local JSON_DUMP_PATH="$DB_DUMP_COPY_DIR_REL_PATH/$TABLE_NAME.json"
+
+        run_command sqlite3 "$DATABASE_REL_PATH" ".output $SQL_DUMP_PATH" ".dump $TABLE_NAME"
 
         echo 'Dumping to JSON...'
 
-        if grep 'CREATE TABLE' "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
-            order_by='artisan_id'
+        if grep -q 'CREATE TABLE creators_urls (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY creator_id, type, url'
+        elif grep -q 'CREATE TABLE creators_values (' "$SQL_DUMP_PATH"; then
+            order_by='ORDER BY creator_id, field_name, value'
+        elif grep -q 'CREATE TABLE doctrine_migration_versions (' "$SQL_DUMP_PATH"; then
+            order_by=''
         else
-            order_by='id'
+            order_by='ORDER BY id'
         fi
 
-        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
+        sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME $order_by" | jq > "$JSON_DUMP_PATH"
     done
+
+    rm -f "$DB_DUMP_DIR_REL_PATH"/*.{json,sql}
+    cp "$DB_DUMP_COPY_DIR_REL_PATH"/*.{json,sql} "$DB_DUMP_DIR_REL_PATH"
 }
 
 function error() {
@@ -171,7 +158,6 @@ Usage:
 
 Available actions:
 
-    setup        Symfony: setup and/or fix required filesystem items and/or settings
     branch       Symfony:
                      composer install
                      yarn install
@@ -202,9 +188,6 @@ Available actions:
     prettier     Symfony: run Prettier
 
     gradle       Kotlin: run Gradle command
-    species      Kotlin: update creators' species
-    filters      Kotlin: update filters data
-    miniatures   Kotlin: set miniatures data for changed photos
 EOF
 }
 
@@ -215,7 +198,6 @@ function action() {
     shift
 
     case $action in
-        'setup')        action_run_setup ;;
         'branch')
             action docker-up
             run_composer install
@@ -238,7 +220,7 @@ function action() {
         'cc-prod')      run_command ssh getfursu.it \
             'docker exec fuzzrake-prod bin/console cache:clear && docker exec fuzzrake-prod bin/console app:precompute-data' ;;
 
-        'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
+        'pu')           run_docker_compose_exec ./bin/phpunit --order-by size,reverse "$@" ;;
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
@@ -247,7 +229,7 @@ function action() {
         'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint --fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')           run_yarn eslint assets/scripts/ --ext js,ts "$@" ;;
+        'el')           run_yarn eslint assets/scripts/ "$@" ;;
         'prettier')     run_yarn prettier . --write "$@" ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
@@ -262,16 +244,10 @@ function action() {
         'release-beta') action_release_beta ;;
         'release-prod') action_release_prod ;;
 
-        'get-snapshots')   action_get_snapshots ;;
-        'get-submissions') action_get_submissions ;;
+        'get-snapshots') action_get_snapshots ;;
 
+        # Work in progress on moving all into Symfony
         'gradle')       run_gradle "$@" ;;
-        'species')      run_gradle run --args sync-species "$@" ;;
-        'filters')      run_gradle run --args update-filters "$@" ;;
-        'miniatures')   run_gradle run --args update-miniatures "$@" ;;
-
-        # Ugly but hopefully truly temporary
-        'data-prod') run_command ssh getfursu.it 'cd /opt/prod && fuzzrake-git-HEAD/bin/fuzzrake sync-species && fuzzrake-git-HEAD/bin/fuzzrake update-filters && fuzzrake-git-HEAD/bin/fuzzrake update-miniatures && echo DONE' ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

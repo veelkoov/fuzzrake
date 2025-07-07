@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Filtering\DataRequests;
 
 use App\Utils\Pagination\Pagination;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider;
+use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
-/**
- * @small
- */
+#[Small]
 class PaginationTest extends TestCase
 {
     /**
-     * @dataProvider getPaginationPagesDataProvider
-     *
      * @param list<int> $expected
      */
+    #[DataProvider('getPaginationPagesDataProvider')]
     public function testGetPaginationPages(int $totalPages, int $currentPage, array $expected): void
     {
         $result = Pagination::getPaginationPages($currentPage, $totalPages);
@@ -23,11 +24,11 @@ class PaginationTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
-    public function getPaginationPagesDataProvider(): DataProvider
+    public static function getPaginationPagesDataProvider(): TestDataProvider
     {
         // TOTAL PAGES, CURRENT PAGE, EXPECTED PAGINATOR PAGES
         // Supposed to return: current, +1, -1, +2, -2, first and last
-        return DataProvider::tuples(
+        return TestDataProvider::tuples(
             [0, 0, []],
 
             [1, 1, [1]],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data;
 
 use App\Data\Definitions\Ages;
@@ -23,17 +25,17 @@ final class FieldValue
                 throw new InvalidArgumentException("$field->value value must be a null or a boolean.");
             }
         } elseif ($field->isDate()) {
-            if (!(null === $value || $value instanceof DateTimeInterface)) {
+            if (null !== $value && !$value instanceof DateTimeInterface) {
                 throw new InvalidArgumentException("$field->value value must be a null or date+time.");
             }
         } elseif ($field->isList()) {
             Enforce::strList($value);
         } elseif (Field::AGES === $field) {
-            if (!(null === $value || $value instanceof Ages)) {
+            if (null !== $value && !$value instanceof Ages) {
                 throw new InvalidArgumentException("$field->value value must be a null or its enum.");
             }
         } elseif (Field::CONTACT_ALLOWED === $field) {
-            if (!(null === $value || $value instanceof ContactPermit)) {
+            if (null !== $value && !$value instanceof ContactPermit) {
                 throw new InvalidArgumentException("$field->value value must be a null or its enum.");
             }
         } else {

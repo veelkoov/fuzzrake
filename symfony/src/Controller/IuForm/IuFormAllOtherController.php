@@ -18,18 +18,20 @@ class IuFormAllOtherController extends AbstractIuFormController
     public function iuFormConfirmation(Request $request): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
-            'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
-            'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
-            'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
-            'submission_id'          => $request->get('submissionId', UtcClock::now()->format(DATE_RFC3339)),
+            'password_ok'            => 'yes' === $request->query->get('passwordOk', 'no'),
+            'contact_allowed'        => 'yes' === $request->query->get('contactAllowed', 'is_no'),
+            'no_selected_previously' => 'was_no' === $request->query->get('contactAllowed', 'is_no'),
+            'submission_id'          => $request->query->get('submissionId', UtcClock::now()->format(DATE_RFC3339)),
+            'creator_id'             => $request->query->get('creatorId', self::NEW_CREATOR_ID_PLACEHOLDER),
+            'is_new'                 => null !== $request->query->get('creatorId'),
         ]);
     }
 
-    #[Route(path: '/iu_form/fill/{makerId}')]
-    #[Route(path: '/iu_form/{makerId}', priority: -10)]
+    #[Route(path: '/iu_form/fill/{creatorId}')]
+    #[Route(path: '/iu_form/{creatorId}', priority: -10)]
     #[Cache(maxage: 0, public: false)]
-    public function oldAddressRedirect(?string $makerId = null): Response
+    public function oldAddressRedirect(?string $creatorId = null): Response
     {
-        return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $makerId]);
+        return $this->redirectToRoute(RouteName::IU_FORM_START, ['creatorId' => $creatorId]);
     }
 }

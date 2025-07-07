@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\Data\Definitions\ContactPermit;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 final readonly class UpdateContact
 {
@@ -25,11 +25,9 @@ final readonly class UpdateContact
         $description = $isNew || $was === $now ? $now->getLabel() : "{$was->getLabel()} → {$now->getLabel()}";
         $isAllowed = ($isNew || ContactPermit::NO !== $was) && (ContactPermit::NO !== $now);
 
-        $address = !$isAllowed
-            ? ''
-            : ($isNew
-                ? $updated->getEmailAddress()
-                : $original->getEmailAddress());
+        $address = $isAllowed
+            ? ($isNew ? $updated->getEmailAddress() : $original->getEmailAddress())
+            : '';
 
         return new self(
             $description,

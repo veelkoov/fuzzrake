@@ -16,25 +16,9 @@ final class Paths
     /**
      * @return non-empty-string
      */
-    public static function getArtisanTypeScriptClassPath(): string
-    {
-        return __DIR__.'/../../assets/scripts/class/Artisan.ts';
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public static function getTestIuFormDataPath(): string
-    {
-        return __DIR__.'/../../var/testIuFormData';
-    }
-
-    /**
-     * @return non-empty-string
-     */
     public static function getCompletenessCalcClassPath(): string
     {
-        return __DIR__.'/../../src/Utils/Artisan/CompletenessCalc.php';
+        return __DIR__.'/../../src/Utils/Creator/CompletenessCalc.php';
     }
 
     /**
@@ -42,7 +26,7 @@ final class Paths
      */
     public static function getDataDefinitionsPath(string $fileName): string
     {
-        return __DIR__."/../../config/data_definitions/$fileName";
+        return __DIR__."/../../config/fuzzrake/$fileName";
     }
 
     /**

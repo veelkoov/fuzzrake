@@ -1,8 +1,16 @@
-# Only have Prettier control frontend/web files
-composer.json
-composer.lock
-config/
-tests/
+# Only have Prettier control frontend/web files and our config YAMLs
+/composer.json
+/composer.lock
+/config/*
+!/config/fuzzrake
+/package.json
+/src/
+/tests/
 
-# Libraries
-assets/3rd-party
+# Libraries, var, etc.
+/public/build/
+/var/
+/vendor/
+
+# Based on Symfony recipes. Ignored to avoid resolving additional conflicts during every update.
+/webpack.config.js

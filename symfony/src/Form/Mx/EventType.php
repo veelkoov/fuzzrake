@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,16 +34,23 @@ class EventType extends AbstractTypeWithDelete
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
+                    Event::TYPE_CREATOR_ADDED => Event::TYPE_CREATOR_ADDED,
+                    Event::TYPE_CREATOR_UPDATED => Event::TYPE_CREATOR_UPDATED,
                     Event::TYPE_DATA_UPDATED => Event::TYPE_DATA_UPDATED,
-                    Event::TYPE_GENERIC      => Event::TYPE_GENERIC,
+                    Event::TYPE_GENERIC => Event::TYPE_GENERIC,
                 ],
                 'expanded' => true,
             ])
-            ->add('newMakersCount', NumberType::class, [
+            ->add('newCreatorsCount', NumberType::class, [
             ])
-            ->add('updatedMakersCount', NumberType::class, [
+            ->add('creatorId', TextType::class, [
+                'label' => 'Maker ID',
+                'empty_data' => '',
+                'required' => false,
             ])
-            ->add('reportedUpdatedMakersCount', NumberType::class, [
+            ->add('updatedCreatorsCount', NumberType::class, [
+            ])
+            ->add('reportedUpdatedCreatorsCount', NumberType::class, [
             ])
             ->add('gitCommits', TextareaType::class, [
                 'required'   => false,

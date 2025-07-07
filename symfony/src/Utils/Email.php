@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
-use TRegx\CleanRegex\Pattern;
+use Veelkoov\Debris\StringList;
 
 final class Email
 {
@@ -15,29 +16,25 @@ final class Email
     // @author Bernhard Schussek <bschussek@gmail.com>
     private const string PATTERN_HTML5_ALLOW_NO_TLD = '^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$';
 
-    private static ?Pattern $pattern = null;
-
     public static function obfuscate(string $input): string
     {
-        return implode('@', array_map(function (string $input): string {
-            $len = mb_strlen($input);
+        return StringList::split('@', $input)
+            ->map(function (string $input): string {
+                $len = mb_strlen($input);
 
-            if ($len >= 3) {
-                $pLen = max(1, (int) ($len / 4));
-
-                return mb_substr($input, 0, $pLen).str_repeat('*', $len - 2 * $pLen).mb_substr($input, -$pLen);
-            } elseif (2 == $len) {
-                return mb_substr($input, 0, 1).'*';
-            } else {
-                return $input;
-            }
-        }, explode('@', $input)));
+                if ($len <= 1) {
+                    return $input;
+                } elseif (2 === $len) {
+                    return mb_substr($input, 0, 1).'*';
+                } else {
+                    return mb_substr($input, 0, 1).str_repeat('*', $len - 2).mb_substr($input, -1);
+                }
+            })
+            ->join('@');
     }
 
     public static function isValid(string $email): bool
     {
-        self::$pattern ??= Pattern::of(self::PATTERN_HTML5_ALLOW_NO_TLD);
-
-        return self::$pattern->test($email);
+        return Patterns::get(self::PATTERN_HTML5_ALLOW_NO_TLD)->test($email);
     }
 }
