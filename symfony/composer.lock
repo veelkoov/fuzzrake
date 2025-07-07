@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "318679aeeff3016f141e0b9471626117",
+    "content-hash": "bf6aa70e703f4a5c5e2de56b32b3146b",
     "packages": [
         {
             "name": "azjezz/psl",
-            "version": "2.9.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "1ade4f1a99fe07a8e06f8dee596609aa07585422"
+                "reference": "78078f2c505473d2a28319ffe426b2a82ac76790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/1ade4f1a99fe07a8e06f8dee596609aa07585422",
-                "reference": "1ade4f1a99fe07a8e06f8dee596609aa07585422",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/78078f2c505473d2a28319ffe426b2a82ac76790",
+                "reference": "78078f2c505473d2a28319ffe426b2a82ac76790",
                 "shasum": ""
             },
             "require": {
@@ -26,20 +26,20 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "revolt/event-loop": "^1.0.1"
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+                "revolt/event-loop": "^1.0.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.22.0",
-                "php-coveralls/php-coveralls": "^2.6.0",
-                "php-standard-library/psalm-plugin": "^2.2.1",
-                "phpbench/phpbench": "^1.2.14",
-                "phpunit/phpunit": "^9.6.10",
-                "roave/infection-static-analysis-plugin": "^1.32.0",
-                "squizlabs/php_codesniffer": "^3.7.2",
-                "vimeo/psalm": "^5.13.1"
+                "carthage-software/mago": "~0.13.1",
+                "php-coveralls/php-coveralls": "^2.7.0",
+                "php-standard-library/psalm-plugin": "^2.3.0",
+                "phpbench/phpbench": "^1.2.15",
+                "phpunit/phpunit": "^9.6.18",
+                "roave/infection-static-analysis-plugin": "^1.36.0",
+                "vimeo/psalm": "^6.0.0"
             },
             "suggest": {
+                "php-standard-library/phpstan-extension": "PHPStan integration",
                 "php-standard-library/psalm-plugin": "Psalm integration"
             },
             "type": "library",
@@ -70,7 +70,7 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.9.1"
+                "source": "https://github.com/azjezz/psl/tree/3.3.0"
             },
             "funding": [
                 {
@@ -78,7 +78,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-05T05:18:37+00:00"
+            "time": "2025-03-03T00:07:00+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -1775,29 +1775,30 @@
         },
         {
             "name": "nette/utils",
-            "version": "v3.2.10",
+            "version": "v4.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "a4175c62652f2300c8017fb7e640f9ccb11648d2"
+                "reference": "e67c4061eb40b9c113b218214e42cb5a0dda28f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/a4175c62652f2300c8017fb7e640f9ccb11648d2",
-                "reference": "a4175c62652f2300c8017fb7e640f9ccb11648d2",
+                "url": "https://api.github.com/repos/nette/utils/zipball/e67c4061eb40b9c113b218214e42cb5a0dda28f2",
+                "reference": "e67c4061eb40b9c113b218214e42cb5a0dda28f2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2 <8.4"
+                "php": "8.0 - 8.4"
             },
             "conflict": {
-                "nette/di": "<3.0.6"
+                "nette/finder": "<3",
+                "nette/schema": "<1.2.2"
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "dev-master",
-                "nette/tester": "~2.0",
+                "nette/tester": "^2.5",
                 "phpstan/phpstan": "^1.0",
-                "tracy/tracy": "^2.3"
+                "tracy/tracy": "^2.9"
             },
             "suggest": {
                 "ext-gd": "to use Image",
@@ -1805,13 +1806,12 @@
                 "ext-intl": "to use Strings::webalize(), toAscii(), normalize() and compare()",
                 "ext-json": "to use Nette\\Utils\\Json",
                 "ext-mbstring": "to use Strings::lower() etc...",
-                "ext-tokenizer": "to use Nette\\Utils\\Reflection::getUseStatements()",
-                "ext-xml": "to use Strings::length() etc. when mbstring is not available"
+                "ext-tokenizer": "to use Nette\\Utils\\Reflection::getUseStatements()"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "4.0-dev"
                 }
             },
             "autoload": {
@@ -1855,9 +1855,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v3.2.10"
+                "source": "https://github.com/nette/utils/tree/v4.0.7"
             },
-            "time": "2023-07-30T15:38:18+00:00"
+            "time": "2025-06-03T04:55:08+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -2427,16 +2427,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "0.41.5",
+            "version": "dev-applied-ExplicitNullableParamTypeRector-rule",
             "source": {
                 "type": "git",
-                "url": "https://github.com/t-regx/T-Regx.git",
-                "reference": "6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29"
+                "url": "https://github.com/veelkoov/T-Regx.git",
+                "reference": "5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/t-regx/T-Regx/zipball/6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29",
-                "reference": "6c4a64d514fdacfb90b854bf5ef9a498cd6bcc29",
+                "url": "https://api.github.com/repos/veelkoov/T-Regx/zipball/5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8",
+                "reference": "5ad7bb5bdc868ea2e80ab4f5a992e5924dd2cba8",
                 "shasum": ""
             },
             "require": {
@@ -2458,18 +2458,48 @@
                     "TRegx\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "classmap": [
+                    "test/"
+                ],
+                "files": [
+                    "test/Supposition/format.php",
+                    "test/Supposition/provided.php"
+                ],
+                "psr-4": {
+                    "Test\\": "test/",
+                    "Test\\Feature\\TRegx\\": "test/Feature/",
+                    "Test\\Functional\\TRegx\\": "test/Functional/",
+                    "Test\\Legacy\\TRegx\\": "test/Legacy/",
+                    "Test\\Structure\\TRegx\\": "test/Structure/",
+                    "Test\\Supposition\\TRegx\\": "test/Supposition/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "/test/**",
+                    "/test"
+                ]
+            },
+            "scripts": {
+                "fqn": [
+                    "fqn-check src"
+                ],
+                "test": [
+                    "phpunit test --no-coverage"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "PHP regular expression brought up to modern standards.",
             "keywords": [
-                "Match",
-                "PCRE",
                 "delimiters",
                 "expression",
+                "match",
                 "pattern",
                 "patterns",
+                "pcre",
                 "preg",
                 "prepared",
                 "prepared patterns",
@@ -2483,16 +2513,15 @@
                 "tregx"
             ],
             "support": {
-                "issues": "https://github.com/t-regx/T-Regx/issues",
-                "source": "https://github.com/t-regx/T-Regx/tree/0.41.5"
+                "source": "https://github.com/veelkoov/T-Regx/tree/applied-ExplicitNullableParamTypeRector-rule"
             },
             "funding": [
                 {
-                    "url": "https://github.com/Danon",
-                    "type": "github"
+                    "type": "github",
+                    "url": "https://github.com/Danon"
                 }
             ],
-            "time": "2023-08-08T14:47:38+00:00"
+            "time": "2025-01-06T10:35:25+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -12473,12 +12502,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "rawr/t-regx": 20,
         "veelkoov/debris": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.3.*",
+        "php": "8.4.*",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
