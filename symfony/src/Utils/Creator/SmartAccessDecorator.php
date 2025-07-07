@@ -51,7 +51,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 {
     private CreatorE $creator;
 
-    public function __construct(CreatorE $creator = null)
+    public function __construct(?CreatorE $creator = null)
     {
         $this->creator = $creator ?? new CreatorE();
     }
