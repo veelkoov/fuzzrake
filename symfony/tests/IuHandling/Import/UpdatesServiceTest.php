@@ -34,7 +34,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testUpdateHandlesNewEmailProperly(): void
     {
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('getfursu.it@localhost.localdomain')
@@ -56,7 +56,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain')
@@ -77,7 +77,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('')
@@ -98,7 +98,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setName('A creator')
             ->setCreatorId('TEST001')
             ->setEmailAddress('an-update.2@localhost.localdomain') // Should be ignored
@@ -116,7 +116,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     {
         self::mockTime();
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setCreatorId('TEST001')
         );
 
@@ -149,7 +149,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setDateAdded($dateAdded)
         ;
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setCreatorId('TEST001')
         );
 
@@ -180,7 +180,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setName('Common part')
         ;
 
-        $submission = SubmissionService::getEntityForSubmission((new Creator())
+        $submission = SubmissionService::getEntityForSubmission(new Creator()
             ->setCreatorId('TEST0A2')
             ->setName('Common')
         );
@@ -207,7 +207,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         ;
 
         // Changing
-        $submission1 = SubmissionService::getEntityForSubmission(Creator::new()
+        $submission1 = SubmissionService::getEntityForSubmission(new Creator()
             ->setCreatorId('TEST003')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -223,7 +223,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
-        $submission2 = SubmissionService::getEntityForSubmission(Creator::new()
+        $submission2 = SubmissionService::getEntityForSubmission(new Creator()
             ->setCreatorId('TEST001')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -248,7 +248,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $creatorRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $creatorIds) use ($calls) {
             foreach ($calls as $call) {
                 if ($call[0] === $names && $call[1] === $creatorIds) {
-                    return Vec\map($call[2], static fn (Creator $creator) => $creator->getCreator());
+                    return Vec\map($call[2], static fn (Creator $creator) => $creator->entity);
                 }
             }
 
@@ -264,7 +264,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testAdditionCreatesCorrespondingEvent(): void
     {
-        $entity = (new Creator())->setCreatorId('TEST0001');
+        $entity = new Creator()->setCreatorId('TEST0001');
         $update = new Update(new Submission(), [], $entity, $entity, $entity, [], true, true);
 
         $subject = $this->getUpdatesServiceForImport($update);
@@ -273,7 +273,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testUpdateCreatesCorrespondingEvent(): void
     {
-        $entity = (new Creator())->setCreatorId('TEST0001');
+        $entity = new Creator()->setCreatorId('TEST0001');
         $update = new Update(new Submission(), [], $entity, $entity, $entity, [], true, false);
 
         $subject = $this->getUpdatesServiceForImport($update);

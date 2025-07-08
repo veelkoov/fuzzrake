@@ -51,7 +51,7 @@ class UpdateableEmailValidator extends ConstraintValidator
 
     private function getOldEmailAddressOrEmpty(Creator $creator): string
     {
-        $privateDataId = $creator->getCreator()->getPrivateData()?->getId();
+        $privateDataId = $creator->entity->getPrivateData()?->getId();
 
         if (null === $privateDataId) {
             return '';

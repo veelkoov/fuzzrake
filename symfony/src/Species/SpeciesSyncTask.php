@@ -59,7 +59,7 @@ final class SpeciesSyncTask
         foreach ($missingSpecieNames as $specieName) {
             $this->logger->info("Adding '$specieName' to $creator.");
 
-            $creator->addSpecie((new CreatorSpecie())->setSpecie($this->dbSpecies->getSpecieByName($specieName)));
+            $creator->addSpecie(new CreatorSpecie()->setSpecie($this->dbSpecies->getSpecieByName($specieName)));
         }
 
         $obsoleteCreatorSpecies = $creator->getSpecies()->filter(

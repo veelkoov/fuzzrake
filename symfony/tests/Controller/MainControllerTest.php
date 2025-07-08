@@ -33,9 +33,9 @@ class MainControllerTest extends FuzzrakeWebTestCase
     {
         self::mockTime();
 
-        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setDateAdded(UtcClock::at('-43 days'));
-        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setDateAdded(UtcClock::at('-41 days'));
-        $creator3 = Creator::new()
+        $creator1 = new Creator()->setCreatorId('TEST001')->setName('Older creator')->setDateAdded(UtcClock::at('-43 days'));
+        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Newer creator 1')->setDateAdded(UtcClock::at('-41 days'));
+        $creator3 = new Creator()
             ->setCreatorId('TEST003')
             ->setName('Newer creator 2')
             ->setFormerly(['Formerly 2a', 'Formerly 2b'])

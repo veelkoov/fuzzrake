@@ -25,10 +25,10 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
      */
     public static function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
     {
-        $official = Creator::new()->setCountry('FI')->setName('Modern creator')
+        $official = new Creator()->setCountry('FI')->setName('Modern creator')
             ->setCreatorId('TEST001');
 
-        $placeholder = Creator::new()->setCountry('CZ')->setName('Early creator')
+        $placeholder = new Creator()->setCountry('CZ')->setName('Early creator')
             ->setFormerCreatorIds(['M000000']);
 
         return [

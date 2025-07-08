@@ -49,47 +49,35 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[UpdateableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
-    private CreatorE $creator;
-
-    public function __construct(?CreatorE $creator = null)
-    {
-        $this->creator = $creator ?? new CreatorE();
-    }
-
-    public static function new(): self
-    {
-        return new self();
+    public function __construct(
+        public private(set) CreatorE $entity = new CreatorE(),
+    ) {
     }
 
     public function __clone()
     {
-        $this->creator = clone $this->creator;
+        $this->entity = clone $this->entity;
     }
 
     #[Override]
     public function __toString(): string
     {
-        return $this->creator->__toString();
+        return $this->entity->__toString();
     }
 
     /**
      * @param CreatorE[] $creators
      *
-     * @return SmartAccessDecorator[]
+     * @return self[]
      */
     public static function wrapAll(array $creators): array
     {
-        return array_map(fn (CreatorE $creator): SmartAccessDecorator => self::wrap($creator), $creators);
+        return array_map(static fn (CreatorE $creator) => self::wrap($creator), $creators);
     }
 
     public static function wrap(CreatorE $creator): self
     {
         return new self($creator);
-    }
-
-    public function getCreator(): CreatorE
-    {
-        return $this->creator;
     }
 
     public function set(Field $field, mixed $newValue): self
@@ -162,7 +150,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function hasCreatorId(string $creatorId): bool
     {
-        return in_array($creatorId, $this->creator->getCreatorIds()
+        return in_array($creatorId, $this->entity->getCreatorIds()
             ->map(static fn (CreatorId $creatorIdE): string => $creatorIdE->getCreatorId())
             ->toArray(), true);
     }
@@ -172,11 +160,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setFormerCreatorIds(array $formerCreatorIdsToSet): self
     {
-        $allCreatorIdsToSet = [...$formerCreatorIdsToSet, $this->creator->getCreatorId()];
+        $allCreatorIdsToSet = [...$formerCreatorIdsToSet, $this->entity->getCreatorId()];
 
-        foreach ($this->creator->getCreatorIds() as $creatorId) {
+        foreach ($this->entity->getCreatorIds() as $creatorId) {
             if (!in_array($creatorId->getCreatorId(), $allCreatorIdsToSet, true)) {
-                $this->creator->removeCreatorId($creatorId);
+                $this->entity->removeCreatorId($creatorId);
             }
         }
 
@@ -194,7 +182,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getFormerCreatorIds(): array
     {
-        return Lists::nonEmptyStrings($this->creator->getCreatorIds()
+        return Lists::nonEmptyStrings($this->entity->getCreatorIds()
             ->map(static fn (CreatorId $creatorId): string => $creatorId->getCreatorId())
             ->filter(fn (string $creatorId): bool => $creatorId !== $this->getCreatorId())
             ->toArray());
@@ -205,7 +193,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getAllCreatorIds(): array
     {
-        return Lists::nonEmptyStrings([$this->creator->getCreatorId(), ...$this->getFormerCreatorIds()]);
+        return Lists::nonEmptyStrings([$this->entity->getCreatorId(), ...$this->getFormerCreatorIds()]);
     }
 
     //
@@ -340,7 +328,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function allowsFeedback(): bool
     {
-        return ContactPermit::FEEDBACK === $this->creator->getContactAllowed();
+        return ContactPermit::FEEDBACK === $this->entity->getContactAllowed();
     }
 
     public function hasSpeciesInfo(): bool
@@ -986,7 +974,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getId(): ?int
     {
-        return $this->creator->getId();
+        return $this->entity->getId();
     }
 
     #[Regex(pattern: '/^[A-Z0-9]*$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).')]
@@ -994,12 +982,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotBlank(groups: [Validation::GRP_DATA])]
     public function getCreatorId(): string
     {
-        return $this->creator->getCreatorId();
+        return $this->entity->getCreatorId();
     }
 
     public function setCreatorId(string $creatorId): self
     {
-        $this->creator->setCreatorId($creatorId);
+        $this->entity->setCreatorId($creatorId);
 
         if ('' !== $creatorId) {
             $this->addCreatorId($creatorId);
@@ -1012,12 +1000,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotBlank]
     public function getName(): string
     {
-        return $this->creator->getName();
+        return $this->entity->getName();
     }
 
     public function setName(string $name): self
     {
-        $this->creator->setName($name);
+        $this->entity->setName($name);
 
         return $this;
     }
@@ -1028,7 +1016,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 256)]
     public function getFormerly(): array
     {
-        return PackedStringList::unpack($this->creator->getFormerly());
+        return PackedStringList::unpack($this->entity->getFormerly());
     }
 
     /**
@@ -1036,7 +1024,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setFormerly(array $formerly): self
     {
-        $this->creator->setFormerly(PackedStringList::pack($formerly));
+        $this->entity->setFormerly(PackedStringList::pack($formerly));
 
         return $this;
     }
@@ -1044,12 +1032,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getIntro(): string
     {
-        return $this->creator->getIntro();
+        return $this->entity->getIntro();
     }
 
     public function setIntro(string $intro): self
     {
-        $this->creator->setIntro($intro);
+        $this->entity->setIntro($intro);
 
         return $this;
     }
@@ -1057,12 +1045,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 16)]
     public function getSince(): string
     {
-        return $this->creator->getSince();
+        return $this->entity->getSince();
     }
 
     public function setSince(string $since): self
     {
-        $this->creator->setSince($since);
+        $this->entity->setSince($since);
 
         return $this;
     }
@@ -1071,12 +1059,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotBlank(groups: [Validation::GRP_DATA])]
     public function getCountry(): string
     {
-        return $this->creator->getCountry();
+        return $this->entity->getCountry();
     }
 
     public function setCountry(string $country): self
     {
-        $this->creator->setCountry($country);
+        $this->entity->setCountry($country);
 
         return $this;
     }
@@ -1084,12 +1072,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 128)]
     public function getState(): string
     {
-        return $this->creator->getState();
+        return $this->entity->getState();
     }
 
     public function setState(string $state): self
     {
-        $this->creator->setState($state);
+        $this->entity->setState($state);
 
         return $this;
     }
@@ -1097,12 +1085,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 128)]
     public function getCity(): string
     {
-        return $this->creator->getCity();
+        return $this->entity->getCity();
     }
 
     public function setCity(string $city): self
     {
-        $this->creator->setCity($city);
+        $this->entity->setCity($city);
 
         return $this;
     }
@@ -1110,12 +1098,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getProductionModelsComment(): string
     {
-        return $this->creator->getProductionModelsComment();
+        return $this->entity->getProductionModelsComment();
     }
 
     public function setProductionModelsComment(string $productionModelsComment): self
     {
-        $this->creator->setProductionModelsComment($productionModelsComment);
+        $this->entity->setProductionModelsComment($productionModelsComment);
 
         return $this;
     }
@@ -1141,12 +1129,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getStylesComment(): string
     {
-        return $this->creator->getStylesComment();
+        return $this->entity->getStylesComment();
     }
 
     public function setStylesComment(string $stylesComment): self
     {
-        $this->creator->setStylesComment($stylesComment);
+        $this->entity->setStylesComment($stylesComment);
 
         return $this;
     }
@@ -1191,12 +1179,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getOrderTypesComment(): string
     {
-        return $this->creator->getOrderTypesComment();
+        return $this->entity->getOrderTypesComment();
     }
 
     public function setOrderTypesComment(string $orderTypesComment): self
     {
-        $this->creator->setOrderTypesComment($orderTypesComment);
+        $this->entity->setOrderTypesComment($orderTypesComment);
 
         return $this;
     }
@@ -1241,12 +1229,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getFeaturesComment(): string
     {
-        return $this->creator->getFeaturesComment();
+        return $this->entity->getFeaturesComment();
     }
 
     public function setFeaturesComment(string $featuresComment): self
     {
-        $this->creator->setFeaturesComment($featuresComment);
+        $this->entity->setFeaturesComment($featuresComment);
 
         return $this;
     }
@@ -1294,7 +1282,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 1024)]
     public function getPaymentPlans(): array
     {
-        return PackedStringList::unpack($this->creator->getPaymentPlans());
+        return PackedStringList::unpack($this->entity->getPaymentPlans());
     }
 
     /**
@@ -1302,7 +1290,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setPaymentPlans(array $paymentPlans): self
     {
-        $this->creator->setPaymentPlans(PackedStringList::pack($paymentPlans));
+        $this->entity->setPaymentPlans(PackedStringList::pack($paymentPlans));
 
         return $this;
     }
@@ -1313,7 +1301,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 1024)]
     public function getPaymentMethods(): array
     {
-        return PackedStringList::unpack($this->creator->getPaymentMethods());
+        return PackedStringList::unpack($this->entity->getPaymentMethods());
     }
 
     /**
@@ -1321,7 +1309,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setPaymentMethods(array $paymentMethods): self
     {
-        $this->creator->setPaymentMethods(PackedStringList::pack($paymentMethods));
+        $this->entity->setPaymentMethods(PackedStringList::pack($paymentMethods));
 
         return $this;
     }
@@ -1332,7 +1320,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 64)]
     public function getCurrenciesAccepted(): array
     {
-        return PackedStringList::unpack($this->creator->getCurrenciesAccepted());
+        return PackedStringList::unpack($this->entity->getCurrenciesAccepted());
     }
 
     /**
@@ -1340,7 +1328,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setCurrenciesAccepted(array $currenciesAccepted): self
     {
-        $this->creator->setCurrenciesAccepted(PackedStringList::pack($currenciesAccepted));
+        $this->entity->setCurrenciesAccepted(PackedStringList::pack($currenciesAccepted));
 
         return $this;
     }
@@ -1348,12 +1336,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getSpeciesComment(): string
     {
-        return $this->creator->getSpeciesComment();
+        return $this->entity->getSpeciesComment();
     }
 
     public function setSpeciesComment(string $speciesComment): self
     {
-        $this->creator->setSpeciesComment($speciesComment);
+        $this->entity->setSpeciesComment($speciesComment);
 
         return $this;
     }
@@ -1364,7 +1352,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 1024)]
     public function getSpeciesDoes(): array
     {
-        return PackedStringList::unpack($this->creator->getSpeciesDoes());
+        return PackedStringList::unpack($this->entity->getSpeciesDoes());
     }
 
     /**
@@ -1372,7 +1360,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setSpeciesDoes(array $speciesDoes): self
     {
-        $this->creator->setSpeciesDoes(PackedStringList::pack($speciesDoes));
+        $this->entity->setSpeciesDoes(PackedStringList::pack($speciesDoes));
 
         return $this;
     }
@@ -1383,7 +1371,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 1024)]
     public function getSpeciesDoesnt(): array
     {
-        return PackedStringList::unpack($this->creator->getSpeciesDoesnt());
+        return PackedStringList::unpack($this->entity->getSpeciesDoesnt());
     }
 
     /**
@@ -1391,7 +1379,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setSpeciesDoesnt(array $speciesDoesnt): self
     {
-        $this->creator->setSpeciesDoesnt(PackedStringList::pack($speciesDoesnt));
+        $this->entity->setSpeciesDoesnt(PackedStringList::pack($speciesDoesnt));
 
         return $this;
     }
@@ -1418,12 +1406,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 4096)]
     public function getNotes(): string
     {
-        return $this->creator->getNotes();
+        return $this->entity->getNotes();
     }
 
     public function setNotes(string $notes): self
     {
-        $this->creator->setNotes($notes);
+        $this->entity->setNotes($notes);
 
         return $this;
     }
@@ -1431,12 +1419,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 512)]
     public function getInactiveReason(): string
     {
-        return $this->creator->getInactiveReason();
+        return $this->entity->getInactiveReason();
     }
 
     public function setInactiveReason(string $inactiveReason): self
     {
-        $this->creator->setInactiveReason($inactiveReason);
+        $this->entity->setInactiveReason($inactiveReason);
 
         return $this;
     }
@@ -1444,20 +1432,20 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotNull(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     public function getContactAllowed(): ?ContactPermit
     {
-        return $this->creator->getContactAllowed();
+        return $this->entity->getContactAllowed();
     }
 
     public function setContactAllowed(?ContactPermit $contactAllowed): self
     {
-        $this->creator->setContactAllowed($contactAllowed);
+        $this->entity->setContactAllowed($contactAllowed);
 
         return $this;
     }
 
     public function getVolatileData(): CreatorVolatileData
     {
-        if (null === ($res = $this->creator->getVolatileData())) {
-            $this->creator->setVolatileData($res = new CreatorVolatileData());
+        if (null === ($res = $this->entity->getVolatileData())) {
+            $this->entity->setVolatileData($res = new CreatorVolatileData());
         }
 
         return $res;
@@ -1465,7 +1453,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setVolatileData(?CreatorVolatileData $volatileData): self
     {
-        $this->creator->setVolatileData($volatileData);
+        $this->entity->setVolatileData($volatileData);
 
         return $this;
     }
@@ -1473,8 +1461,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Valid]
     public function getPrivateData(): CreatorPrivateData
     {
-        if (null === ($res = $this->creator->getPrivateData())) {
-            $this->creator->setPrivateData($res = new CreatorPrivateData());
+        if (null === ($res = $this->entity->getPrivateData())) {
+            $this->entity->setPrivateData($res = new CreatorPrivateData());
         }
 
         return $res;
@@ -1482,7 +1470,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setPrivateData(?CreatorPrivateData $privateData): self
     {
-        $this->creator->setPrivateData($privateData);
+        $this->entity->setPrivateData($privateData);
 
         return $this;
     }
@@ -1497,7 +1485,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             $creatorId = new CreatorId($creatorId);
         }
 
-        $this->creator->addCreatorId($creatorId);
+        $this->entity->addCreatorId($creatorId);
 
         return $this;
     }
@@ -1541,7 +1529,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     private function getStringValue(Field $field): ?string
     {
-        foreach ($this->creator->getValues() as $value) {
+        foreach ($this->entity->getValues() as $value) {
             if ($value->getFieldName() === $field->value) {
                 return $value->getValue();
             }
@@ -1552,10 +1540,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     private function setStringValue(Field $field, ?string $newValue): self
     {
-        foreach ($this->creator->getValues() as $value) {
+        foreach ($this->entity->getValues() as $value) {
             if ($value->getFieldName() === $field->value) {
                 if (null === $newValue) {
-                    $this->creator->getValues()->removeElement($value);
+                    $this->entity->getValues()->removeElement($value);
                 } else {
                     $value->setValue($newValue);
                 }
@@ -1565,10 +1553,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         if (null !== $newValue) {
-            $newEntity = (new CreatorValue())
+            $newEntity = new CreatorValue()
                 ->setFieldName($field->value)
                 ->setValue($newValue);
-            $this->creator->addValue($newEntity);
+            $this->entity->addValue($newEntity);
         }
 
         return $this;

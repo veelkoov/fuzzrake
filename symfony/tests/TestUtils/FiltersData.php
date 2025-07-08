@@ -32,16 +32,16 @@ class FiltersData
 
         $species = Dict\from_keys(
             self::getSpecieNamesFrom($creators),
-            fn (string $name) => (new Specie())->setName($name),
+            fn (string $name) => new Specie()->setName($name),
         );
 
         $creatorSpecies = [];
 
         foreach ($creators as $creator) {
             $creatorSpecies = [...$creatorSpecies, ...Vec\map($creator->getSpeciesDoes(),
-                fn (string $name) => (new CreatorSpecie())
+                fn (string $name) => new CreatorSpecie()
                     ->setSpecie($species[$name])
-                    ->setCreator($creator->getCreator()),
+                    ->setCreator($creator->entity),
             )];
         }
 

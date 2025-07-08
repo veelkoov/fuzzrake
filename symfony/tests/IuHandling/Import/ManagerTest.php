@@ -25,12 +25,12 @@ class ManagerTest extends TestCase
     public function testDetectingDelimiter(): void
     {
         $manager = new Manager('set NAME |abcdef|');
-        $manager->correctCreator($creator = Creator::new());
+        $manager->correctCreator($creator = new Creator());
 
         self::assertSame('abcdef', $creator->getName());
 
         $manager = new Manager('set NAME |fedcba|');
-        $manager->correctCreator($creator = Creator::new());
+        $manager->correctCreator($creator = new Creator());
 
         self::assertSame('fedcba', $creator->getName());
     }
@@ -46,7 +46,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('clear NOTES');
 
-        $creator = Creator::new()->setNotes('will be removed');
+        $creator = new Creator()->setNotes('will be removed');
 
         self::assertSame('will be removed', $creator->getNotes());
         $manager->correctCreator($creator);
@@ -57,7 +57,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('set NOTES "will be added"');
 
-        $creator = Creator::new();
+        $creator = new Creator();
 
         self::assertSame('', $creator->getNotes());
         $manager->correctCreator($creator);

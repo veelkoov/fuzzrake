@@ -38,7 +38,7 @@ class CreatorSmallTest extends TestCase
      */
     public function testDeepCloningIsComplete(): void
     {
-        $subject = (new Creator())->setContactAllowed(ContactPermit::CORRECTIONS);
+        $subject = new Creator()->setContactAllowed(ContactPermit::CORRECTIONS);
         $subject->addCreatorId(new CreatorId());
         $subject->setPrivateData(new CreatorPrivateData());
         $subject->setVolatileData(new CreatorVolatileData());
@@ -46,7 +46,7 @@ class CreatorSmallTest extends TestCase
         $subject->addValue(new CreatorValue());
 
         $specie = new Specie();
-        $subject->addSpecie((new CreatorSpecie())->setSpecie($specie));
+        $subject->addSpecie(new CreatorSpecie()->setSpecie($specie));
 
         $creatorUrl = new CreatorUrl();
         $creatorUrl->getState();

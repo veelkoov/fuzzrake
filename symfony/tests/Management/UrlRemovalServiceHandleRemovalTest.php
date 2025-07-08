@@ -75,7 +75,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
      */
     public function testNonEmptyNotesGetUpdated(): void
     {
-        $creator = Creator::new()->setNotes("  Some previous stuff\nBlah blah\n");
+        $creator = new Creator()->setNotes("  Some previous stuff\nBlah blah\n");
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_FAQ, 0, 'https://example.com/'),
@@ -127,7 +127,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
      */
     public function testUrlsAreUpdatedAsDesired(): void
     {
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setWebsiteUrl('https://getfursu.it/info')
             ->setPricesUrls([
                 'https://example.com/prices0',
@@ -195,7 +195,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = Creator::new()->setName('The Hidden Creator')->setCreatorId('TEST001');
+        $creator = new Creator()->setName('The Hidden Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),
@@ -232,7 +232,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = Creator::new()->setName('The Updated Creator')->setCreatorId('TEST001');
+        $creator = new Creator()->setName('The Updated Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),

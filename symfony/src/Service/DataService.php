@@ -177,7 +177,7 @@ class DataService
         return $this->cache->get(function (): StringIntMap {
             $stats = $this->cosRepository->getOfferStatusStats();
 
-            return (new StringIntMap([
+            return new StringIntMap([
                 'Open for anything'              => $stats['open_for_anything'],
                 'Closed for anything'            => $stats['closed_for_anything'],
                 'Status successfully tracked'    => $stats['successfully_tracked'],
@@ -186,7 +186,7 @@ class DataService
                 'Tracking issues'                => $stats['tracking_issues'],
                 'Status tracked'                 => $stats['tracked'],
                 'Total'                          => $stats['total'],
-            ]))->freeze();
+            ])->freeze();
         }, CacheTags::TRACKING, __METHOD__);
     }
 

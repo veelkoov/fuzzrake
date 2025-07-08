@@ -14,7 +14,7 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
     public function persist(object $object): void
     {
         if ($object instanceof SmartAccessDecorator) {
-            $object = $object->getCreator();
+            $object = $object->entity;
         }
 
         parent::persist($object);
@@ -24,7 +24,7 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
     public function remove(object $object): void
     {
         if ($object instanceof SmartAccessDecorator) {
-            $object = $object->getCreator();
+            $object = $object->entity;
         }
 
         parent::remove($object);
@@ -34,7 +34,7 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
     public function isUninitializedObject(mixed $value): bool
     {
         if ($value instanceof SmartAccessDecorator) {
-            $value = $value->getCreator();
+            $value = $value->entity;
         }
 
         return $this->wrapped->isUninitializedObject($value);

@@ -16,8 +16,8 @@ class StringBufferTest extends TestCase
 {
     public function testIsEmpty(): void
     {
-        self::assertTrue((new StringBuffer(''))->isEmpty());
-        self::assertFalse((new StringBuffer(' '))->isEmpty());
+        self::assertTrue(new StringBuffer('')->isEmpty());
+        self::assertFalse(new StringBuffer(' ')->isEmpty());
     }
 
     public function testReadCharacter(): void

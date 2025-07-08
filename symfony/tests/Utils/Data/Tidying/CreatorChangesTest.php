@@ -19,7 +19,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void
     {
-        $creator1 = (new Creator())
+        $creator1 = new Creator()
             ->setName('Creator 1')
             ->setCity('Varkaus')
             ->setFaqUrl('https://some-faq-address/')
@@ -30,7 +30,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
             ->setNsfwSocial(false)
         ;
 
-        $creator2 = (new Creator())
+        $creator2 = new Creator()
             ->setName('Creator 2')
             ->setCity('Joensuu')
             ->setWebsiteUrl('https://some-website-address/')

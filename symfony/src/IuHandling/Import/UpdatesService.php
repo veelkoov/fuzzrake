@@ -173,7 +173,7 @@ class UpdatesService
 
     private function getEventFor(Update $update): Event
     {
-        return (new Event())
+        return new Event()
             ->setType($update->isNew ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED)
             ->setCreatorId($update->originalCreator->getCreatorId());
     }
