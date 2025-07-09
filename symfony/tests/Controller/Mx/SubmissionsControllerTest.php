@@ -52,7 +52,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testAdditionIsProperlyRendered(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             // NOT fixed
             ->setCreatorId('TEST001')
 
@@ -103,7 +103,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testUpdateIsProperlyRendered(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Some testing creator')
             ->setCountry('FI')
@@ -116,7 +116,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         self::persistAndFlush($creator);
 
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             // Submitted the same, NOT fixed, NOT changed
             ->setCreatorId('TEST001')
 
@@ -202,12 +202,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testSubmissionMatchingMultipleCreators(): void
     {
-        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
-        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Testing creator');
+        $creator1 = new Creator()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
+        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
 
         self::persistAndFlush($creator1, $creator2);
 
-        $submissionData = Creator::new()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu');
+        $submissionData = new Creator()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu');
         $submission = $this->createSubmission($submissionData);
         self::persistAndFlush($submission);
 
@@ -233,7 +233,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testUpdatingExistingSubmissionWithoutImport(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
@@ -270,7 +270,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testImportDoesntWorkWithoutAccepting(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
@@ -289,7 +289,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testDirectivesWork(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
@@ -315,7 +315,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testDirectivesUpdateIsImmediate(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
@@ -338,7 +338,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testInvalidDirectivesDontBreakPageLoad(): void
     {
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
@@ -355,7 +355,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
         if (!$new) {
-            $creator = (new Creator())
+            $creator = new Creator()
                 ->setCreatorId('TEST001')
                 ->setPassword('password')
             ;
@@ -363,7 +363,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             self::persistAndFlush($creator);
         }
 
-        $submissionData = (new Creator())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
         ;
@@ -402,9 +402,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testChangesDescriptionShowUp(): void
     {
-        self::persistAndFlush(Creator::new()->setCreatorId('TEST001')->setName('Old name'));
+        self::persistAndFlush(new Creator()->setCreatorId('TEST001')->setName('Old name'));
 
-        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setName('New name'));
+        $submission = $this->createSubmission(new Creator()->setCreatorId('TEST001')->setName('New name'));
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -419,12 +419,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $address = 'getfursu.it@example.com';
         $permit = $allowed ? ContactPermit::FEEDBACK : ContactPermit::NO;
 
-        self::persistAndFlush(Creator::new()->setCreatorId('TEST001')
+        self::persistAndFlush(new Creator()->setCreatorId('TEST001')
             ->setName('Old name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
-        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')
+        $submission = $this->createSubmission(new Creator()->setCreatorId('TEST001')
             ->setName('New name')
             ->setEmailAddress($address)
             ->setContactAllowed($permit)
@@ -453,7 +453,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testMissingSubmissionReturns404(): void
     {
-        $this->createSubmission(Creator::new()); // Only to have the submissions directory existing
+        $this->createSubmission(new Creator()); // Only to have the submissions directory existing
         self::$client->request('GET', '/mx/submission/wrongId');
 
         self::assertResponseStatusCodeIs(404);
@@ -463,13 +463,13 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
     {
         if (!$isNew) {
-            $creator = Creator::new()->setCreatorId('TEST001')->setPassword('password___1234');
+            $creator = new Creator()->setCreatorId('TEST001')->setPassword('password___1234');
 
             self::persistAndFlush($creator);
         }
 
         $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
-        $submission = $this->createSubmission(Creator::new()->setCreatorId('TEST001')->setPassword($submittedPassword));
+        $submission = $this->createSubmission(new Creator()->setCreatorId('TEST001')->setPassword($submittedPassword));
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -511,7 +511,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testHiddenCreator(): void
     {
-        $entity = Creator::new()->setCreatorId('TEST001')->setInactiveReason('Dunno');
+        $entity = new Creator()->setCreatorId('TEST001')->setInactiveReason('Dunno');
         self::persistAndFlush($entity);
 
         $submission = $this->createSubmission($entity); // No need to modify

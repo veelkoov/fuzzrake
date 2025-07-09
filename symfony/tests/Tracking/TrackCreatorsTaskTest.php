@@ -30,10 +30,10 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
      */
     public function testInitiatingTracking(): void
     {
-        $creator1 = (new Creator())->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
-        $creator2 = (new Creator())->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A', 'creator2_B']);
-        $creator3 = (new Creator())->setCreatorId('TEST003')->setWebsiteUrl('creator3_A');
-        $creator4 = (new Creator())->setCreatorId('TEST004')->setWebsiteUrl('creator4_A')->setCommissionsUrls(['creator4_B']);
+        $creator1 = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
+        $creator2 = new Creator()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A', 'creator2_B']);
+        $creator3 = new Creator()->setCreatorId('TEST003')->setWebsiteUrl('creator3_A');
+        $creator4 = new Creator()->setCreatorId('TEST004')->setWebsiteUrl('creator4_A')->setCommissionsUrls(['creator4_B']);
 
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
 
@@ -65,19 +65,19 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
      */
     public function testTrackCreatorsMessageHandler(): void
     {
-        $creator1 = (new Creator())->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
-        $creator2 = (new Creator())->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A']);
-        $creator3 = (new Creator())->setCreatorId('TEST003')->setCommissionsUrls(['creator3_A']);
-        $creator4 = (new Creator())->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
+        $creator1 = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
+        $creator2 = new Creator()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A']);
+        $creator3 = new Creator()->setCreatorId('TEST003')->setCommissionsUrls(['creator3_A']);
+        $creator4 = new Creator()->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
 
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
 
-        $intList = (new IntList([
+        $intList = new IntList([
             $creator1->getId() ?? 0,
             $creator2->getId() ?? 0,
             $creator3->getId() ?? 0,
             $creator4->getId() ?? 0,
-        ]))->unique();
+        ])->unique();
         self::assertCount(4, $intList);
 
         // Tracker which will "fail" every second creator (by ID)

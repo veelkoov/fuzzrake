@@ -27,7 +27,7 @@ class FurAffinityProfileStrategy extends Strategy
     #[Override]
     public function filterContents(string $input): string
     {
-        $element = (new Crawler($input))->filter('#page-userpage div.userpage-profile');
+        $element = new Crawler($input)->filter('#page-userpage div.userpage-profile');
 
         if (0 !== $element->count()) {
             return $element->html();

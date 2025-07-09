@@ -14,8 +14,8 @@ final class MutableSpecie implements Specie
     private readonly SpecieSet $children;
 
     public function __construct(
-        readonly string $name,
-        readonly bool $hidden,
+        public readonly string $name,
+        public readonly bool $hidden,
     ) {
         $this->parents = new SpecieSet();
         $this->children = new SpecieSet();

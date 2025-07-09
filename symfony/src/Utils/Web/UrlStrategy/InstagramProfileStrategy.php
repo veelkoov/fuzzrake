@@ -35,7 +35,7 @@ class InstagramProfileStrategy extends Strategy
     #[Override]
     public function filterContents(string $input): string
     {
-        $descriptionNodes = (new Crawler($input))->filterXPath("//head/meta[@property='description']");
+        $descriptionNodes = new Crawler($input)->filterXPath("//head/meta[@property='description']");
 
         if (0 === $descriptionNodes->count()) {
             return $input;

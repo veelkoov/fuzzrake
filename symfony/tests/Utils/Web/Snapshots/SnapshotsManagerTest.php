@@ -62,9 +62,10 @@ class SnapshotsManagerTest extends TestCase
         $serializerMock->expects(self::exactly(3))->method('save')
             ->willReturnCallback($cache->set(...));
         $serializerMock->expects(self::exactly(4))->method('load')
-            ->willReturnCallback(function (string $snapshotDirPath) use ($cache): ?Snapshot {
-                return $cache->getOrDefault($snapshotDirPath, static fn () => null);
-            });
+            ->willReturnCallback(static fn (string $snapshotDirPath): ?Snapshot => $cache->getOrDefault(
+                $snapshotDirPath,
+                static fn () => null,
+            ));
 
         $subject = new SnapshotsManager(
             $serializerMock,

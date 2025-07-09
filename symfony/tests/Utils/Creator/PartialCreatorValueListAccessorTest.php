@@ -18,10 +18,10 @@ class PartialCreatorValueListAccessorTest extends TestCase
     public function testGetAndSet(): void
     {
         $creator = new Creator();
-        $creatorE = $creator->getCreator();
+        $creatorE = $creator->entity;
 
-        $creatorE->addValue((new CreatorValue())->setFieldName('OtherField')->setValue('OtherField value 1'));
-        $creatorE->addValue((new CreatorValue())->setFieldName('OtherField')->setValue('OtherField value 2'));
+        $creatorE->addValue(new CreatorValue()->setFieldName('OtherField')->setValue('OtherField value 1'));
+        $creatorE->addValue(new CreatorValue()->setFieldName('OtherField')->setValue('OtherField value 2'));
 
         self::assertUnorderedValues($creatorE, [
             'OtherField: OtherField value 1',

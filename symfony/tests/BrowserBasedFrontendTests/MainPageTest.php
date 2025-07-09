@@ -112,7 +112,7 @@ class MainPageTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * If only I was competent enough to be able to fix this test properly.
+     * If only I was competent enough to be able to fix this test properly. grep-code-dumb-workarounds-in-tests.
      *
      * @throws Exception
      */
@@ -133,8 +133,8 @@ class MainPageTest extends FuzzrakePantherTestCase
     {
         self::mockTime();
 
-        $creator1 = Creator::new()->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
-        $creator2 = Creator::new()->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
+        $creator1 = new Creator()->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
+        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
 
         self::persistAndFlush($creator1, $creator2);
         $this->clearCache();
@@ -187,7 +187,7 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->waitExpectLoadedCreatorsTable(1, 1);
 
-        usleep(500_000); // Lame
+        usleep(500_000); // Lame grep-code-dumb-workarounds-in-tests
         self::$client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1, true);
 

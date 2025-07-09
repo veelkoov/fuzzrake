@@ -5,10 +5,14 @@
         {
             "type": "vcs",
             "url": "https://github.com/veelkoov/debris"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/veelkoov/t-regx"
         }
     ],
     "require": {
-        "php": "8.3.*",
+        "php": "8.4.*",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -16,14 +20,14 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
-        "azjezz/psl": "^2.3.0",
+        "azjezz/psl": "^3.1.0",
         "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "*",
-        "nette/utils": "^3.2",
+        "nette/utils": "^v4.0.5",
         "phpoffice/phpspreadsheet": "^3.7.0",
-        "rawr/t-regx": "0.41.*",
+        "rawr/t-regx": "dev-applied-ExplicitNullableParamTypeRector-rule",
         "symfony/apache-pack": "^1.0",
         "symfony/browser-kit": "*",
         "symfony/clock": "*",

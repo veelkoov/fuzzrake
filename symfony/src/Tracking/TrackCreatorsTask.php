@@ -73,7 +73,7 @@ final class TrackCreatorsTask
             $this->logger->warning('Retrieved less creators than given IDs. Unless commonly happening, this can be ignored.');
         }
 
-        $failedIds = (new DList($creators))
+        $failedIds = new DList($creators)
             // Tracking happens here.
             ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator),
                 $message->retryAllowed(), $message->refetchPages))

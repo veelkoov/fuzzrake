@@ -271,7 +271,7 @@ trait FiltersTestTrait
      */
     private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, array $paymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
     {
-        return Creator::new()
+        return new Creator()
             ->setCreatorId($creatorIdAndName)
             ->setName($creatorIdAndName)
             ->setCountry($country)

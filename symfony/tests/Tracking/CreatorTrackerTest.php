@@ -53,7 +53,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
 
     public function testChangesNotAppliedOnFailureAndRetryPossible(): void
     {
-        $creator = Creator::new()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001');
 
         $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
 
@@ -65,7 +65,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
 
     public function testChangesAppliedOnFailureWithoutRetryPossibility(): void
     {
-        $creator = Creator::new()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001');
 
         $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
 
@@ -77,7 +77,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
 
     public function testChangesAppliedEvenOnPartialSuccess(): void
     {
-        $creator = Creator::new()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001');
 
         $analysisResults = new AnalysisResults(new StringList(['Pancakes']), new StringList(), true);
 
@@ -89,7 +89,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
 
     public function testAllRetrievedSnapshotAnalysedAndResultsAggregated(): void
     {
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setCreatorId('TEST001')
             ->setCommissionsUrls(['https://getfursu.it/', 'https://getfursu.it/info'])
         ;

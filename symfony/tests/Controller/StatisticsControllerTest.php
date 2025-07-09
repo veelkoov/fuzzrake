@@ -80,9 +80,9 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
         $creatorFakeIdAndOldAndNew->setCreatorId('TEST002')
             ->setFormerCreatorIds([sprintf("TEST003\nM%06d", $creatorFakeIdAndOldAndNew->getId())]);
 
-        $creator3 = (new Creator())->setCreatorId('TEST004')->setFormerCreatorIds(['TEST005', 'TEST006']);
-        $creator4 = (new Creator())->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
-        $creator5 = (new Creator())->setCreatorId('TEST009')->setFormerCreatorIds([]);
+        $creator3 = new Creator()->setCreatorId('TEST004')->setFormerCreatorIds(['TEST005', 'TEST006']);
+        $creator4 = new Creator()->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
+        $creator5 = new Creator()->setCreatorId('TEST009')->setFormerCreatorIds([]);
 
         self::persistAndFlush($creator3, $creator4, $creator5);
 

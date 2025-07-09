@@ -18,7 +18,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 {
     public function testEmainNotSentWhenNoContactPermitted(): void
     {
-        $creator = Creator::new()->setContactAllowed(ContactPermit::NO)
+        $creator = new Creator()->setContactAllowed(ContactPermit::NO)
             ->setWebsiteUrl('https://localhost/');
 
         $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_WEBSITE_0']);
@@ -28,7 +28,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 
     public function testEmailSentWhenContactPermitted(): void
     {
-        $creator = Creator::new()->setContactAllowed(ContactPermit::CORRECTIONS)
+        $creator = new Creator()->setContactAllowed(ContactPermit::CORRECTIONS)
             ->setWebsiteUrl('https://localhost/');
 
         $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_WEBSITE_0']);
@@ -38,7 +38,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 
     public function testRemovalOfAllImportantLinksHides(): void
     {
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setWebsiteUrl('https://localhost/')
             ->setCommissionsUrls(['https://localhost/'])
         ;
@@ -50,7 +50,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 
     public function testImportantLinksLeftDoNotHide(): void
     {
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setWebsiteUrl('https://localhost/')
             ->setCommissionsUrls(['https://localhost/'])
         ;
@@ -63,12 +63,12 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
     public function testNoRemovedUrlsThrowException(): void
     {
         self::expectException(InvalidArgumentException::class);
-        UrlRemovalService::getRemovalDataFor(Creator::new(), []);
+        UrlRemovalService::getRemovalDataFor(new Creator(), []);
     }
 
     public function testUnknownUrlIdThrowException(): void
     {
-        $creator = Creator::new()->setWebsiteUrl('https://localhost/');
+        $creator = new Creator()->setWebsiteUrl('https://localhost/');
 
         self::expectException(InvalidArgumentException::class);
         UrlRemovalService::getRemovalDataFor($creator, ['WRONG']);
@@ -76,7 +76,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 
     public function testRemovedAndRemainingAreCalculatedProperly(): void
     {
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setWebsiteUrl('https://localhost/main')
             ->setCommissionsUrls(['https://com1.example.com/', 'https://com2.example.com/'])
             ->setPricesUrls(['https://prc1.example.com/', 'https://prc2.example.com/'])

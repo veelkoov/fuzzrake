@@ -17,7 +17,7 @@ class StrategiesTest extends TestCase
 {
     public function testTwitterProfileStrategyIsNotUsedForCookieInitUrl(): void
     {
-        $subject = Strategies::getFor((new TwitterProfileStrategy())->getCookieInitUrl()->getUrl());
+        $subject = Strategies::getFor(new TwitterProfileStrategy()->getCookieInitUrl()->getUrl());
 
         self::assertNull($subject->getCookieInitUrl());
     }

@@ -28,9 +28,9 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
      */
     public function testWorkingWithMinors(): void
     {
-        $a1 = Creator::new()->setCreatorId('M000001')->setWorksWithMinors(false);
-        $a2 = Creator::new()->setCreatorId('M000002')->setWorksWithMinors(true);
-        $a3 = Creator::new()->setCreatorId('M000003');
+        $a1 = new Creator()->setCreatorId('M000001')->setWorksWithMinors(false);
+        $a2 = new Creator()->setCreatorId('M000002')->setWorksWithMinors(true);
+        $a3 = new Creator()->setCreatorId('M000003');
 
         foreach ([$a1, $a2, $a3] as $a) {
             $a->setNsfwSocial(false)->setNsfwWebsite(false)->setDoesNsfw(false);
@@ -49,13 +49,13 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
     public function testWantsSfw(): void
     {
-        $a1 = Creator::new()->setCreatorId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
-        $a2 = Creator::new()->setCreatorId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
-        $a3 = Creator::new()->setCreatorId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
-        $a4 = Creator::new()->setCreatorId('M000004')->setNsfwWebsite(true)->setNsfwSocial(true);
-        $a5 = Creator::new()->setCreatorId('M000005')->setNsfwWebsite(true);
-        $a6 = Creator::new()->setCreatorId('M000006')->setNsfwSocial(true);
-        $a7 = Creator::new()->setCreatorId('M000007');
+        $a1 = new Creator()->setCreatorId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
+        $a2 = new Creator()->setCreatorId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
+        $a3 = new Creator()->setCreatorId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
+        $a4 = new Creator()->setCreatorId('M000004')->setNsfwWebsite(true)->setNsfwSocial(true);
+        $a5 = new Creator()->setCreatorId('M000005')->setNsfwWebsite(true);
+        $a6 = new Creator()->setCreatorId('M000006')->setNsfwSocial(true);
+        $a7 = new Creator()->setCreatorId('M000007');
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
@@ -93,7 +93,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         int $expectedFirst, int $expectedLast): void
     {
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
-            self::persist(Creator::new()
+            self::persist(new Creator()
                 ->setName(sprintf('%03d', $i)) // For sorting
                 ->setCity("$i") // For easy number access
             );

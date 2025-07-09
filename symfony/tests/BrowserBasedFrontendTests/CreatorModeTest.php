@@ -58,15 +58,15 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         // Expect: text search works properly even in creator mode
 
         $this->clearTypeInTextSearch('NSFW');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
         $this->assertCreatorsVisibility(['TEST001'], ['TEST002']);
 
         $this->clearTypeInTextSearch('WWM');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
         $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
 
         $this->clearTypeInTextSearch('Creator');
-        self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
         $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
 
         // Action: click re-enable filters button

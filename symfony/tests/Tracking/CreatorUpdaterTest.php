@@ -46,7 +46,7 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
     {
         self::mockTime();
 
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setCreatorId('TEST001')
             ->setOpenFor(['Pancakes', 'Pizza'])
             ->setClosedFor(['Cheddar'])
@@ -116,7 +116,7 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
     {
         self::mockTime();
 
-        $creator = Creator::new()
+        $creator = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Creator w/event test')
             ->setOpenFor(['Pancakes'])

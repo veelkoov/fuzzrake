@@ -27,7 +27,7 @@ trait FilesystemTrait
     protected function cleanupTemporaryDirectory(): void
     {
         if (self::SAFE_DEFAULT_VALUE !== $this->testsTempDir) {
-            (new Filesystem())->remove($this->testsTempDir);
+            new Filesystem()->remove($this->testsTempDir);
         }
     }
 

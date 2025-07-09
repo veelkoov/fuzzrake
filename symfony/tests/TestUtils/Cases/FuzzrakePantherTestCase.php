@@ -66,7 +66,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         }
     }
 
-    protected static function assertVisible(string $locator, string $message = null): void
+    protected static function assertVisible(string $locator, ?string $message = null): void
     {
         $exception = null;
 
@@ -79,7 +79,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
         self::assertNull($exception, $message ?? "Element '$locator' is not visible.");
     }
 
-    protected static function assertInvisible(string $locator, string $message = null): void
+    protected static function assertInvisible(string $locator, ?string $message = null): void
     {
         $exception = null;
 

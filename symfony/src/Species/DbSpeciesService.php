@@ -47,7 +47,7 @@ final class DbSpeciesService
         foreach ($missingSpecieNames as $specieName) {
             $this->logger->info("Creating '$specieName' specie...");
 
-            $specieEntity = (new Specie())->setName($specieName);
+            $specieEntity = new Specie()->setName($specieName);
             $this->entityManager->persist($specieEntity);
 
             $this->getNameToSpecie()->set($specieName, $specieEntity);

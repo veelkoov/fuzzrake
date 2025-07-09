@@ -21,7 +21,7 @@ final class FieldsData
     {
         self::$fields = [];
 
-        foreach ((new ReflectionEnum(Field::class))->getCases() as $case) {
+        foreach (new ReflectionEnum(Field::class)->getCases() as $case) {
             foreach ($case->getAttributes() as $attribute) {
                 /** @var Properties $data */
                 $data = $attribute->newInstance();

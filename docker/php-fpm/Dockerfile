@@ -1,4 +1,4 @@
-FROM php:8.3.14-fpm-alpine3.19
+FROM php:8.4.10-fpm-alpine3.22
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
@@ -74,3 +74,5 @@ ENV COMPOSER_HOME=/var/www/html/var/composer
 
 ENV PANTHER_CHROME_DRIVER_BINARY=/usr/lib/chromium/chromedriver
 ENV PANTHER_NO_SANDBOX=1
+ENV CHROME_CONFIG_HOME=/tmp/chromium-config-home
+ENV CHROME_USER_DATA_DIR=/tmp/chromium-user-data

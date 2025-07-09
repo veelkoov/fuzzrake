@@ -31,7 +31,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
         $updaterMock = $this->createMock(MiniaturesUpdater::class);
         $updaterMock->expects(self::once())->method('updateCreatorMiniaturesFor')
             ->willReturnCallback(function (Creator $creator, bool $force) use ($creatorE) {
-                self::assertSame($creatorE, $creator->getCreator());
+                self::assertSame($creatorE, $creator->entity);
                 self::assertTrue($force, 'Force should be true for a single-creator update.');
             });
 
@@ -53,10 +53,10 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
         // Expect that the update method gets called for all creators in the repository.
         $updaterMock->expects(self::exactly($creators->count()))->method('updateCreatorMiniaturesFor')
             ->willReturnCallback(function (Creator $creator, bool $force) use ($creators) {
-                self::assertTrue($creators->contains($creator->getCreator()));
+                self::assertTrue($creators->contains($creator->entity));
                 self::assertFalse($force, 'Force should be false for an all-creators update.');
 
-                $creators->remove($creator->getCreator());
+                $creators->remove($creator->entity);
             });
 
         $subject = $this->getSubject($creatorRepositoryMock, $updaterMock);

@@ -19,8 +19,8 @@ final class SmartUrlAccessor
      */
     public static function getObjects(Creator $creator, string $type): array
     {
-        return Vec\filter($creator->getCreator()->getUrls(),
-            fn (ItemType $url): bool => $url->getType() === $type);
+        return Vec\filter($creator->entity->getUrls(),
+            static fn (ItemType $url): bool => $url->getType() === $type);
     }
 
     /**
@@ -28,7 +28,7 @@ final class SmartUrlAccessor
      */
     public static function getList(Creator $creator, string $type): array
     {
-        return array_map(fn (ItemType $item) => $item->getUrl(), self::getObjects($creator, $type));
+        return array_map(static fn (ItemType $item) => $item->getUrl(), self::getObjects($creator, $type));
     }
 
     /**
@@ -41,7 +41,7 @@ final class SmartUrlAccessor
 
         foreach ($existingObjects as $existingObject) {
             if (!in_array($existingObject->getUrl(), $newUrls, true)) {
-                $creator->getCreator()->removeUrl($existingObject);
+                $creator->entity->removeUrl($existingObject);
             }
         }
 
@@ -49,9 +49,9 @@ final class SmartUrlAccessor
 
         foreach ($newUrls as $newValue) {
             if (!in_array($newValue, $existingValues, true)) {
-                $newObject = (new ItemType())->setType($type)->setUrl($newValue);
+                $newObject = new ItemType()->setType($type)->setUrl($newValue);
 
-                $creator->getCreator()->addUrl($newObject);
+                $creator->entity->addUrl($newObject);
             }
         }
     }

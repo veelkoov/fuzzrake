@@ -44,14 +44,14 @@ class CreatorUpdater
 
     private function createEvent(Creator $old, Creator $new, bool $hasEncounteredIssues): void
     {
-        $nowOpenFor = (new StringList($new->getOpenFor()))->minusAll($old->getOpenFor());
-        $nowLongerOpenFor = (new StringList($old->getOpenFor()))->minusAll($new->getOpenFor());
+        $nowOpenFor = new StringList($new->getOpenFor())->minusAll($old->getOpenFor());
+        $nowLongerOpenFor = new StringList($old->getOpenFor())->minusAll($new->getOpenFor());
 
         if ($nowOpenFor->isEmpty() && $nowLongerOpenFor->isEmpty()) {
             return;
         }
 
-        $event = (new Event())
+        $event = new Event()
             ->setCheckedUrls(PackedStringList::pack($new->getCommissionsUrls()))
             ->setNowOpenFor(PackedStringList::pack($nowOpenFor->getValuesArray()))
             ->setNoLongerOpenFor(PackedStringList::pack($nowLongerOpenFor->getValuesArray()))

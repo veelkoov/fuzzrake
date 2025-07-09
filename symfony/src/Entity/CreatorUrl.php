@@ -89,7 +89,7 @@ class CreatorUrl implements Stringable, Url
 
     public function getState(): CreatorUrlState
     {
-        return $this->state ?? $this->state = (new CreatorUrlState())->setUrl($this);
+        return $this->state ?? $this->state = new CreatorUrlState()->setUrl($this);
     }
 
     public function setState(CreatorUrlState $state): self

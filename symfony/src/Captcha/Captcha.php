@@ -101,7 +101,7 @@ class Captcha
      */
     private static function getCaptchaField(FormInterface $form): FormInterface
     {
-        return (new DList($form))->filter(self::isCaptchaType(...))->single();
+        return new DList($form)->filter(self::isCaptchaType(...))->single();
     }
 
     /**
