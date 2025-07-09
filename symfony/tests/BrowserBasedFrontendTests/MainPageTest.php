@@ -112,7 +112,7 @@ class MainPageTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * If only I was competent enough to be able to fix this test properly.
+     * If only I was competent enough to be able to fix this test properly. grep-code-dumb-workarounds-in-tests.
      *
      * @throws Exception
      */
@@ -187,7 +187,7 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->waitExpectLoadedCreatorsTable(1, 1);
 
-        usleep(500_000); // Lame
+        usleep(500_000); // Lame grep-code-dumb-workarounds-in-tests
         self::$client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1, true);
 
