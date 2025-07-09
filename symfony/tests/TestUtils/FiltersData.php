@@ -11,7 +11,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use Psl\Dict;
-use Psl\Iter;
 use Psl\Vec;
 
 class FiltersData
@@ -32,16 +31,16 @@ class FiltersData
 
         $species = Dict\from_keys(
             self::getSpecieNamesFrom($creators),
-            fn (string $name) => (new Specie())->setName($name),
+            fn (string $name) => new Specie()->setName($name),
         );
 
         $creatorSpecies = [];
 
         foreach ($creators as $creator) {
             $creatorSpecies = [...$creatorSpecies, ...Vec\map($creator->getSpeciesDoes(),
-                fn (string $name) => (new CreatorSpecie())
+                static fn (string $name) => new CreatorSpecie()
                     ->setSpecie($species[$name])
-                    ->setCreator($creator->getCreator()),
+                    ->setCreator($creator->entity),
             )];
         }
 
@@ -53,7 +52,7 @@ class FiltersData
      */
     private static function makeSureNoCreatorUsesSpeciesDoesnt(array $creators): void
     {
-        if (Iter\any($creators, fn (Creator $creator) => [] !== $creator->getSpeciesDoesnt())) {
+        if (array_any($creators, static fn (Creator $creator) => [] !== $creator->getSpeciesDoesnt())) {
             throw new InvalidArgumentException(self::class.' does not support resolving species. Creators cannot have "species doesn\'t" specified.');
         }
     }
@@ -65,6 +64,6 @@ class FiltersData
      */
     private static function getSpecieNamesFrom(array $creators): array
     {
-        return Lists::unique(array_merge(...Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes())));
+        return Lists::unique(array_merge(...Vec\map($creators, static fn (Creator $creator) => $creator->getSpeciesDoes())));
     }
 }

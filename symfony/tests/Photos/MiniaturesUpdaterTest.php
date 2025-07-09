@@ -41,7 +41,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testWhenPhotosCountEqualsMiniatureCountCreatorIsUnchangedWithoutForce(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['scritch_photo_1', 'scritch_photo_2'])
             ->setMiniatureUrls(['scritch_wrongMiniature_1', 'scritch_wrongMiniature_2']);
@@ -53,7 +53,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testWhenPhotosCountEqualsMiniatureCountCreatorIsUpdatedWithForce(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['scritch_photo_1', 'scritch_photo_2'])
             ->setMiniatureUrls(['scritch_wrongMiniature_1', 'scritch_wrongMiniature_2']);
@@ -65,7 +65,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testMiniaturesGetClearedWhenPhotosAreEmpty(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls([])
             ->setMiniatureUrls(['furtrack_obsoleteMiniature_1', 'furtrack_obsoleteMiniature_2']);
@@ -77,7 +77,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testNothingChangesWhenAtLeastOnePhotoIsUnsupported(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setMiniatureUrls([]);
 
@@ -94,7 +94,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testAddingMiniaturesWorksProperly(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['scritch_photo_1', 'furtrack_photo_2'])
             ->setMiniatureUrls([]);
@@ -106,7 +106,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testUpdatingMiniaturesWorksProperly(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['scritch_photo_1', 'furtrack_photo_2'])
             ->setMiniatureUrls(['furtrack_miniature_1', 'scritch_miniature_2']);
@@ -118,7 +118,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testReorderingMiniaturesWorksProperly(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['furtrack_photo_1', 'furtrack_photo_2'])
             ->setMiniatureUrls(['furtrack_miniature_2', 'furtrack_miniature_1']);
@@ -130,7 +130,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 
     public function testPhotosAreNotDeduplicatedToAvoidRefetchingDuringEachUpdate(): void
     {
-        $creator = (new Creator())
+        $creator = new Creator()
             ->setCreatorId('CREATOR')
             ->setPhotoUrls(['furtrack_photo_1', 'furtrack_photo_2', 'furtrack_photo_2'])
             ->setMiniatureUrls([]);

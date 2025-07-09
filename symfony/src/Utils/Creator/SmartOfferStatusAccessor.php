@@ -18,8 +18,8 @@ final class SmartOfferStatusAccessor
      */
     private static function getObjects(Creator $creator, bool $isOpen): array
     {
-        return Vec\filter($creator->getCreator()->getOfferStatuses(),
-            fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
+        return Vec\filter($creator->entity->getOfferStatuses(),
+            static fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
     }
 
     /**
@@ -27,7 +27,7 @@ final class SmartOfferStatusAccessor
      */
     public static function getList(Creator $creator, bool $isOpen): array
     {
-        return array_map(fn (ItemType $item) => $item->getOffer(), self::getObjects($creator, $isOpen));
+        return array_map(static fn (ItemType $item) => $item->getOffer(), self::getObjects($creator, $isOpen));
     }
 
     /**
@@ -39,7 +39,7 @@ final class SmartOfferStatusAccessor
 
         foreach ($existingObjects as $existingObject) {
             if (!in_array($existingObject->getOffer(), $newOffers, true)) {
-                $creator->getCreator()->removeOfferStatus($existingObject);
+                $creator->entity->removeOfferStatus($existingObject);
             }
         }
 
@@ -47,9 +47,9 @@ final class SmartOfferStatusAccessor
 
         foreach ($newOffers as $newValue) {
             if (!in_array($newValue, $existingValues, true)) {
-                $newObject = (new ItemType())->setIsOpen($isOpen)->setOffer($newValue);
+                $newObject = new ItemType()->setIsOpen($isOpen)->setOffer($newValue);
 
-                $creator->getCreator()->addOfferStatus($newObject);
+                $creator->entity->addOfferStatus($newObject);
             }
         }
     }

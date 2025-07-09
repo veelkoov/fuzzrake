@@ -22,11 +22,11 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 
     public function testUpdateMessageGetsSentAfterAddingPhotoUrl(): void
     {
-        $creatorUrl = (new CreatorUrl())
+        $creatorUrl = new CreatorUrl()
             ->setUrl('https://example.com/')
             ->setType(Field::URL_PHOTOS->value)
         ;
-        $creator = (new Creator())->addUrl($creatorUrl);
+        $creator = new Creator()->addUrl($creatorUrl);
 
         self::persistAndFlush($creator);
         $creatorId = $creator->getId();
@@ -79,11 +79,11 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 
     public function testNonPhotoUrlChangesAreIgnored(): void
     {
-        $creatorUrl = (new CreatorUrl())
+        $creatorUrl = new CreatorUrl()
             ->setUrl('https://example.com/initial')
             ->setType(Field::URL_WEBSITE->value)
         ;
-        $creator = (new Creator())->addUrl($creatorUrl);
+        $creator = new Creator()->addUrl($creatorUrl);
 
         self::persistAndFlush($creator);
 
@@ -96,15 +96,15 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
 
     public function testMessagesAreNotDuplicated(): void
     {
-        $creatorUrl1 = (new CreatorUrl())
+        $creatorUrl1 = new CreatorUrl()
             ->setUrl('https://example.com/url1')
             ->setType(Field::URL_PHOTOS->value)
         ;
-        $creatorUrl2 = (new CreatorUrl())
+        $creatorUrl2 = new CreatorUrl()
             ->setUrl('https://example.com/url2')
             ->setType(Field::URL_PHOTOS->value)
         ;
-        $creator = (new Creator())
+        $creator = new Creator()
             ->addUrl($creatorUrl1)
             ->addUrl($creatorUrl2)
         ;

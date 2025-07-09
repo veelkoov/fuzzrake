@@ -11,6 +11,6 @@ trait CacheTrait
 {
     protected function clearCache(): void
     {
-        (new Filesystem())->remove(Paths::getCachePoolsDir());
+        new Filesystem()->remove(Paths::getCachePoolsDir());
     }
 }

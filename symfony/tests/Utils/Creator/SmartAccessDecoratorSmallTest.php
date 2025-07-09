@@ -19,7 +19,7 @@ class SmartAccessDecoratorSmallTest extends TestCase
      */
     public function testEquals(): void
     {
-        $subject1 = Creator::new()
+        $subject1 = new Creator()
             ->setIntro('Same intro')
             ->setCity('Oulu')
             ->setDateAdded(UtcClock::at('2022-09-23 11:46:11'))
@@ -28,7 +28,7 @@ class SmartAccessDecoratorSmallTest extends TestCase
             ->setOtherStyles(['qwer', 'asdf', 'zxcv'])
         ;
 
-        $subject2 = Creator::new()
+        $subject2 = new Creator()
             ->setIntro('Same intro')
             ->setCity('Kuopio')
             ->setDateAdded(UtcClock::at('2022-09-23 11:46:11'))

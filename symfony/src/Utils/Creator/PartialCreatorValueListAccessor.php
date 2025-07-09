@@ -21,7 +21,7 @@ final class PartialCreatorValueListAccessor
     {
         return Vec\map(
             self::getObjects($creator, $field),
-            fn (CreatorValue $value): string => $value->getValue(),
+            static fn (CreatorValue $value): string => $value->getValue(),
         );
     }
 
@@ -31,8 +31,8 @@ final class PartialCreatorValueListAccessor
     private static function getObjects(Creator $creator, Field $field): array
     {
         return Vec\filter(
-            $creator->getCreator()->getValues(),
-            fn (CreatorValue $value): bool => $value->getFieldName() === $field->value,
+            $creator->entity->getValues(),
+            static fn (CreatorValue $value): bool => $value->getFieldName() === $field->value,
         );
     }
 
@@ -46,8 +46,8 @@ final class PartialCreatorValueListAccessor
         $howManyNewToCreate = count($values) - count($existing);
 
         for ($i = 0; $i < $howManyNewToCreate; ++$i) {
-            $newValue = (new CreatorValue())->setFieldName($field->value);
-            $creator->getCreator()->addValue($newValue);
+            $newValue = new CreatorValue()->setFieldName($field->value);
+            $creator->entity->addValue($newValue);
 
             $existing[] = $newValue;
         }
@@ -62,7 +62,7 @@ final class PartialCreatorValueListAccessor
         $lastToRemoveIdx = count($existing) - 1;
 
         for ($i = $firstToRemoveIdx; $i <= $lastToRemoveIdx; ++$i) {
-            $creator->getCreator()->removeValue($existing[$i]);
+            $creator->entity->removeValue($existing[$i]);
         }
     }
 }

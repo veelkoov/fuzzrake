@@ -43,7 +43,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
     {
         return TestDataProvider::tuples(
             [
-                (new Event())
+                new Event()
                     ->setCreatorName('Creator name 1')
                     ->setCheckedUrls('https://getfursu.it/page1.html')
                     ->setType(Event::TYPE_CS_UPDATED)
@@ -58,7 +58,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
                 <a href="https://getfursu.it/page1.html" target="_blank">getfursu.it/page1.html</a>.',
             ],
             [
-                (new Event())
+                new Event()
                     ->setCreatorName('Creator name 2')
                     ->setCheckedUrls("https://getfursu.it/page2.html\nhttps://another.page/")
                     ->setType(Event::TYPE_CS_UPDATED)
@@ -72,7 +72,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
                 <a href="https://another.page/" target="_blank">another.page</a>.',
             ],
             [
-                (new Event())
+                new Event()
                     ->setCreatorName('One more creator')
                     ->setCheckedUrls('http://just-one-website/doc.php')
                     ->setType(Event::TYPE_CS_UPDATED)
@@ -106,12 +106,12 @@ class EventsControllerTest extends FuzzrakeWebTestCase
         $older = UtcClock::time() - $fourDaysInSeconds - 1;
         $younger = UtcClock::time() - $fourDaysInSeconds + 1;
 
-        $eventVisible = (new Event())
+        $eventVisible = new Event()
             ->setType(Event::TYPE_GENERIC)
             ->setDescription('I should be visible in the Atom feed')
             ->setTimestamp(UtcClock::at("@$younger"));
 
-        $eventHidden = (new Event())
+        $eventHidden = new Event()
             ->setType(Event::TYPE_GENERIC)
             ->setDescription('I should not appear in the Atom feed')
             ->setTimestamp(UtcClock::at("@$older"));

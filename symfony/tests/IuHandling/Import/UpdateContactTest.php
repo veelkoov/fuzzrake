@@ -68,7 +68,7 @@ class UpdateContactTest extends FuzzrakeTestCase
     private function getUpdateContactPermit(?ContactPermit $old, ContactPermit $new): UpdateContact
     {
         $oldA = null === $old ? new Creator() : self::getPersistedCreatorMock()->setContactAllowed($old);
-        $newA = Creator::new()->setContactAllowed($new);
+        $newA = new Creator()->setContactAllowed($new);
 
         return UpdateContact::from($oldA, $newA);
     }
@@ -77,7 +77,7 @@ class UpdateContactTest extends FuzzrakeTestCase
     {
         $oldA = null === $oldAddress ? new Creator() : self::getPersistedCreatorMock()->setEmailAddress($oldAddress)
             ->setContactAllowed('' === $oldAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
-        $newA = Creator::new()->setEmailAddress($newAddress)
+        $newA = new Creator()->setEmailAddress($newAddress)
             ->setContactAllowed('' === $newAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
 
         return UpdateContact::from($oldA, $newA);

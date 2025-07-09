@@ -28,7 +28,7 @@ class EmailService
         string $recipient = '',
         string $attachedJsonData = '',
     ): void {
-        $email = (new Email())
+        $email = new Email()
             ->from($this->contactEmail)
             ->subject($subject)
             ->text($contents)

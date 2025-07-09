@@ -13,19 +13,21 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Large]
 class IuFormTest extends FuzzrakePantherTestCase
 {
-    public static function passwordCheckBoxesDataProvider(): TestDataProvider
+    /**
+     * @return list<array{?ContactPermit, ContactPermit, bool, bool}>
+     */
+    public static function passwordCheckBoxesDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [null,                    ContactPermit::FEEDBACK, false, false],
             [ContactPermit::FEEDBACK, ContactPermit::FEEDBACK, true,  false],
             [ContactPermit::NO,       ContactPermit::FEEDBACK, true,  true],
             [ContactPermit::FEEDBACK, ContactPermit::NO,       true,  true],
-        );
+        ];
     }
 
     /**

@@ -80,7 +80,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
             $name .= ' '.$this->descBool($doesNsfw, 'nsfw');
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
-            $creators[$creatorId] = (new Creator())
+            $creators[$creatorId] = new Creator()
                 ->setCreatorId($creatorId)
                 ->setName($name)
                 ->setAges($ages)

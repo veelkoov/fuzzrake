@@ -19,7 +19,7 @@ class CreatorMediumTest extends FuzzrakeKernelTestCase
     public function testPersistingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
-            (new SmartAccessDecorator())
+            new SmartAccessDecorator()
                 ->setCreatorId('TEST001')
                 ->setDoesNsfw(true)
                 ->setNsfwWebsite(true)
@@ -40,7 +40,7 @@ class CreatorMediumTest extends FuzzrakeKernelTestCase
     public function testUpdatingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
-            (new SmartAccessDecorator())
+            new SmartAccessDecorator()
                 ->setCreatorId('TEST001')
                 ->setDoesNsfw(false)
                 ->setNsfwWebsite(false)

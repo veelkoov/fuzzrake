@@ -81,7 +81,7 @@ trait ContainerTrait
 
     protected static function addSimpleGenericEvent(): Event
     {
-        $event = (new Event())
+        $event = new Event()
             ->setDescription('Test event')
         ;
 
@@ -95,7 +95,7 @@ trait ContainerTrait
         string $creatorId = 'TEST000',
         string $country = 'CZ',
         string $password = '',
-        ContactPermit $contactAllowed = null,
+        ?ContactPermit $contactAllowed = null,
         ?Ages $ages = null,
         ?bool $nsfwWebsite = null,
         ?bool $nsfwSocial = null,
@@ -103,7 +103,7 @@ trait ContainerTrait
         ?bool $worksWithMinors = null,
         ?string $emailAddress = null,
     ): Creator {
-        $result = (new Creator())
+        $result = new Creator()
             ->setName($name)
             ->setCreatorId($creatorId)
             ->setCountry($country);
