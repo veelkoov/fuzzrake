@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class CompletenessCalcTest extends TestCase
@@ -49,14 +48,17 @@ class CompletenessCalcTest extends TestCase
         self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    public static function justRequiredGive50DataProvider(): TestDataProvider
+    /**
+     * @return list<array{Ages, bool, bool, ?bool, ?bool}>
+     */
+    public static function justRequiredGive50DataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],
             [Ages::MINORS, false, true,  null,  null],
-        );
+        ];
     }
 
     public function testAllNonRequiredAndAllButOneRequiredCantGetPast50(): void

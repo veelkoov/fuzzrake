@@ -13,14 +13,17 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\Json;
 use Exception;
-use Psl\File;
+use Symfony\Component\Filesystem\Filesystem;
 use UnexpectedValueException;
 
 class JsonCreatorDataLoader
 {
+    private readonly Filesystem $filesystem;
+
     public function __construct(
         private readonly string $subdir,
     ) {
+        $this->filesystem = new Filesystem();
     }
 
     final public const array FIELDS_NOT_IN_TEST_DATA = [ // Fields which are not loaded from JSON, they are not impacted by import
@@ -46,7 +49,7 @@ class JsonCreatorDataLoader
         /**
          * @var array<string, list<string>|string|bool|null> $data
          */
-        $data = Json::decode(File\read(Paths::getTestDataPath($fileName)));
+        $data = Json::decode($this->filesystem->readFile(Paths::getTestDataPath($fileName)));
 
         $result = new Creator();
 

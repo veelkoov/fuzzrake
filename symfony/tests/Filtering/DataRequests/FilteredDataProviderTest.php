@@ -14,10 +14,8 @@ use App\Utils\Parse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Psl\Iter;
-use Psl\Str;
 use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 use Veelkoov\Debris\StringSet;
 
 #[Medium]
@@ -68,11 +66,14 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         self::assertSame('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
     }
 
-    public static function paginatedResultsDataProvider(): TestDataProvider
+    /**
+     * @return list<array{int, int, int, int, int}>
+     */
+    public static function paginatedResultsDataProvider(): array
     {
         // Page size is 25
 
-        return TestDataProvider::tuples(
+        return [
             [0,  1, 1, 1,  0,  0],
             [1,  1, 1, 1,  1,  1],
             [25, 1, 1, 1,  1, 25],
@@ -85,7 +86,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
             [0,  2, 1, 1,  0,  0],
             [26, 3, 2, 2, 26, 26],
             [26, 5, 2, 2, 26, 26],
-        );
+        ];
     }
 
     #[DataProvider('paginatedResultsDataProvider')]
@@ -125,6 +126,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     {
         $creatorIds = Vec\map($pageData->items, fn (Creator $creator) => $creator->getCreatorId());
 
-        return Str\join(Vec\sort($creatorIds), ', ');
+        return implode(', ', Vec\sort($creatorIds));
     }
 }

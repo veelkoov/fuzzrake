@@ -11,7 +11,6 @@ use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class EventsControllerTest extends FuzzrakeWebTestCase
@@ -38,10 +37,12 @@ class EventsControllerTest extends FuzzrakeWebTestCase
         self::assertEqualsIgnoringWhitespace($expectedHtml, $actualHtml);
     }
 
-    /** @noinspection HtmlUnknownTarget */
-    public static function eventDescriptionDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Event, string}>
+     */
+    public static function eventDescriptionDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [
                 new Event()
                     ->setCreatorName('Creator name 1')
@@ -85,7 +86,7 @@ class EventsControllerTest extends FuzzrakeWebTestCase
                 Checked contents of:
                 <a href="http://just-one-website/doc.php" target="_blank">just-one-website/doc.php</a>.',
             ],
-        );
+        ];
     }
 
     public function testAtomFeedLoadsWithoutAnyEvents(): void

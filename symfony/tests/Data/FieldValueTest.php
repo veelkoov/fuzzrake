@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Throwable;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class FieldValueTest extends TestCase
@@ -31,11 +30,14 @@ class FieldValueTest extends TestCase
         FieldValue::validateType($field, $value);
     }
 
-    public static function validateTypeDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Field, mixed, bool}>
+     */
+    public static function validateTypeDataProvider(): array
     {
         $date = new DateTimeImmutable();
 
-        return TestDataProvider::tuples(
+        return [
             [Field::NAME, null,     false],
             [Field::NAME, '',       true],
             [Field::NAME, 'Name',   true],
@@ -73,7 +75,7 @@ class FieldValueTest extends TestCase
             [Field::CONTACT_ALLOWED, ContactPermit::NO,        true],
             [Field::CONTACT_ALLOWED, ContactPermit::NO->value, false],
             [Field::CONTACT_ALLOWED, [ContactPermit::NO],      false],
-        );
+        ];
     }
 
     /**
@@ -89,11 +91,14 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::fromString($field, $value));
     }
 
-    public static function fromStringDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Field, string, Throwable|list<string>|string|bool}>
+     */
+    public static function fromStringDataProvider(): array
     {
         $iae = new InvalidArgumentException();
 
-        return TestDataProvider::tuples(
+        return [
             [Field::NAME, '', ''],
             [Field::NAME, 'OK', 'OK'],
 
@@ -109,7 +114,7 @@ class FieldValueTest extends TestCase
             [Field::DATE_UPDATED, '', $iae], // Not supported yet
             [Field::AGES, '', $iae], // Not supported yet
             [Field::CONTACT_ALLOWED, '', $iae], // Not supported yet
-        );
+        ];
     }
 
     #[DataProvider('isProvidedDataProvider')]
@@ -122,12 +127,15 @@ class FieldValueTest extends TestCase
         self::assertEquals($expected, FieldValue::isProvided($field, $value));
     }
 
-    public static function isProvidedDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Field, mixed, Throwable|bool}>
+     */
+    public static function isProvidedDataProvider(): array
     {
         $iae = new InvalidArgumentException();
         $date = new DateTimeImmutable();
 
-        return TestDataProvider::tuples(
+        return [
             [Field::NAME, null,     $iae],
             [Field::NAME, '',       false],
             [Field::NAME, 'Name',   true],
@@ -162,6 +170,6 @@ class FieldValueTest extends TestCase
             [Field::CONTACT_ALLOWED, ContactPermit::NO,        true],
             [Field::CONTACT_ALLOWED, ContactPermit::NO->value, $iae],
             [Field::CONTACT_ALLOWED, [ContactPermit::NO],      $iae],
-        );
+        ];
     }
 }

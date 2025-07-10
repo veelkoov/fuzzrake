@@ -12,7 +12,6 @@ use App\Utils\Collections\StringList;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 use Veelkoov\Debris\StringSet;
 
 #[Small]
@@ -105,14 +104,17 @@ class CreatorSpeciesResolverTest extends TestCase
         return $species;
     }
 
-    public static function getOrderedDoesDoesntSpeciesDataProvider(): TestDataProvider
+    /**
+     * @return list<array{StringList, StringList, string}>
+     */
+    public static function getOrderedDoesDoesntSpeciesDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [StringList::of('A', 'C'), StringList::of('B', 'D'), '+A -B +C -D'],
             [StringList::of('C', 'A'), StringList::of('D', 'B'), '+A -B +C -D'],
             [StringList::of('B', 'D'), StringList::of('A', 'C'), '-A +B -C +D'],
             [StringList::of('D', 'B'), StringList::of('C', 'A'), '-A +B -C +D'],
-        );
+        ];
     }
 
     #[DataProvider('getOrderedDoesDoesntSpeciesDataProvider')]
@@ -169,9 +171,12 @@ class CreatorSpeciesResolverTest extends TestCase
         return $species;
     }
 
-    public static function resolveDoesDataProvider(): TestDataProvider
+    /**
+     * @return list<array{StringList, StringList, StringList}>
+     */
+    public static function resolveDoesDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [new StringList(),                       new StringList(),                          new StringList()],
             [StringList::of('Mammals', 'Corgis'),    StringList::of('Canines', 'With antlers'), StringList::of('Mammals', 'Corgis')],
             [StringList::of('Mammals'),              StringList::of('With antlers', 'Dogs'),    StringList::of('Mammals', 'Canines', 'Wolves')],
@@ -180,7 +185,7 @@ class CreatorSpeciesResolverTest extends TestCase
             [StringList::of('Dogs', 'With antlers'), StringList::of('Deers'),                   StringList::of('With antlers', 'Dogs', 'Corgis', 'Dalmatians')],
             [StringList::of('Dogs', 'Pancakes'),     StringList::of(''),                        StringList::of('Other', 'Dogs', 'Corgis', 'Dalmatians')],
             [StringList::of('Dogs', 'Other'),        StringList::of('Dalmatians'),              StringList::of('Other', 'Dogs', 'Corgis')],
-        );
+        ];
     }
 
     #[DataProvider('resolveDoesDataProvider')]
@@ -193,14 +198,17 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEqualsCanonicalizing($expected->getValuesArray(), $result->getValuesArray());
     }
 
-    public static function resolveForFiltersDataProvider(): TestDataProvider
+    /**
+     * @return list<array{StringSet, StringSet}>
+     */
+    public static function resolveForFiltersDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [new StringSet(), new StringSet()],
             [StringSet::of('Deers'),        StringSet::of('Deers', 'With antlers', 'Most species', 'Mammals')],
             [StringSet::of('With antlers'), StringSet::of('With antlers', 'Most species')],
             [StringSet::of('Other'),        StringSet::of('Other')],
-        );
+        ];
     }
 
     #[DataProvider('resolveForFiltersDataProvider')]

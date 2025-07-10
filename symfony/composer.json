@@ -68,7 +68,6 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0.1",
         "phpunit/phpunit": "^12.1",
-        "rawr/phpunit-data-provider": "^3.0",
         "rector/rector": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",

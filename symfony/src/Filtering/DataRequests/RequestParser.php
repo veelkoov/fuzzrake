@@ -8,9 +8,9 @@ use Psl\Dict;
 use Psl\Iter;
 use Psl\Type;
 use Symfony\Component\HttpFoundation\Request;
-use Veelkoov\Debris\StringBoolMap;
+use Veelkoov\Debris\Maps\StringToBool;
+use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringSet;
-use Veelkoov\Debris\StringStringMap;
 
 class RequestParser
 {
@@ -87,13 +87,13 @@ class RequestParser
         return $dataShape->coerce($result);
     }
 
-    private static function getBooleansFromRequest(Request $request): StringBoolMap
+    private static function getBooleansFromRequest(Request $request): StringToBool
     {
-        return StringBoolMap::fromKeys(self::BOOLEANS, static fn ($reqKey) => $request->query->getBoolean($reqKey, false));
+        return StringToBool::fromKeys(self::BOOLEANS, static fn ($reqKey) => $request->query->getBoolean($reqKey, false));
     }
 
-    private static function getStringsFromRequest(Request $request): StringStringMap
+    private static function getStringsFromRequest(Request $request): StringToString
     {
-        return StringStringMap::fromKeys(self::STRINGS, static fn ($reqKey) => $request->query->get($reqKey, ''));
+        return StringToString::fromKeys(self::STRINGS, static fn ($reqKey) => $request->query->get($reqKey, ''));
     }
 }

@@ -8,7 +8,6 @@ use App\Utils\Pagination\Pagination;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class PaginationTest extends TestCase
@@ -24,11 +23,14 @@ class PaginationTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
-    public static function getPaginationPagesDataProvider(): TestDataProvider
+    /**
+     * @return list<array{int, int, list<int>}>
+     */
+    public static function getPaginationPagesDataProvider(): array
     {
         // TOTAL PAGES, CURRENT PAGE, EXPECTED PAGINATOR PAGES
         // Supposed to return: current, +1, -1, +2, -2, first and last
-        return TestDataProvider::tuples(
+        return [
             [0, 0, []],
 
             [1, 1, [1]],
@@ -84,6 +86,6 @@ class PaginationTest extends TestCase
             [9, 7, [1, 5, 6, 7, 8, 9]],
             [9, 8, [1, 6, 7, 8, 9]],
             [9, 9, [1, 7, 8, 9]],
-        );
+        ];
     }
 }
