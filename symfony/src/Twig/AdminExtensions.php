@@ -9,10 +9,8 @@ use App\Data\Definitions\Fields\SecureValues;
 use App\Entity\Creator as CreatorE;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
-use App\Utils\Regexp\Patterns;
 use App\Utils\StrUtils;
-use Psl\Iter;
-use TRegx\CleanRegex\Match\Detail;
+use Composer\Pcre\Preg;
 use Twig\Attribute\AsTwigFilter;
 
 class AdminExtensions
@@ -61,7 +59,7 @@ class AdminExtensions
         $otherItems = $other->getStringList($field);
 
         foreach ($subjectItems as $item) {
-            $itemClass = Iter\contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
+            $itemClass = in_array($item, $otherItems, true) ? 'badge-outline-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
             $result .= " <span class=\"submission-list-item badge $itemClass\" title=\"$text\">$text</span> ";
@@ -85,37 +83,29 @@ class AdminExtensions
     #[AsTwigFilter('link_urls', isSafe: ['html'])]
     public function linkUrls(string $input): string
     {
-        $urls = Patterns::getI('(?<!title=")https?://[^ ,\n<>"]+');
-
-        return $urls->replace($input)->callback(function (Detail $detail): string {
-            $url = $detail->text();
-
-            return "<a href=\"$url\" target=\"_blank\">$url</a>";
-        });
+        return Preg::replace(
+            '#(?<!title=")https?://[^ ,\n<>"]+#i',
+            '<a href="$0" target="_blank">$0</a>',
+            $input,
+        );
     }
 
     #[AsTwigFilter('bluesky_at')]
     public function blueskyAt(string $blueskyUrl): string
     {
-        return Patterns::get('^https://[^/]+/profile/([^/#?]+).*')
-            ->replace($blueskyUrl)
-            ->withReferences('@$1');
+        return Preg::replace('#^https://[^/]+/profile/([^/\#?]+).*$#', '@$1', $blueskyUrl);
     }
 
     #[AsTwigFilter('mastodon_at')]
     public function mastodonAt(string $mastodonUrl): string
     {
-        return Patterns::get('^https://([^/]+)/([^/#?]+).*')
-            ->replace($mastodonUrl)
-            ->withReferences('$2@$1');
+        return Preg::replace('#^https://([^/]+)/([^/\#?]+).*$#', '$2@$1', $mastodonUrl);
     }
 
     #[AsTwigFilter('tumblr_at')]
-    public function tumblrAt(string $mastodonUrl): string
+    public function tumblrAt(string $tumblrUrl): string
     {
-        return Patterns::get('^https://www\.tumblr\.com/([^/#?]+).*')
-            ->replace($mastodonUrl)
-            ->withReferences('@$1 _FIX_');
+        return Preg::replace('#^https://www\.tumblr\.com/([^/\#?]+).*$#', '@$1 _FIX_', $tumblrUrl);
     }
 
     /**

@@ -10,7 +10,6 @@ use App\Data\FieldValue;
 use App\Utils\Creator\CreatorId;
 use App\Utils\FieldReadInterface;
 use Psl\Vec;
-use TRegx\CleanRegex\Pattern;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
@@ -246,9 +245,12 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
         return $this->getData()->modelName;
     }
 
-    public function validationPattern(): ?Pattern
+    /**
+     * @return ?non-empty-string
+     */
+    public function validationPattern(): ?string
     {
-        return $this->getData()->getValidationPattern();
+        return $this->getData()->validationPattern;
     }
 
     public function isList(): bool

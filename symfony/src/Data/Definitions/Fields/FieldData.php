@@ -4,31 +4,26 @@ declare(strict_types=1);
 
 namespace App\Data\Definitions\Fields;
 
-use TRegx\CleanRegex\Pattern;
-
-class FieldData
+readonly class FieldData
 {
-    private ?Pattern $validationPattern = null;
-    public readonly bool $isValidated;
+    public bool $isValidated;
 
+    /**
+     * @param ?non-empty-string $validationPattern
+     */
     public function __construct(
-        public readonly string $name,
-        public readonly string $modelName,
-        public readonly Type $type,
-        private readonly ?string $validationRegexp,
-        public readonly bool $isFreeForm,
-        public readonly bool $inStats,
-        public readonly bool $public,
-        public readonly bool $isInIuForm,
-        public readonly bool $isPersisted,
-        public readonly bool $affectedByIuForm,
-        public readonly bool $notInspectedUrl,
+        public string $name,
+        public string $modelName,
+        public Type $type,
+        public ?string $validationPattern,
+        public bool $isFreeForm,
+        public bool $inStats,
+        public bool $public,
+        public bool $isInIuForm,
+        public bool $isPersisted,
+        public bool $affectedByIuForm,
+        public bool $notInspectedUrl,
     ) {
-        $this->isValidated = null !== $this->validationRegexp;
-    }
-
-    public function getValidationPattern(): ?Pattern
-    {
-        return null === $this->validationRegexp ? null : ($this->validationPattern ??= pattern($this->validationRegexp, 'n'));
+        $this->isValidated = null !== $this->validationPattern;
     }
 }

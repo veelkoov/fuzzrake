@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
+use Composer\Pcre\Preg;
 use Override;
 
 class GenericValidator implements ValidatorInterface
@@ -14,6 +15,6 @@ class GenericValidator implements ValidatorInterface
     {
         $pattern = $field->validationPattern();
 
-        return null === $pattern || $pattern->test($subject);
+        return null === $pattern || Preg::isMatch($pattern, $subject);
     }
 }
