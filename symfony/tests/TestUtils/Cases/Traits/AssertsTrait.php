@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Utils\StrUtils;
+use Composer\Pcre\Preg;
 use DateTimeImmutable;
 
 trait AssertsTrait
 {
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
     {
-        $pattern = pattern('\s+');
-
-        $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
-        $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
+        $expectedHtml = trim(Preg::replace('#\s+#', ' ', $expectedHtml));
+        $actualHtml = trim(Preg::replace('#\s+#', ' ', $actualHtml));
 
         self::assertSame($expectedHtml, $actualHtml);
     }

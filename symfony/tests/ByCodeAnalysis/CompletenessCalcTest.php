@@ -9,23 +9,23 @@ use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use App\Utils\Creator\CompletenessCalc;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Composer\Pcre\Regex;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
-
-use function Psl\File\read;
 
 #[Small]
 class CompletenessCalcTest extends TestCase
 {
     public function testAllFieldsCovered(): void
     {
-        $contents = read(Paths::getCompletenessCalcClassPath());
+        $contents = new Filesystem()->readFile(Paths::getCompletenessCalcClassPath());
         $wrongCount = [];
 
         foreach (Fields::all() as $field) {
-            if (1 !== pattern('[ :]'.$field->value.'[,;).]')->count($contents)) {
+            if (1 !== Regex::matchAll('#[ :]'.$field->value.'[,;).]#', $contents)->count) {
                 $wrongCount[] = $field->value;
             }
         }

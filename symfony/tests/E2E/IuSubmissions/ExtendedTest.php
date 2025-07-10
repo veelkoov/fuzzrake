@@ -11,8 +11,9 @@ use App\Tests\TestUtils\JsonCreatorDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
-use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
+use Composer\Pcre\Preg;
+use Composer\Pcre\Regex;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Medium;
@@ -20,7 +21,6 @@ use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
-use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
@@ -261,14 +261,9 @@ class ExtendedTest extends IuSubmissionsTestCase
                 continue; // grep-default-auto-since-day-01
             }
 
-            $match = pattern('<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>', 's')->search($htmlBody);
-            self::assertCount(1, $match, "since/$sfName didn't match exactly once.");
-
-            try {
-                $matchedText = $match->first();
-            } catch (SubjectNotMatchedException $exception) {
-                throw new UnbelievableRuntimeException($exception);
-            }
+            $match = Regex::matchAllStrictGroups('#<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>#s', $htmlBody);
+            self::assertSame(1, $match->count, "since/$sfName didn't match exactly once.");
+            $matchedText = $match->matches[0][0];
 
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
@@ -305,31 +300,25 @@ class ExtendedTest extends IuSubmissionsTestCase
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
-            $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
-            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->value radio field was not present or (not) selected.");
+            $pattern = "#<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>#";
+            self::assertTrue(Preg::isMatch($pattern, $htmlBody), "$field->value radio field was not present or (not) selected.");
         }
     }
 
     private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
     {
         if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->search($htmlBody);
-            self::assertCount(1, $match);
+            $match = Regex::matchAllStrictGroups('#<input[^>]+name="iu_form\[password]"[^>]*>#', $htmlBody);
+            self::assertSame(1, $match->count);
 
-            try {
-                $textMatch = $match->first();
-
-                self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
-            } catch (SubjectNotMatchedException $exception) {
-                throw new UnbelievableRuntimeException($exception);
-            }
+            self::assertStringNotContainsStringIgnoringCase('value', $match->matches[0][0]); // Needle = attribute name
 
             if ('' !== $value) {
                 self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
             }
 
             foreach (password_algos() as $algorithm) { // grep-password-algorithms
-                self::assertFalse(pattern("\$$algorithm\$")->test($htmlBody));
+                self::assertFalse(Preg::isMatch("#\$$algorithm\$#", $htmlBody));
             }
         } else {
             if ('' !== $value) {

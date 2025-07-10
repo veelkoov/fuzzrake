@@ -4,22 +4,14 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use RuntimeException;
+use Composer\Pcre\Preg;
 use Symfony\Component\String\AbstractString;
 use Symfony\Component\String\UnicodeString;
-use TRegx\CleanRegex\Pattern;
-use TRegx\Exception\MalformedPatternException;
-use TRegx\SafeRegex\preg;
 use UnexpectedValueException;
 
 class StringBuffer
 {
     private AbstractString $buffer;
-
-    /**
-     * @var array<string, Pattern>
-     */
-    private array $terminatorPatternCache = [];
 
     public function __construct(string $buffer)
     {
@@ -28,7 +20,7 @@ class StringBuffer
 
     public function readUntil(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
-        return $this->readUntilRegexp(preg::quote($terminator), $trimWhitespaceAfterwards);
+        return $this->readUntilRegexp(preg_quote($terminator, '#'), $trimWhitespaceAfterwards);
     }
 
     public function readUntilEolOrEof(): string
@@ -65,13 +57,7 @@ class StringBuffer
 
     public function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
-        try {
-            $pattern = $this->terminatorPatternCache[$terminator] ??= pattern($terminator);
-
-            $parts = $pattern->splitStart($this->buffer->toString(), 1);
-        } catch (MalformedPatternException $exception) {
-            throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$exception->getMessage()}", $exception->getCode(), $exception);
-        }
+        $parts = @Preg::split("#$terminator#", $this->buffer->toString(), 2);
 
         if (count($parts) < 2) {
             throw new UnexpectedValueException("Unable to find '$terminator' in the remaining buffer '$this->buffer'");

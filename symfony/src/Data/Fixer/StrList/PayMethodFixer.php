@@ -24,7 +24,7 @@ final class PayMethodFixer extends AbstractListFixer
         private readonly GenericStringFixer $genericStringFixer,
     ) {
         $this->fixer = new ConfigurableStringFixer($paymentMethods);
-        $this->nsp = pattern('\([^)\n]+\)');
+        $this->nsp = Pattern::of('\([^)\n]+\)');
     }
 
     #[Override]

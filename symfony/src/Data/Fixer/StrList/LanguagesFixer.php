@@ -25,7 +25,7 @@ final class LanguagesFixer extends AbstractListFixer
         #[Autowire(param: 'languages')] array $languages,
         private readonly GenericStringFixer $genericStringFixer,
     ) {
-        $this->replacementPattern = pattern($languages['regexp'], 'i');
+        $this->replacementPattern = Pattern::of($languages['regexp'], 'i');
 
         $this->fixer = new ConfigurableStringFixer($languages);
     }
