@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataRequests;
 
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Pagination\Pagination;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\TestCase;
 
 #[Small]
-class PaginationTest extends TestCase
+class PaginationTest extends FuzzrakeTestCase
 {
     /**
      * @param list<int> $expected
@@ -20,7 +20,7 @@ class PaginationTest extends TestCase
     {
         $result = Pagination::getPaginationPages($currentPage, $totalPages);
 
-        self::assertEquals($expected, $result);
+        self::assertSameItems($expected, $result);
     }
 
     /**

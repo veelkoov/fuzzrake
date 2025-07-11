@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use InvalidArgumentException;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Type;
+use Psl\Type\Exception\CoercionException;
 use Symfony\Component\HttpFoundation\Request;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
@@ -84,7 +86,11 @@ class RequestParser
         $result = Dict\from_keys(self::ARRAYS, static fn ($reqKey) => $request->get($reqKey, []));
         $dataShape = Type\shape(Dict\from_keys(self::ARRAYS, static fn ($_) => Type\vec(Type\string())));
 
-        return $dataShape->coerce($result);
+        try {
+            return $dataShape->coerce($result);
+        } catch (CoercionException $exception) {
+            throw new InvalidArgumentException(previous: $exception);
+        }
     }
 
     private static function getBooleansFromRequest(Request $request): StringToBool

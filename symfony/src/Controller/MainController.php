@@ -13,7 +13,7 @@ use App\Service\DataService;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
-use Psl\Type\Exception\CoercionException;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +93,7 @@ class MainController extends AbstractController
                 'creators_page'        => $creatorsPage,
                 'searched_creator_id'  => $searchedCreatorId,
             ]);
-        } catch (CoercionException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return throw new BadRequestException(previous: $exception);
         }
     }

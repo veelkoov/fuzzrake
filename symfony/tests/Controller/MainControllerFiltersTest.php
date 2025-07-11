@@ -57,6 +57,6 @@ class MainControllerFiltersTest extends FuzzrakeWebTestCase
 
         $resultCreatorIds = $crawler->filter('td.creator-id')->each(fn (Crawler $node, $_) => $node->text(''));
 
-        self::assertArrayItemsSameOrderIgnored($expectedCreatorIds, $resultCreatorIds, "$query query failed.");
+        self::assertSameItems($expectedCreatorIds, $resultCreatorIds, "$query query failed.");
     }
 }

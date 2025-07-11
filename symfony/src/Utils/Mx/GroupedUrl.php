@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Mx;
 
 use App\Data\Definitions\Fields\Field;
-use Psl\Str;
 
 final readonly class GroupedUrl
 {
@@ -18,7 +17,7 @@ final readonly class GroupedUrl
 
     public function getLabel(): string
     {
-        $name = Str\strip_prefix($this->type->value, 'URL_');
+        $name = substr($this->type->value, 4); // 'URL_' = 4 characters
 
         if ($this->type->isList()) {
             $name .= ' '.($this->index + 1);

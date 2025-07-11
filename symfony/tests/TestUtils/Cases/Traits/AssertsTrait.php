@@ -19,15 +19,18 @@ trait AssertsTrait
     }
 
     /**
-     * @param mixed[] $expected
-     * @param mixed[] $actual
+     * @param iterable<mixed> $expected
+     * @param iterable<mixed> $actual
      */
-    protected function assertArrayItemsSameOrderIgnored(array $expected, array $actual, string $message = ''): void
+    protected static function assertSameItems(iterable $expected, iterable $actual, string $message = ''): void
     {
+        $expected = [...$expected];
+        $actual = [...$actual];
+
         sort($expected);
         sort($actual);
 
-        self::assertEquals($expected, $actual, $message);
+        self::assertSame($expected, $actual, $message);
     }
 
     protected static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void

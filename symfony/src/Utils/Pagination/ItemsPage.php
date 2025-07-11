@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Utils\Pagination;
 
+use Veelkoov\Debris\IntSet;
+
 /**
  * @template T
  */
 final readonly class ItemsPage
 {
-    /**
-     * @var list<int>
-     */
-    public array $paginationPages;
-
+    public IntSet $paginationPages;
     public bool $hasPrev;
     public bool $hasNext;
 
