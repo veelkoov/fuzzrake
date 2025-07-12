@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use InvalidArgumentException;
-use Psl\Dict;
-use Psl\Type;
-use Psl\Type\Exception\CoercionException;
 use Symfony\Component\HttpFoundation\Request;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Maps\StringToStringList;
+use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
 class RequestParser
@@ -56,40 +54,32 @@ class RequestParser
         return $this->filter->getOnlyValidChoices(new Choices(
             $strings->get('creatorId'),
             $strings->get('textSearch'),
-            new StringSet($strArrays['countries']),
-            new StringSet($strArrays['states']),
-            new StringSet($strArrays['languages']),
-            new StringSet($strArrays['styles']),
-            new StringSet($strArrays['features']),
-            new StringSet($strArrays['orderTypes']),
-            new StringSet($strArrays['productionModels']),
-            new StringSet($strArrays['openFor']),
-            new StringSet($strArrays['species']),
-            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
-            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
-            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
+            new StringSet($strArrays->get('countries')),
+            new StringSet($strArrays->get('states')),
+            new StringSet($strArrays->get('languages')),
+            new StringSet($strArrays->get('styles')),
+            new StringSet($strArrays->get('features')),
+            new StringSet($strArrays->get('orderTypes')),
+            new StringSet($strArrays->get('productionModels')),
+            new StringSet($strArrays->get('openFor')),
+            new StringSet($strArrays->get('species')),
+            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_UNKNOWN),
+            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans->get('isAdult'),
             $booleans->get('wantsSfw'),
-            arr_contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
+            $strArrays->get('inactive')->contains(Consts::FILTER_VALUE_INCLUDE_INACTIVE),
             $booleans->get('creatorMode'),
             $pageNumber,
         ));
     }
 
-    /**
-     * @return array<string, list<string>>
-     */
-    private static function getStrArraysFromRequest(Request $request): array
+    private static function getStrArraysFromRequest(Request $request): StringToStringList
     {
-        /* @phpstan-ignore method.internal (Unsure how to fix currently) */
-        $result = Dict\from_keys(self::ARRAYS, static fn ($reqKey) => $request->get($reqKey, []));
-        $dataShape = Type\shape(Dict\from_keys(self::ARRAYS, static fn ($_) => Type\vec(Type\string())));
-
-        try {
-            return $dataShape->coerce($result);
-        } catch (CoercionException $exception) {
-            throw new InvalidArgumentException(previous: $exception);
-        }
+        return StringToStringList::fromKeys(
+            self::ARRAYS,
+            static fn (string $paramName) => StringList::fromUnsafe($request->query->all($paramName)),
+        );
     }
 
     private static function getBooleansFromRequest(Request $request): StringToBool
