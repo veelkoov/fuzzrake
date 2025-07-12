@@ -24,13 +24,11 @@ trait AssertsTrait
      */
     protected static function assertSameItems(iterable $expected, iterable $actual, string $message = ''): void
     {
-        $expected = [...$expected];
-        $actual = [...$actual];
-
-        sort($expected);
-        sort($actual);
-
-        self::assertSame($expected, $actual, $message);
+        self::assertSame(
+            list_sort([...$expected]),
+            list_sort([...$actual]),
+            $message,
+        );
     }
 
     protected static function assertDateTimeSameIgnoreSubSeconds(DateTimeImmutable $expected, ?DateTimeImmutable $actual): void
