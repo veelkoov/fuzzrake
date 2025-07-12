@@ -20,7 +20,7 @@ class PaginationTest extends FuzzrakeTestCase
     {
         $result = Pagination::getPaginationPages($currentPage, $totalPages);
 
-        self::assertSameItems($expected, $result);
+        self::assertEquals($expected, $result->getValuesArray());
     }
 
     /**
