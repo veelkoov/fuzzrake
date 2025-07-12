@@ -30,6 +30,22 @@ function arr_map(array $array, callable|Closure $callback): array
 }
 
 /**
+ * `array_map` with fixed params order, returning a *L*ist.
+ *
+ * @template InV
+ * @template OutV
+ *
+ * @param array<InV>                                 $array
+ * @param (callable(InV): OutV)|(Closure(InV): OutV) $callback
+ *
+ * @return list<OutV>
+ */
+function arr_lmap(array $array, callable|Closure $callback): array
+{
+    return array_map($callback, array_values($array));
+}
+
+/**
  * `array_map` for *ITER*ables, with fixed params order, returning a *L*ist.
  *
  * @template InV
@@ -100,6 +116,18 @@ function arr_lsort(array $array): array
     sort($array);
 
     return $array;
+}
+
+/**
+ * @template V
+ *
+ * @param iterable<V> $iterable
+ *
+ * @return list<V>
+ */
+function iter_lsort(iterable $iterable): array
+{
+    return arr_lsort([...$iterable]);
 }
 
 /**

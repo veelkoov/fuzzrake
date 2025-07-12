@@ -25,8 +25,8 @@ trait AssertsTrait
     protected static function assertSameItems(iterable $expected, iterable $actual, string $message = ''): void
     {
         self::assertSame(
-            arr_lsort([...$expected]),
-            arr_lsort([...$actual]),
+            iter_lsort($expected),
+            iter_lsort($actual),
             $message,
         );
     }
