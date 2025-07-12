@@ -11,7 +11,7 @@ use Veelkoov\Debris\StringSet;
 
 class CreatorUrlsSelectionData
 {
-    private StringToBool $urlIds;
+    private readonly StringToBool $urlIds;
 
     public function __construct()
     {
