@@ -37,7 +37,7 @@ class UpdatesService
     public function getUpdateFor(Submission $submission): Update
     {
         [$directivesError, $manager] = $this->getManager($submission);
-        $errors = array_filter([$directivesError], static fn (string $error) => '' !== $error);
+        $errors = Arrays::nonEmptyStrings([$directivesError]);
 
         $originalInput = new Creator();
         $this->updateWith($originalInput, $submission->getReader(), Fields::readFromSubmissionData());

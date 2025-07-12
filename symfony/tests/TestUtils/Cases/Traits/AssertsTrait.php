@@ -12,8 +12,8 @@ trait AssertsTrait
 {
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
     {
-        $expectedHtml = trim(Preg::replace('#\s+#', ' ', $expectedHtml));
-        $actualHtml = trim(Preg::replace('#\s+#', ' ', $actualHtml));
+        $expectedHtml = trim(Preg::replace('~\s+~', ' ', $expectedHtml));
+        $actualHtml = trim(Preg::replace('~\s+~', ' ', $actualHtml));
 
         self::assertSame($expectedHtml, $actualHtml);
     }

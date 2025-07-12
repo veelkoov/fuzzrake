@@ -11,6 +11,7 @@ use UnexpectedValueException;
 
 class StringBuffer
 {
+    private const string DELIMITER = '~';
     private AbstractString $buffer;
 
     public function __construct(string $buffer)
@@ -20,7 +21,7 @@ class StringBuffer
 
     public function readUntil(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
-        return $this->readUntilRegexp(preg_quote($terminator, '#'), $trimWhitespaceAfterwards);
+        return $this->readUntilRegexp(preg_quote($terminator, self::DELIMITER), $trimWhitespaceAfterwards);
     }
 
     public function readUntilEolOrEof(): string
@@ -57,7 +58,7 @@ class StringBuffer
 
     public function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
-        $parts = @Preg::split("#$terminator#", $this->buffer->toString(), 2);
+        $parts = @Preg::split(self::DELIMITER.$terminator.self::DELIMITER, $this->buffer->toString(), 2);
 
         if (count($parts) < 2) {
             throw new UnexpectedValueException("Unable to find '$terminator' in the remaining buffer '$this->buffer'");

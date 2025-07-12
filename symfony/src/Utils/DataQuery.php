@@ -46,7 +46,7 @@ class DataQuery
 
     public function __construct(string $input)
     {
-        $items = Arrays::nonEmptyStrings(Preg::split('#\s+#', $input));
+        $items = Arrays::nonEmptyStrings(Preg::split('~\s+~', $input));
 
         foreach ($items as $item) {
             switch ($item[0]) {

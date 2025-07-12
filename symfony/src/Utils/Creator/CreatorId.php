@@ -11,7 +11,7 @@ final class CreatorId
 {
     use UtilityClass;
 
-    final public const string VALID_REGEX = '#^([A-Z0-9]{7})?$#';
+    final public const string VALID_REGEX = '~^([A-Z0-9]{7})?$~';
 
     public static function isValid(string $creatorId): bool
     {

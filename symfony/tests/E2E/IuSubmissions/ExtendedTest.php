@@ -261,7 +261,7 @@ class ExtendedTest extends IuSubmissionsTestCase
                 continue; // grep-default-auto-since-day-01
             }
 
-            $match = Regex::matchAllStrictGroups('#<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>#s', $htmlBody);
+            $match = Regex::matchAllStrictGroups('~<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>~s', $htmlBody);
             self::assertSame(1, $match->count, "since/$sfName didn't match exactly once.");
             $matchedText = $match->matches[0][0];
 
@@ -300,7 +300,7 @@ class ExtendedTest extends IuSubmissionsTestCase
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
-            $pattern = "#<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>#";
+            $pattern = "~<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>~";
             self::assertTrue(Preg::isMatch($pattern, $htmlBody), "$field->value radio field was not present or (not) selected.");
         }
     }
@@ -308,7 +308,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
     {
         if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = Regex::matchAllStrictGroups('#<input[^>]+name="iu_form\[password]"[^>]*>#', $htmlBody);
+            $match = Regex::matchAllStrictGroups('~<input[^>]+name="iu_form\[password]"[^>]*>~', $htmlBody);
             self::assertSame(1, $match->count);
 
             self::assertStringNotContainsStringIgnoringCase('value', $match->matches[0][0]); // Needle = attribute name
@@ -318,7 +318,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             }
 
             foreach (password_algos() as $algorithm) { // grep-password-algorithms
-                self::assertFalse(Preg::isMatch("#\$$algorithm\$#", $htmlBody));
+                self::assertFalse(Preg::isMatch("~\$$algorithm\$~", $htmlBody));
             }
         } else {
             if ('' !== $value) {

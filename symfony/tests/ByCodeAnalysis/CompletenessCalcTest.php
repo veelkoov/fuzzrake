@@ -24,7 +24,7 @@ class CompletenessCalcTest extends TestCase
         $wrongCount = [];
 
         foreach (Fields::all() as $field) {
-            if (1 !== Regex::matchAll('#[ :]'.$field->value.'[,;).]#', $contents)->count) {
+            if (1 !== Regex::matchAll('~[ :]'.$field->value.'[,;).]~', $contents)->count) {
                 $wrongCount[] = $field->value;
             }
         }

@@ -84,7 +84,7 @@ class AdminExtensions
     public function linkUrls(string $input): string
     {
         return Preg::replace(
-            '#(?<!title=")https?://[^ ,\n<>"]+#i',
+            '~(?<!title=")https?://[^ ,\n<>"]+~i',
             '<a href="$0" target="_blank">$0</a>',
             $input,
         );
@@ -93,19 +93,19 @@ class AdminExtensions
     #[AsTwigFilter('bluesky_at')]
     public function blueskyAt(string $blueskyUrl): string
     {
-        return Preg::replace('#^https://[^/]+/profile/([^/\#?]+).*$#', '@$1', $blueskyUrl);
+        return Preg::replace('~^https://[^/]+/profile/([^/#?]+).*$~', '@$1', $blueskyUrl);
     }
 
     #[AsTwigFilter('mastodon_at')]
     public function mastodonAt(string $mastodonUrl): string
     {
-        return Preg::replace('#^https://([^/]+)/([^/\#?]+).*$#', '$2@$1', $mastodonUrl);
+        return Preg::replace('~^https://([^/]+)/([^/#?]+).*$~', '$2@$1', $mastodonUrl);
     }
 
     #[AsTwigFilter('tumblr_at')]
     public function tumblrAt(string $tumblrUrl): string
     {
-        return Preg::replace('#^https://www\.tumblr\.com/([^/\#?]+).*$#', '@$1 _FIX_', $tumblrUrl);
+        return Preg::replace('~^https://www\.tumblr\.com/([^/#?]+).*$~', '@$1 _FIX_', $tumblrUrl);
     }
 
     /**
