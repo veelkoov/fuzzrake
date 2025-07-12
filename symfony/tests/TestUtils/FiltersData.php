@@ -10,7 +10,7 @@ use App\Utils\Collections\Lists;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
-use Psl\Dict;
+use Veelkoov\Debris\Base\DStringMap;
 
 class FiltersData
 {
@@ -28,9 +28,9 @@ class FiltersData
     {
         self::makeSureNoCreatorUsesSpeciesDoesnt($creators);
 
-        $species = Dict\from_keys(
+        $species = DStringMap::mapFrom(
             self::getSpecieNamesFrom($creators),
-            fn (string $name) => new Specie()->setName($name),
+            static fn (string $name) => [$name, new Specie()->setName($name)],
         );
 
         $creatorSpecies = [];
@@ -38,7 +38,7 @@ class FiltersData
         foreach ($creators as $creator) {
             $creatorSpecies = [...$creatorSpecies, ...arr_map($creator->getSpeciesDoes(),
                 static fn (string $name) => new CreatorSpecie()
-                    ->setSpecie($species[$name])
+                    ->setSpecie($species->get($name))
                     ->setCreator($creator->entity),
             )];
         }

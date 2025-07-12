@@ -34,7 +34,6 @@ use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
 use Override;
-use Psl\Dict;
 use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
@@ -902,13 +901,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore return.type (FIXME)
+        $result = arr_map($fields->toArray(), fn (Field $field) => match ($field) {
             Field::COMPLETENESS => $this->getCompleteness(),
             Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
             Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
             Field::DATE_UPDATED => StrUtils::asStr($this->getDateUpdated()),
             default => $this->get($field),
         });
+
+        return $result; // @phpstan-ignore return.type (FIXME)
     }
 
     /**
