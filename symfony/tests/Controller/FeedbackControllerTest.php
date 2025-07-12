@@ -7,7 +7,6 @@ namespace App\Tests\Controller;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class FeedbackControllerTest extends FuzzrakeWebTestCase
@@ -101,9 +100,12 @@ class FeedbackControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs($shouldBlock ? 422 : 302);
     }
 
-    public static function blockedOptionsDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, bool}>
+     */
+    public static function blockedOptionsDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             ['Help me get a fursuit', true],
             ["Maker's commissions info (open/closed) is inaccurate", true],
             ["Maker's website/social account is no longer working", false],
@@ -112,6 +114,6 @@ class FeedbackControllerTest extends FuzzrakeWebTestCase
             ['Report a technical problem/bug with this website', false],
             ['Suggest an improvement to this website', false],
             ['Other (please provide adequate details and context)', false],
-        );
+        ];
     }
 }

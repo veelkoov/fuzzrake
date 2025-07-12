@@ -11,7 +11,6 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class SimpleChangeTest extends TestCase
@@ -28,12 +27,15 @@ class SimpleChangeTest extends TestCase
         self::assertSame($description, $subject->getDescription());
     }
 
-    public static function simpleChangeDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Field, psPhpFieldValue, psPhpFieldValue, bool, string}>
+     */
+    public static function simpleChangeDataProvider(): array
     {
         $date = new DateTimeImmutable('2024-05-19 20:46:00');
         $chdt = new DateTimeImmutable('2024-05-19 20:47:00');
 
-        return TestDataProvider::tuples(
+        return [
             [Field::NAME, 'Name', 'Name', false, 'NAME did not change'],
             [Field::NAME, '',     'Name', true,  'Added NAME: "Name"'],
             [Field::NAME, 'Name', '',     true,  'Removed NAME: "Name"'],
@@ -53,6 +55,6 @@ class SimpleChangeTest extends TestCase
             [Field::AGES, null,        Ages::MIXED,  true,  'Added AGES: "MIXED"'],
             [Field::AGES, Ages::MIXED, null,         true,  'Removed AGES: "MIXED"'],
             [Field::AGES, Ages::MIXED, Ages::ADULTS, true,  'Changed AGES from "MIXED" to "ADULTS"'],
-        );
+        ];
     }
 }

@@ -16,7 +16,7 @@ class SimpleReplacement implements ReplacementInterface
         string $flags,
         private readonly string $replacement,
     ) {
-        $this->pattern = pattern($pattern, $flags);
+        $this->pattern = Pattern::of($pattern, $flags);
     }
 
     #[Override]

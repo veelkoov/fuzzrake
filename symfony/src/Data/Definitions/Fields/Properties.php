@@ -9,6 +9,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 readonly class Properties
 {
+    /**
+     * @param ?non-empty-string $validationRegex
+     */
     public function __construct(
         public string $modelName,
         public Type $type = Type::STRING,

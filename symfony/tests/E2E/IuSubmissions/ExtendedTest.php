@@ -11,8 +11,9 @@ use App\Tests\TestUtils\JsonCreatorDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
-use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
+use Composer\Pcre\Preg;
+use Composer\Pcre\Regex;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Medium;
@@ -20,7 +21,6 @@ use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
-use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
@@ -186,7 +186,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             'Sanity check - checking field presence on page - failed.');
 
         foreach (Fields::all() as $field) {
-            if (in_array($field, self::NOT_IN_FORM, true)) {
+            if (arr_contains(self::NOT_IN_FORM, $field)) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
                 self::assertFalse($field->isInIuForm());
@@ -196,7 +196,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             self::assertTrue($field->isInIuForm());
             $value = $oldData->get($field);
 
-            if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, true)) {
+            if (arr_contains(self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, $field)) {
                 self::assertValueIsNotPresentInForm(Enforce::string($value), $field, $htmlBody);
             } else {
                 self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
@@ -210,11 +210,11 @@ class ExtendedTest extends IuSubmissionsTestCase
             $value = $value->value;
         }
 
-        if (in_array($field, self::EXPANDED_CHECKBOXES, true) || in_array($field, self::EXPANDED_RADIOS, true)) {
+        if (arr_contains(self::EXPANDED_CHECKBOXES, $field) || arr_contains(self::EXPANDED_RADIOS, $field)) {
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue(Enforce::string($value), $htmlBody);
-        } elseif (in_array($field, self::BOOLEAN, true)) {
+        } elseif (arr_contains(self::BOOLEAN, $field)) {
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, $htmlBody);
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
@@ -238,7 +238,7 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         $items = Enforce::strList($value);
 
-        $optionalArraySuffix = in_array($field, self::EXPANDED_CHECKBOXES, true) ? '[]' : '';
+        $optionalArraySuffix = arr_contains(self::EXPANDED_CHECKBOXES, $field) ? '[]' : '';
         $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $optionalArraySuffix])
             ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
@@ -261,14 +261,9 @@ class ExtendedTest extends IuSubmissionsTestCase
                 continue; // grep-default-auto-since-day-01
             }
 
-            $match = pattern('<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>', 's')->search($htmlBody);
-            self::assertCount(1, $match, "since/$sfName didn't match exactly once.");
-
-            try {
-                $matchedText = $match->first();
-            } catch (SubjectNotMatchedException $exception) {
-                throw new UnbelievableRuntimeException($exception);
-            }
+            $match = Regex::matchAllStrictGroups('~<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>~s', $htmlBody);
+            self::assertSame(1, $match->count, "since/$sfName didn't match exactly once.");
+            $matchedText = $match->matches[0][0];
 
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
@@ -300,36 +295,30 @@ class ExtendedTest extends IuSubmissionsTestCase
      */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
-        self::assertTrue(null === $value || in_array($value, $choices, true), "'$value' is not one of the possible choices for $field->value.");
+        self::assertTrue(null === $value || arr_contains($choices, $value), "'$value' is not one of the possible choices for $field->value.");
 
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
-            $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
-            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->value radio field was not present or (not) selected.");
+            $pattern = "~<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>~";
+            self::assertTrue(Preg::isMatch($pattern, $htmlBody), "$field->value radio field was not present or (not) selected.");
         }
     }
 
     private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
     {
         if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->search($htmlBody);
-            self::assertCount(1, $match);
+            $match = Regex::matchAllStrictGroups('~<input[^>]+name="iu_form\[password]"[^>]*>~', $htmlBody);
+            self::assertSame(1, $match->count);
 
-            try {
-                $textMatch = $match->first();
-
-                self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
-            } catch (SubjectNotMatchedException $exception) {
-                throw new UnbelievableRuntimeException($exception);
-            }
+            self::assertStringNotContainsStringIgnoringCase('value', $match->matches[0][0]); // Needle = attribute name
 
             if ('' !== $value) {
                 self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
             }
 
             foreach (password_algos() as $algorithm) { // grep-password-algorithms
-                self::assertFalse(pattern("\$$algorithm\$")->test($htmlBody));
+                self::assertFalse(Preg::isMatch("~\$$algorithm\$~", $htmlBody));
             }
         } else {
             if ('' !== $value) {
@@ -341,7 +330,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
-            if (in_array($field, self::NOT_IN_FORM, true)) {
+            if (arr_contains(self::NOT_IN_FORM, $field)) {
                 continue;
             }
 
@@ -358,7 +347,7 @@ class ExtendedTest extends IuSubmissionsTestCase
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
                 self::setValuesInSinceField(Enforce::string($value), $fields);
-            } elseif (in_array($field, self::EXPANDED_CHECKBOXES, true)) {
+            } elseif (arr_contains(self::EXPANDED_CHECKBOXES, $field)) {
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
                 self::setValuesInExpandedField(Enforce::strList($value), $fields);
@@ -415,7 +404,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             }
 
             /* @phpstan-ignore method.internal (Don't know how to do that nicely) */
-            if (in_array($formField->availableOptionValues()[0], $value, true)) {
+            if (arr_contains($value, $formField->availableOptionValues()[0])) {
                 $formField->tick();
             } else {
                 $formField->untick();

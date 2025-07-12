@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Transformers;
 
+use Composer\Pcre\Preg;
 use Override;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -16,7 +17,7 @@ class SinceTransformer implements DataTransformerInterface
     #[Override]
     public function transform($value): mixed
     {
-        return pattern('^\d{4}-\d{2}$')->test($value ?? '') ? $value.'-01' : '';
+        return Preg::isMatch('~^\d{4}-\d{2}$~', $value ?? '') ? $value.'-01' : '';
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */

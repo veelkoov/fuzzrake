@@ -149,7 +149,7 @@ final class CompletenessCalc
 
     private static function doesCommissions(Creator $creator): bool
     {
-        return in_array(ProductionModels::STANDARD_COMMISSIONS, $creator->getProductionModels(), true);
+        return arr_contains($creator->getProductionModels(), ProductionModels::STANDARD_COMMISSIONS);
     }
 
     private static function shouldCountState(Creator $creator): bool

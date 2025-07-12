@@ -8,7 +8,6 @@ use App\Data\Fixer\StrListFixerInterface;
 use App\Utils\Collections\Arrays;
 use App\Utils\PackedStringList;
 use Override;
-use Psl\Vec;
 
 abstract class AbstractListFixer implements StrListFixerInterface
 {
@@ -19,14 +18,14 @@ abstract class AbstractListFixer implements StrListFixerInterface
             $subject = PackedStringList::split(Arrays::single($subject), static::getSeparatorRegexp(), static::getNonsplittable($subject));
         }
 
-        $subject = Vec\map($subject, trim(...));
-        $subject = Vec\filter($subject, fn (string $item): bool => '' !== $item);
+        $subject = arr_map($subject, trim(...));
+        $subject = arr_filterl($subject, static fn (string $item) => '' !== $item);
 
         if (static::shouldSort()) {
             sort($subject);
         }
 
-        return Vec\map($subject, static::fixItem(...));
+        return arr_map($subject, static::fixItem(...));
     }
 
     abstract protected function fixItem(string $subject): string;

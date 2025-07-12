@@ -19,7 +19,6 @@ use App\Utils\FieldReadInterface;
 use App\Utils\UnbelievableRuntimeException;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
-use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -38,7 +37,7 @@ class UpdatesService
     public function getUpdateFor(Submission $submission): Update
     {
         [$directivesError, $manager] = $this->getManager($submission);
-        $errors = Vec\filter([$directivesError]);
+        $errors = Arrays::nonEmptyStrings([$directivesError]);
 
         $originalInput = new Creator();
         $this->updateWith($originalInput, $submission->getReader(), Fields::readFromSubmissionData());
@@ -121,7 +120,7 @@ class UpdatesService
             $names = [];
         } else {
             $creatorIds = $submissionData->getAllCreatorIds();
-            $names = Vec\concat([$submissionData->getName()], $submissionData->getFormerly());
+            $names = [$submissionData->getName(), ...$submissionData->getFormerly()];
         }
 
         $results = $this->creatorRepository->findBestMatches($names, $creatorIds);

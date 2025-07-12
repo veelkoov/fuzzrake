@@ -8,7 +8,6 @@ use App\Species\Hierarchy\MutableSpecie;
 use App\Species\Hierarchy\MutableSpecies;
 use App\Species\Hierarchy\Species;
 use App\Utils\Regexp\Replacements;
-use Psl\Str;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\StringSet;
 
@@ -55,7 +54,7 @@ final class SpeciesService
     private function createSpecie(MutableSpecies $species, string $nameOptFlag, ?array $subspeciesData): MutableSpecie
     {
         $hidden = str_starts_with($nameOptFlag, 'i_');
-        $name = Str\strip_prefix($nameOptFlag, 'i_');
+        $name = str_strip_prefix($nameOptFlag, 'i_');
 
         $specie = $species->getByNameCreatingMissing($name, $hidden);
 

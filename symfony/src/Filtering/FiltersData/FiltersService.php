@@ -19,7 +19,6 @@ use App\Service\DataService;
 use App\Species\SpeciesFilterService;
 use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Vec;
 
 class FiltersService
 {
@@ -155,7 +154,7 @@ class FiltersService
 
     public function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
     {
-        $fields = Vec\filter_nulls([$primaryField, $otherField]);
+        $fields = arr_filter_nulls([$primaryField, $otherField]);
 
         $unknownCount = $this->dataService->countActiveCreators()
             - $this->dataService->countActiveCreatorsHavingAnyOf(...$fields);

@@ -41,7 +41,7 @@ class Differ
         $newValItems = PackedStringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
-            if (!in_array($item, $newValItems, true)) {
+            if (!arr_contains($newValItems, $item)) {
                 $item = Formatter::deleted($item);
             }
 
@@ -49,7 +49,7 @@ class Differ
         }
 
         foreach ($newValItems as &$item) {
-            if (!in_array($item, $oldValItems, true)) {
+            if (!arr_contains($oldValItems, $item)) {
                 $item = Formatter::added($item);
             }
 

@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class IuFormValidationTest extends FuzzrakeWebTestCase
@@ -116,9 +115,12 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
         }
     }
 
-    public static function ageStuffFieldsDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, string, string, ?string, ?string, array<string, string>}>
+     */
+    public static function ageStuffFieldsDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
             //         WEB.   SOCIAL  NSFW   W/MINORS  ERRORS
             ['MINORS', 'NO',  'NO',   null,  null,     [
@@ -166,12 +168,15 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
             ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
-        );
+        ];
     }
 
-    public static function iuFormContactAndPasswordValidationDataProvider(): TestDataProvider
+    /**
+     * @return list<array{?ContactPermit, ?string, ?string, ?string, bool, bool, bool, callable(): void}>
+     */
+    public static function iuFormContactAndPasswordValidationDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [
                 null, // No pre-existing creator
                 'new-password', // Setting a new password
@@ -282,7 +287,7 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
                     self::assertIuSubmittedWrongPasswordContactWasNotAllowed();
                 },
             ],
-        );
+        ];
     }
 
     #[DataProvider('iuFormContactAndPasswordValidationDataProvider')]

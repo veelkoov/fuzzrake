@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Psl\Iter;
-
 trait IuFormTrait
 {
     private static function skipRules(): void
@@ -18,9 +16,9 @@ trait IuFormTrait
     {
         $text = self::$client->getCrawler()->filter('.card-header')->text();
 
-        self::assertTrue(Iter\any(
+        self::assertTrue(array_any(
             ['Your submission has been queued', 'Submission recorded, but on hold'],
-            fn (string $candidate) => str_contains($text, $candidate))
+            static fn (string $candidate) => str_contains($text, $candidate))
         );
     }
 

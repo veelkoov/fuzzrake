@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class CreatorsControllerTest extends FuzzrakeWebTestCase
@@ -140,15 +139,18 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         self::assertSame($check, $creator->getEmailAddress());
     }
 
-    public static function contactUpdatesDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, string, string}>
+     */
+    public static function contactUpdatesDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             ['',                         '',                          ''],
             ['garbage',                  'garbage',                   'garbage'],
             ['garbage',                  'some-email@somedomain.fi',  'some-email@somedomain.fi'],
             ['',                         'some-email@somedomain.fi',  'some-email@somedomain.fi'],
             ['some-email@somedomain.fi', 'updated-email@example.com', 'updated-email@example.com'],
             ['some-email@somedomain.fi', 'some-email@somedomain.fi',  'some-email@somedomain.fi'],
-        );
+        ];
     }
 }

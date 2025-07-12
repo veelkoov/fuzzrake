@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use App\Utils\Json;
 use App\Utils\Pagination\Pagination;
-use Psl\Json;
+use JsonException;
+use RuntimeException;
 use Veelkoov\Debris\StringSet;
 
 readonly class Choices
@@ -62,6 +64,10 @@ readonly class Choices
 
     public function getCacheDigest(): string
     {
-        return hash('sha256', Json\encode($this));
+        try {
+            return hash('sha256', Json::encode($this));
+        } catch (JsonException $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
     }
 }

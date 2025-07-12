@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\StringBuffer;
+use Composer\Pcre\PcreException;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
@@ -40,7 +40,7 @@ class StringBufferTest extends TestCase
             $result = $exception;
         }
 
-        self::assertInstanceOf(RuntimeException::class, $result);
+        self::assertInstanceOf(PcreException::class, $result);
 
         try {
             $result = $subject->readUntilRegexp('[12]{1,}');

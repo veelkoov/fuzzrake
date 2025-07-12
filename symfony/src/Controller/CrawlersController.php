@@ -17,7 +17,7 @@ class CrawlersController extends AbstractController
     #[Cache(maxage: 21600, public: true)]
     public function sitemap(): Response
     {
-        $urls = array_map(fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL), [
+        $urls = arr_map([
             RouteName::CONTACT,
             RouteName::DONATE,
             RouteName::EVENTS,
@@ -29,7 +29,7 @@ class CrawlersController extends AbstractController
             RouteName::SHOULD_KNOW,
             RouteName::STATISTICS,
             RouteName::TRACKING,
-        ]);
+        ], fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $this->render('crawlers/sitemap.txt.twig', [
             'urls' => $urls,

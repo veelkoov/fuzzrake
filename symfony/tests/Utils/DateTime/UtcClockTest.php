@@ -10,7 +10,6 @@ use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class UtcClockTest extends FuzzrakeTestCase
@@ -56,12 +55,15 @@ class UtcClockTest extends FuzzrakeTestCase
         }
     }
 
-    public static function atThrowsOnInvalidDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string|int|bool|null}>
+     */
+    public static function atThrowsOnInvalidDataProvider(): array
     {
         // The method will be used in some cases where data will be typehinted as many different things.
         // Example: Doctrine's single scalar result. The simplest solution is to (string) cast.
         // Below cases cover also the least possible.
-        return TestDataProvider::list('some invalid info', '', '0', '1', 0, 1, false, true, null);
+        return [['some invalid info'], [''], ['0'], ['1'], [0], [1], [false], [true], [null]];
     }
 
     public function testFromTimestamp(): void
