@@ -49,12 +49,12 @@ final readonly class GroupedUrls
      */
     public function onlyWithIds(array $urlIds): self
     {
-        return new self(arr_lfilter($this->urls, static fn (GroupedUrl $url) => arr_contains($urlIds, $url->getId())));
+        return new self(arr_filterl($this->urls, static fn (GroupedUrl $url) => arr_contains($urlIds, $url->getId())));
     }
 
     public function minus(self $removedUrls): self
     {
-        return new self(arr_lfilter(
+        return new self(arr_filterl(
             $this->urls,
             static fn (GroupedUrl $url): bool => !array_any(
                 $removedUrls->urls,
@@ -69,7 +69,7 @@ final readonly class GroupedUrls
     public function getStringOrStrList(Field $urlType): string|array
     {
         $urls = arr_map(
-            arr_lfilter($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
+            arr_filterl($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
             static fn (GroupedUrl $url): string => $url->url,
         );
 

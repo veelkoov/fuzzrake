@@ -319,6 +319,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
      */
     public static function strings(array $fields): array
     {
-        return arr_lmap($fields, static fn (self $field): string => $field->value);
+        return arr_mapl($fields, static fn (self $field): string => $field->value);
     }
 }

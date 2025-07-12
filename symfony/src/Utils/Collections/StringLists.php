@@ -16,7 +16,7 @@ final class StringLists // TODO: Improve https://github.com/veelkoov/fuzzrake/is
      */
     public static function sameElements(array $input1, array $input2): bool
     {
-        return count($input1) === count($input2) && arr_lsort($input1) === arr_lsort($input2);
+        return count($input1) === count($input2) && arr_sortl($input1) === arr_sortl($input2);
     }
 
     /**

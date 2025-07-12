@@ -17,7 +17,7 @@ final class SmartOfferStatusAccessor
      */
     private static function getObjects(Creator $creator, bool $isOpen): array
     {
-        return iter_lfilter($creator->entity->getOfferStatuses(),
+        return iter_filterl($creator->entity->getOfferStatuses(),
             static fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
     }
 

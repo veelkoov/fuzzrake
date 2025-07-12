@@ -40,7 +40,7 @@ function arr_map(array $array, callable|Closure $callback): array
  *
  * @return list<OutV>
  */
-function arr_lmap(array $array, callable|Closure $callback): array
+function arr_mapl(array $array, callable|Closure $callback): array
 {
     return array_map($callback, array_values($array));
 }
@@ -56,7 +56,7 @@ function arr_lmap(array $array, callable|Closure $callback): array
  *
  * @return list<OutV>
  */
-function iter_lmap(iterable $iterable, callable|Closure $callback): array
+function iter_mapl(iterable $iterable, callable|Closure $callback): array
 {
     return array_map($callback, array_values([...$iterable]));
 }
@@ -84,7 +84,7 @@ function arr_filter_nulls(array $array): array
  *
  * @return list<V>
  */
-function iter_lfilter(iterable $iterable, callable|Closure $callback): array
+function iter_filterl(iterable $iterable, callable|Closure $callback): array
 {
     return array_values(array_filter([...$iterable], $callback));
 }
@@ -99,7 +99,7 @@ function iter_lfilter(iterable $iterable, callable|Closure $callback): array
  *
  * @return list<V>
  */
-function arr_lfilter(array $array, callable|Closure $callback): array
+function arr_filterl(array $array, callable|Closure $callback): array
 {
     return array_values(array_filter($array, $callback));
 }
@@ -111,7 +111,7 @@ function arr_lfilter(array $array, callable|Closure $callback): array
  *
  * @return list<V>
  */
-function arr_lsort(array $array): array
+function arr_sortl(array $array): array
 {
     sort($array);
 
@@ -125,9 +125,9 @@ function arr_lsort(array $array): array
  *
  * @return list<V>
  */
-function iter_lsort(iterable $iterable): array
+function iter_sortl(iterable $iterable): array
 {
-    return arr_lsort([...$iterable]);
+    return arr_sortl([...$iterable]);
 }
 
 /**

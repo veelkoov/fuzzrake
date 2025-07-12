@@ -63,7 +63,7 @@ class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
      */
     private function getOfferStatusArray(CreatorE $creator): array
     {
-        return arr_lsort(iter_lmap(
+        return arr_sortl(iter_mapl(
             $creator->getOfferStatuses(),
             static fn (CreatorOfferStatus $url) => StrUtils::asStr($url->getIsOpen()).' '.$url->getOffer(),
         ));
