@@ -17,7 +17,7 @@ final readonly class GroupedUrl
 
     public function getLabel(): string
     {
-        $name = substr($this->type->value, 4); // 'URL_' = 4 characters
+        $name = str_strip_prefix($this->type->value, 'URL_');
 
         if ($this->type->isList()) {
             $name .= ' '.($this->index + 1);

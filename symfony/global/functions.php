@@ -137,3 +137,10 @@ function array_last(array $array): mixed
 
     return $array[$key];
 }
+
+function str_strip_prefix(string $subject, string $prefix): string
+{
+    return str_starts_with($subject, $prefix)
+        ? substr($subject, strlen($prefix))
+        : $subject;
+}

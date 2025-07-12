@@ -54,7 +54,7 @@ final class SpeciesService
     private function createSpecie(MutableSpecies $species, string $nameOptFlag, ?array $subspeciesData): MutableSpecie
     {
         $hidden = str_starts_with($nameOptFlag, 'i_');
-        $name = $hidden ? substr($nameOptFlag, 2) : $nameOptFlag;
+        $name = str_strip_prefix($nameOptFlag, 'i_');
 
         $specie = $species->getByNameCreatingMissing($name, $hidden);
 
