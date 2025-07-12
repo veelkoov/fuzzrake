@@ -83,7 +83,7 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
      */
     private function getUrlArray(CreatorE $creator): array
     {
-        $result = iter_map($creator->getUrls(), static fn (CreatorUrl $url) => $url->getType().' '.$url->getUrl());
+        $result = iter_lmap($creator->getUrls(), static fn (CreatorUrl $url) => $url->getType().' '.$url->getUrl());
         sort($result);
 
         return $result;

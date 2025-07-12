@@ -19,7 +19,7 @@ abstract class AbstractListFixer implements StrListFixerInterface
         }
 
         $subject = arr_map($subject, trim(...));
-        $subject = iter_filter($subject, static fn (string $item) => '' !== $item);
+        $subject = iter_lfilter($subject, static fn (string $item) => '' !== $item);
 
         if (static::shouldSort()) {
             sort($subject);

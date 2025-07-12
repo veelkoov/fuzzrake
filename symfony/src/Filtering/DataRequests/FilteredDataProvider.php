@@ -47,7 +47,7 @@ class FilteredDataProvider
             $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
         } while ($choices->pageNumber > $pagesCount);
 
-        $creators = iter_map($paginator,
+        $creators = iter_lmap($paginator,
             // grep-code-cannot-use-coalesce-in-doctrine-order-by
             static fn (array $creatorAndOrderColumns) => Creator::wrap($creatorAndOrderColumns[0]),
         );

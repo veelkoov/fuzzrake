@@ -29,7 +29,7 @@ final class PartialCreatorValueListAccessor
      */
     private static function getObjects(Creator $creator, Field $field): array
     {
-        return iter_filter(
+        return iter_lfilter(
             $creator->entity->getValues(),
             static fn (CreatorValue $value) => $value->getFieldName() === $field->value,
         );

@@ -30,7 +30,7 @@ function arr_map(array $array, callable|Closure $callback): array
 }
 
 /**
- * `array_map` for iterables with fixed params order.
+ * `array_map` for *ITER*ables, with fixed params order, returning a *L*ist.
  *
  * @template InV
  * @template OutV
@@ -40,7 +40,7 @@ function arr_map(array $array, callable|Closure $callback): array
  *
  * @return list<OutV>
  */
-function iter_map(iterable $iterable, callable|Closure $callback): array
+function iter_lmap(iterable $iterable, callable|Closure $callback): array
 {
     return array_map($callback, array_values([...$iterable]));
 }
@@ -59,7 +59,7 @@ function arr_filter_nulls(array $array): array
 }
 
 /**
- * `array_filter` for iterables returning a list.
+ * `array_filter` for *ITER*ables returning a *L*ist.
  *
  * @template V
  *
@@ -68,22 +68,22 @@ function arr_filter_nulls(array $array): array
  *
  * @return list<V>
  */
-function iter_filter(iterable $iterable, callable|Closure $callback): array
+function iter_lfilter(iterable $iterable, callable|Closure $callback): array
 {
     return array_values(array_filter([...$iterable], $callback));
 }
 
 /**
- * `array_filter` for lists.
+ * `array_filter` returning a *L*ist.
  *
  * @template V
  *
- * @param list<V>                                $array
+ * @param array<V>                               $array
  * @param (callable(V): bool)|(Closure(V): bool) $callback
  *
  * @return list<V>
  */
-function list_filter(array $array, callable|Closure $callback): array
+function arr_lfilter(array $array, callable|Closure $callback): array
 {
     return array_values(array_filter($array, $callback));
 }
@@ -95,7 +95,7 @@ function list_filter(array $array, callable|Closure $callback): array
  *
  * @return list<V>
  */
-function list_sort(array $array): array
+function arr_lsort(array $array): array
 {
     sort($array);
 

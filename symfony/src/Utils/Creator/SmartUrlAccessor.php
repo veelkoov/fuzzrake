@@ -18,7 +18,7 @@ final class SmartUrlAccessor
      */
     public static function getObjects(Creator $creator, string $type): array
     {
-        return iter_filter($creator->entity->getUrls(),
+        return iter_lfilter($creator->entity->getUrls(),
             static fn (ItemType $url): bool => $url->getType() === $type);
     }
 

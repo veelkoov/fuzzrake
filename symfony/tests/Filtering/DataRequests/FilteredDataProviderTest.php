@@ -124,6 +124,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     {
         $creatorIds = arr_map($pageData->items, static fn (Creator $creator) => $creator->getCreatorId());
 
-        return implode(', ', list_sort($creatorIds));
+        return implode(', ', arr_lsort($creatorIds));
     }
 }
