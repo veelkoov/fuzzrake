@@ -11,7 +11,6 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class CreatorRepositoryTest extends FuzzrakeKernelTestCase
@@ -39,13 +38,16 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
         static::assertEquals($creators[$resultIdx], $result);
     }
 
-    public static function findByCreatorIdDataProvider(): TestDataProvider
+    /**
+     * @return list<array{list<CreatorE>, string, ?int}>
+     */
+    public static function findByCreatorIdDataProvider(): array
     {
         Creator::wrap($m1 = new CreatorE())->setCreatorId('TESTI11');
         Creator::wrap($m2 = new CreatorE())->setCreatorId('TESTI21')->setFormerCreatorIds(['TESTI22']);
         Creator::wrap($m3 = new CreatorE())->setCreatorId('TESTI31')->setFormerCreatorIds(['TESTI32', 'TESTI33']);
 
-        return TestDataProvider::tuples(
+        return [
             [[$m1], 'TESTI11', 0],
             [[$m1], 'TESTI12', null],
             [[$m1], 'TESTI',   null],
@@ -64,7 +66,7 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
             [[$m3], 'TESTI32',   0],
             [[$m3], 'TESTI33',   0],
             [[$m3], "MER2\nFOR", null],
-        );
+        ];
     }
 
     /**

@@ -23,7 +23,7 @@ trait FormsChoicesValuesAndLabelsTestTrait
             ...Styles::getValues(),
         ];
 
-        $choices = array_map(fn (string $value) => ['value' => $value, 'label' => $value], $choices);
+        $choices = arr_map($choices, static fn (string $value) => ['value' => $value, 'label' => $value]);
 
         // TODO https://github.com/veelkoov/fuzzrake/issues/184
         // foreach (Ages::cases() as $ages) {

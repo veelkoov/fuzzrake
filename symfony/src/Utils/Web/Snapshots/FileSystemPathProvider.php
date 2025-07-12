@@ -5,25 +5,15 @@ declare(strict_types=1);
 namespace App\Utils\Web\Snapshots;
 
 use App\Utils\Web\Url\Url;
-use Psl\Str;
-use TRegx\CleanRegex\Pattern;
+use Composer\Pcre\Preg;
 
 class FileSystemPathProvider
 {
-    private readonly Pattern $urlPrefixAndSuffixRegex;
-    private readonly Pattern $fsUnfriendlyCharactersRegex;
-
-    public function __construct()
-    {
-        $this->urlPrefixAndSuffixRegex = Pattern::of('^https?://(www\.)?|[?#].+$', 'i');
-        $this->fsUnfriendlyCharactersRegex = Pattern::of('[^a-z0-9_.-]+', 'i');
-    }
-
     public function getSnapshotDirPath(Url $url): string
     {
-        $hostName = Str\strip_prefix($url->getHost(), 'www.');
+        $hostName = str_strip_prefix($url->getHost(), 'www.');
 
-        $urlFsSafe = ltrim(Str\strip_prefix($this->toFileSystemSafeString($url->getUrl()), $hostName), '_');
+        $urlFsSafe = ltrim(str_strip_prefix($this->toFileSystemSafeString($url->getUrl()), $hostName), '_');
 
         $firstLetter = mb_strtoupper("{$hostName}_")[0];
         $optionalDash = '' === $urlFsSafe ? '' : '-';
@@ -34,8 +24,8 @@ class FileSystemPathProvider
 
     private function toFileSystemSafeString(string $url): string
     {
-        $url = $this->urlPrefixAndSuffixRegex->prune($url);
-        $url = $this->fsUnfriendlyCharactersRegex->replace($url)->with('_');
+        $url = Preg::replace('~^https?://(www\.)?|[?#].+$~i', '', $url);
+        $url = Preg::replace('~[^a-z0-9_.-]+~i', '_', $url);
 
         return trim($url, '_');
     }

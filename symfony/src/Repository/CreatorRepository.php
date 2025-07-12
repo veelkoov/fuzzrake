@@ -24,9 +24,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
-use Psl\Dict;
-use Psl\Vec;
 use Veelkoov\Debris\IntList;
+use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringSet;
 
@@ -128,7 +127,7 @@ class CreatorRepository extends ServiceEntityRepository
      */
     public function getWithOtherItemsLikePaged(array $items): Generator
     {
-        $items = Dict\map_keys($items, fn (int $key): string => "item$key");
+        $items = StringToString::mapFrom($items, static fn (string $value, int $key) => ["item$key", $value]);
 
         $parameters = new ArrayCollection([
             new Parameter('empty', ''),
@@ -137,7 +136,8 @@ class CreatorRepository extends ServiceEntityRepository
                 Field::OTHER_ORDER_TYPES->value,
                 Field::OTHER_STYLES->value,
             ]),
-            ...Vec\map_with_key($items, fn (string $key, string $value) => new Parameter($key, "%$value%")),
+            // grep-code-debris-needs-improvements
+            ...$items->map(static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
         ]);
 
         $queryBuilder = $this->getCreatorsQueryBuilder();
@@ -149,7 +149,7 @@ class CreatorRepository extends ServiceEntityRepository
                     ->where('d_cv.creator = d_c')
                     ->andWhere('d_cv.fieldName IN (:otherFieldNames)')
                     ->andWhere($queryBuilder->expr()->orX(
-                        ...Vec\map_with_key($items, fn (string $parName, string $_): string => "cv.value LIKE :$parName"),
+                        ...$items->getKeys()->map(static fn (string $parName) => "cv.value LIKE :$parName")
                     )),
             ))
             ->setParameters($parameters)

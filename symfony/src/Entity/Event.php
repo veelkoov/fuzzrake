@@ -301,6 +301,6 @@ class Event
 
     public function isEditable(): bool
     {
-        return in_array($this->type, self::EDITABLE_TYPES, true);
+        return arr_contains(self::EDITABLE_TYPES, $this->type);
     }
 }

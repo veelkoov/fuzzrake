@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
-use Psl\Vec;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
@@ -71,7 +70,7 @@ class Cache
             $keyParts = [$keyParts];
         }
 
-        $keyParts = Vec\map($keyParts, function (mixed $item): string {
+        $keyParts = arr_map($keyParts, function (mixed $item): string {
             if ($item instanceof Field) {
                 $result = $item->value;
             } elseif (is_string($item)) {

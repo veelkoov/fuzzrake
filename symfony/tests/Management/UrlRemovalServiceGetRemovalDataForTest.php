@@ -11,7 +11,6 @@ use App\Utils\Mx\GroupedUrl;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Psl\Vec;
 
 #[Small]
 class UrlRemovalServiceGetRemovalDataForTest extends TestCase
@@ -87,12 +86,12 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
 
         self::assertEqualsCanonicalizing(
             ['https://localhost/faq', 'https://com2.example.com/', 'https://prc1.example.com/'],
-            Vec\map($result->removedUrls->urls, fn (GroupedUrl $url): string => $url->url),
+            arr_map($result->removedUrls->urls, static fn (GroupedUrl $url): string => $url->url),
         );
 
         self::assertEqualsCanonicalizing(
             ['https://localhost/main', 'https://com1.example.com/', 'https://prc2.example.com/'],
-            Vec\map($result->remainingUrls->urls, fn (GroupedUrl $url): string => $url->url),
+            arr_map($result->remainingUrls->urls, static fn (GroupedUrl $url): string => $url->url),
         );
     }
 }

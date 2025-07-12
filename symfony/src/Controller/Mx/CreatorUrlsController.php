@@ -43,7 +43,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         $form = $this->createForm(CreatorUrlsSelectionType::class, $data, ['urls' => $urls]);
 
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
-            $urlIds = implode(',', $data->getChosenUrls());
+            $urlIds = $data->getChosenUrls()->join(',');
 
             return $this->redirectToRoute(RouteName::MX_CREATOR_URLS_REMOVAL, [
                 'creatorId' => $creatorId,

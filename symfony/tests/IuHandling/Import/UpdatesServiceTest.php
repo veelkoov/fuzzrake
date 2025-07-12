@@ -20,7 +20,6 @@ use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psl\Vec;
 use Psr\Log\LoggerInterface;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
@@ -248,7 +247,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $creatorRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $creatorIds) use ($calls) {
             foreach ($calls as $call) {
                 if ($call[0] === $names && $call[1] === $creatorIds) {
-                    return Vec\map($call[2], static fn (Creator $creator) => $creator->entity);
+                    return arr_map($call[2], static fn (Creator $creator) => $creator->entity);
                 }
             }
 

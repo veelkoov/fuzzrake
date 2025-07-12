@@ -9,7 +9,6 @@ use App\Utils\ParseException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class ParseTest extends TestCase
@@ -24,9 +23,12 @@ class ParseTest extends TestCase
         }
     }
 
-    public static function intDataProvider(): TestDataProvider
+    /**
+     * @return list<array{float|int|string|null, int|false}>
+     */
+    public static function intDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [null,   false],
             [0,      0],
             [1,      1],
@@ -46,7 +48,7 @@ class ParseTest extends TestCase
             ['1a ',  false],
             ['1.0',  false],
             [' 1.0', false],
-        );
+        ];
     }
 
     #[DataProvider('nBoolDataProvider')]
@@ -55,9 +57,12 @@ class ParseTest extends TestCase
         self::assertSame($expected, Parse::nBool($input));
     }
 
-    public static function nBoolDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, ?bool}>
+     */
+    public static function nBoolDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             ['1',       true],
             ['true',    true],
             ['tRue',    true],
@@ -82,6 +87,6 @@ class ParseTest extends TestCase
             ['null',    null],
             ['unknown', null],
             ['2',       null],
-        );
+        ];
     }
 }

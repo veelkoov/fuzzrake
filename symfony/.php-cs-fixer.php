@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-$finder = (new PhpCsFixer\Finder())
+$finder = new PhpCsFixer\Finder()
     ->in(__DIR__)
     ->exclude('var')
     ->exclude('node_modules')
 ;
 
-return (new PhpCsFixer\Config())
+return new PhpCsFixer\Config()
     ->setRules([
         '@Symfony'                => true,
         'binary_operator_spaces'  => false,

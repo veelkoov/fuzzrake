@@ -19,7 +19,6 @@ use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
-use Psl\Vec;
 use Veelkoov\Debris\StringSet;
 
 class QueryChoicesAppender
@@ -456,7 +455,7 @@ class QueryChoicesAppender
                     ->andWhere("$creatorValue.fieldName IN (:$cvFieldNameValue)")
             ));
 
-            $builder->setParameter($cvFieldNameValue, Vec\filter_nulls([$primaryField->value, $otherField?->value]));
+            $builder->setParameter($cvFieldNameValue, arr_filter_nulls([$primaryField->value, $otherField?->value]));
         }
 
         if ($items->common->isNotEmpty()) {

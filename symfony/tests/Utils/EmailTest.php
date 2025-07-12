@@ -8,7 +8,6 @@ use App\Utils\Email;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Small]
 class EmailTest extends TestCase
@@ -19,15 +18,18 @@ class EmailTest extends TestCase
         self::assertSame($isValid, Email::isValid($input));
     }
 
-    public static function isValidDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, bool}>
+     */
+    public static function isValidDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             ['', false],
             ['@example', false],
             ['example:@example', false],
             ['example:@example.com', false],
             ['contact@example.com', true],
-        );
+        ];
     }
 
     #[DataProvider('obfuscateDataProvider')]
@@ -36,14 +38,17 @@ class EmailTest extends TestCase
         self::assertSame($expected, Email::obfuscate($input));
     }
 
-    public static function obfuscateDataProvider(): TestDataProvider
+    /**
+     * @return list<array{string, string}>
+     */
+    public static function obfuscateDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             ['@example.com', '@e*********m'],
             ['e@example.com', 'e@e*********m'],
             ['ex@example.com', 'e*@e*********m'],
             ['exa@example.com', 'e*a@e*********m'],
             ['exam@example.com', 'e**m@e*********m'],
-        );
+        ];
     }
 }

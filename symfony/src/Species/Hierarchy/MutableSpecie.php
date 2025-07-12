@@ -6,7 +6,6 @@ namespace App\Species\Hierarchy;
 
 use App\Species\SpecieException;
 use Override;
-use Psl\Vec;
 
 final class MutableSpecie implements Specie
 {
@@ -60,7 +59,13 @@ final class MutableSpecie implements Specie
 
     public function getAncestors(): SpecieSet
     {
-        return new SpecieSet(Vec\flat_map($this->parents, static fn (Specie $specie) => $specie->getThisAndAncestors()));
+        $result = new SpecieSet();
+
+        foreach ($this->parents as $parent) {
+            $result->addAll($parent->getThisAndAncestors());
+        }
+
+        return $result;
     }
 
     #[Override]
@@ -78,7 +83,13 @@ final class MutableSpecie implements Specie
     #[Override]
     public function getDescendants(): SpecieSet
     {
-        return new SpecieSet(Vec\flat_map($this->children, static fn (Specie $specie) => $specie->getThisAndDescendants()));
+        $result = new SpecieSet();
+
+        foreach ($this->children as $child) {
+            $result->addAll($child->getThisAndDescendants());
+        }
+
+        return $result;
     }
 
     #[Override]

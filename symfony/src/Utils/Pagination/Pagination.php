@@ -6,9 +6,7 @@ namespace App\Utils\Pagination;
 
 use App\Utils\Traits\UtilityClass;
 use Countable;
-use Psl\Dict;
-use Psl\Math;
-use Psl\Vec;
+use Veelkoov\Debris\IntSet;
 
 final class Pagination
 {
@@ -18,7 +16,7 @@ final class Pagination
 
     public static function countPages(Countable $paginator, int $pageSize): int
     {
-        return (int) Math\max([1, Math\ceil($paginator->count() / $pageSize)]);
+        return (int) max(1, ceil($paginator->count() / $pageSize));
     }
 
     public static function getFirstIdx(int $pageSize, int $pageNumber): int
@@ -26,12 +24,9 @@ final class Pagination
         return $pageSize * ($pageNumber - 1);
     }
 
-    /**
-     * @return list<int>
-     */
-    public static function getPaginationPages(int $pageNumber, int $pagesCount): array
+    public static function getPaginationPages(int $pageNumber, int $pagesCount): IntSet
     {
-        $candidates = [
+        return new IntSet([
             1,
             $pageNumber - 2,
             $pageNumber - 1,
@@ -39,13 +34,9 @@ final class Pagination
             $pageNumber + 1,
             $pageNumber + 2,
             $pagesCount,
-        ];
-
-        $result = Vec\filter(
-            $candidates,
-            fn (int $candidate): bool => $candidate >= 1 && $candidate <= $pagesCount,
-        );
-
-        return Vec\sort(Vec\values(Dict\unique($result)));
+        ])
+            ->filter(static fn (int $candidate): bool => $candidate >= 1 && $candidate <= $pagesCount)
+            ->sorted()
+            ->freeze();
     }
 }

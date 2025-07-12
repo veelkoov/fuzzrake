@@ -12,7 +12,6 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
 
 #[Medium]
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
@@ -42,9 +41,12 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
         self::assertEquals($expected, $creator->get($field));
     }
 
-    public static function getFixedDataProvider(): TestDataProvider
+    /**
+     * @return list<array{Field, list<string>|string, list<string>|string}>
+     */
+    public static function getFixedDataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [Field::NAME, ' The name ', 'The name'],
 
             // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated creators
@@ -101,6 +103,6 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
                 ['armsleeves', 'Posable tounges'],
                 ['Arm sleeves', 'Poseable tongue'],
             ],
-        );
+        ];
     }
 }

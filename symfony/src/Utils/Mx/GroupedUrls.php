@@ -9,8 +9,6 @@ use App\Data\Definitions\Fields\Fields;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
-use Psl\Iter;
-use Psl\Vec;
 
 final readonly class GroupedUrls
 {
@@ -51,16 +49,16 @@ final readonly class GroupedUrls
      */
     public function onlyWithIds(array $urlIds): self
     {
-        return new self(Vec\filter($this->urls, fn (GroupedUrl $url): bool => Iter\contains($urlIds, $url->getId())));
+        return new self(arr_filterl($this->urls, static fn (GroupedUrl $url) => arr_contains($urlIds, $url->getId())));
     }
 
     public function minus(self $removedUrls): self
     {
-        return new self(Vec\filter(
+        return new self(arr_filterl(
             $this->urls,
-            fn (GroupedUrl $url): bool => !Iter\any(
+            static fn (GroupedUrl $url): bool => !array_any(
                 $removedUrls->urls,
-                fn (GroupedUrl $other): bool => $other->getId() === $url->getId(),
+                static fn (GroupedUrl $other): bool => $other->getId() === $url->getId(),
             ),
         ));
     }
@@ -70,9 +68,9 @@ final readonly class GroupedUrls
      */
     public function getStringOrStrList(Field $urlType): string|array
     {
-        $urls = Vec\map(
-            Vec\filter($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
-            fn (GroupedUrl $url): string => $url->url,
+        $urls = arr_map(
+            arr_filterl($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
+            static fn (GroupedUrl $url): string => $url->url,
         );
 
         if ($urlType->isList()) {

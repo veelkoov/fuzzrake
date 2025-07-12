@@ -9,23 +9,22 @@ use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use App\Utils\Creator\CompletenessCalc;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Composer\Pcre\Regex;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use TRegx\PhpUnit\DataProviders\DataProvider as TestDataProvider;
-
-use function Psl\File\read;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[Small]
 class CompletenessCalcTest extends TestCase
 {
     public function testAllFieldsCovered(): void
     {
-        $contents = read(Paths::getCompletenessCalcClassPath());
+        $contents = new Filesystem()->readFile(Paths::getCompletenessCalcClassPath());
         $wrongCount = [];
 
         foreach (Fields::all() as $field) {
-            if (1 !== pattern('[ :]'.$field->value.'[,;).]')->count($contents)) {
+            if (1 !== Regex::matchAll('~[ :]'.$field->value.'[,;).]~', $contents)->count) {
                 $wrongCount[] = $field->value;
             }
         }
@@ -49,14 +48,17 @@ class CompletenessCalcTest extends TestCase
         self::assertSame(50, CompletenessCalc::count($subject));
     }
 
-    public static function justRequiredGive50DataProvider(): TestDataProvider
+    /**
+     * @return list<array{Ages, bool, bool, ?bool, ?bool}>
+     */
+    public static function justRequiredGive50DataProvider(): array
     {
-        return TestDataProvider::tuples(
+        return [
             [Ages::ADULTS, false, false, false, false],
             [Ages::ADULTS, false, false, true,  null],
             [Ages::MINORS, false, false, null,  true],
             [Ages::MINORS, false, true,  null,  null],
-        );
+        ];
     }
 
     public function testAllNonRequiredAndAllButOneRequiredCantGetPast50(): void

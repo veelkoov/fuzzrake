@@ -9,7 +9,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use PHPUnit\Framework\Attributes\Medium;
-use Psl\Dict;
+use Veelkoov\Debris\Maps\StringToString;
 
 #[Medium]
 class EmailUpdateTest extends FuzzrakeWebTestCase
@@ -22,62 +22,62 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::NO, '');
         $this->skipToTheDataIuFormPage();
-        $this->succeedsSubmittingAfterSetting([]);
+        $this->succeedsSubmittingAfterSetting(new StringToString());
     }
 
     public function testGarbageEmailIgnoredWhenNoContactAllowed(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::NO, 'garbage');
         $this->skipToTheDataIuFormPage();
-        $this->succeedsSubmittingAfterSetting([]);
+        $this->succeedsSubmittingAfterSetting(new StringToString());
     }
 
     public function testEmptyEmailRejected(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, '');
         $this->skipToTheDataIuFormPage();
-        $this->failsSubmittingAfterSetting([]);
+        $this->failsSubmittingAfterSetting(new StringToString());
     }
 
     public function testGarbageEmailRejected(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
         $this->skipToTheDataIuFormPage();
-        $this->failsSubmittingAfterSetting([]);
+        $this->failsSubmittingAfterSetting(new StringToString());
     }
 
     public function testOldUnchangedValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'contact@example.com');
         $this->skipToTheDataIuFormPage();
-        $this->succeedsSubmittingAfterSetting([]);
+        $this->succeedsSubmittingAfterSetting(new StringToString());
     }
 
     public function testOldUnchangedGarbageEmailRejected(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
         $this->skipToTheDataIuFormPage();
-        $this->failsSubmittingAfterSetting([
+        $this->failsSubmittingAfterSetting(new StringToString([
             'emailAddress' => 'garbage',
-        ]);
+        ]));
     }
 
     public function testNewValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, '');
         $this->skipToTheDataIuFormPage();
-        $this->succeedsSubmittingAfterSetting([
+        $this->succeedsSubmittingAfterSetting(new StringToString([
             'emailAddress' => 'contact@example.com',
-        ]);
+        ]));
     }
 
     public function testFixedValidEmailAccepted(): void
     {
         $this->havingACreatorWithContactAndEmailSetAs(ContactPermit::CORRECTIONS, 'garbage');
         $this->skipToTheDataIuFormPage();
-        $this->succeedsSubmittingAfterSetting([
+        $this->succeedsSubmittingAfterSetting(new StringToString([
             'emailAddress' => 'contact@example.com',
-        ]);
+        ]));
     }
 
     private function havingACreatorWithContactAndEmailSetAs(ContactPermit $contactPermit, string $email): void
@@ -95,39 +95,27 @@ class EmailUpdateTest extends FuzzrakeWebTestCase
         self::skipRules();
     }
 
-    /**
-     * @param array<string, string> $values
-     */
-    private function succeedsSubmittingAfterSetting(array $values): void
+    private function succeedsSubmittingAfterSetting(StringToString $values): void
     {
-        self::submitValidForm('Submit', $this->extendFormValuesWith($values));
+        self::submitValidForm('Submit', $this->extendFormValuesWith($values)->toArray());
     }
 
-    /**
-     * @param array<string, string> $values
-     */
-    private function failsSubmittingAfterSetting(array $values): void
+    private function failsSubmittingAfterSetting(StringToString $values): void
     {
-        self::submitInvalidForm('Submit', $this->extendFormValuesWith($values));
+        self::submitInvalidForm('Submit', $this->extendFormValuesWith($values)->toArray());
 
         self::assertFieldErrorValidEmailAddressRequired();
     }
 
-    /**
-     * @param array<string, string> $values
-     *
-     * @return array<string, string>
-     */
-    private function extendFormValuesWith(array $values): array
+    private function extendFormValuesWith(StringToString $values): StringToString
     {
-        return Dict\merge(
-            Dict\map_keys($values, fn (string $key): string => "iu_form[$key]"),
-            [
+        return $values
+            ->mapKeysInto(static fn (string $key): string => "iu_form[$key]", new StringToString()) // grep-code-debris-needs-improvements
+            ->setAll([
                 'iu_form[password]' => 'abcd1234',
                 'iu_form[changePassword]' => '1', // Just allow the submission
                 'iu_form[verificationAcknowledgement]' => '1', // Whatever the contact permit is
                 $this->getCaptchaFieldName('right') => 'right',
-            ],
-        );
+            ]);
     }
 }

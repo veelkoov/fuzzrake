@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Repository\CreatorRepository;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Composer\Pcre\Preg;
 
 class DataQuery
 {
@@ -15,9 +16,9 @@ class DataQuery
     private const string CMD_ONLY_FEEDBACK_YES = ':YES';
 
     /**
-     * @var Creator[]
+     * @var list<Creator>
      */
-    private array $result = [];
+    public private(set) array $result = [];
 
     /**
      * @var list<string>
@@ -35,17 +36,17 @@ class DataQuery
     private array $matchedItems = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
-    private array $errors = [];
+    public private(set) array $errors = [];
 
     private bool $optOnlyFeedbackYes = false;
 
-    private bool $wasRun = false;
+    public private(set) bool $wasRun = false;
 
     public function __construct(string $input)
     {
-        $items = Arrays::nonEmptyStrings(pattern('\s+')->split($input));
+        $items = Arrays::nonEmptyStrings(Preg::split('~\s+~', $input));
 
         foreach ($items as $item) {
             switch ($item[0]) {
@@ -82,19 +83,6 @@ class DataQuery
         $this->wasRun = true;
     }
 
-    public function getWasRun(): bool
-    {
-        return $this->wasRun;
-    }
-
-    /**
-     * @return Creator[]
-     */
-    public function getResult(): array
-    {
-        return $this->result;
-    }
-
     /**
      * @return array<string, int>
      */
@@ -109,14 +97,6 @@ class DataQuery
         }
 
         return $res;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getErrors(): array
-    {
-        return $this->errors;
     }
 
     /**
@@ -186,12 +166,6 @@ class DataQuery
      */
     private function itemMatchesList(string $item, array $list): bool
     {
-        foreach ($list as $listItem) {
-            if (false !== stripos($item, $listItem)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($list, static fn ($listItem) => false !== stripos($item, $listItem));
     }
 }

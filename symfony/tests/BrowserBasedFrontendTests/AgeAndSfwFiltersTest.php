@@ -12,7 +12,6 @@ use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
-use Psl\Iter;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 
 #[Large]
@@ -37,7 +36,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 
                             $showToMinors = false === $nsfwWebsite
                                 && false === $nsfwSocial
-                                && (false === $doesNsfw || (null === $doesNsfw && Iter\contains([Ages::MIXED, Ages::MINORS], $ages)))
+                                && (false === $doesNsfw || (null === $doesNsfw && arr_contains([Ages::MIXED, Ages::MINORS], $ages)))
                                 && true === $worksWithMinors;
 
                             $showAsSfw = false === $nsfwWebsite
