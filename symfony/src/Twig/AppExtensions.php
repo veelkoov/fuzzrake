@@ -13,7 +13,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
-use Psl\Vec;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
 
@@ -54,7 +53,7 @@ class AppExtensions
 
         $explanation = Patterns::get(' \([^)]+\)');
 
-        return implode(', ', Vec\map($items, static fn (string $item): string => $explanation->prune($item)));
+        return implode(', ', arr_map($items, static fn (string $item): string => $explanation->prune($item)));
     }
 
     #[AsTwigFunction('is_new')]

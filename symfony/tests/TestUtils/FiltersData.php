@@ -11,7 +11,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use Psl\Dict;
-use Psl\Vec;
 
 class FiltersData
 {
@@ -37,14 +36,14 @@ class FiltersData
         $creatorSpecies = [];
 
         foreach ($creators as $creator) {
-            $creatorSpecies = [...$creatorSpecies, ...Vec\map($creator->getSpeciesDoes(),
+            $creatorSpecies = [...$creatorSpecies, ...arr_map($creator->getSpeciesDoes(),
                 static fn (string $name) => new CreatorSpecie()
                     ->setSpecie($species[$name])
                     ->setCreator($creator->entity),
             )];
         }
 
-        return Vec\values([...$species, ...$creatorSpecies]);
+        return array_values([...$species, ...$creatorSpecies]);
     }
 
     /**
@@ -64,6 +63,6 @@ class FiltersData
      */
     private static function getSpecieNamesFrom(array $creators): array
     {
-        return Lists::unique(array_merge(...Vec\map($creators, static fn (Creator $creator) => $creator->getSpeciesDoes())));
+        return Lists::unique(array_merge(...arr_map($creators, static fn (Creator $creator) => $creator->getSpeciesDoes())));
     }
 }

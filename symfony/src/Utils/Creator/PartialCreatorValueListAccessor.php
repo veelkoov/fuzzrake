@@ -8,7 +8,6 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorValue;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
-use Psl\Vec;
 
 final class PartialCreatorValueListAccessor
 {
@@ -19,7 +18,7 @@ final class PartialCreatorValueListAccessor
      */
     public static function get(Creator $creator, Field $field): array
     {
-        return Vec\map(
+        return arr_map(
             self::getObjects($creator, $field),
             static fn (CreatorValue $value): string => $value->getValue(),
         );
@@ -30,9 +29,9 @@ final class PartialCreatorValueListAccessor
      */
     private static function getObjects(Creator $creator, Field $field): array
     {
-        return Vec\filter(
+        return iter_filter(
             $creator->entity->getValues(),
-            static fn (CreatorValue $value): bool => $value->getFieldName() === $field->value,
+            static fn (CreatorValue $value) => $value->getFieldName() === $field->value,
         );
     }
 

@@ -9,7 +9,6 @@ use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Small;
-use Psl\Vec;
 
 #[Small]
 class SmartUrlAccessorTest extends FuzzrakeTestCase
@@ -84,7 +83,7 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
      */
     private function getUrlArray(CreatorE $creator): array
     {
-        $result = Vec\map($creator->getUrls(), fn (CreatorUrl $url) => $url->getType().' '.$url->getUrl());
+        $result = iter_map($creator->getUrls(), static fn (CreatorUrl $url) => $url->getType().' '.$url->getUrl());
         sort($result);
 
         return $result;

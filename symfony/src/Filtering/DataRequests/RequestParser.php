@@ -6,7 +6,6 @@ namespace App\Filtering\DataRequests;
 
 use InvalidArgumentException;
 use Psl\Dict;
-use Psl\Iter;
 use Psl\Type;
 use Psl\Type\Exception\CoercionException;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,12 +65,12 @@ class RequestParser
             new StringSet($strArrays['productionModels']),
             new StringSet($strArrays['openFor']),
             new StringSet($strArrays['species']),
-            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
-            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
-            Iter\contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
+            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
+            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+            arr_contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans->get('isAdult'),
             $booleans->get('wantsSfw'),
-            Iter\contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
+            arr_contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
             $booleans->get('creatorMode'),
             $pageNumber,
         ));

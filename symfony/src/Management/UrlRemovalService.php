@@ -16,8 +16,6 @@ use App\Utils\Mx\GroupedUrls;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Psl\Iter;
-use Psl\Vec;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -65,9 +63,9 @@ final class UrlRemovalService
         }
 
         // If there are no remaining valid URLs, hide the creator.
-        $hide = [] === Vec\filter(
+        $hide = [] === array_filter(
             $remainingUrls->urls,
-            static fn (GroupedUrl $url): bool => !Iter\contains(self::IGNORED_URL_TYPES, $url->type),
+            static fn (GroupedUrl $url): bool => !arr_contains(self::IGNORED_URL_TYPES, $url->type),
         );
 
         $sendEmail = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
@@ -159,7 +157,7 @@ final class UrlRemovalService
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string
     {
-        return implode("\n", array_unique(Vec\map(
+        return implode("\n", array_unique(arr_map(
             $data->removedUrls->urls,
             static fn (GroupedUrl $url): string => "- $url->url",
         )));

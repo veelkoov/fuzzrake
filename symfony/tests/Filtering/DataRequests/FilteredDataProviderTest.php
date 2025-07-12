@@ -13,8 +13,6 @@ use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use Psl\Iter;
-use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
 use Veelkoov\Debris\StringSet;
 
@@ -112,8 +110,8 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         self::assertSame($pageReturned, $result->pageNumber);
         self::assertSame($pagesCount, $result->totalPages);
 
-        $first = Parse::int(Iter\first($result->items)?->getCity() ?? '0');
-        $last = Parse::int(Iter\last($result->items)?->getCity() ?? '0');
+        $first = Parse::int(array_first($result->items)?->getCity() ?? '0');
+        $last = Parse::int(array_last($result->items)?->getCity() ?? '0');
 
         self::assertSame($expectedFirst, $first);
         self::assertSame($expectedLast, $last);
@@ -124,8 +122,8 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
      */
     private static function creatorsListToCreatorIdList(ItemsPage $pageData): string
     {
-        $creatorIds = Vec\map($pageData->items, fn (Creator $creator) => $creator->getCreatorId());
+        $creatorIds = arr_map($pageData->items, static fn (Creator $creator) => $creator->getCreatorId());
 
-        return implode(', ', Vec\sort($creatorIds));
+        return implode(', ', list_sort($creatorIds));
     }
 }

@@ -10,7 +10,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use App\ValueObject\CacheTags;
-use Psl\Vec;
 
 class FilteredDataProvider
 {
@@ -48,7 +47,7 @@ class FilteredDataProvider
             $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
         } while ($choices->pageNumber > $pagesCount);
 
-        $creators = Vec\map($paginator,
+        $creators = iter_map($paginator,
             // grep-code-cannot-use-coalesce-in-doctrine-order-by
             static fn (array $creatorAndOrderColumns) => Creator::wrap($creatorAndOrderColumns[0]),
         );

@@ -8,7 +8,6 @@ use App\Entity\CreatorUrl as ItemType;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
-use Psl\Vec;
 
 final class SmartUrlAccessor
 {
@@ -19,7 +18,7 @@ final class SmartUrlAccessor
      */
     public static function getObjects(Creator $creator, string $type): array
     {
-        return Vec\filter($creator->entity->getUrls(),
+        return iter_filter($creator->entity->getUrls(),
             static fn (ItemType $url): bool => $url->getType() === $type);
     }
 
@@ -28,7 +27,7 @@ final class SmartUrlAccessor
      */
     public static function getList(Creator $creator, string $type): array
     {
-        return array_map(static fn (ItemType $item) => $item->getUrl(), self::getObjects($creator, $type));
+        return arr_map(self::getObjects($creator, $type), static fn (ItemType $item) => $item->getUrl());
     }
 
     /**
@@ -40,7 +39,7 @@ final class SmartUrlAccessor
         $existingObjects = self::getObjects($creator, $type);
 
         foreach ($existingObjects as $existingObject) {
-            if (!in_array($existingObject->getUrl(), $newUrls, true)) {
+            if (!arr_contains($newUrls, $existingObject->getUrl())) {
                 $creator->entity->removeUrl($existingObject);
             }
         }
@@ -48,7 +47,7 @@ final class SmartUrlAccessor
         $existingValues = self::getList($creator, $type);
 
         foreach ($newUrls as $newValue) {
-            if (!in_array($newValue, $existingValues, true)) {
+            if (!arr_contains($existingValues, $newValue)) {
                 $newObject = new ItemType()->setType($type)->setUrl($newValue);
 
                 $creator->entity->addUrl($newObject);

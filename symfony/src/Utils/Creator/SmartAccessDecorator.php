@@ -35,7 +35,6 @@ use JsonSerializable;
 use LogicException;
 use Override;
 use Psl\Dict;
-use Psl\Iter;
 use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
@@ -72,7 +71,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public static function wrapAll(array $creators): array
     {
-        return array_map(static fn (CreatorE $creator) => self::wrap($creator), $creators);
+        return arr_map($creators, static fn (CreatorE $creator) => self::wrap($creator));
     }
 
     public static function wrap(CreatorE $creator): self
@@ -145,14 +144,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getLastCreatorId(): string
     {
-        return Iter\first($this->getAllCreatorIds()) ?? throw new LogicException('Creator does not have any creator ID');
+        return array_first($this->getAllCreatorIds()) ?? throw new LogicException('Creator does not have any creator ID');
     }
 
     public function hasCreatorId(string $creatorId): bool
     {
-        return in_array($creatorId, $this->entity->getCreatorIds()
+        return arr_contains($this->entity->getCreatorIds()
             ->map(static fn (CreatorId $creatorIdE): string => $creatorIdE->getCreatorId())
-            ->toArray(), true);
+            ->toArray(), $creatorId);
     }
 
     /**
@@ -163,7 +162,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $allCreatorIdsToSet = [...$formerCreatorIdsToSet, $this->entity->getCreatorId()];
 
         foreach ($this->entity->getCreatorIds() as $creatorId) {
-            if (!in_array($creatorId->getCreatorId(), $allCreatorIdsToSet, true)) {
+            if (!arr_contains($allCreatorIdsToSet, $creatorId->getCreatorId())) {
                 $this->entity->removeCreatorId($creatorId);
             }
         }

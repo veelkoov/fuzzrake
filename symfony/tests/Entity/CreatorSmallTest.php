@@ -99,12 +99,12 @@ class CreatorSmallTest extends TestCase
             $type = $property->getType();
             self::assertInstanceOf(ReflectionNamedType::class, $type, "$propertyPath type ($type) is not a named type.");
 
-            if (in_array($type->getName(), self::$ignoredTypes, true)) {
+            if (arr_contains(self::$ignoredTypes, $type->getName())) {
                 continue;
             }
 
             $subjectValue = $property->getValue($subject);
-            if (in_array($subjectValue, $subjectParents, true)) {
+            if (arr_contains($subjectParents, $subjectValue)) {
                 continue;
             }
 

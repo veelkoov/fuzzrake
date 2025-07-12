@@ -93,6 +93,9 @@
         }
     },
     "autoload": {
+        "files": [
+            "global/functions.php"
+        ],
         "psr-4": {
             "App\\": "src/"
         }

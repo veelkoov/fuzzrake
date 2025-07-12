@@ -7,7 +7,6 @@ namespace App\Utils\Creator;
 use App\Entity\CreatorOfferStatus as ItemType;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
-use Psl\Vec;
 
 final class SmartOfferStatusAccessor
 {
@@ -18,7 +17,7 @@ final class SmartOfferStatusAccessor
      */
     private static function getObjects(Creator $creator, bool $isOpen): array
     {
-        return Vec\filter($creator->entity->getOfferStatuses(),
+        return iter_filter($creator->entity->getOfferStatuses(),
             static fn (ItemType $status): bool => $status->getIsOpen() === $isOpen);
     }
 
@@ -27,7 +26,7 @@ final class SmartOfferStatusAccessor
      */
     public static function getList(Creator $creator, bool $isOpen): array
     {
-        return array_map(static fn (ItemType $item) => $item->getOffer(), self::getObjects($creator, $isOpen));
+        return arr_map(self::getObjects($creator, $isOpen), static fn (ItemType $item) => $item->getOffer());
     }
 
     /**
@@ -38,7 +37,7 @@ final class SmartOfferStatusAccessor
         $existingObjects = self::getObjects($creator, $isOpen);
 
         foreach ($existingObjects as $existingObject) {
-            if (!in_array($existingObject->getOffer(), $newOffers, true)) {
+            if (!arr_contains($newOffers, $existingObject->getOffer())) {
                 $creator->entity->removeOfferStatus($existingObject);
             }
         }
@@ -46,7 +45,7 @@ final class SmartOfferStatusAccessor
         $existingValues = self::getList($creator, $isOpen);
 
         foreach ($newOffers as $newValue) {
-            if (!in_array($newValue, $existingValues, true)) {
+            if (!arr_contains($existingValues, $newValue)) {
                 $newObject = new ItemType()->setIsOpen($isOpen)->setOffer($newValue);
 
                 $creator->entity->addOfferStatus($newObject);

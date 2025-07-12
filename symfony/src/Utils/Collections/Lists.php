@@ -23,7 +23,7 @@ final class Lists
         $result = $a1;
 
         foreach ($result as $key => $value) {
-            if (!in_array($value, $a2, true)) {
+            if (!arr_contains($a2, $value)) {
                 unset($result[$key]);
             }
         }

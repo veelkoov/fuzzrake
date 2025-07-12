@@ -10,7 +10,6 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
 use PHPUnit\Framework\Attributes\Small;
-use Psl\Vec;
 
 #[Small]
 class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
@@ -64,7 +63,10 @@ class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
      */
     private function getOfferStatusArray(CreatorE $creator): array
     {
-        $result = Vec\map($creator->getOfferStatuses(), fn (CreatorOfferStatus $url) => StrUtils::asStr($url->getIsOpen()).' '.$url->getOffer());
+        $result = iter_map(
+            $creator->getOfferStatuses(),
+            static fn (CreatorOfferStatus $url) => StrUtils::asStr($url->getIsOpen()).' '.$url->getOffer(),
+        );
         sort($result);
 
         return $result;

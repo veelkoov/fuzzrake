@@ -9,7 +9,6 @@ use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Data\FieldValue;
 use App\Utils\Creator\CreatorId;
 use App\Utils\FieldReadInterface;
-use Psl\Vec;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
@@ -320,6 +319,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
      */
     public static function strings(array $fields): array
     {
-        return Vec\map($fields, fn (self $field): string => $field->value);
+        return iter_map($fields, static fn (self $field): string => $field->value);
     }
 }

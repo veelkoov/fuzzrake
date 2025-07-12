@@ -32,6 +32,6 @@ final class SecureValues
 
     public static function hideInChangesDescription(Field $field): bool
     {
-        return in_array($field, self::FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION, true);
+        return arr_contains(self::FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION, $field);
     }
 }

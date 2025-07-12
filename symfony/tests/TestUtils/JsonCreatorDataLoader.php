@@ -54,7 +54,7 @@ class JsonCreatorDataLoader
         $result = new Creator();
 
         foreach (Fields::all() as $fieldName => $field) {
-            if (in_array($field, $skippedFields, true)) {
+            if (arr_contains($skippedFields, $field)) {
                 continue;
             }
 

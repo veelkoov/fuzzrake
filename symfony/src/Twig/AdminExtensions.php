@@ -59,7 +59,7 @@ class AdminExtensions
         $otherItems = $other->getStringList($field);
 
         foreach ($subjectItems as $item) {
-            $itemClass = in_array($item, $otherItems, true) ? 'badge-outline-secondary' : $bsClass;
+            $itemClass = arr_contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
             $result .= " <span class=\"submission-list-item badge $itemClass\" title=\"$text\">$text</span> ";

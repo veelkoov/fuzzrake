@@ -7,7 +7,7 @@ use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 
 return RectorConfig::configure()
-    ->withPaths([__DIR__.'/migrations', __DIR__.'/src', __DIR__.'/tests'])
+    ->withPaths([__DIR__.'/global', __DIR__.'/migrations', __DIR__.'/src', __DIR__.'/tests'])
     ->withPhpSets()
     ->withComposerBased(
         twig: true,
