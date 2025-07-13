@@ -6,23 +6,23 @@ namespace App\Tracking\Patterns;
 
 use App\Utils\ConfigurationException;
 use App\Utils\Traits\UtilityClass;
-use TRegx\CleanRegex\Pattern;
+use Veelkoov\Debris\Maps\StringToString;
 
 final class Token
 {
     use UtilityClass;
 
-    private static ?StringToPattern $patternsCache = null;
+    private static ?StringToString $patternsCache = null;
 
-    public static function getPattern(string $token): Pattern
+    public static function getPattern(string $token): string
     {
-        $cache = self::$patternsCache ??= new StringToPattern();
+        $cache = self::$patternsCache ??= new StringToString();
 
         return $cache->getOrSet($token, function () use ($token) {
             $start = str_starts_with($token, ' ') ? '' : '(?<=^|[^A-Z_])';
             $end = str_ends_with($token, ' ') ? '' : '(?=[^A-Z_]|$)';
 
-            return Pattern::inject("$start@$end", [$token]);
+            return '~'.$start.preg_quote($token, '~').$end.'~';
         });
     }
 

@@ -172,3 +172,16 @@ function str_strip_prefix(string $subject, string $prefix): string
         ? substr($subject, strlen($prefix))
         : $subject;
 }
+
+function str_replace_limit(string $search, string $replace, string $subject, int $limit): string
+{
+    if ($limit < 0) {
+        throw new InvalidArgumentException("Limit must be positive integer, got: $limit.");
+    }
+
+    if ('' === $search) {
+        return $subject;
+    }
+
+    return implode($replace, explode($search, $subject, 1 + $limit));
+}

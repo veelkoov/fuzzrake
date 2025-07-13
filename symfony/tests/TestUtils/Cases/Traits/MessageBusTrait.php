@@ -6,6 +6,7 @@ namespace App\Tests\TestUtils\Cases\Traits;
 
 use Veelkoov\Debris\Base\DList;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
+use Zenstruck\Messenger\Test\Transport\TestTransport;
 use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;
 
 trait MessageBusTrait
@@ -39,7 +40,7 @@ trait MessageBusTrait
         $this->getTransport()->reset();
     }
 
-    private function getTransport(): \Zenstruck\Messenger\Test\Transport\TestTransport
+    private function getTransport(): TestTransport
     {
         return $this->transport('async-msg-queue');
     }

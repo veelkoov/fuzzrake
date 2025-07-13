@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Regexp;
 
 use App\Utils\Traits\UtilityClass;
+use Deprecated;
 use TRegx\CleanRegex\Pattern;
 
 final class Patterns
@@ -21,11 +22,13 @@ final class Patterns
      */
     private static array $cache = [];
 
+    #[Deprecated]
     public static function getI(string $pattern): Pattern
     {
         return self::$iCache[$pattern] ??= Pattern::of($pattern, 'i');
     }
 
+    #[Deprecated]
     public static function get(string $pattern): Pattern
     {
         return self::$cache[$pattern] ??= Pattern::of($pattern);

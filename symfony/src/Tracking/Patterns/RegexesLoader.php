@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tracking\Patterns;
 
 use App\Utils\ConfigurationException;
+use Composer\Pcre\Preg;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringList;
 
@@ -18,8 +20,10 @@ class RegexesLoader
     /**
      * @param array{tokens_replacements: array<mixed>, cleaners: array<mixed>, false_positives: array<mixed>, offers_statuses: array<mixed>} $patterns
      */
-    public function __construct(array $patterns)
-    {
+    public function __construct(
+        #[Autowire(param: 'tracking')]
+        array $patterns,
+    ) {
         $this->cleaners = StringToString::fromUnsafe($patterns['cleaners'])->freeze();
 
         $this->tokensReplacements = new StringToString();
@@ -65,12 +69,13 @@ class RegexesLoader
         return $topTokens->join('|');
     }
 
-    private function resolve(string $value): string
+    private function resolve(string $subject): string
     {
+        // TODO: Optimize, use array params to do all at once.
         foreach ($this->tokensReplacements as $token => $replacement) {
-            $value = Token::getPattern($token)->replace($value)->with($replacement);
+            $subject = Preg::replace(Token::getPattern($token), $replacement, $subject);
         }
 
-        return $value;
+        return $subject;
     }
 }
