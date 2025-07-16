@@ -6,6 +6,7 @@ namespace App\Tracking;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
@@ -20,13 +21,13 @@ class AnalysisAggregator
     /**
      * @param list<AnalysisResult> $results
      */
-    public function aggregate(array $results): AnalysisResults // FIXME
+    public function aggregate(array $results): AnalysisResults
     {
         $openFor = new StringSet();
         $closedFor = new StringSet();
         $hasEncounteredIssues = false;
 
-        foreach ($results as $result) {
+        foreach ($results as &$result) { // & to avoid logging the local duplicates/conflicts later
             $result = $this->normalizeResult($result);
 
             $openFor->addAll($result->openFor);
@@ -37,7 +38,10 @@ class AnalysisAggregator
         $contradicting = $openFor->intersect($closedFor);
 
         if ($contradicting->isNotEmpty()) {
-            $this->logger->info("Contradicting offers detected: {$contradicting->join(', ')}."); // FIXME: Not enough information.
+            $resultsAsString = new DList($results)
+                ->mapInto(static fn (AnalysisResult $result) => (string) $result, new StringList())
+                ->join(' / ');
+            $this->logger->info("Contradicting offers detected: $resultsAsString.");
 
             $openFor = $openFor->removeAll($contradicting);
             $closedFor = $closedFor->removeAll($contradicting);
