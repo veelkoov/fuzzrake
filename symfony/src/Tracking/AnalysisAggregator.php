@@ -12,7 +12,6 @@ use Veelkoov\Debris\StringSet;
 class AnalysisAggregator
 {
     public function __construct(
-        /* @phpstan-ignore property.onlyWritten (TODO: Use) */
         #[Autowire(service: 'monolog.logger.tracking')]
         private readonly LoggerInterface $logger,
     ) {
@@ -28,11 +27,56 @@ class AnalysisAggregator
         $hasEncounteredIssues = false;
 
         foreach ($results as $result) {
+            $result = $this->normalizeResult($result);
+
             $openFor->addAll($result->openFor);
             $closedFor->addAll($result->closedFor);
             $hasEncounteredIssues = $hasEncounteredIssues || $result->hasEncounteredIssues;
         }
 
+        $contradicting = $openFor->intersect($closedFor);
+
+        if ($contradicting->isNotEmpty()) {
+            $this->logger->info("Contradicting offers detected: {$contradicting->join(', ')}."); // FIXME: Not enough information.
+
+            $openFor = $openFor->removeAll($contradicting);
+            $closedFor = $closedFor->removeAll($contradicting);
+            $hasEncounteredIssues = true;
+        }
+
         return new AnalysisResults(new StringList($openFor), new StringList($closedFor), $hasEncounteredIssues);
+    }
+
+    private function normalizeResult(AnalysisResult $result): AnalysisResult
+    {
+        if ($result->openFor->isEmpty() && $result->closedFor->isEmpty()) {
+            $this->logger->info("Nothing detected: $result.");
+
+            return $result->with(hasEncounteredIssues: true);
+        }
+
+        $uniqueOpenFor = $result->openFor->unique();
+        $uniqueClosedFor = $result->closedFor->unique();
+
+        if ($uniqueOpenFor->count() !== $result->openFor->count()
+        || $uniqueClosedFor->count() !== $result->closedFor->count()) {
+            $this->logger->warning("Duplicated offers detected: $result.");
+
+            $result = $result->with(openFor: $uniqueOpenFor, closedFor: $uniqueClosedFor, hasEncounteredIssues: true);
+        }
+
+        $contradicting = $result->openFor->intersect($result->closedFor);
+
+        if ($contradicting->isNotEmpty()) {
+            $this->logger->warning("Contradicting offers detected: $result.");
+
+            $result = $result->with(
+                openFor: $result->openFor->minusAll($contradicting),
+                closedFor: $result->closedFor->minusAll($contradicting),
+                hasEncounteredIssues: true,
+            );
+        }
+
+        return $result;
     }
 }

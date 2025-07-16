@@ -100,7 +100,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
             ->willReturnCallback(static fn (Url $url) => new Snapshot('', new SnapshotMetadata($url->getUrl(),
                 UtcClock::now(), 200, [], [])));
 
-        $analysisResult = new AnalysisResult(new StringList(), new StringList(), false); // FIXME
+        $analysisResult = new AnalysisResult('', new StringList(), new StringList(), false); // FIXME
 
         $this->snapshotProcessorMock
             ->expects(self::exactly(2))
