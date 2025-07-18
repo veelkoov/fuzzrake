@@ -71,11 +71,9 @@ class RegexesLoader
 
     private function resolve(string $subject): string
     {
-        // TODO: Optimize, use array params to do all at once.
-        foreach ($this->tokensReplacements as $token => $replacement) {
-            $subject = Preg::replace(Token::getPattern($token), $replacement, $subject);
-        }
-
-        return $subject;
+        return Preg::replace(
+            $this->tokensReplacements->getKeys()->map(Token::getPattern(...))->getValuesArray(),
+            $this->tokensReplacements->getValuesArray(),
+            $subject);
     }
 }
