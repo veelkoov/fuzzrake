@@ -43,7 +43,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $messageBusMock->expects(self::once())->method('dispatch')
             ->willReturnCallback(function (TrackCreatorsV1 $message) use ($expectedIds): Envelope {
                 self::assertCount(3, $message->idsOfCreators);
-                self::assertEqualsCanonicalizing($expectedIds, $message->idsOfCreators->getValuesArray());
+                self::assertSameItems($expectedIds, $message->idsOfCreators);
 
                 return new Envelope($message);
             });
