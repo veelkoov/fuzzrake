@@ -11,7 +11,7 @@ use Veelkoov\Debris\Maps\StringToString;
 final class Token
 {
     use UtilityClass;
-    private const string REGEX_PRECEDEED_BY_STRING_START_OR_NON_TOKEN_CHARACTERS = '(?<=^|[^A-Z_])';
+    private const string REGEX_PRECEDED_BY_STRING_START_OR_NON_TOKEN_CHARACTERS = '(?<=^|[^A-Z_])';
     private const string REGEX_FOLLOWED_BY_STRING_END_OR_NON_TOKEN_CHARACTERS = '(?=[^A-Z_]|$)';
 
     private static ?StringToString $patternsCache = null;
@@ -21,7 +21,7 @@ final class Token
         $cache = self::$patternsCache ??= new StringToString();
 
         return $cache->getOrSet($token, function () use ($token) {
-            $start = str_starts_with($token, ' ') ? '' : self::REGEX_PRECEDEED_BY_STRING_START_OR_NON_TOKEN_CHARACTERS;
+            $start = str_starts_with($token, ' ') ? '' : self::REGEX_PRECEDED_BY_STRING_START_OR_NON_TOKEN_CHARACTERS;
             $end = str_ends_with($token, ' ') ? '' : self::REGEX_FOLLOWED_BY_STRING_END_OR_NON_TOKEN_CHARACTERS;
 
             return '~'.$start.preg_quote($token, '~').$end.'~';

@@ -8,9 +8,11 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\AnalysisResult;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\StringList;
 
+#[Small]
 class AnalysisAggregatorTest extends FuzzrakeTestCase
 {
     private AnalysisAggregator $subject;
