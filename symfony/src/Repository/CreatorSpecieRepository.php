@@ -7,7 +7,7 @@ namespace App\Repository;
 use App\Entity\CreatorSpecie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 
 /**
  * @method CreatorSpecie|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,7 +24,7 @@ class CreatorSpecieRepository extends ServiceEntityRepository
         parent::__construct($registry, CreatorSpecie::class);
     }
 
-    public function getActiveCreatorsSpecieNamesToCount(): StringIntMap
+    public function getActiveCreatorsSpecieNamesToCount(): StringToInt
     {
         $result = $this->getEntityManager()->createQuery('
                 SELECT d_s.name AS name
@@ -38,7 +38,7 @@ class CreatorSpecieRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getArrayResult();
 
-        return StringIntMap::fromRows($result, 'name', 'count');
+        return StringToInt::fromRows($result, 'name', 'count');
     }
 
     public function countActiveCreatorsHavingSpeciesDefined(): int

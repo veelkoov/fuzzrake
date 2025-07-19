@@ -15,7 +15,7 @@ use App\Repository\CreatorSpecieRepository;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Species\Hierarchy\SpecieSet;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 
 final class SpeciesFilterService
 {
@@ -41,7 +41,7 @@ final class SpeciesFilterService
         return new FilterData($items, SpecialItemList::of($unknown));
     }
 
-    private function getSpeciesList(SpecieSet $species, StringIntMap $stats): ItemList
+    private function getSpeciesList(SpecieSet $species, StringToInt $stats): ItemList
     {
         return ItemList::mapFrom(
             $species->filter(static fn (Specie $specie) => !$specie->getHidden()),
@@ -49,7 +49,7 @@ final class SpeciesFilterService
         );
     }
 
-    private function specieToStandardItem(Specie $specie, StringIntMap $stats): Item
+    private function specieToStandardItem(Specie $specie, StringToInt $stats): Item
     {
         return new Item(
             $specie->getName(),

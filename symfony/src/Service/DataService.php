@@ -21,7 +21,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\StringSet;
 
 class DataService
@@ -102,7 +102,7 @@ class DataService
         );
     }
 
-    public function countDistinctInActiveCreatorsHaving(Field $field): StringIntMap
+    public function countDistinctInActiveCreatorsHaving(Field $field): StringToInt
     {
         return $this->cache->get(
             function () use ($field) {
@@ -117,16 +117,16 @@ class DataService
         );
     }
 
-    public function getCompletenessStats(): StringIntMap
+    public function getCompletenessStats(): StringToInt
     {
-        return $this->cache->get(function (): StringIntMap {
+        return $this->cache->get(function (): StringToInt {
             $completeness = DList::mapFrom($this->creatorRepository->getActivePaged(),
                 static fn (CreatorE $creator) => Creator::wrap($creator)->getCompleteness());
 
             $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
                 '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0];
 
-            $result = new StringIntMap();
+            $result = new StringToInt();
 
             foreach ($levels as $description => $level) {
                 $result->set($description, $completeness->filter(static fn (int $percent) => $percent >= $level)->count());
@@ -141,10 +141,10 @@ class DataService
     /**
      * @see SmartAccessDecorator::getLastCreatorId()
      */
-    public function getProvidedInfoStats(): StringIntMap
+    public function getProvidedInfoStats(): StringToInt
     {
-        return $this->cache->get(function (): StringIntMap {
-            $result = StringIntMap::fromKeys(Fields::inStats()->names(), fn () => 0);
+        return $this->cache->get(function (): StringToInt {
+            $result = StringToInt::fromKeys(Fields::inStats()->names(), fn () => 0);
 
             foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
                 $creator = Creator::wrap($creatorE);
@@ -172,12 +172,12 @@ class DataService
         }, CacheTags::CREATORS, __METHOD__);
     }
 
-    public function getOfferStatusStats(): StringIntMap
+    public function getOfferStatusStats(): StringToInt
     {
-        return $this->cache->get(function (): StringIntMap {
+        return $this->cache->get(function (): StringToInt {
             $stats = $this->cosRepository->getOfferStatusStats();
 
-            return new StringIntMap([
+            return new StringToInt([
                 'Open for anything'              => $stats['open_for_anything'],
                 'Closed for anything'            => $stats['closed_for_anything'],
                 'Status successfully tracked'    => $stats['successfully_tracked'],

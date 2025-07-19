@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Http;
 
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 final readonly class ExpectedHttpCall
 {
@@ -12,10 +12,10 @@ final readonly class ExpectedHttpCall
         public string $method,
         public string $url,
         public ?string $requestBody = null,
-        public StringStringMap $requestHeaders = new StringStringMap(),
+        public StringToString $requestHeaders = new StringToString(),
         public int $responseCode = 200,
         public string $responseBody = '',
-        public StringStringMap $responseHeaders = new StringStringMap(),
+        public StringToString $responseHeaders = new StringToString(),
     ) {
     }
 }

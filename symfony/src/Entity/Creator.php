@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use LogicException;
 use Override;
 use Stringable;
 
@@ -202,6 +203,10 @@ class Creator implements Stringable
     public function setCreatorId(string $creatorId): self
     {
         $this->creatorId = $creatorId;
+
+        if ('' !== $creatorId) {
+            $this->addCreatorId($creatorId);
+        }
 
         return $this;
     }
@@ -532,8 +537,16 @@ class Creator implements Stringable
         return $this->creatorIds;
     }
 
-    public function addCreatorId(CreatorId $creatorId): self
+    public function addCreatorId(CreatorId|string $creatorId): self
     {
+        if (!($creatorId instanceof CreatorId)) {
+            if ($this->hasCreatorId($creatorId)) {
+                return $this;
+            }
+
+            $creatorId = new CreatorId($creatorId);
+        }
+
         if (!$this->creatorIds->contains($creatorId)) {
             $this->creatorIds[] = $creatorId;
             $creatorId->setCreator($this);
@@ -604,5 +617,62 @@ class Creator implements Stringable
     public function preFlush(PreFlushEventArgs $event): void
     {
         SmartAccessDecorator::wrap($this)->assureNsfwSafety();
+    }
+
+    //
+    // ===== CREATOR ID HELPERS =====
+    //
+
+    public function getLastCreatorId(): string
+    {
+        return '' !== $this->creatorId
+            ? $this->creatorId
+            : array_first($this->getFormerCreatorIds()) ?? throw new LogicException('Creator does not have any creator ID');
+    }
+
+    /**
+     * This does not guarantee any order, including current creator ID does not have to be the first one.
+     *
+     * @return list<string>
+     */
+    public function getAllCreatorIds(): array
+    {
+        return array_values($this->creatorIds
+            ->map(static fn (CreatorId $entity): string => $entity->getCreatorId())->toArray());
+    }
+
+    /**
+     * Assume that values come from setting the creator ID, which is validated independently.
+     *
+     * @return list<string>
+     */
+    public function getFormerCreatorIds(): array
+    {
+        return arr_filterl($this->getAllCreatorIds(), fn (string $creatorId) => $creatorId !== $this->creatorId);
+    }
+
+    public function hasCreatorId(string $creatorId): bool
+    {
+        return arr_contains($this->getAllCreatorIds(), $creatorId);
+    }
+
+    /**
+     * @param list<string> $formerCreatorIdsToSet
+     */
+    public function setFormerCreatorIds(array $formerCreatorIdsToSet): self
+    {
+        $creatorIdsToKeep = [...$formerCreatorIdsToSet, $this->creatorId];
+
+        foreach ($this->getCreatorIds() as $creatorId) {
+            if (!arr_contains($creatorIdsToKeep, $creatorId->getCreatorId())) {
+                $this->removeCreatorId($creatorId);
+            }
+        }
+
+        foreach ($formerCreatorIdsToSet as $creatorId) {
+            $this->addCreatorId($creatorId);
+        }
+
+        return $this;
     }
 }

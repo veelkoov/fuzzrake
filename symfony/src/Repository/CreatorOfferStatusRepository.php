@@ -11,7 +11,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\StringSet;
 
 /**
@@ -105,7 +105,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
-    public function getDistinctWithOpenCount(): StringIntMap
+    public function getDistinctWithOpenCount(): StringToInt
     {
         $result = $this->createQueryBuilder('d_cos')
             ->select('d_cos.offer')
@@ -114,7 +114,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        return StringIntMap::fromRows($result, 'offer', 'openCount');
+        return StringToInt::fromRows($result, 'offer', 'openCount');
     }
 
     public function getDistinctOpenFor(): StringSet

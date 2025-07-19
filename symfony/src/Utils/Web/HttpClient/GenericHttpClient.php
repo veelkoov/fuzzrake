@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 final class GenericHttpClient implements HttpClientInterface
 {
@@ -28,7 +28,7 @@ final class GenericHttpClient implements HttpClientInterface
     }
 
     #[Override]
-    public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
+    public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 

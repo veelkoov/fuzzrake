@@ -7,7 +7,7 @@ namespace App\Repository;
 use App\Entity\CreatorValue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\StringSet;
 
 /**
@@ -57,7 +57,7 @@ class CreatorValueRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
-    public function countDistinctInActiveCreatorsHaving(string $fieldName): StringIntMap
+    public function countDistinctInActiveCreatorsHaving(string $fieldName): StringToInt
     {
         $result = $this->getEntityManager()->createQuery('
             SELECT d_cv.value AS value, COUNT(d_cv.value) AS count
@@ -71,6 +71,6 @@ class CreatorValueRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getArrayResult();
 
-        return StringIntMap::fromRows($result, 'value', 'count');
+        return StringToInt::fromRows($result, 'value', 'count');
     }
 }

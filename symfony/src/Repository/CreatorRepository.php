@@ -24,8 +24,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringIntMap;
 use Veelkoov\Debris\StringSet;
 
 /**
@@ -221,7 +221,7 @@ class CreatorRepository extends ServiceEntityRepository
     /**
      * @param literal-string $columnName
      */
-    public function countDistinctInActiveCreators(string $columnName): StringIntMap
+    public function countDistinctInActiveCreators(string $columnName): StringToInt
     {
         $result = $this->getEntityManager()->createQuery("
             SELECT d_c.$columnName AS value, COUNT(d_c.$columnName) AS count
@@ -233,7 +233,7 @@ class CreatorRepository extends ServiceEntityRepository
             ->setParameter('empty', '')
             ->getArrayResult();
 
-        return StringIntMap::fromRows($result, 'value', 'count');
+        return StringToInt::fromRows($result, 'value', 'count');
     }
 
     /**
