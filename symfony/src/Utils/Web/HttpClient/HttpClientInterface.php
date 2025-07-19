@@ -6,14 +6,14 @@ namespace App\Utils\Web\HttpClient;
 
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 interface HttpClientInterface
 {
     public function fetch(
         Url $url,
         string $method = 'GET',
-        StringStringMap $addHeaders = new StringStringMap(),
+        StringToString $addHeaders = new StringToString(),
         ?string $content = null,
     ): Snapshot;
 

@@ -9,7 +9,7 @@ use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 class GentleHttpClient implements HttpClientInterface
 {
@@ -23,7 +23,7 @@ class GentleHttpClient implements HttpClientInterface
     }
 
     #[Override]
-    public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
+    public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
         return $this->queue->patiently($url, fn () => $this->client->fetch($url, $method, $addHeaders, $content));
     }

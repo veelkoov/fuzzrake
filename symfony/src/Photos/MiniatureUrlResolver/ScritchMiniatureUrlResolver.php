@@ -17,7 +17,7 @@ use JsonException;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TRegx\CleanRegex\Pattern;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
 {
@@ -63,7 +63,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         $csrfToken = $this->getCsrfToken();
         $jsonPayload = $this->getGraphQlJsonPayload($pictureId);
 
-        $headers = new StringStringMap([
+        $headers = new StringToString([
             'Content-Type' => 'application/json',
             'X-CSRF-Token' => $csrfToken,
             'authorization' => "Scritcher $csrfToken",

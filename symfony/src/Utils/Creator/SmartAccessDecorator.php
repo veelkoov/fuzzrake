@@ -32,7 +32,6 @@ use App\Validator\UpdateableEmail;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
-use LogicException;
 use Override;
 use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -143,14 +142,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getLastCreatorId(): string
     {
-        return array_first($this->getAllCreatorIds()) ?? throw new LogicException('Creator does not have any creator ID');
+        return $this->entity->getLastCreatorId();
     }
 
     public function hasCreatorId(string $creatorId): bool
     {
-        return arr_contains($this->entity->getCreatorIds()
-            ->map(static fn (CreatorId $creatorIdE): string => $creatorIdE->getCreatorId())
-            ->toArray(), $creatorId);
+        return $this->entity->hasCreatorId($creatorId);
     }
 
     /**
@@ -158,17 +155,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setFormerCreatorIds(array $formerCreatorIdsToSet): self
     {
-        $allCreatorIdsToSet = [...$formerCreatorIdsToSet, $this->entity->getCreatorId()];
-
-        foreach ($this->entity->getCreatorIds() as $creatorId) {
-            if (!arr_contains($allCreatorIdsToSet, $creatorId->getCreatorId())) {
-                $this->entity->removeCreatorId($creatorId);
-            }
-        }
-
-        foreach ($formerCreatorIdsToSet as $creatorId) {
-            $this->addCreatorId($creatorId);
-        }
+        $this->entity->setFormerCreatorIds($formerCreatorIdsToSet);
 
         return $this;
     }
@@ -180,18 +167,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getFormerCreatorIds(): array
     {
-        return Lists::nonEmptyStrings($this->entity->getCreatorIds()
-            ->map(static fn (CreatorId $creatorId): string => $creatorId->getCreatorId())
-            ->filter(fn (string $creatorId): bool => $creatorId !== $this->getCreatorId())
-            ->toArray());
+        return $this->entity->getFormerCreatorIds();
     }
 
     /**
+     * This does not guarantee any order, including current creator ID does not have to be the first one.
+     *
      * @return list<string>
      */
     public function getAllCreatorIds(): array
     {
-        return Lists::nonEmptyStrings([$this->entity->getCreatorId(), ...$this->getFormerCreatorIds()]);
+        return $this->entity->getAllCreatorIds();
     }
 
     //
@@ -968,18 +954,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
     }
 
-    /*******************************************************************************************************************
-
-    No, __call(), method_exists(), call_user_func() are not cool enough (Twig etc.). Boilerplate time!
-
-    grep -P 'public function (?!__)' src/Entity/Creator.php \
-        | sed -r 's/public function ((set|add|remove)[a-zA-Z]+)\(([^ ]+ )(\$[a-zA-Z]+)\): self/\0 { $this->creator->\1(\4); return $this; }/' \
-        | sed -r 's/public function (get[a-zA-Z]+)\(\): ([?a-zA-Z| ]+)/\0 { return $this->creator->\1(); }/'
-
-    NOTE: Few methods were changed.
-
-    *******************************************************************************************************************/
-
     public function getId(): ?int
     {
         return $this->entity->getId();
@@ -996,10 +970,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setCreatorId(string $creatorId): self
     {
         $this->entity->setCreatorId($creatorId);
-
-        if ('' !== $creatorId) {
-            $this->addCreatorId($creatorId);
-        }
 
         return $this;
     }
@@ -1485,14 +1455,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function addCreatorId(CreatorId|string $creatorId): self
     {
-        if (!($creatorId instanceof CreatorId)) {
-            if ($this->hasCreatorId($creatorId)) {
-                return $this;
-            }
-
-            $creatorId = new CreatorId($creatorId);
-        }
-
         $this->entity->addCreatorId($creatorId);
 
         return $this;

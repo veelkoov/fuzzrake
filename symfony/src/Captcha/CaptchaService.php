@@ -15,16 +15,16 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\StringBoolMap;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToBool;
+use Veelkoov\Debris\Maps\StringToString;
 
 class CaptchaService implements CaptchaProvider
 {
     private readonly int $questionsPerChallenge;
     private readonly int $optionsPerQuestion;
-    private readonly StringStringMap $animals;
+    private readonly StringToString $animals;
     /**
-     * @var DMap<covariant string, StringBoolMap>
+     * @var DMap<covariant string, StringToBool>
      */
     private readonly DMap $questions;
 
@@ -42,9 +42,9 @@ class CaptchaService implements CaptchaProvider
     ) {
         $this->questionsPerChallenge = $parameters['questions_per_challenge'];
         $this->optionsPerQuestion = $parameters['options_per_question'];
-        $this->animals = new StringStringMap($parameters['animals'], frozen: true);
+        $this->animals = new StringToString($parameters['animals'], frozen: true);
         $this->questions = DMap::mapFrom($parameters['questions'],
-            static fn ($value, string $key): array => [$key, new StringBoolMap($value, frozen: true)])->freeze();
+            static fn ($value, string $key): array => [$key, new StringToBool($value, frozen: true)])->freeze();
     }
 
     public function getCaptcha(SessionInterface $session): Captcha

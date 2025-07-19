@@ -43,9 +43,9 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
      */
     public static function findByCreatorIdDataProvider(): array
     {
-        Creator::wrap($m1 = new CreatorE())->setCreatorId('TESTI11');
-        Creator::wrap($m2 = new CreatorE())->setCreatorId('TESTI21')->setFormerCreatorIds(['TESTI22']);
-        Creator::wrap($m3 = new CreatorE())->setCreatorId('TESTI31')->setFormerCreatorIds(['TESTI32', 'TESTI33']);
+        $m1 = new CreatorE()->setCreatorId('TESTI11');
+        $m2 = new CreatorE()->setCreatorId('TESTI21')->setFormerCreatorIds(['TESTI22']);
+        $m3 = new CreatorE()->setCreatorId('TESTI31')->setFormerCreatorIds(['TESTI32', 'TESTI33']);
 
         return [
             [[$m1], 'TESTI11', 0],
@@ -74,15 +74,16 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
      */
     public function testFindByCreatorIdReturnsCompleteCreatorIdsSet(): void
     {
-        $accessor = Creator::wrap($creator = new CreatorE())->setCreatorId('TESTID1')->setFormerCreatorIds(['TESTID2', 'TESTID3']);
+        $creator = new CreatorE()->setCreatorId('TESTID1')->setFormerCreatorIds(['TESTID2', 'TESTID3']);
 
         self::persistAndFlush($creator);
         self::clear();
 
         $retrieved1 = self::getCreatorRepository()->findByCreatorId('TESTID1');
 
+        self::assertNotSame($creator, $retrieved1);
         self::assertSame($creator->getCreatorId(), $retrieved1->getCreatorId());
-        self::assertEquals($accessor->getFormerCreatorIds(), Creator::wrap($retrieved1)->getFormerCreatorIds());
+        self::assertEquals($creator->getFormerCreatorIds(), $retrieved1->getFormerCreatorIds());
 
         $retrieved2 = self::getCreatorRepository()->findByCreatorId('TESTID2');
         self::assertEquals($retrieved1, $retrieved2);

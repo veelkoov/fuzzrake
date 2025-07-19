@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Veelkoov\Debris\Base\DIntMap;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 
 class StatisticsController extends AbstractController
 {
@@ -82,7 +82,7 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private function prepareTableData(FilterData $input): StringIntMap
+    private function prepareTableData(FilterData $input): StringToInt
     {
         /** @var DIntMap<StringList> $countToList */
         $countToList = new DIntMap();
@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
                 ->add($item->label);
         }
 
-        $countToJoined = new StringIntMap($countToList
+        $countToJoined = new StringToInt($countToList
             ->mapValues(static fn (StringList $item) => $item->join(', '))
             ->flip());
 

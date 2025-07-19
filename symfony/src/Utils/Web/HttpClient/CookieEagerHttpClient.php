@@ -8,8 +8,8 @@ use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringSet;
-use Veelkoov\Debris\StringStringMap;
 
 class CookieEagerHttpClient implements HttpClientInterface
 {
@@ -23,7 +23,7 @@ class CookieEagerHttpClient implements HttpClientInterface
     }
 
     #[Override]
-    public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
+    public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
         $cookieInitUrl = $url->getStrategy()->getCookieInitUrl();
 

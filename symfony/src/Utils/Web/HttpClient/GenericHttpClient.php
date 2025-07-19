@@ -12,11 +12,10 @@ use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\Exception\ExceptionInterface as BrowserKitExceptionInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Throwable;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 class GenericHttpClient implements HttpClientInterface
 {
@@ -32,7 +31,7 @@ class GenericHttpClient implements HttpClientInterface
     }
 
     #[Override]
-    public function fetch(Url $url, string $method = 'GET', StringStringMap $addHeaders = new StringStringMap(), ?string $content = null): Snapshot
+    public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
         $this->logger->info("Retrieving: '{$url->getUrl()}'");
 
