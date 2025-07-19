@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Base\DList;
@@ -12,28 +13,36 @@ use Veelkoov\Debris\StringSet;
 
 class AnalysisAggregator
 {
+    private readonly ContextLogger $logger;
+
     public function __construct(
         #[Autowire(service: 'monolog.logger.tracking')]
-        private readonly LoggerInterface $logger,
+        LoggerInterface $logger,
     ) {
+        $this->logger=new ContextLogger($logger);
     }
 
     /**
      * @param list<AnalysisResult> $results
      */
-    public function aggregate(array $results): AnalysisResults
+    public function aggregate(Creator $creator, array $results): AnalysisResults
     {
+        $this->logger->addContext('creator', $creator->getLastCreatorId());
+
         $openFor = new StringSet();
         $closedFor = new StringSet();
         $hasEncounteredIssues = false;
 
         foreach ($results as &$result) { // & to avoid logging the local duplicates/conflicts later
+            $this->logger->addContext('url', $result);
             $result = $this->normalizeResult($result);
 
             $openFor->addAll($result->openFor);
             $closedFor->addAll($result->closedFor);
             $hasEncounteredIssues = $hasEncounteredIssues || $result->hasEncounteredIssues;
         }
+
+        $this->logger->addContext('creator', $creator->getLastCreatorId(), true);
 
         $contradicting = $openFor->intersect($closedFor);
 

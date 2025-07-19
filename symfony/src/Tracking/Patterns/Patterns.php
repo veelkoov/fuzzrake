@@ -20,6 +20,11 @@ class Patterns
         $this->falsePositives = new Replacements(StringToString::fromKeys($regexesLoader->falsePositives,
             static fn () => 'FALSE_POSITIVE')->toArray(), 'sxJ');
 
-        $this->offersStatuses = new StringList(); // TODO
+        $this->offersStatuses = $regexesLoader->offersStatuses->mapInto(self::regexToPattern(...), new StringList());
+    }
+
+    public static function regexToPattern(string $regex): string
+    {
+        return '~'.str_replace('~', '\~', $regex).'~sxnJ';
     }
 }

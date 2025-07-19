@@ -110,7 +110,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->analysisAggregatorMock
             ->expects(self::once())
             ->method('aggregate')
-            ->with([$analysisResult, $analysisResult])
+            ->with($creator, [$analysisResult, $analysisResult])
             ->willReturn(new AnalysisResults(new StringList(), new StringList(), false));
 
         $this->subject->update($creator, true, true);

@@ -12,14 +12,14 @@ final class RegexUtl
     use UtilityClass;
 
     /**
-     * @param array<array-key, string> $matches
+     * @param array<array-key, ?string> $matches
      */
     public static function namedGroups(array $matches): StringToString
     {
         $result = new StringToString();
 
         foreach ($matches as $groupName => $match) {
-            if (!is_numeric($groupName)) {
+            if (null !== $match && !is_numeric($groupName)) {
                 $result->set($groupName, $match);
             }
         }

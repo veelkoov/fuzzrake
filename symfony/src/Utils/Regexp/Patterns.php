@@ -22,13 +22,13 @@ final class Patterns
      */
     private static array $cache = [];
 
-    #[Deprecated]
+    /** @deprecated */
     public static function getI(string $pattern): Pattern
     {
         return self::$iCache[$pattern] ??= Pattern::of($pattern, 'i');
     }
 
-    #[Deprecated]
+    /** @deprecated */
     public static function get(string $pattern): Pattern
     {
         return self::$cache[$pattern] ??= Pattern::of($pattern);

@@ -16,15 +16,20 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CreatorUpdater
 {
+    private readonly ContextLogger $logger;
+
     public function __construct(
         #[Autowire(service: 'monolog.logger.tracking')]
-        private readonly LoggerInterface $logger,
+        LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
     ) {
+        $this->logger = new ContextLogger($logger);
     }
 
     public function applyResults(Creator $creator, AnalysisResults $analysisResults): void
     {
+        $this->logger->addContext('creator', $creator->getLastCreatorId(), true);
+
         $old = clone $creator;
 
         $volatileData = $creator->getVolatileData();
@@ -36,7 +41,7 @@ class CreatorUpdater
 
         $differences = new Description($old, $creator);
         foreach ($differences->getList() as $change) {
-            $this->logger->info("{$creator->getLastCreatorId()}: $change");
+            $this->logger->info($change);
         }
 
         $this->createEvent($old, $creator, $analysisResults->hasEncounteredIssues);
@@ -50,6 +55,8 @@ class CreatorUpdater
         if ($nowOpenFor->isEmpty() && $nowLongerOpenFor->isEmpty()) {
             return;
         }
+
+        $this->logger->info('Creating an event for the changes.');
 
         $event = new Event()
             ->setCheckedUrls(PackedStringList::pack($new->getCommissionsUrls()))

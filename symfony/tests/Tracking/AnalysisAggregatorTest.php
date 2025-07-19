@@ -7,6 +7,7 @@ namespace App\Tests\Tracking;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\AnalysisResult;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
@@ -16,10 +17,12 @@ use Veelkoov\Debris\StringList;
 class AnalysisAggregatorTest extends FuzzrakeTestCase
 {
     private AnalysisAggregator $subject;
+    private Creator $creator;
 
     protected function setUp(): void
     {
         $this->subject = new AnalysisAggregator(self::createStub(LoggerInterface::class));
+        $this->creator = new Creator()->setCreatorId('TEST001');
     }
 
     /**
@@ -43,7 +46,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
         /* Some consistent result is required, otherwise errors state would be set for other reasons */
         $openFor = StringList::of('Commissions');
 
-        $result = $this->subject->aggregate(array_map(
+        $result = $this->subject->aggregate($this->creator, array_map(
             static fn (bool $encountered) => new AnalysisResult('', $openFor, new StringList(), $encountered),
             $encounteredIssuesArray,
         ));
@@ -53,7 +56,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testEmptyUrlAnalysisSetsErrorStatus(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', new StringList(), new StringList(), false),
             new AnalysisResult('', new StringList(), StringList::of('Quotes'), false),
         ]);
@@ -63,7 +66,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testResultsFromMultipleUrlsAreProperlyAggregated(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Parts'), false),
             new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Quotes'), false),
         ]);
@@ -75,7 +78,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testContradictingOfferStatusesInASingleUrlCancelEachOtherAndSetErrorState(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Commissions'), false),
             new AnalysisResult('', StringList::of('Mini partials'), new StringList(), false),
         ]);
@@ -87,7 +90,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testContradictingOfferStatusesInASingleUrlSetErrorStateButDoesntCancelOtherUrlsDuplicate(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Commissions'), false),
             new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Commissions'), false),
         ]);
@@ -99,7 +102,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testContradictingOffersFromDifferentUrlsAreRemovedSettingErrorState(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Parts', 'Mini partials'), false),
             new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Commissions', 'Quotes'), false),
         ]);
@@ -111,7 +114,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testDuplicatedOfferStatusInASingleUrlSetsErrorStateButIsNotCancelled(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials', 'Commissions'), new StringList(), false),
             new AnalysisResult('', StringList::of('Mini partials'), new StringList(), false),
         ]);
@@ -123,7 +126,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
     public function testDuplicatedOfferStatusInDifferentUrlIsOk(): void
     {
-        $result = $this->subject->aggregate([
+        $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Mini partials'), false),
             new AnalysisResult('', StringList::of('Commissions'), StringList::of('Heads', 'Mini partials'), false),
         ]);
