@@ -19,7 +19,7 @@ class AnalysisAggregator
         #[Autowire(service: 'monolog.logger.tracking')]
         LoggerInterface $logger,
     ) {
-        $this->logger=new ContextLogger($logger);
+        $this->logger = new ContextLogger($logger);
     }
 
     /**
@@ -34,7 +34,7 @@ class AnalysisAggregator
         $hasEncounteredIssues = false;
 
         foreach ($results as &$result) { // & to avoid logging the local duplicates/conflicts later
-            $this->logger->addContext('url', $result);
+            $this->logger->addContext('url', $result->url);
             $result = $this->normalizeResult($result);
 
             $openFor->addAll($result->openFor);
