@@ -36,7 +36,7 @@ class FurtrackMiniatureUrlResolver implements MiniatureUrlResolver
         $pictureId = $this->pattern->match($url->getUrl())->first()->get('pictureId');
         $miniatureUrl = "https://orca2.furtrack.com/thumb/$pictureId.jpg";
 
-        $response = $this->httpClient->fetch(new FreeUrl($miniatureUrl), 'HEAD');
+        $response = $this->httpClient->fetch(new FreeUrl($miniatureUrl, $url->getCreatorId()), 'HEAD');
 
         if (200 !== $response->metadata->httpCode) {
             throw new MiniaturesUpdateException('Non-200 HTTP response code.');

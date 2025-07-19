@@ -10,6 +10,8 @@ interface Url
 {
     public function getUrl(): string;
 
+    public function getCreatorId(): string;
+
     public function getHost(): string;
 
     public function getOriginalUrl(): string;

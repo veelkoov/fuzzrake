@@ -28,7 +28,7 @@ class SnapshotProcessor
 
     public function analyse(Snapshot $snapshot): AnalysisResult
     {
-        $this->currentCreatorId = 'TODO'; // TODO: $snapshot->metadata->creatorId;
+        $this->currentCreatorId = $snapshot->metadata->creatorId;
 
         $remainingContent = $snapshot->contents;
         $openFor = new StringList();

@@ -8,6 +8,18 @@ use Override;
 
 readonly class FreeUrl extends AbstractBaseUrl
 {
+    public function __construct(
+        string $url,
+        private string $creatorId,
+    ) {
+        parent::__construct($url);
+    }
+
+    public function getCreatorId(): string
+    {
+        return $this->creatorId;
+    }
+
     #[Override]
     public function getOriginalUrl(): string
     {

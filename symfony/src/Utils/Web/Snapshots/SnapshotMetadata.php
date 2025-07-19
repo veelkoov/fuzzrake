@@ -16,6 +16,7 @@ readonly class SnapshotMetadata
      */
     public function __construct(
         public string $url,
+        public string $creatorId,
         #[Context(context: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d\TH:i:s.uP'])]
         public DateTimeImmutable $retrievedAtUtc,
         public int $httpCode,

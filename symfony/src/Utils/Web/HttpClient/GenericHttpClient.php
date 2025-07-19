@@ -75,6 +75,7 @@ class GenericHttpClient implements HttpClientInterface
 
         $metadata = new SnapshotMetadata(
             $url->getUrl(),
+            $url->getCreatorId(),
             UtcClock::now(),
             $httpCode,
             $headers, // @phpstan-ignore argument.type (Insufficient typehinting)

@@ -32,4 +32,10 @@ readonly class UrlForTracking extends AbstractBaseUrl
     {
         $this->original->recordFailedFetch($code, $reason);
     }
+
+    #[Override]
+    public function getCreatorId(): string
+    {
+        return $this->original->getCreatorId();
+    }
 }

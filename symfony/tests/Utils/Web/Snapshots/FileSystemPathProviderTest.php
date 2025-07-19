@@ -34,6 +34,6 @@ class FileSystemPathProviderTest extends TestCase
     {
         $subject = new FileSystemPathProvider();
 
-        self::assertStringStartsWith($expectedPrefix, $subject->getSnapshotDirPath(new FreeUrl($inputUrl)));
+        self::assertStringStartsWith($expectedPrefix, $subject->getSnapshotDirPath(new FreeUrl($inputUrl, '')));
     }
 }

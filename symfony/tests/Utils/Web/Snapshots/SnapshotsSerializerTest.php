@@ -26,6 +26,7 @@ class SnapshotsSerializerTest extends KernelTestCase
 
         $input = new Snapshot('testing contents', new SnapshotMetadata(
             'testing URL',
+            'TEST001',
             UtcClock::now(),
             555,
             ['Header1' => ['H1V1', 'H1V2'], 'Header2' => ['H2V1']],

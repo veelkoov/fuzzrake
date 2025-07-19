@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\StringStringMap;
+use Veelkoov\Debris\Maps\StringToString;
 
 #[Small]
 class SnapshotsManagerTest extends TestCase
@@ -44,7 +44,7 @@ class SnapshotsManagerTest extends TestCase
             $this->testsTempDir,
         );
 
-        $subject->get(new FreeUrl('https://getfursu.it/'), false);
+        $subject->get(new FreeUrl('https://getfursu.it/', ''), false);
     }
 
     public function testCachingAndRefetching(): void
@@ -73,11 +73,11 @@ class SnapshotsManagerTest extends TestCase
             $this->testsTempDir,
         );
 
-        $rootSnapshot1 = $subject->get(new FreeUrl('https://getfursu.it/'), false);
-        $infoSnapshot1 = $subject->get(new FreeUrl('https://getfursu.it/info'), false);
-        $rootSnapshot2 = $subject->get(new FreeUrl('https://getfursu.it/'), false);
-        $infoSnapshot2 = $subject->get(new FreeUrl('https://getfursu.it/info'), false);
-        $infoSnapshot3 = $subject->get(new FreeUrl('https://getfursu.it/info'), true);
+        $rootSnapshot1 = $subject->get(new FreeUrl('https://getfursu.it/', ''), false);
+        $infoSnapshot1 = $subject->get(new FreeUrl('https://getfursu.it/info', ''), false);
+        $rootSnapshot2 = $subject->get(new FreeUrl('https://getfursu.it/', ''), false);
+        $infoSnapshot2 = $subject->get(new FreeUrl('https://getfursu.it/info', ''), false);
+        $infoSnapshot3 = $subject->get(new FreeUrl('https://getfursu.it/info', ''), true);
 
         self::assertSame($rootSnapshot1, $rootSnapshot2);
         self::assertSame($infoSnapshot1, $infoSnapshot2);
@@ -103,7 +103,7 @@ class SnapshotsManagerTest extends TestCase
         $contents = '<h1>Test contents</h1>';
 
         $httpClientMock = self::getHttpClientMock(new ExpectedHttpCall('GET', $url, responseCode: $statusCode,
-            responseBody: $contents, responseHeaders: new StringStringMap($headers)));
+            responseBody: $contents, responseHeaders: new StringToString($headers)));
         $serializerStub = self::createStub(SnapshotsSerializer::class);
 
         $subject = new SnapshotsManager(
@@ -112,7 +112,7 @@ class SnapshotsManagerTest extends TestCase
             $this->testsTempDir,
         );
 
-        $result = $subject->get(new FreeUrl('https://getfursu.it/'), false);
+        $result = $subject->get(new FreeUrl('https://getfursu.it/', ''), false);
 
         self::assertSame($contents, $result->contents);
         self::assertSame($url, $result->metadata->url);

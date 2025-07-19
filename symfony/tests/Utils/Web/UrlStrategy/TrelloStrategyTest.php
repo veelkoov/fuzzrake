@@ -25,7 +25,7 @@ class TrelloStrategyTest extends TestCase
     #[DataProvider('coerceUrlDataProvider')]
     public function testCoerceUrl(string $input, string $expected): void
     {
-        $result = $this->subject->getUrlForTracking(new FreeUrl($input))->getUrl();
+        $result = $this->subject->getUrlForTracking(new FreeUrl($input, ''))->getUrl();
 
         self::assertSame($expected, $result);
     }

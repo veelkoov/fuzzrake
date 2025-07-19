@@ -24,15 +24,15 @@ class HostCallsQueueTest extends TestCase
         $now = UtcClock::time();
 
         // @phpstan-ignore staticMethod.alreadyNarrowedType (Testing interface/sanity check)
-        self::assertSame(1, $subject->patiently(new FreeUrl('https://getfursu.it/'), static fn () => 1));
+        self::assertSame(1, $subject->patiently(new FreeUrl('https://getfursu.it/', ''), static fn () => 1));
         self::assertSame($now, UtcClock::time());
 
         // @phpstan-ignore staticMethod.alreadyNarrowedType (Testing interface/sanity check)
-        self::assertSame(2, $subject->patiently(new FreeUrl('http://127.0.0.1/'), static fn () => 2));
+        self::assertSame(2, $subject->patiently(new FreeUrl('http://127.0.0.1/', ''), static fn () => 2));
         self::assertSame($now, UtcClock::time());
 
         // @phpstan-ignore staticMethod.alreadyNarrowedType (Testing interface/sanity check)
-        self::assertSame(3, $subject->patiently(new FreeUrl('http://getfursu.it/info'), static fn () => 3));
+        self::assertSame(3, $subject->patiently(new FreeUrl('http://getfursu.it/info', ''), static fn () => 3));
         self::assertSame($now + 600, UtcClock::time());
     }
 }

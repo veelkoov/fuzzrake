@@ -30,10 +30,10 @@ class GentleHttpClientTest extends TestCase
 
         $now = UtcClock::time();
 
-        $subject->fetch(new FreeUrl('https://getfursu.it/'));
+        $subject->fetch(new FreeUrl('https://getfursu.it/', ''));
         self::assertSame($now, UtcClock::time(), 'First call should be immediate.');
 
-        $subject->fetch(new FreeUrl('http://getfursu.it/info'));
+        $subject->fetch(new FreeUrl('http://getfursu.it/info', ''));
         self::assertSame($now + 5, UtcClock::time(), 'Second call should happen after 5 seconds.');
     }
 }

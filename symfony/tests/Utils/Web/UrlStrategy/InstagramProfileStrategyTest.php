@@ -26,7 +26,7 @@ class InstagramProfileStrategyTest extends TestCase
     public function testCoerceUrl(): void
     {
         $expected = 'https://www.instagram.com/getfursu.it/profilecard/';
-        $input = new FreeUrl('https://www.instagram.com/getfursu.it/');
+        $input = new FreeUrl('https://www.instagram.com/getfursu.it/', '');
         $result = $this->subject->getUrlForTracking($input)->getUrl();
 
         self::assertSame($expected, $result);

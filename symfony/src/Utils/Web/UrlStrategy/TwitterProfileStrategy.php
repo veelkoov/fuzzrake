@@ -51,7 +51,7 @@ class TwitterProfileStrategy extends Strategy
 
     public function getCookieInitUrl(): Url
     {
-        return new FreeUrl('https://x.com/'); // Space Karen
+        return new FreeUrl('https://x.com/', ''); // Space Karen
     }
 
     // TODO

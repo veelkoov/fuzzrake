@@ -23,8 +23,8 @@ class CookieEagerHttpClientTest extends TestCase
             new ExpectedHttpCall('GET', 'https://www.instagram.com/finland/'),
         ));
 
-        $subject->fetch(new FreeUrl('https://www.instagram.com/getfursu.it/'));
-        $subject->fetch(new FreeUrl('https://www.instagram.com/finland/'));
+        $subject->fetch(new FreeUrl('https://www.instagram.com/getfursu.it/', ''));
+        $subject->fetch(new FreeUrl('https://www.instagram.com/finland/', ''));
     }
 
     public function testCookieEagerCase(): void
@@ -35,7 +35,7 @@ class CookieEagerHttpClientTest extends TestCase
             new ExpectedHttpCall('GET', 'https://twitter.com/veelkoov'),
         ));
 
-        $subject->fetch(new FreeUrl('https://twitter.com/getfursuit'));
-        $subject->fetch(new FreeUrl('https://twitter.com/veelkoov'));
+        $subject->fetch(new FreeUrl('https://twitter.com/getfursuit', ''));
+        $subject->fetch(new FreeUrl('https://twitter.com/veelkoov', ''));
     }
 }

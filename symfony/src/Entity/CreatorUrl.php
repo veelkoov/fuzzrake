@@ -152,4 +152,9 @@ class CreatorUrl implements Stringable, Url
     {
         return UrlUtils::getHost($this->url);
     }
+
+    public function getCreatorId(): string
+    {
+        return $this->creator->getLastCreatorId();
+    }
 }
