@@ -9,6 +9,8 @@ use Veelkoov\Debris\StringList;
 
 class Preprocessor
 {
+    private const int MAX_ANALYSED_SIZE_CHARACTERS = 1 * 1024 * 1024; // ~= 1 MiB (+multibyte characters)
+
     public function __construct(
         private readonly Patterns $patterns,
     ) {
@@ -16,8 +18,9 @@ class Preprocessor
 
     public function preprocess(string $input, StringList $aliases): string
     {
+        $result = mb_substr($input, 0, self::MAX_ANALYSED_SIZE_CHARACTERS);
         // TODO: URL strategy
-        $result = strtolower($input);
+        $result = strtolower($result);
         $result = $this->patterns->cleaners->do($result);
         $result = $this->replaceCreatorAliases($result, $aliases);
         $result = $this->patterns->falsePositives->do($result);

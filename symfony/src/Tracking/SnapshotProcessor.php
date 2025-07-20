@@ -20,7 +20,7 @@ class SnapshotProcessor
     private const string GRP_NAME_STATUS_OPEN = 'StatusOpen';
     private const string GRP_NAME_STATUS_CLOSED = 'StatusClosed';
 
-    private ContextLogger $logger;
+    private readonly ContextLogger $logger;
 
     public function __construct(
         #[Autowire(service: 'monolog.logger.tracking')]
@@ -81,9 +81,9 @@ class SnapshotProcessor
         $matches = RegexUtl::namedGroups($match->matches);
 
         $isOpen = $this->getSingleStatusKeyRemove($matches);
-        $offer = $this->getOffersFromSingleKey($matches);
+        $offers = $this->getOffersFromGroups($matches);
 
-        return new AnalysisFinding($matchedText, $offer, $isOpen);
+        return new AnalysisFinding($matchedText, $offers, $isOpen);
     }
 
     private function getSingleStatusKeyRemove(StringToString $matches): ?bool
@@ -103,14 +103,14 @@ class SnapshotProcessor
         return $isOpen;
     }
 
-    private function getOffersFromSingleKey(StringToString $matches): StringList
+    private function getOffersFromGroups(StringToString $matches): StringList
     {
-        if (1 !== $matches->count()) {
-            $this->logger->error("Matched {$matches->count()} offer groups.");
+        $result = new StringList();
 
-            return new StringList();
+        foreach ($matches->getKeys() as $key) {
+            $result->addAll(GroupNamesTranslator::toOffers($key));
         }
 
-        return GroupNamesTranslator::toOffers($matches->singleKey());
+        return $result;
     }
 }

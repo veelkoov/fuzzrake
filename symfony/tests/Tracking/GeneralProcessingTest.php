@@ -45,7 +45,7 @@ class GeneralProcessingTest extends FuzzrakeTestCase
     }
 
     #[DataProvider('analyseDataProvider')]
-    public function testAnalyse(string $caseName, string $contents, StringList $exptected): void
+    public function testAnalyse(string $caseName, string $contents, StringList $expected): void
     {
         $snapshot = new Snapshot($contents, new SnapshotMetadata('', '', UtcClock::now(), 200, [], []));
         $result = self::$aggregator->aggregate(self::$creator, [self::$processor->analyse($snapshot)]);
@@ -58,7 +58,7 @@ class GeneralProcessingTest extends FuzzrakeTestCase
             $actual->add('ISSUES');
         }
 
-        self::assertSameItems($exptected, $actual, "$caseName open for mismatch.");
+        self::assertSameItems($expected, $actual, "$caseName open for mismatch.");
     }
 
     /**

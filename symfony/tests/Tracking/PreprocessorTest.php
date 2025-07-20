@@ -122,4 +122,15 @@ class PreprocessorTest extends FuzzrakeTestCase
 
         self::assertSame($expected, $result);
     }
+
+    public function testLongContentsGetsTruncated(): void
+    {
+        $input = 'hello' . str_repeat(str_repeat('1234567890abcdef', 64), 1024) . 'bye';
+
+        $result = $this->subject->preprocess($input, new StringList());
+
+        self::assertSame(1048576, mb_strlen($result));
+        self::assertStringStartsWith('hello', $result);
+        self::assertStringEndsNotWith('bye', $result);
+    }
 }
