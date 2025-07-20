@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Patterns\Patterns;
-use App\Utils\Collections\StringList;
 use App\Utils\Enforce;
 use App\Utils\Regexp\RegexUtl;
 use App\Utils\Web\Snapshots\Snapshot;
@@ -14,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\StringList;
 
 class SnapshotProcessor
 {
@@ -26,6 +26,7 @@ class SnapshotProcessor
         #[Autowire(service: 'monolog.logger.tracking')]
         LoggerInterface $logger,
         private readonly Patterns $patterns,
+        private readonly Preprocessor $preprocessor,
     ) {
         $this->logger = new ContextLogger($logger);
     }
@@ -36,7 +37,7 @@ class SnapshotProcessor
         $this->logger->addContext('url', $snapshot->metadata->url);
         $this->logger->addContext('creator', $snapshot->metadata->creatorId);
 
-        $remainingContent = $snapshot->contents;
+        $remainingContent = $this->preprocessor->preprocess($snapshot->contents, new StringList());
         $openFor = new StringList();
         $closedFor = new StringList();
         $hasEncounteredIssues = false;
@@ -55,9 +56,9 @@ class SnapshotProcessor
                 }
 
                 if ($finding->isOpen) {
-                    $openFor->add($finding->offer);
+                    $openFor->addAll($finding->offers);
                 } else {
-                    $closedFor->add($finding->offer);
+                    $closedFor->addAll($finding->offers);
                 }
             }
         }
@@ -80,7 +81,7 @@ class SnapshotProcessor
         $matches = RegexUtl::namedGroups($match->matches);
 
         $isOpen = $this->getSingleStatusKeyRemove($matches);
-        $offer = $this->getSingleOfferKey($matches);
+        $offer = $this->getOffersFromSingleKey($matches);
 
         return new AnalysisFinding($matchedText, $offer, $isOpen);
     }
@@ -102,14 +103,14 @@ class SnapshotProcessor
         return $isOpen;
     }
 
-    private function getSingleOfferKey(StringToString $matches): ?string
+    private function getOffersFromSingleKey(StringToString $matches): StringList
     {
         if (1 !== $matches->count()) {
             $this->logger->error("Matched {$matches->count()} offer groups.");
 
-            return null;
+            return new StringList();
         }
 
-        return $matches->singleKey(); // FIXME: Pretty name
+        return GroupNamesTranslator::toOffers($matches->singleKey());
     }
 }

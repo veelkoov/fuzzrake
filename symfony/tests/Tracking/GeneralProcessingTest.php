@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Paths;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\Patterns\Patterns;
 use App\Tracking\Patterns\RegexesLoader;
+use App\Tracking\Preprocessor;
 use App\Tracking\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -23,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Veelkoov\Debris\StringList;
 
 #[Small]
-class SnapshotProcessorTest extends FuzzrakeTestCase
+class GeneralProcessingTest extends FuzzrakeTestCase
 {
     private static SnapshotProcessor $processor;
     private static AnalysisAggregator $aggregator;
@@ -32,13 +33,14 @@ class SnapshotProcessorTest extends FuzzrakeTestCase
     #[Override]
     public static function setUpBeforeClass(): void
     {
-        $patterns = DataDefinitions::get('tracking.yaml', 'tracking');
-        $regexesLoader = new RegexesLoader($patterns); // @phpstan-ignore argument.type
+        $patternsData = DataDefinitions::get('tracking.yaml', 'tracking');
+        $regexesLoader = new RegexesLoader($patternsData); // @phpstan-ignore argument.type
+        $patterns = new Patterns($regexesLoader);
 
         $logger = self::createStub(LoggerInterface::class);
 
         self::$creator = new Creator()->setCreatorId('TEST001');
-        self::$processor = new SnapshotProcessor($logger, new Patterns($regexesLoader));
+        self::$processor = new SnapshotProcessor($logger, $patterns, new Preprocessor($patterns));
         self::$aggregator = new AnalysisAggregator($logger);
     }
 
@@ -60,11 +62,11 @@ class SnapshotProcessorTest extends FuzzrakeTestCase
     }
 
     /**
-     * @return iterable<array{string, string, StringList, StringList, bool}>
+     * @return iterable<array{string, string, StringList}>
      */
     public static function analyseDataProvider(): iterable
     {
-        $joinedTestsData = new Filesystem()->readFile(Paths::getTestDataPath('snapshot_processor_test.txt'));
+        $joinedTestsData = new Filesystem()->readFile(Paths::getTestDataPath('general_processing_test.txt'));
         $testsData = explode("\n================================================================\n", $joinedTestsData);
 
         foreach ($testsData as $testData) {

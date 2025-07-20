@@ -14,15 +14,15 @@ class Preprocessor
     ) {
     }
 
-    public function preprocess(Content $input): Content
+    public function preprocess(string $input, StringList $aliases): string
     {
         // TODO: URL strategy
-        $newContent = strtolower($input->content);
-        $newContent = $this->patterns->cleaners->do($newContent);
-        $newContent = $this->replaceCreatorAliases($newContent, $input->aliases);
-        $newContent = $this->patterns->falsePositives->do($newContent);
+        $result = strtolower($input);
+        $result = $this->patterns->cleaners->do($result);
+        $result = $this->replaceCreatorAliases($result, $aliases);
+        $result = $this->patterns->falsePositives->do($result);
 
-        return $input->with($newContent);
+        return $result;
     }
 
     private function replaceCreatorAliases(string $input, StringList $aliases): string
