@@ -17,6 +17,9 @@ use Veelkoov\Debris\Maps\StringToString;
 
 class SnapshotProcessor
 {
+    private const string GRP_NAME_STATUS_OPEN = 'StatusOpen';
+    private const string GRP_NAME_STATUS_CLOSED = 'StatusClosed';
+
     private ContextLogger $logger;
 
     public function __construct(
@@ -84,9 +87,9 @@ class SnapshotProcessor
 
     private function getSingleStatusKeyRemove(StringToString $matches): ?bool
     {
-        if ($matches->hasKey('StatusOpen')) {
+        if ($matches->hasKey(self::GRP_NAME_STATUS_OPEN)) {
             $isOpen = true;
-        } elseif ($matches->hasKey('StatusClosed')) {
+        } elseif ($matches->hasKey(self::GRP_NAME_STATUS_CLOSED)) {
             $isOpen = false;
         } else {
             $isOpen = null;
@@ -94,7 +97,7 @@ class SnapshotProcessor
             $this->logger->error('Status group not matched.');
         }
 
-        $matches->removeAllKeys(['StatusOpen', 'StatusClosed']);
+        $matches->removeAllKeys([self::GRP_NAME_STATUS_OPEN, self::GRP_NAME_STATUS_CLOSED]);
 
         return $isOpen;
     }

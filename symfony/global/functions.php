@@ -173,6 +173,13 @@ function str_strip_prefix(string $subject, string $prefix): string
         : $subject;
 }
 
+function str_strip_suffix(string $subject, string $suffix): string
+{
+    return str_ends_with($subject, $suffix)
+        ? substr($subject, 0, -strlen($suffix))
+        : $subject;
+}
+
 function str_replace_limit(string $search, string $replace, string $subject, int $limit): string
 {
     if ($limit < 0) {
