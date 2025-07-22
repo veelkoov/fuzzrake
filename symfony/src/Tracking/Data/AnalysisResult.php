@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tracking;
+namespace App\Tracking\Data;
 
 use App\Utils\StrUtils;
 use Stringable;

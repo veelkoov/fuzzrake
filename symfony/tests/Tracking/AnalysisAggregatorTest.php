@@ -6,7 +6,7 @@ namespace App\Tests\Tracking;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
-use App\Tracking\AnalysisResult;
+use App\Tracking\Data\AnalysisResult;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;

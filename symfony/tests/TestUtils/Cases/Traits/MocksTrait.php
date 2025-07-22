@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Entity\Creator as CreatorE;
+use App\Tracking\Data\AnalysisInput;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\Web\Snapshots\Snapshot;
+use App\Utils\Web\Snapshots\SnapshotMetadata;
 
 trait MocksTrait
 {
@@ -15,5 +19,21 @@ trait MocksTrait
         $result->method('getId')->willReturn(1);
 
         return Creator::wrap($result);
+    }
+
+    /**
+     * @param list<string> $formerly
+     */
+    protected function getAnalysisInput(
+        string $creatorId = 'TEST001',
+        string $name = '',
+        array $formerly = [],
+        string $contents = '',
+        string $url = '',
+    ): AnalysisInput {
+        $snapshot = new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
+        $creator = new Creator()->setCreatorId($creatorId)->setName($name)->setFormerly($formerly);
+
+        return new AnalysisInput($snapshot, $creator);
     }
 }

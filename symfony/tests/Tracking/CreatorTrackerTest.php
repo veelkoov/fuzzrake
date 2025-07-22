@@ -6,11 +6,12 @@ namespace App\Tests\Tracking;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
-use App\Tracking\AnalysisResult;
-use App\Tracking\AnalysisResults;
 use App\Tracking\CreatorTracker;
 use App\Tracking\CreatorUpdater;
-use App\Tracking\SnapshotProcessor;
+use App\Tracking\Data\AnalysisInput;
+use App\Tracking\Data\AnalysisResult;
+use App\Tracking\Data\AnalysisResults;
+use App\Tracking\TextProcessing\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
@@ -105,7 +106,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->snapshotProcessorMock
             ->expects(self::exactly(2))
             ->method('analyse')
-            ->willReturnCallback(static fn (Snapshot $snapshot) => $analysisResult);
+            ->willReturnCallback(static fn (AnalysisInput $input) => $analysisResult);
 
         $this->analysisAggregatorMock
             ->expects(self::once())

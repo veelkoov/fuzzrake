@@ -2,27 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Tracking;
+namespace App\Tracking\TextProcessing;
 
+use App\Tracking\ContextLogger;
+use App\Tracking\Data\AnalysisInput;
 use App\Tracking\Patterns\Patterns;
+use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\StringList;
 
 class Preprocessor
 {
     private const int MAX_ANALYSED_SIZE_CHARACTERS = 1 * 1024 * 1024; // ~= 1 MiB (+multibyte characters)
 
+    private readonly ContextLogger $logger;
+
     public function __construct(
+        LoggerInterface $logger,
         private readonly Patterns $patterns,
     ) {
+        $this->logger = new ContextLogger($logger);
     }
 
-    public function preprocess(string $input, StringList $aliases): string
+    public function getPreprocessedContent(AnalysisInput $input): string
     {
-        $result = mb_substr($input, 0, self::MAX_ANALYSED_SIZE_CHARACTERS);
+        $this->logger->resetContextFor($input);
+
+        $result = $this->getWithLengthLimit($input);
         // TODO: URL strategy
         $result = strtolower($result);
         $result = $this->patterns->cleaners->do($result);
-        $result = $this->replaceCreatorAliases($result, $aliases);
+        $result = $this->replaceCreatorAliases($result, $input->creatorAliases);
         $result = $this->patterns->falsePositives->do($result);
 
         return $result;
@@ -43,5 +52,18 @@ class Preprocessor
         }
 
         return $result;
+    }
+
+    private function getWithLengthLimit(AnalysisInput $input): string
+    {
+        $length = mb_strlen($input->contents);
+
+        if ($length <= self::MAX_ANALYSED_SIZE_CHARACTERS) {
+            return $input->contents;
+        }
+
+        $this->logger->info("Contents too long, truncating $length ---> ".$this::MAX_ANALYSED_SIZE_CHARACTERS.'.');
+
+        return mb_substr($input->contents, 0, self::MAX_ANALYSED_SIZE_CHARACTERS);
     }
 }

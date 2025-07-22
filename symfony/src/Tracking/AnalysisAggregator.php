@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
+use App\Tracking\Data\AnalysisResult;
+use App\Tracking\Data\AnalysisResults;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

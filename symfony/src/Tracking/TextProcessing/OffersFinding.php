@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tracking;
+namespace App\Tracking\TextProcessing;
 
 use Veelkoov\Debris\StringList;
 
-final readonly class AnalysisFinding
+final readonly class OffersFinding
 {
     public function __construct(
         public string $matchedText,

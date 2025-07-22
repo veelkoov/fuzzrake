@@ -10,12 +10,9 @@ use App\Tests\TestUtils\Paths;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\Patterns\Patterns;
 use App\Tracking\Patterns\RegexesLoader;
-use App\Tracking\Preprocessor;
-use App\Tracking\SnapshotProcessor;
+use App\Tracking\TextProcessing\Preprocessor;
+use App\Tracking\TextProcessing\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\Snapshots\Snapshot;
-use App\Utils\Web\Snapshots\SnapshotMetadata;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
@@ -40,15 +37,15 @@ class GeneralProcessingTest extends FuzzrakeTestCase
         $logger = self::createStub(LoggerInterface::class);
 
         self::$creator = new Creator()->setCreatorId('TEST001');
-        self::$processor = new SnapshotProcessor($logger, $patterns, new Preprocessor($patterns));
+        self::$processor = new SnapshotProcessor($logger, $patterns, new Preprocessor($logger, $patterns));
         self::$aggregator = new AnalysisAggregator($logger);
     }
 
     #[DataProvider('analyseDataProvider')]
     public function testAnalyse(string $caseName, string $contents, StringList $expected): void
     {
-        $snapshot = new Snapshot($contents, new SnapshotMetadata('', '', UtcClock::now(), 200, [], []));
-        $result = self::$aggregator->aggregate(self::$creator, [self::$processor->analyse($snapshot)]);
+        $result = self::$aggregator->aggregate(self::$creator,
+            [self::$processor->analyse(self::getAnalysisInput(contents: $contents))]);
 
         $actual = new StringList()
             ->addAll($result->openFor->map(static fn (string $item) => "+$item"))

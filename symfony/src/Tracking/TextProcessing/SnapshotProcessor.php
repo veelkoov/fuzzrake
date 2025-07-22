@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tracking;
+namespace App\Tracking\TextProcessing;
 
+use App\Tracking\ContextLogger;
+use App\Tracking\Data\AnalysisInput;
+use App\Tracking\Data\AnalysisResult;
 use App\Tracking\Patterns\Patterns;
 use App\Utils\Enforce;
 use App\Utils\Regexp\RegexUtl;
-use App\Utils\Web\Snapshots\Snapshot;
 use Composer\Pcre\Regex;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -31,13 +33,13 @@ class SnapshotProcessor
         $this->logger = new ContextLogger($logger);
     }
 
-    public function analyse(Snapshot $snapshot): AnalysisResult
+    public function analyse(AnalysisInput $input): AnalysisResult
     {
-        $this->logger->clearContext();
-        $this->logger->addContext('url', $snapshot->metadata->url);
-        $this->logger->addContext('creator', $snapshot->metadata->creatorId);
+        $this->logger->resetContextFor($input);
 
-        $remainingContent = $this->preprocessor->preprocess($snapshot->contents, new StringList());
+        // TODO: Reject to analyse httpCode != 200
+
+        $remainingContent = $this->preprocessor->getPreprocessedContent($input);
         $openFor = new StringList();
         $closedFor = new StringList();
         $hasEncounteredIssues = false;
@@ -45,17 +47,12 @@ class SnapshotProcessor
         foreach ($this->patterns->offersStatuses as $pattern) {
             $this->logger->addContext('pattern', $pattern);
 
-            $pattern = Enforce::nonEmptyString($pattern);
-
             while (null !== ($finding = $this->getOfferStatus($pattern, $remainingContent))) {
                 $remainingContent = str_replace_limit($finding->matchedText, ' MATCH ', $remainingContent, 1);
 
                 if (!$finding->isValid()) {
                     $hasEncounteredIssues = true;
-                    continue;
-                }
-
-                if ($finding->isOpen) {
+                } elseif ($finding->isOpen) {
                     $openFor->addAll($finding->offers);
                 } else {
                     $closedFor->addAll($finding->offers);
@@ -63,15 +60,12 @@ class SnapshotProcessor
             }
         }
 
-        return new AnalysisResult($snapshot->metadata->url, $openFor->freeze(), $closedFor->freeze(), $hasEncounteredIssues);
+        return new AnalysisResult($input->url, $openFor->freeze(), $closedFor->freeze(), $hasEncounteredIssues);
     }
 
-    /**
-     * @param non-empty-string $pattern
-     */
-    private function getOfferStatus(string $pattern, string $remainingContent): ?AnalysisFinding
+    private function getOfferStatus(string $pattern, string $remainingContent): ?OffersFinding
     {
-        $match = Regex::match($pattern, $remainingContent);
+        $match = Regex::match(Enforce::nonEmptyString($pattern), $remainingContent);
 
         if (!$match->matched) {
             return null;
@@ -83,7 +77,7 @@ class SnapshotProcessor
         $isOpen = $this->getSingleStatusKeyRemove($matches);
         $offers = $this->getOffersFromGroups($matches);
 
-        return new AnalysisFinding($matchedText, $offers, $isOpen);
+        return new OffersFinding($matchedText, $offers, $isOpen);
     }
 
     private function getSingleStatusKeyRemove(StringToString $matches): ?bool

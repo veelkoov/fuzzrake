@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
+use App\Tracking\Data\AnalysisInput;
+use App\Tracking\Data\AnalysisResults;
+use App\Tracking\TextProcessing\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Snapshots\SnapshotsManager;
 use Psr\Log\LoggerInterface;
@@ -21,12 +24,12 @@ class CreatorTracker
         private readonly AnalysisAggregator $analysisAggregator,
         private readonly CreatorUpdater $creatorUpdater,
     ) {
-        $this->logger=new ContextLogger($logger);
+        $this->logger = new ContextLogger($logger);
     }
 
     public function update(Creator $creator, bool $retryPossible, bool $refetchPages): bool
     {
-        $this->logger->addContext('creator', $creator->getLastCreatorId(), true);
+        $this->logger->resetContextFor($creator);
 
         $this->logger->info('Trying to update statuses.', [
             'retryPossible' => $retryPossible,
@@ -53,7 +56,7 @@ class CreatorTracker
 
             $snapshot = $this->snapshotsManager->get($url, $refetchPages);
 
-            $results[] = $this->snapshotProcessor->analyse($snapshot);
+            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($snapshot, $creator));
         }
 
         $this->logger->info('Aggregating '.count($results).' results.');

@@ -6,8 +6,8 @@ namespace App\Tests\Tracking;
 
 use App\Entity\Event;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
-use App\Tracking\AnalysisResults;
 use App\Tracking\CreatorUpdater;
+use App\Tracking\Data\AnalysisResults;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;

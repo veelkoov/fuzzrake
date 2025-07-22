@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Entity\Event;
+use App\Tracking\Data\AnalysisResults;
 use App\Utils\Collections\StringList;
 use App\Utils\Creator\Changes\Description;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -28,7 +29,7 @@ class CreatorUpdater
 
     public function applyResults(Creator $creator, AnalysisResults $analysisResults): void
     {
-        $this->logger->addContext('creator', $creator->getLastCreatorId(), true);
+        $this->logger->resetContextFor($creator);
 
         $old = clone $creator;
 

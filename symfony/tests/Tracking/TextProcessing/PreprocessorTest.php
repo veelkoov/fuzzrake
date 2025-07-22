@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tracking;
+namespace App\Tests\Tracking\TextProcessing;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tests\TestUtils\DataDefinitions;
 use App\Tracking\Patterns\Patterns;
 use App\Tracking\Patterns\RegexesLoader;
-use App\Tracking\Preprocessor;
+use App\Tracking\TextProcessing\Preprocessor;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
+use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\StringList;
 
 #[Small]
@@ -24,7 +25,7 @@ class PreprocessorTest extends FuzzrakeTestCase
     {
         /* @phpstan-ignore argument.type */
         $regexesLoader = new RegexesLoader(DataDefinitions::get('tracking.yaml', 'tracking'));
-        $this->subject = new Preprocessor(new Patterns($regexesLoader));
+        $this->subject = new Preprocessor(self::createStub(LoggerInterface::class), new Patterns($regexesLoader));
     }
 
     /**
@@ -43,14 +44,14 @@ class PreprocessorTest extends FuzzrakeTestCase
     #[DataProvider('cleanerRegexesAreWorkingDataProvider')]
     public function testCleanerRegexesAreWorking(string $input, string $expected): void
     {
-        $result = $this->subject->preprocess($input, new StringList());
+        $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(contents: $input));
 
         self::assertSame($expected, $result);
     }
 
     public function testInputGetsConvertedToLowercase(): void
     {
-        $result = $this->subject->preprocess('AaBbCcDdEeFf', new StringList());
+        $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(contents: 'AaBbCcDdEeFf'));
 
         self::assertSame('aabbccddeeff', $result);
     }
@@ -88,7 +89,8 @@ class PreprocessorTest extends FuzzrakeTestCase
     #[DataProvider('creatorAliasesAreGettingReplacedWithTheNamePlaceholderDataProvider')]
     public function testAliasesGetReplacedWithPlaceholder(string $input, StringList $aliases, string $expected): void
     {
-        $result = $this->subject->preprocess($input, new StringList($aliases));
+        $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(name: $aliases->at(0),
+            formerly: $aliases->slice(1)->getValuesArray(), contents: $input));
 
         self::assertSame($expected, $result);
     }
@@ -118,16 +120,16 @@ class PreprocessorTest extends FuzzrakeTestCase
     #[DataProvider('falsePositivesAreBeingRemovedDataProvider')]
     public function testFalsePositivesAreBeingRemoved(string $input, string $expected): void
     {
-        $result = $this->subject->preprocess($input, StringList::of('The Creator'));
+        $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(contents: $input, name: 'The Creator'));
 
         self::assertSame($expected, $result);
     }
 
     public function testLongContentsGetsTruncated(): void
     {
-        $input = 'hello' . str_repeat(str_repeat('1234567890abcdef', 64), 1024) . 'bye';
+        $input = 'hello'.str_repeat(str_repeat('1234567890abcdef', 64), 1024).'bye';
 
-        $result = $this->subject->preprocess($input, new StringList());
+        $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(contents: $input));
 
         self::assertSame(1048576, mb_strlen($result));
         self::assertStringStartsWith('hello', $result);

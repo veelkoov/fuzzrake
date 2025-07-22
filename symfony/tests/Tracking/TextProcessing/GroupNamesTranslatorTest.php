@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tracking;
+namespace App\Tests\Tracking\TextProcessing;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
-use App\Tracking\GroupNamesTranslator;
+use App\Tracking\TextProcessing\GroupNamesTranslator;
 use PHPUnit\Framework\Attributes\Small;
 
 #[Small]
