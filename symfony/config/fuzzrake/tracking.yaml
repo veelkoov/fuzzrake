@@ -121,10 +121,6 @@ parameters:
     cleaners:  # Used to remove noise / simplify information
       '<style[^>]*>.*?</style>':                         ' '
 
-      # Seems to duplicate primary content on some serial websites.
-      # Doesn't affect Twitter (yet...). grep-code-og-description-removal
-      '<meta (?:itemprop|property)="(?:og:|twitter:)?description"[^>]+>':      ' '
-
       # First is the NBSP
       "\u00A0|&nbsp;|\t":                                ' '
       '❗':                                              '!' # Emoji exclamation mark
