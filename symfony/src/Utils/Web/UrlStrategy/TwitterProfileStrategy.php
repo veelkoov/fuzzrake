@@ -53,14 +53,4 @@ class TwitterProfileStrategy extends Strategy
     {
         return new FreeUrl('https://x.com/', ''); // Space Karen
     }
-
-    // TODO
-    // private const string loginLocationHeader = "^location: \\S+login\\S+$"; //, setOf(RegexOption.MULTILINE, RegexOption.IGNORE_CASE))
-    // override fun getLatentCode(url: Url, contents: String, originalCode: Int): Int {
-    //     return if (originalCode == 302 && contents.contains(loginLocationHeader)) {
-    //         401 // SPACE KAREN
-    //     } else {
-    //         originalCode
-    //     }
-    // }
 }
