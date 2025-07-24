@@ -54,13 +54,37 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
         self::assertSame($expected, $result->hasEncounteredIssues);
     }
 
-    public function testEmptyUrlAnalysisSetsErrorStatus(): void
+    public function testSingleUrlOneOffer(): void
+    {
+        $result = $this->subject->aggregate($this->creator, [
+            new AnalysisResult('', StringList::of('Commissions'), StringList::of(), false),
+        ]);
+
+        self::assertSameItems(['Commissions'], $result->openFor);
+        self::assertSameItems([], $result->closedFor);
+        self::assertFalse($result->hasEncounteredIssues);
+    }
+
+    public function testSingleUrlNoOffer(): void
+    {
+        $result = $this->subject->aggregate($this->creator, [
+            new AnalysisResult('', StringList::of(), StringList::of(), false),
+        ]);
+
+        self::assertSameItems([], $result->openFor);
+        self::assertSameItems([], $result->closedFor);
+        self::assertTrue($result->hasEncounteredIssues);
+    }
+
+    public function testSingleEmptyUrlAnalysisSetsErrorStatus(): void
     {
         $result = $this->subject->aggregate($this->creator, [
             new AnalysisResult('', new StringList(), new StringList(), false),
             new AnalysisResult('', new StringList(), StringList::of('Quotes'), false),
         ]);
 
+        self::assertSameItems([], $result->openFor);
+        self::assertSameItems(['Quotes'], $result->closedFor);
         self::assertTrue($result->hasEncounteredIssues);
     }
 
@@ -109,6 +133,17 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
 
         self::assertSameItems(['Partials'], $result->openFor);
         self::assertSameItems(['Parts', 'Quotes'], $result->closedFor);
+        self::assertTrue($result->hasEncounteredIssues);
+    }
+
+    public function testMultipleContradictingOffersOnASingleUrlCancelEachOtherSettingErrorState(): void
+    {
+        $result = $this->subject->aggregate($this->creator, [
+            new AnalysisResult('', StringList::of('Commissions', 'Commissions'), StringList::of('Commissions'), false),
+        ]);
+
+        self::assertSameItems([], $result->openFor);
+        self::assertSameItems([], $result->closedFor);
         self::assertTrue($result->hasEncounteredIssues);
     }
 
