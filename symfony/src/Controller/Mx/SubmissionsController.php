@@ -11,11 +11,9 @@ use App\Form\Mx\SubmissionType;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
-use App\Service\Cache as CacheService;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -36,7 +34,6 @@ class SubmissionsController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
         private readonly UpdatesService $updates,
-        private readonly CacheService $cache,
         private readonly CreatorRepository $creatorRepository,
     ) {
     }
@@ -87,7 +84,6 @@ class SubmissionsController extends AbstractController
         if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
                 && $form->isValid() && $update->isAccepted) {
             $this->updates->import($update);
-            $this->cache->invalidate(CacheTags::CREATORS);
 
             return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
         }

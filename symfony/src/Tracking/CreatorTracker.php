@@ -40,6 +40,8 @@ class CreatorTracker
             $creator->setClosedFor([]);
             $creator->setCsTrackerIssue(false);
             $creator->setCsLastCheck(null);
+
+            return true;
         }
 
         $this->logger->info('Trying to update statuses.', [
@@ -53,8 +55,6 @@ class CreatorTracker
             $this->logger->info('Saving statuses update results.');
 
             $this->creatorUpdater->applyResults($creator, $analysisResults);
-
-            // TODO: Clear cache
         }
 
         return $analysisResults->anySuccess();

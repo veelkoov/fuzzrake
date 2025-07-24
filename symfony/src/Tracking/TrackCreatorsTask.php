@@ -9,7 +9,9 @@ use App\Repository\CreatorRepository;
 use App\Repository\CreatorUrlRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
+use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InitiateTrackingV1;
+use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,6 +82,11 @@ final class TrackCreatorsTask
             ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
 
         $this->handleFailedIds($failedIds, $message);
+
+        // Clear cache if retries are not allowed (tracked must have been updated), or at least one creator was updated.
+        if (!$message->retryAllowed() || $message->idsOfCreators->count() !== $failedIds->count()) {
+            $this->messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS, CacheTags::TRACKING));
+        }
 
         $this->entityManager->flush();
     }
