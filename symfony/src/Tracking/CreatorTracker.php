@@ -33,6 +33,15 @@ class CreatorTracker
     {
         $this->logger->resetContextFor($creator);
 
+        if (!$creator->isTracked()) {
+            $this->logger->info('Not tracked. Clearing tracking state.');
+
+            $creator->setOpenFor([]);
+            $creator->setClosedFor([]);
+            $creator->setCsTrackerIssue(false);
+            $creator->setCsLastCheck(null);
+        }
+
         $this->logger->info('Trying to update statuses.', [
             'retryPossible' => $retryPossible,
             'refetchPages' => $refetchPages,
@@ -44,6 +53,8 @@ class CreatorTracker
             $this->logger->info('Saving statuses update results.');
 
             $this->creatorUpdater->applyResults($creator, $analysisResults);
+
+            // TODO: Clear cache
         }
 
         return $analysisResults->anySuccess();

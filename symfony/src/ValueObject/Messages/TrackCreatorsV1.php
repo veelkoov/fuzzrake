@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject\Messages;
 
+use App\Tracking\TrackCreatorsTask;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 use Veelkoov\Debris\IntList;
 
@@ -12,8 +13,8 @@ final readonly class TrackCreatorsV1
 {
     public function __construct(
         public IntList $idsOfCreators,
-        public int $retriesLimit,
-        public bool $refetchPages,
+        public int $retriesLimit = TrackCreatorsTask::MAX_RETRIES,
+        public bool $refetchPages = true,
     ) {
     }
 

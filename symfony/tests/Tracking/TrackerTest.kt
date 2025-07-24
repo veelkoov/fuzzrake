@@ -1,29 +1,4 @@
-package e2e
-
-import database.entities.Creator
-import database.entities.CreatorOfferStatus
-import database.entities.CreatorUrl
-import database.entities.CreatorVolatileData
-import database.helpers.getVolatileData
-import database.helpers.toOfferStatus
-import io.mockk.*
-import org.junit.jupiter.api.DynamicTest.dynamicTest
-import org.junit.jupiter.api.TestFactory
-import testUtils.TrackerTestCaseData
-import testUtils.disposableDatabase
-import testUtils.getNullConfiguration
-import testUtils.toOfferStatus
-import time.UTC
-import tracking.Tracker
-import tracking.TrackerOptions
-import tracking.contents.CreatorItems
-import tracking.contents.ProcessedItem
-import tracking.contents.TrackedContentsProvider
-import tracking.website.StandardStrategy
-import web.url.Url
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+// FIXME
 
 class TrackerTest {
     private val failingUrl = "http://localhost/failing" to "nothing to detect here"

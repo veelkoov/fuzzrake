@@ -71,6 +71,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $creator4 = new Creator()->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
 
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
+        self::clearQueue(); // The listener creates "refresh single creator tracking" messages
 
         $intList = new IntList([
             $creator1->getId() ?? 0,

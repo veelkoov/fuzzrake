@@ -9,13 +9,14 @@ use App\Entity\Creator;
 use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
+use App\ValueObject\Messages\TrackCreatorsV1;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\Attributes\Medium;
 use RuntimeException;
 
 #[Medium]
-class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
+class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 {
     use MessageBusTrait;
 
@@ -76,7 +77,24 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
         $this->assertSingleUpdateMiniaturesV1HasBeenSentFor($creatorId);
     }
 
-    public function testNonPhotoUrlChangesAreIgnored(): void
+    public function testUpdateMessageGetsSentAfterAddingTrackingUrl(): void
+    {
+        $creatorUrl = new CreatorUrl()
+            ->setUrl('https://example.com/')
+            ->setType(Field::URL_COMMISSIONS->value)
+        ;
+        $creator = new Creator()->addUrl($creatorUrl);
+
+        self::persistAndFlush($creator);
+        $creatorId = $creator->getId();
+        self::assertNotNull($creatorId);
+
+        $this->assertSingleTrackCreatorsV1HasBeenSentFor($creatorId);
+    }
+
+    // Not testing update and delete for tracking URLs. Works identically as already tested miniatures.
+
+    public function testUnsupportedUrlChangesAreIgnored(): void
     {
         $creatorUrl = new CreatorUrl()
             ->setUrl('https://example.com/initial')
@@ -133,5 +151,12 @@ class CreatorUrlPhotosChangedListenerTest extends FuzzrakeKernelTestCase
         $queued = $this->getQueued(UpdateMiniaturesV1::class);
 
         self::assertSame($creatorId, $queued->single()->creatorId);
+    }
+
+    private function assertSingleTrackCreatorsV1HasBeenSentFor(int $creatorId): void
+    {
+        $queued = $this->getQueued(TrackCreatorsV1::class);
+
+        self::assertSameItems([$creatorId], $queued->single()->idsOfCreators);
     }
 }
