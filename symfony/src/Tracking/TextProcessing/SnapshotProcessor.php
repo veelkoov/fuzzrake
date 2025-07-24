@@ -37,7 +37,11 @@ class SnapshotProcessor
     {
         $this->logger->resetContextFor($input);
 
-        // TODO: Reject to analyse httpCode != 200
+        if (200 !== $input->snapshot->metadata->httpCode) {
+            $this->logger->info('Skipping analysis of non-200 fetched result.');
+
+            return new AnalysisResult($input->url->getUrl(), new StringList(), new StringList(), true);
+        }
 
         $remainingContent = $this->preprocessor->getPreprocessedContent($input);
         $openFor = new StringList();

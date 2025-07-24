@@ -10,6 +10,7 @@ use App\Utils\Web\Url\Url;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class SnapshotsManager
@@ -23,8 +24,10 @@ class SnapshotsManager
         #[Autowire(env: 'resolve:SNAPSHOTS_STORAGE_PATH')]
         private readonly string $storagePath,
     ) {
-        if (!is_dir($storagePath)) { // TODO: Autocreate if possible
-            throw new RuntimeException("Storage path '$storagePath' is not an existing directory.");
+        try {
+            new Filesystem()->mkdir($storagePath);
+        } catch (IOException $exception) {
+            throw new RuntimeException("Storage path '$storagePath' is not an existing directory.", previous: $exception);
         }
 
         $this->pathProvider = new FileSystemPathProvider();
