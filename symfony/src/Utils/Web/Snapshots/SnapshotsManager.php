@@ -23,7 +23,7 @@ class SnapshotsManager
         #[Autowire(env: 'resolve:SNAPSHOTS_STORAGE_PATH')]
         private readonly string $storagePath,
     ) {
-        if (!is_dir($storagePath)) {
+        if (!is_dir($storagePath)) { // TODO: Autocreate if possible
             throw new RuntimeException("Storage path '$storagePath' is not an existing directory.");
         }
 

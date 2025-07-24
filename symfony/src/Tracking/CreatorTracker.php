@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
+use App\Entity\CreatorUrl;
 use App\Tracking\Data\AnalysisInput;
 use App\Tracking\Data\AnalysisResults;
 use App\Tracking\TextProcessing\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Snapshots\SnapshotsManager;
+use App\Utils\Web\Url\Url;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -52,15 +54,28 @@ class CreatorTracker
         $results = [];
 
         foreach ($creator->getCommissionsUrlObjects() as $url) {
-            $this->logger->info('Retrieving and analysing a web page.', ['url' => $url->getUrl()]);
+            $trackedUrl = $this->getTrackedUrl($url);
 
-            $snapshot = $this->snapshotsManager->get($url, $refetchPages);
+            $this->logger->info('Retrieving and analysing a web page.', ['url' => $trackedUrl->getUrl()]);
 
-            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($url, $snapshot, $creator));
+            $snapshot = $this->snapshotsManager->get($trackedUrl, $refetchPages);
+
+            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($trackedUrl, $snapshot, $creator));
         }
 
         $this->logger->info('Aggregating '.count($results).' results.');
 
         return $this->analysisAggregator->aggregate($creator, $results);
+    }
+
+    private function getTrackedUrl(CreatorUrl $url): Url
+    {
+        $trackedUrl = $url->getStrategy()->getUrlForTracking($url);
+
+        if ($trackedUrl->getUrl() !== $url->getUrl()) {
+            $this->logger->info("Will analyse '{$trackedUrl->getUrl()}' instead of '{$url->getUrl()}'.");
+        }
+
+        return $trackedUrl;
     }
 }
