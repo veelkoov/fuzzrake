@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tracking;
 
-use App\Entity\Creator as CreatorE;
 use App\Repository\CreatorRepository;
 use App\Repository\CreatorUrlRepository;
+use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\ValueObject\CacheTags;
@@ -21,7 +21,6 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\IntList;
 
 final class TrackCreatorsTask
@@ -70,16 +69,12 @@ final class TrackCreatorsTask
     {
         $creators = $this->creatorRepository->getWithIds($message->idsOfCreators);
 
-        if (count($creators) !== $message->idsOfCreators->count()) {
+        if ($creators->count() !== $message->idsOfCreators->count()) {
             // A maker could have been removed between message dispatch and handling.
             $this->logger->warning('Retrieved less creators than given IDs. Unless commonly happening, this can be ignored.');
         }
 
-        $failedIds = new DList($creators)
-            // Tracking happens here.
-            ->filterNot(fn (CreatorE $creator) => $this->tracker->track(Creator::wrap($creator),
-                $message->retryAllowed(), $message->refetchPages))
-            ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
+        $failedIds = $this->trackAndGetFailedIds($creators, $message->retryAllowed(), $message->refetchPages);
 
         $this->handleFailedIds($failedIds, $message);
 
@@ -112,5 +107,11 @@ final class TrackCreatorsTask
             new TrackCreatorsV1($failedIds, $message->retriesLimit - 1, $message->refetchPages),
             [DelayStamp::delayFor(new DateInterval('PT2H'))], // grep-code-tracking-frequency
         );
+    }
+
+    private function trackAndGetFailedIds(CreatorList $creators, bool $retryAllowed, bool $refetchPages): IntList
+    {
+        return $creators->filterNot(fn (Creator $creator) => $this->tracker->track($creator, $retryAllowed,
+            $refetchPages))->mapInto(static fn (Creator $creator) => Enforce::int($creator->getId()), new IntList());
     }
 }

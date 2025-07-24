@@ -11,6 +11,7 @@ use App\Entity\CreatorValue;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Collections\StringList;
 use App\Utils\Creator\CreatorId;
+use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
 use App\Utils\Pagination\Pagination;
 use App\Utils\UnbelievableRuntimeException;
@@ -351,15 +352,14 @@ class CreatorRepository extends ServiceEntityRepository
         return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
     }
 
-    /**
-     * @return list<Creator>
-     */
-    public function getWithIds(IntList $idsOfCreators): array
+    public function getWithIds(IntList $idsOfCreators): CreatorList
     {
-        return $this->getCreatorsQueryBuilder()
+        $entities = $this->getCreatorsQueryBuilder()
             ->where('d_c.id IN (:idsOfCreators)')
             ->setParameter('idsOfCreators', $idsOfCreators)
             ->getQuery()
             ->getResult();
+
+        return CreatorList::wrap($entities);
     }
 }
