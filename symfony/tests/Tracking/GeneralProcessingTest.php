@@ -45,7 +45,7 @@ class GeneralProcessingTest extends FuzzrakeTestCase
     public function testAnalyse(string $caseName, string $contents, StringList $expected): void
     {
         $result = self::$aggregator->aggregate(self::$creator,
-            [self::$processor->analyse(self::getAnalysisInput(contents: $contents))]);
+            [self::$processor->process(self::getAnalysisInput(contents: $contents))]);
 
         $actual = new StringList()
             ->addAll($result->openFor->map(static fn (string $item) => "+$item"))

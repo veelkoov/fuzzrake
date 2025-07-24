@@ -29,7 +29,7 @@ class CreatorTracker
         $this->logger = new ContextLogger($logger);
     }
 
-    public function update(Creator $creator, bool $retryPossible, bool $refetchPages): bool
+    public function track(Creator $creator, bool $retryPossible, bool $refetchPages): bool
     {
         $this->logger->resetContextFor($creator);
 
@@ -71,7 +71,7 @@ class CreatorTracker
 
             $snapshot = $this->snapshotsManager->get($trackedUrl, $refetchPages);
 
-            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($trackedUrl, $snapshot, $creator));
+            $results[] = $this->snapshotProcessor->process(new AnalysisInput($trackedUrl, $snapshot, $creator));
         }
 
         $this->logger->info('Aggregating '.count($results).' results.');

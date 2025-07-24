@@ -77,7 +77,7 @@ final class TrackCreatorsTask
 
         $failedIds = new DList($creators)
             // Tracking happens here.
-            ->filterNot(fn (CreatorE $creator) => $this->tracker->update(Creator::wrap($creator),
+            ->filterNot(fn (CreatorE $creator) => $this->tracker->track(Creator::wrap($creator),
                 $message->retryAllowed(), $message->refetchPages))
             ->mapInto(static fn (CreatorE $creator) => Enforce::int($creator->getId()), new IntList());
 

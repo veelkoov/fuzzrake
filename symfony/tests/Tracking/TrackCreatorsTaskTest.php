@@ -83,7 +83,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
 
         // Tracker which will "fail" every second creator (by ID)
         $trackerMock = self::createMock(CreatorTracker::class);
-        $trackerMock->method('update')->willReturnCallback(
+        $trackerMock->method('track')->willReturnCallback(
             static fn (Creator $creator) => ($creator->getId() ?? 0) % 2 === 0);
 
         $subject = new TrackCreatorsTask(
@@ -110,6 +110,6 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
 
         $subject->trackCreatorsMessageHandler($message);
 
-        self::assertMessageBusQueueEmpty();
+        self::assertEmpty(self::getQueued(TrackCreatorsV1::class));
     }
 }

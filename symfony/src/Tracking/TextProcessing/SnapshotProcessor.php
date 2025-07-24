@@ -33,7 +33,7 @@ class SnapshotProcessor
         $this->logger = new ContextLogger($logger);
     }
 
-    public function analyse(AnalysisInput $input): AnalysisResult
+    public function process(AnalysisInput $input): AnalysisResult
     {
         $this->logger->resetContextFor($input);
 

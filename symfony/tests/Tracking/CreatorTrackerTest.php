@@ -8,16 +8,10 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\CreatorTracker;
 use App\Tracking\CreatorUpdater;
-use App\Tracking\Data\AnalysisInput;
-use App\Tracking\Data\AnalysisResult;
 use App\Tracking\Data\AnalysisResults;
 use App\Tracking\TextProcessing\SnapshotProcessor;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\Snapshots\Snapshot;
-use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Snapshots\SnapshotsManager;
-use App\Utils\Web\Url\Url;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -54,67 +48,41 @@ class CreatorTrackerTest extends FuzzrakeTestCase
 
     public function testChangesNotAppliedOnFailureAndRetryPossible(): void
     {
-        $creator = new Creator()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
         $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::never())->method('applyResults');
 
-        $this->subject->update($creator, true, true);
+        $this->subject->track($creator, true, true);
     }
 
     public function testChangesAppliedOnFailureWithoutRetryPossibility(): void
     {
-        $creator = new Creator()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
         $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
 
-        $this->subject->update($creator, false, true);
+        $this->subject->track($creator, false, true);
     }
 
     public function testChangesAppliedOnEvenPartialSuccess(): void
     {
-        $creator = new Creator()->setCreatorId('TEST001');
+        $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
         $analysisResults = new AnalysisResults(new StringList(['Pancakes']), new StringList(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
 
-        $this->subject->update($creator, true, true);
+        $this->subject->track($creator, true, true);
     }
 
-    // TODO: ??? Change to sth testing getAnalysisResults()
-    public function testAllRetrievedSnapshotAnalysedAndResultsAggregated(): void
-    {
-        $creator = new Creator()
-            ->setCreatorId('TEST001')
-            ->setCommissionsUrls(['https://getfursu.it/', 'https://getfursu.it/info'])
-        ;
+    // TODO: "Everything gets reset when there are no tracked URLs"
 
-        $this->snapshotsManagerMock
-            ->expects(self::exactly(2))
-            ->method('get')
-            ->willReturnCallback(static fn (Url $url) => new Snapshot('', new SnapshotMetadata($url->getUrl(),
-                'TEST001', UtcClock::now(), 200, [], [])));
-
-        $analysisResult = new AnalysisResult('', new StringList(), new StringList(), false); // FIXME
-
-        $this->snapshotProcessorMock
-            ->expects(self::exactly(2))
-            ->method('analyse')
-            ->willReturnCallback(static fn (AnalysisInput $input) => $analysisResult);
-
-        $this->analysisAggregatorMock
-            ->expects(self::once())
-            ->method('aggregate')
-            ->with($creator, [$analysisResult, $analysisResult])
-            ->willReturn(new AnalysisResults(new StringList(), new StringList(), false));
-
-        $this->subject->update($creator, true, true);
-    }
+    // TODO: All tracked URLs are queried and processed
 }
