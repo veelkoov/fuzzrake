@@ -56,7 +56,7 @@ class CreatorTracker
 
             $snapshot = $this->snapshotsManager->get($url, $refetchPages);
 
-            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($snapshot, $creator));
+            $results[] = $this->snapshotProcessor->analyse(new AnalysisInput($url, $snapshot, $creator));
         }
 
         $this->logger->info('Aggregating '.count($results).' results.');

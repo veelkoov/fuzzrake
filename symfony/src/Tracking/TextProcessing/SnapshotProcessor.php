@@ -60,7 +60,7 @@ class SnapshotProcessor
             }
         }
 
-        return new AnalysisResult($input->url, $openFor->freeze(), $closedFor->freeze(), $hasEncounteredIssues);
+        return new AnalysisResult($input->url->getUrl(), $openFor->freeze(), $closedFor->freeze(), $hasEncounteredIssues);
     }
 
     private function getOfferStatus(string $pattern, string $remainingContent): ?OffersFinding

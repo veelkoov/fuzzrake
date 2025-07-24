@@ -76,7 +76,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->subject->update($creator, false, true);
     }
 
-    public function testChangesAppliedEvenOnPartialSuccess(): void
+    public function testChangesAppliedOnEvenPartialSuccess(): void
     {
         $creator = new Creator()->setCreatorId('TEST001');
 
@@ -88,6 +88,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         $this->subject->update($creator, true, true);
     }
 
+    // TODO: ??? Change to sth testing getAnalysisResults()
     public function testAllRetrievedSnapshotAnalysedAndResultsAggregated(): void
     {
         $creator = new Creator()

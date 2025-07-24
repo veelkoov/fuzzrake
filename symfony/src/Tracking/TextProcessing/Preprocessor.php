@@ -28,7 +28,7 @@ class Preprocessor
         $this->logger->resetContextFor($input);
 
         $result = $this->getWithLengthLimit($input);
-        // TODO: URL strategy
+        $result = $input->url->getStrategy()->filterContents($result);
         $result = strtolower($result);
         $result = $this->patterns->cleaners->do($result);
         $result = $this->replaceCreatorAliases($result, $input->creatorAliases);

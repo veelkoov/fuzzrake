@@ -10,6 +10,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
+use App\Utils\Web\Url\FreeUrl;
 
 trait MocksTrait
 {
@@ -29,11 +30,12 @@ trait MocksTrait
         string $name = '',
         array $formerly = [],
         string $contents = '',
-        string $url = '',
+        string $url = 'https://example.com/',
     ): AnalysisInput {
+        $urlObj = new FreeUrl($url, $creatorId);
         $snapshot = new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
         $creator = new Creator()->setCreatorId($creatorId)->setName($name)->setFormerly($formerly);
 
-        return new AnalysisInput($snapshot, $creator);
+        return new AnalysisInput($urlObj, $snapshot, $creator);
     }
 }
