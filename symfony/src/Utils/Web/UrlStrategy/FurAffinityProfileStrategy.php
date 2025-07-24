@@ -45,6 +45,8 @@ class FurAffinityProfileStrategy extends Strategy
             return $originalCode;
         }
 
+        // No impact on the tracking as of 2025-07-24
+
         if (str_contains($contents, self::FA_USER_NOT_FOUND_CONTENTS_SEARCH_STRING)
             && str_contains($contents, self::FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING)
         ) {

@@ -87,19 +87,13 @@ class GenericHttpClient implements HttpClientInterface
 
     private function correctHttpCode(Url $url, int $statusCode, string $contents): int
     {
-        $originalCode = $statusCode;
+        $result = $url->getStrategy()->getLatentCode($url, $contents, $statusCode);
 
-        // TODO: Implement correction
-        // val originalCode = response.status.value
-        // val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
-        //
-        // if (correctedCode != originalCode) {
-        //     logger.info { "Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}" }
-        // }
-        //
-        // return correctedCode
+        if ($result !== $statusCode) {
+            $this->logger->info("Correcting HTTP code from $statusCode to $result for {$url->getUrl()}.");
+        }
 
-        return $originalCode;
+        return $result;
     }
 
     #[Override]
