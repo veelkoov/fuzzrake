@@ -25,7 +25,7 @@ use Veelkoov\Debris\IntList;
 
 final class TrackCreatorsTask
 {
-    private const int NUMBER_OF_TRACKED_CREATORS_PER_CHUNK = 50;
+    private const int NUMBER_OF_TRACKED_CREATORS_PER_CHUNK = 20;
     public const int MAX_RETRIES = 1;
 
     public function __construct(
