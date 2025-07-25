@@ -16,6 +16,7 @@ final readonly class TrackCreatorsV1
         public int $retriesLimit = TrackCreatorsTask::MAX_RETRIES,
         public bool $refetchPages = true,
     ) {
+        $this->idsOfCreators->freeze();
     }
 
     public function retryAllowed(): bool
