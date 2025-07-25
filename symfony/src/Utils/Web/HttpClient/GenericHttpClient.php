@@ -14,7 +14,6 @@ use Symfony\Component\BrowserKit\Exception\ExceptionInterface as BrowserKitExcep
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
-use Throwable;
 use Veelkoov\Debris\Maps\StringToString;
 
 class GenericHttpClient implements HttpClientInterface

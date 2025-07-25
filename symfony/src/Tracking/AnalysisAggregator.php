@@ -9,7 +9,6 @@ use App\Tracking\Data\AnalysisResults;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
@@ -49,8 +48,7 @@ class AnalysisAggregator
         $contradicting = $openFor->intersect($closedFor);
 
         if ($contradicting->isNotEmpty()) {
-            $resultsAsString = new DList($results)
-                ->mapInto(static fn (AnalysisResult $result) => (string) $result, new StringList())
+            $resultsAsString = StringList::mapFrom($results, static fn (AnalysisResult $result) => (string) $result)
                 ->join(' / ');
             $this->logger->info("Contradicting offers detected: $resultsAsString.");
 
@@ -74,7 +72,7 @@ class AnalysisAggregator
         $uniqueClosedFor = $result->closedFor->unique();
 
         if ($uniqueOpenFor->count() !== $result->openFor->count()
-        || $uniqueClosedFor->count() !== $result->closedFor->count()) {
+            || $uniqueClosedFor->count() !== $result->closedFor->count()) {
             $this->logger->warning("Duplicated offers detected: $result.");
 
             $result = $result->with(openFor: $uniqueOpenFor, closedFor: $uniqueClosedFor, hasEncounteredIssues: true);
