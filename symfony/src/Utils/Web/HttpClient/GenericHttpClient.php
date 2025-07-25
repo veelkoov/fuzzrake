@@ -26,7 +26,7 @@ class GenericHttpClient implements HttpClientInterface
         SymfonyHttpClientInterface $httpClient,
     ) {
         $this->browser = new HttpBrowser($httpClient);
-        $this->browser->setMaxRedirects(2);
+        $this->browser->setMaxRedirects(5);
     }
 
     #[Override]
