@@ -50,9 +50,6 @@ class GenericHttpClient implements HttpClientInterface
         } catch (BrowserKitExceptionInterface|HttpClientExceptionInterface $exception) {
             $this->logger->info("Retrieval failed: '{$url->getUrl()}'", ['exception' => $exception]);
             $errors[] = $exception->getMessage();
-        } catch (Throwable $exception) {
-            $this->logger->info("RETRIEVAL FAILED A LOT: '{$url->getUrl()}'", ['exception' => $exception]);
-            $errors[] = $exception->getMessage();
         }
 
         $contents = $response?->getContent() ?? '';
