@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
+use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -47,15 +49,13 @@ class Cache
         return $getCached;
     }
 
-    /**
-     * @param list<string>|string $tags
-     */
-    public function invalidate(array|string $tags): void
+    #[AsMessageHandler]
+    public function invalidate(InvalidateCacheTagsV1 $message): void
     {
         try {
-            $this->cache->invalidateTags(is_string($tags) ? [$tags] : $tags);
+            $this->cache->invalidateTags($message->tags->getValuesArray());
         } catch (InvalidArgumentException $exception) {
-            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
+            throw new RuntimeException(previous: $exception);
         }
     }
 

@@ -12,9 +12,9 @@ class Replacements
     private array $replacements = [];
 
     /**
-     * @param array<string, string> $replacements
+     * @param iterable<string, string> $replacements
      */
-    public function __construct(array $replacements, string $flags, string $prefix, string $suffix)
+    public function __construct(iterable $replacements, string $flags, string $prefix = '', string $suffix = '')
     {
         foreach ($replacements as $pattern => $replacement) {
             $this->replacements[] = new SimpleReplacement("$prefix$pattern$suffix", $flags, $replacement);

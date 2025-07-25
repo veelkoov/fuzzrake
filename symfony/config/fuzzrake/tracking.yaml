@@ -1,0 +1,216 @@
+---
+parameters:
+  tracking:
+    tokens_replacements:
+      'OPEN_TAG':
+        - '<(h[123456]|p|div)[^>]*>'
+      'END_TAG':
+        - '</(h[123456]|p|div)>'
+
+      'END_OPEN_TAGS':
+        - 'END_TAG\s*OPEN_TAG'
+        - 'END_TAG\s*END_TAG\s*OPEN_TAG\s*OPEN_TAG'
+        - 'END_TAG\s*END_TAG\s*END_TAG\s*OPEN_TAG\s*OPEN_TAG\s*OPEN_TAG'
+
+      'STATUS_ANY':
+        - 'STATUS_OPEN'
+        - 'STATUS_CLOSED'
+
+      'STATUS_OPEN=StatusOpen':
+        - 'open(?!ing)'
+        - 'only\s+making'
+        - 'taking'
+
+      'STATUS_CLOSED=StatusClosed':
+        - 'closed?(?![a-z])'
+        - 'not\s+(taking(\s+on)?|accepting|open)'
+        - 'don''t\s+(do|take|provide|accept)'
+
+      'SIMPLE_OFFER':
+        - 'COMMISSIONS (\ slots)? ( AND QUOTES)?'
+        - 'QUOTES ( AND COMMISSIONS)?'
+
+      'OFFER':
+        'HANDPAWS_AND_SOCKPAWS=HandpawsCmsAndSockpawsCms':
+          - 'handpaws AND sockpaws\s+COMMISSIONS'
+
+        'PARTS_AND_REFURBISHMENTS=PartsAndRefurbishments':
+          - 'parts AND refurbishments\s+COMMISSIONS'
+
+        'COMMISSIONS_AND_QUOTES=CommissionsAndQuotes':
+          - '(COMMISSIONS AND quotes?)'
+          - '(quotes? AND COMMISSIONS)'
+          - 'quote/com' # Hmmm... FIXME?
+
+        'FULLSUIT_COMMISSIONS=FullsuitCommissions':
+          - 'fullsuit\s+COMMISSIONS'
+
+        'PARTIAL_COMMISSIONS=PartialCommissions':
+          - 'partial\s+COMMISSIONS'
+
+        'HEAD_COMMISSIONS=HeadCommissions':
+          - 'head\s+COMMISSIONS'
+
+        'PARTS=Parts':
+          - '(fursuit\s+)?parts?\s+COMMISSIONS'
+
+        'COMPLEX_COMMISSIONS_WORDING=Commissions':
+          - '(custom\s+)?(costume\s+|fursuit\s+)?COMMISSIONS'
+          - '(custom\s+|COMMISSIONS\s+)?slots?'
+          - 'fursuits?(\s+queue)?'
+
+        'PROJECTS=Projects':
+          - 'projects?'
+
+        'TRADES=Trades':
+          - 'trades?'
+
+        'REFURBISHMENTS=Refurbishments':
+          - 'refurbishments?'
+
+        'PREMADES=Premades':
+          - 'pre-?mades?(\s+designs?)?'
+
+        'ARTISTIC_LIBERTY=ArtisticLiberty':
+          - 'artistic\s+liberty'
+
+        'QUOTES=Quotes':
+          - 'quotes?'
+
+        'ORDERS=Orders':
+          - '(custom\s+)?orders?'
+
+      ' AND ':
+        - '\s+and\s+'
+        - '\s?(&|&amp;|[/+])\s?'
+
+      'COMMISSIONS':
+        - 'comm?iss?ions?'
+        - 'comms'
+
+      'WE_ARE':
+        - 'we(''re|\s+are|\s+will)?'
+        - 'i(''m|\s+am|\s+will)?'
+        - 'CREATOR_NAME\s+(is|are)'
+
+      'OUR':
+        - 'my'
+        - 'mine'
+        - 'ours?'
+
+      'ANY_TIME_DESC':
+        - >-
+          (\d{1,2} (st|rd|th)? (\s+ of)? \s+)?
+          MONTHS
+        - 'spring|summer|autumn|winter|late|early'
+
+      'MONTHS':
+        - 'jan(uary)?'
+        - 'feb(ruary)?'
+        - 'mar(ch)?'
+        - 'apr(il)?'
+        - 'may'
+        - 'june?'
+        - 'july?'
+        - 'aug(ust)?'
+        - 'sep(tember)?'
+        - 'oct(ober)?'
+        - 'nov(ember)?'
+        - 'dec(ember)?'
+
+    cleaners:  # Used to remove noise / simplify information
+      '<style[^>]*>.*?</style>':                         ' '
+
+      # First is the NBSP
+      "\u00A0|&nbsp;|\t":                                ' '
+      '❗':                                              '!' # Emoji exclamation mark
+      '<br[^>]*>':                                       "\n"
+      '<!--.*?-->':                                      ' '
+      '</?(?:strong|b|i|span|center|u|a|em|font)( [^>]*)?>': ''
+
+      '&#(?:39|8217);': "'"
+
+      ' {2,}':  ' '
+      '\n{2,}': "\n"
+
+      # square.site
+      # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
+      # This is obviously naive and will fail if anyone uses { or } in actual site text.
+      ',"attributes":\{[^{}]*(\{[^{}]*(\{[^{}]*(\{[^{}]*\})?[^{}]*\})?[^{}]*\})?[^{}]*\}': ''
+      '"\},\{"insert":"': ''
+
+      # always / currently / now
+      '(?<![a-z])(currently|basically always|always|permanently)(?![a-z])': 'now'
+
+      # Change order to reduce the number of alterations
+      '(?<![a-z])we are now(?![a-z])': 'now we are'
+      '(?<![a-z])not now(?![a-z])':    'now not'
+
+      # Remove decorations
+      '(\*\*\*|!)(open|closed)(\*\*\*|!)':               '$2'
+      '&gt;&gt; ?(open|closed) ?&lt;&lt;':               '$1'
+
+      # [ Commissions . . . Open ]
+      '\[ ([a-z]+) ?\.(?: ?\.)+ ?([a-z]+) \]': '$1: $2'
+
+      # | - Commissions: - CLOSED |
+      '\| - ([a-z]+): - ([a-z]+) \|': '$1: $2'
+
+    false_positives:
+      - >-
+        when\ (
+          will\ you\ start\ taking\ new\ COMMISSIONS |
+          WE_ARE\ (open\ for|taking|take)            |
+          do\ you\ open\ for                         |
+          (we|i)\ open\ commissions                  )
+
+      - '(if|when|while|after)(\ OUR)?\ OFFER(\ are)?\ STATUS_ANY'
+
+      - 'WE_ARE\ (now\ )?opening\ for\ quotes\ a\ few\ weeks\ before\ commission\ slots\ open'
+      - '(when|if)\ (my\ |our\ |the\ )(COMMISSIONS|QUOTES)\ (are\ )?open'
+      - 'after\ the\ commissions\ close'
+
+      # as soon / as ... open
+      - 'as\ (soon\ as\ WE_ARE|slots)\ open'
+
+      # even though / although
+      - 'even\ though\ you''re\ closed\ for\ COMMISSIONS'
+      - 'although\ (fursuit\ )?COMMISSIONS\ are\ closed'
+
+      # open in / next opening
+      - >-
+        SIMPLE_OFFER:?
+        (\ are)?
+        \ open(s|ing)?\ (
+          in\                          |
+          (in\ |from\ )? ANY_TIME_DESC )
+      - 'next\ COMMISSIONS\ opening'
+
+      # "art commissions"
+      - '(?<=[^a-z])art(work)?\ COMMISSIONS'
+
+    offers_statuses:
+      # Short and to the point first
+      - 'STATUS_ANY \s+ for \s+ OFFER'
+
+      # OFFER - SEPARATOR? - STATUS
+      - >-
+        ( OFFER
+          | OPEN_TAG \s* OFFER \s* END_TAG )
+
+        ( \s+ are | \s+ status )?
+        (\s+now)?
+        ([\s:-]+ | \s* <hr[^>]*> \s* )
+        (now\s+)?
+
+        ( STATUS_ANY
+          | OPEN_TAG \s* (status: \s+)? STATUS_ANY \s* END_TAG )
+
+      # Inverted order - careful!
+      - '(WE_ARE|now)\s+STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
+      -                'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER(\s+and\s+OFFER)?'
+
+      - 'OPEN_TAG\s*OFFER(\s+status:?|\s+?:)?\s*END_OPEN_TAGS(\s*now)?\s*STATUS_ANY'
+
+      # Separators, which should be handled safely
+      - 'OPEN_TAG\s*OFFER\s+[|]\s+STATUS_ANY\s*END_TAG'

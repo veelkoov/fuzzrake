@@ -12,10 +12,9 @@
   ansible.builtin.dnf:
     name:
       - '@nodejs:18/common'
-      - 'augeas-libs'
+      - 'augeas-libs' # Used by Certbot
       - 'firewalld'
       - 'git'
-      - 'java-17-openjdk-headless'
       - 'python3-firewall'
       - 'python3-pip'
       - 'python3-requests'

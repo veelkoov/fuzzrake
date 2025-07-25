@@ -17,9 +17,12 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\UnbelievableRuntimeException;
+use App\ValueObject\CacheTags;
+use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -30,7 +33,7 @@ class UpdatesService
         private readonly EntityManagerInterface $entityManager,
         private readonly Fixer $fixer,
         private readonly MessageBusInterface $messageBus,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $logger, // @phpstan-ignore property.onlyWritten (Leave for future uses)
     ) {
     }
 
@@ -165,8 +168,9 @@ class UpdatesService
 
         try {
             $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
+            $this->messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS));
         } catch (ExceptionInterface $exception) {
-            $this->logger->error("Failed dispatching species sync notification: {$exception->getMessage()}");
+            throw new RuntimeException(previous: $exception);
         }
     }
 

@@ -7,7 +7,7 @@ namespace App\Photos;
 use App\Photos\MiniatureUrlResolver\FurtrackMiniatureUrlResolver;
 use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\Url;
 use Psr\Log\LoggerInterface;
 
 class MiniaturesUpdater

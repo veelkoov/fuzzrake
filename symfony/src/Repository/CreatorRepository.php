@@ -11,6 +11,7 @@ use App\Entity\CreatorValue;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Collections\StringList;
 use App\Utils\Creator\CreatorId;
+use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
 use App\Utils\Pagination\Pagination;
 use App\Utils\UnbelievableRuntimeException;
@@ -24,6 +25,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use Veelkoov\Debris\IntList;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringSet;
@@ -348,5 +350,16 @@ class CreatorRepository extends ServiceEntityRepository
         $appender->applyChoices($builder);
 
         return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
+    }
+
+    public function getWithIds(IntList $idsOfCreators): CreatorList
+    {
+        $entities = $this->getCreatorsQueryBuilder()
+            ->where('d_c.id IN (:idsOfCreators)')
+            ->setParameter('idsOfCreators', $idsOfCreators)
+            ->getQuery()
+            ->getResult();
+
+        return CreatorList::wrap($entities);
     }
 }

@@ -1,6 +1,5 @@
 ---
-frontend_deployment_path: '/var/www/prod'
-backend_deployment_path:  '/opt/prod'
+deployment_path: '/var/www/prod'
 
 branch:      'main'
 app_env:     'prod'

@@ -29,7 +29,12 @@ class Description
 
     public function getText(): string
     {
-        return StringList::mapFrom($this->changes, static fn (ChangeInterface $change) => $change->getDescription())->join("\n");
+        return $this->getList()->join("\n");
+    }
+
+    public function getList(): StringList
+    {
+        return StringList::mapFrom($this->changes, static fn (ChangeInterface $change) => $change->getDescription());
     }
 
     /**

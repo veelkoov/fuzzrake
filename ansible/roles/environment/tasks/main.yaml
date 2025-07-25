@@ -19,10 +19,6 @@
   ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
   tags: 'migrate'
 
-- name: 'Setup backend'
-  ansible.builtin.import_tasks: 'setup_backend.yaml'
-  tags: 'backend'
-
 - name: 'Setup automation'
   when: 'setup_automation | default(false)'
   ansible.builtin.import_tasks: 'setup_automation.yaml'

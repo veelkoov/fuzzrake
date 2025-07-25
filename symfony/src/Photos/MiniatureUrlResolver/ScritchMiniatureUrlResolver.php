@@ -7,13 +7,15 @@ namespace App\Photos\MiniatureUrlResolver;
 use App\Photos\MiniaturesUpdateException;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Json;
-use App\Utils\Web\FreeUrl;
+use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Snapshots\Snapshot;
-use App\Utils\Web\Url;
+use App\Utils\Web\Url\FreeUrl;
+use App\Utils\Web\Url\Url;
 use InvalidArgumentException;
 use JsonException;
 use Override;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TRegx\CleanRegex\Pattern;
 use Veelkoov\Debris\Maps\StringToString;
 
@@ -22,6 +24,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     private readonly Pattern $pattern;
 
     public function __construct(
+        #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
     ) {
         $this->pattern = Pattern::of('^https://scritch\.es/pictures/(?<pictureId>[-a-f0-9]{36})$');
@@ -36,9 +39,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     #[Override]
     public function getMiniatureUrl(Url $url): string
     {
-        $pictureId = $this->pattern->match($url->getUrl())->first()->get('pictureId');
-
-        $response = $this->getResponseForPictureId($pictureId);
+        $response = $this->getResponseForPictureUrl($url);
 
         if (200 !== $response->metadata->httpCode) {
             throw new MiniaturesUpdateException('Non-200 HTTP response code.');
@@ -55,10 +56,10 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
     /**
      * @throws MiniaturesUpdateException
      */
-    private function getResponseForPictureId(string $pictureId): Snapshot
+    private function getResponseForPictureUrl(Url $url): Snapshot
     {
         $csrfToken = $this->getCsrfToken();
-        $jsonPayload = $this->getGraphQlJsonPayload($pictureId);
+        $jsonPayload = $this->getGraphQlJsonPayload($this->getPictureIdFor($url));
 
         $headers = new StringToString([
             'Content-Type' => 'application/json',
@@ -66,7 +67,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
             'authorization' => "Scritcher $csrfToken",
         ]);
 
-        return $this->httpClient->fetch(new FreeUrl('https://scritch.es/graphql'), 'POST', $headers, $jsonPayload);
+        return $this->httpClient->fetch(new FreeUrl('https://scritch.es/graphql', $url->getCreatorId()), 'POST', $headers, $jsonPayload);
     }
 
     private function getGraphQlJsonPayload(string $pictureId): string
@@ -100,8 +101,13 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
      */
     private function getFirstRequiredCsrfToken(): string
     {
-        $this->httpClient->fetch(new FreeUrl('https://scritch.es/'));
+        $this->httpClient->fetch(new FreeUrl('https://scritch.es/', ''));
 
         return $this->getOptionalCsrfToken() ?? throw new MiniaturesUpdateException('Missing csrf-token cookie.');
+    }
+
+    private function getPictureIdFor(Url $url): string
+    {
+        return $this->pattern->match($url->getUrl())->first()->get('pictureId');
     }
 }

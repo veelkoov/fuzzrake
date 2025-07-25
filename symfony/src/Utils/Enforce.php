@@ -135,4 +135,18 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
 
         return $input;
     }
+
+    /**
+     * @phpstan-assert non-empty-string $input
+     *
+     * @return non-empty-string
+     */
+    public static function nonEmptyString(mixed $input): string
+    {
+        if (!is_string($input) || '' === $input) {
+            throw new InvalidArgumentException('Expected a non-empty string.');
+        }
+
+        return $input;
+    }
 }

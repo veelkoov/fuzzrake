@@ -393,9 +393,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->getVolatileData()->getLastCsUpdate();
     }
 
-    public function setCsLastCheck(?DateTimeImmutable $csLastCheck): void
+    public function setCsLastCheck(?DateTimeImmutable $csLastCheck): self
     {
         $this->getVolatileData()->setLastCsUpdate($csLastCheck);
+
+        return $this;
     }
 
     public function getCsTrackerIssue(): bool
@@ -578,6 +580,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getCommissionsUrls(): array
     {
         return $this->getUrls(Field::URL_COMMISSIONS);
+    }
+
+    /**
+     * @return list<CreatorUrl>
+     */
+    public function getCommissionsUrlObjects(): array
+    {
+        return $this->getUrlObjects(Field::URL_COMMISSIONS);
     }
 
     /**

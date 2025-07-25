@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[Medium]
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {
-    use ContainerTrait; // FIXME: Should not use any of EM-related stuff
+    use ContainerTrait;
 
     private readonly Fixer $subject;
 

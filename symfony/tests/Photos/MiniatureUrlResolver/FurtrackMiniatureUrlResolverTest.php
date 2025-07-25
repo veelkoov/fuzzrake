@@ -8,7 +8,7 @@ use App\Photos\MiniaturesUpdateException;
 use App\Photos\MiniatureUrlResolver\FurtrackMiniatureUrlResolver;
 use App\Tests\TestUtils\Http\ExpectedHttpCall;
 use App\Tests\TestUtils\Http\HttpClientMockTrait;
-use App\Utils\Web\FreeUrl;
+use App\Utils\Web\Url\FreeUrl;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
@@ -35,11 +35,11 @@ class FurtrackMiniatureUrlResolverTest extends TestCase
 
         self::assertSame(
             'https://orca2.furtrack.com/thumb/49767.jpg',
-            $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/49767')),
+            $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/49767', '')),
         );
         self::assertSame(
             'https://orca2.furtrack.com/thumb/41933.jpg',
-            $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/41933')),
+            $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/41933', '')),
         );
     }
 
@@ -58,6 +58,6 @@ class FurtrackMiniatureUrlResolverTest extends TestCase
 
         self::expectException(MiniaturesUpdateException::class);
         self::expectExceptionMessage('Non-200 HTTP response code.');
-        $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/49767'));
+        $subject->getMiniatureUrl(new FreeUrl('https://www.furtrack.com/p/49767', ''));
     }
 }

@@ -303,7 +303,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $entityManagerMock->expects(self::once())->method('flush');
 
         $messageBusMock = $this->createMock(MessageBusInterface::class);
-        $messageBusMock->expects(self::once())->method('dispatch')->willReturn(new Envelope(new stdClass()));
+        $messageBusMock->expects(self::exactly(2)) // Species sync and cache invalidation
+            ->method('dispatch')->willReturn(new Envelope(new stdClass()));
 
         $creatorRepoStub = self::createStub(CreatorRepository::class);
         $loggerStub = self::createStub(LoggerInterface::class);

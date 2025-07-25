@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Entity\CreatorUrl;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -52,5 +53,23 @@ class CreatorUrlRepository extends ServiceEntityRepository
         $resultData = $builder->getQuery()->execute();
 
         return $resultData; // @phpstan-ignore return.type (Lack of skill to fix this)
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function getIdsOfActiveCreatorsHavingAnyTrackedUrl(): array
+    {
+        $result = $this->createQueryBuilder('d_cu')
+            ->select('DISTINCT d_c.id')
+            ->where('d_cu.type = :type')
+            ->setParameter('type', Field::URL_COMMISSIONS->value)
+            ->join('d_cu.creator', 'd_c')
+            ->andWhere('d_c.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 }
