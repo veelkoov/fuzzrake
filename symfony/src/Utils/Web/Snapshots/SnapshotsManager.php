@@ -7,6 +7,7 @@ namespace App\Utils\Web\Snapshots;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Url\Url;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -18,6 +19,7 @@ class SnapshotsManager
     private readonly FileSystemPathProvider $pathProvider;
 
     public function __construct(
+        private readonly LoggerInterface $logger,
         private readonly SnapshotsSerializer $serializer,
         #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
@@ -45,7 +47,7 @@ class SnapshotsManager
                     return $result;
                 }
             } catch (ExceptionInterface|IOException) {
-                // Treat as a cache miss, refetch
+                $this->logger->warning("Failed to deserialize '$snapshotDirPath'.");
             }
         }
 

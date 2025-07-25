@@ -14,6 +14,7 @@ use App\Utils\Web\Snapshots\SnapshotsSerializer;
 use App\Utils\Web\Url\FreeUrl;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Maps\StringToString;
@@ -39,6 +40,7 @@ class SnapshotsManagerTest extends TestCase
         $serializerMock->expects(self::once())->method('load')->willReturn(null);
 
         $subject = new SnapshotsManager(
+            self::createStub(LoggerInterface::class),
             $serializerMock,
             $httpClientMock,
             $this->testsTempDir,
@@ -68,6 +70,7 @@ class SnapshotsManagerTest extends TestCase
             ));
 
         $subject = new SnapshotsManager(
+            self::createStub(LoggerInterface::class),
             $serializerMock,
             $httpClientMock,
             $this->testsTempDir,
@@ -107,6 +110,7 @@ class SnapshotsManagerTest extends TestCase
         $serializerStub = self::createStub(SnapshotsSerializer::class);
 
         $subject = new SnapshotsManager(
+            self::createStub(LoggerInterface::class),
             $serializerStub,
             $httpClientMock,
             $this->testsTempDir,
