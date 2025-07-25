@@ -25,7 +25,7 @@ trait MocksTrait
     /**
      * @param list<string> $formerly
      */
-    protected function getAnalysisInput(
+    protected static function getAnalysisInput(
         string $creatorId = 'TEST001',
         string $name = '',
         array $formerly = [],
@@ -33,9 +33,17 @@ trait MocksTrait
         string $url = 'https://example.com/',
     ): AnalysisInput {
         $urlObj = new FreeUrl($url, $creatorId);
-        $snapshot = new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
+        $snapshot = self::getSnapshot($contents, $url, $creatorId);
         $creator = new Creator()->setCreatorId($creatorId)->setName($name)->setFormerly($formerly);
 
         return new AnalysisInput($urlObj, $snapshot, $creator);
+    }
+
+    protected static function getSnapshot(
+        string $contents = '',
+        string $url = 'https://example.com/',
+        string $creatorId = 'TEST001',
+    ): Snapshot {
+        return new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
     }
 }

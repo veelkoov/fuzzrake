@@ -393,9 +393,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->getVolatileData()->getLastCsUpdate();
     }
 
-    public function setCsLastCheck(?DateTimeImmutable $csLastCheck): void
+    public function setCsLastCheck(?DateTimeImmutable $csLastCheck): self
     {
         $this->getVolatileData()->setLastCsUpdate($csLastCheck);
+
+        return $this;
     }
 
     public function getCsTrackerIssue(): bool
