@@ -1,0 +1,18 @@
+[Unit]
+Description={{ server_name }} SCHEDULER
+
+# NOTE: Every time this service gets restarted, it starts calculating the schedule "from zero",
+# meaning the first tracking happens ~12 hours after this service (re)start. grep-code-tracking-frequency
+# This is the reason the scheduler has a dedicated worker.
+# https://symfony.com/doc/current/scheduler.html#efficient-management-with-symfony-scheduler
+#
+# Memory limit here is OK. The restart due to breaching the limit would happen right after sending
+# the tracking messages; this does not affect the schedule in a significant amount.
+
+[Service]
+ExecStart=docker exec {{ php_fpm_container_name | quote }} bin/console messenger:consume scheduler_default --sleep=60 --memory-limit=128M
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

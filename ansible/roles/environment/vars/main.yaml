@@ -1,5 +1,8 @@
 ---
 php_fpm_docker_image_name: 'fuzzrake/php-fpm:latest'
 
-systemd_service_name:      'messenger-worker-{{ server_name }}'
-systemd_service_conf_path: '/etc/systemd/system/{{ systemd_service_name }}.service'
+systemd_services:
+  - name: 'messenger-worker-{{ server_name }}'
+    template_src: 'messenger_worker.service.j2'
+  - name: 'scheduler-worker-{{ server_name }}'
+    template_src: 'scheduler_worker.service.j2'

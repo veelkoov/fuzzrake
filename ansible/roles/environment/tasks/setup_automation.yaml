@@ -1,14 +1,16 @@
 ---
-- name: 'Setup messenger worker service'
+- name: 'Setup systemd services'
+  loop: '{{ systemd_services }}'
   ansible.builtin.template:
-    dest: '{{ systemd_service_conf_path }}'
+    dest: '/etc/systemd/system/{{ item.name }}.service'
     mode: '0644'
-    src:  'messenger_worker.service.j2'
+    src:  '{{ item.template_src }}'
   register: 'service_result'
 
-- name: 'Enable and start messenger worker service'
+- name: 'Enable and (re)start systemd services'
+  loop: '{{ systemd_services }}'
   ansible.builtin.systemd_service:
     daemon_reload: '{{ service_result.changed }}'
     enabled:       true
-    name:          '{{ systemd_service_name }}'
-    state:         'started'
+    name:          '{{ item.name }}'
+    state:         'restarted'

@@ -1,8 +1,8 @@
 [Unit]
-Description={{ server_name }} messenger:consume
+Description={{ server_name }} MESSENGER
 
 [Service]
-ExecStart=docker exec {{ php_fpm_container_name | quote }} bin/console messenger:consume async-msg-queue scheduler_default --sleep=5 --limit=10 --memory-limit=256M
+ExecStart=docker exec {{ php_fpm_container_name | quote }} bin/console messenger:consume async-msg-queue --sleep=5 --limit=10 --memory-limit=256M
 Restart=always
 RestartSec=30
 
