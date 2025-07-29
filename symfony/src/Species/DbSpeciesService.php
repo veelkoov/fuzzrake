@@ -8,7 +8,6 @@ use App\Entity\Specie;
 use App\Repository\SpecieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\StringSet;
 
@@ -16,10 +15,8 @@ final class DbSpeciesService
 {
     /**
      * Assuming that this service is the only instance adding/removing species during a single request.
-     *
-     * @var DStringMap<Specie>|null
      */
-    private ?DStringMap $nameToSpecie = null;
+    private ?StringToSpecieE $nameToSpecie = null;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -28,12 +25,9 @@ final class DbSpeciesService
     ) {
     }
 
-    /**
-     * @return DStringMap<Specie>
-     */
-    private function getNameToSpecie(): DStringMap
+    private function getNameToSpecie(): StringToSpecieE
     {
-        return $this->nameToSpecie ??= DStringMap::fromValues(
+        return $this->nameToSpecie ??= StringToSpecieE::fromValues(
             $this->speciesRepository->findAll(),
             static fn (Specie $specie) => $specie->getName(),
         );

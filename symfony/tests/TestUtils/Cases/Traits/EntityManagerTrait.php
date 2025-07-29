@@ -19,20 +19,13 @@ trait EntityManagerTrait
 {
     use ContainerTrait;
 
-    private static ?EntityManagerInterface $entityManager = null;
-
     protected static function getEM(): EntityManagerInterface
     {
-        return self::$entityManager ??= self::getContainerService(EntityManagerInterface::class, 'doctrine.orm.default_entity_manager');
+        return self::getContainerService(EntityManagerInterface::class, 'doctrine.orm.default_entity_manager');
     }
 
     protected static function resetDB(): void
     {
-        if (null !== self::$entityManager) {
-            self::$entityManager->clear();
-            self::$entityManager = null;
-        }
-
         $metadata = self::getEM()->getMetadataFactory()->getAllMetadata();
 
         $schemaTool = new OrmSchemaTool(self::getEM());
