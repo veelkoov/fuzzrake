@@ -15,18 +15,7 @@ final class Patterns
     /**
      * @var array<string, Pattern>
      */
-    private static array $iCache = [];
-
-    /**
-     * @var array<string, Pattern>
-     */
     private static array $cache = [];
-
-    /** @deprecated */
-    public static function getI(string $pattern): Pattern
-    {
-        return self::$iCache[$pattern] ??= Pattern::of($pattern, 'i');
-    }
 
     /** @deprecated */
     public static function get(string $pattern): Pattern

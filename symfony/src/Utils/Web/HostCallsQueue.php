@@ -6,19 +6,19 @@ namespace App\Utils\Web;
 
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Url\Url;
-use Veelkoov\Debris\StringIntMap;
+use Veelkoov\Debris\Maps\StringToInt;
 
 class HostCallsQueue
 {
     /**
      * Key = hostname. Value = Next allowed call timestamp (epoch sec).
      */
-    private readonly StringIntMap $hostToTimestamp;
+    private readonly StringToInt $hostToTimestamp;
 
     public function __construct(
         private readonly int $delayForHostSec,
     ) {
-        $this->hostToTimestamp = new StringIntMap();
+        $this->hostToTimestamp = new StringToInt();
     }
 
     /**
