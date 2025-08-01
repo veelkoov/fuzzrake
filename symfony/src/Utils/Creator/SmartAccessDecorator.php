@@ -239,11 +239,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function isAllowedToDoNsfw(): ?bool
     {
-        if (null === ($ages = $this->getAges())) {
-            return null;
-        }
-
-        return Ages::ADULTS === $ages;
+        return match ($this->getAges()) {
+            null => null,
+            Ages::ADULTS => true,
+            default => false,
+        };
     }
 
     public function isAllowedToWorkWithMinors(): ?bool
@@ -273,28 +273,20 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getSafeDoesNsfw(): ?bool
     {
-        if (null === ($allowed = $this->isAllowedToDoNsfw())) {
-            return null;
-        }
-
-        if (false === $allowed) {
-            return false;
-        }
-
-        return $this->getDoesNsfw();
+        return match ($this->isAllowedToDoNsfw()) {
+            null => null,
+            false => false,
+            true => $this->getDoesNsfw(),
+        };
     }
 
     public function getSafeWorksWithMinors(): ?bool
     {
-        if (null === ($allowed = $this->isAllowedToWorkWithMinors())) {
-            return null;
-        }
-
-        if (false === $allowed) {
-            return false;
-        }
-
-        return $this->getWorksWithMinors();
+        return match ($this->isAllowedToWorkWithMinors()) {
+            null => null,
+            false => false,
+            true => $this->getWorksWithMinors(),
+        };
     }
 
     /**
