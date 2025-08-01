@@ -12,7 +12,6 @@ use App\Utils\Creator\Completeness;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
-use Composer\Pcre\Preg;
 use JsonException;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
@@ -135,8 +134,6 @@ class AppExtensions
     #[AsTwigFilter('filter_items_matching')]
     public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {
-        $pattern = '~'.preg_quote($matchWord, '~').'~i';
-
-        return $items->filter(static fn (Item $item) => Preg::isMatch($pattern, $item->label));
+        return $items->filter(static fn (Item $item) => false !== mb_stripos($item->label, $matchWord));
     }
 }
