@@ -5,7 +5,7 @@
       path: '{{ deployment_path }}/docker/php-fpm'
       pull: true
     force_source: true
-    name:   '{{ php_fpm_docker_image_name }}'
+    name:   '{{ environment_php_fpm_docker_image_name }}'
     source: 'build'
     state:  'present'
   run_once: true # This obviously will fail if envs were on separate machines
@@ -13,7 +13,7 @@
 - name: 'Setup PHP-FPM Docker container'
   community.docker.docker_container:
     container_default_behavior: 'no_defaults'
-    image: '{{ php_fpm_docker_image_name }}'
+    image: '{{ environment_php_fpm_docker_image_name }}'
     name:  '{{ php_fpm_container_name }}'
     published_ports: '127.0.0.1:{{ php_fpm_container_port }}:9000'
     restart_policy:  'unless-stopped'
