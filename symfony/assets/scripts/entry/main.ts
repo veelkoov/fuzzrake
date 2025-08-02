@@ -19,16 +19,8 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   const creatorId = window.location.hash.slice(1);
   const type = "htmx:configRequest";
 
-  const listener = function (event: unknown): void {
-    // Garbage, but safe?
-    if (
-      event instanceof Event &&
-      "detail" in event &&
-      event.detail instanceof Object &&
-      "path" in event.detail &&
-      "string" === typeof event.detail.path &&
-      event.detail.path.includes("_______")
-    ) {
+  const listener = (event: Event): void => {
+    if (event instanceof CustomEvent && event.detail.path.includes("_______")) {
       event.detail.path = event.detail.path.replace("_______", creatorId);
       document.body.removeEventListener(type, listener);
     }
@@ -123,3 +115,30 @@ jQuery("#creator-card-modal").on("shown.bs.modal", function (): void {
 window.goToPage = function (pageNumber: number): void {
   requireJQ("#page-number").val(pageNumber).trigger("click");
 };
+
+(function setUpPreCachingOfNextCreatorsPage(): void {
+  document.body.addEventListener("htmx:afterRequest", (event: Event): void => {
+    if (!(event instanceof CustomEvent)) {
+      return;
+    }
+
+    const currentPagePath = event.detail.pathInfo.finalRequestPath;
+    const match = currentPagePath.match(/[?&]page=(\d+)/); // grep-code-page-number-parameter-name
+
+    if (match != null) {
+      const currentPageParameter = match[0];
+      const currentPageNumber = Number.parseInt(match[1]);
+
+      const nextPageParameter = currentPageParameter.replace(
+        currentPageNumber,
+        currentPageNumber + 1,
+      );
+      const nextPagePath = currentPagePath.replace(
+        currentPageParameter,
+        nextPageParameter,
+      );
+
+      jQuery.ajax({ url: nextPagePath }); // Ignore result, just cache it.
+    }
+  });
+})();

@@ -94,7 +94,7 @@ function action_dbpull() {
     run_command chmod a+w "$DATABASE_REL_PATH"
 }
 
-function action_dbpush() {
+function action_dbpush_main() {
     echo "$(tput setaf 1)$(tput bold)WARNING!$(tput sgr0) Destructive action."
     read -rp 'Confirm by typing "overwrite": ' user_input
 
@@ -103,6 +103,9 @@ function action_dbpush() {
     fi
 
     run_command scp -p "$DATABASE_REL_PATH" "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH"
+}
+
+function action_dbpush_beta() {
     run_command scp -p "$DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
 }
 
@@ -228,7 +231,8 @@ function action() {
         'dbdump')       action_dbdump ;;
         'dbcommit')     action_dbcommit ;;
         'dbpdc')        action_dbpull && action_dbdump && action_dbcommit ;;
-        'dbpush')       action_dbpush ;;
+        'dbpush-beta')  action_dbpush_beta ;;
+        'dbpush-prod')  action_dbpush_prod ;;
 
         'release-beta') action_release_beta ;;
         'release-prod') action_release_prod ;;
