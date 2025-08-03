@@ -21,6 +21,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\StringSet;
 
@@ -107,7 +108,10 @@ class DataService
         return $this->cache->get(
             function () use ($field) {
                 if (Field::COUNTRY === $field || Field::STATE === $field) {
-                    return $this->creatorRepository->countDistinctInActiveCreators(strtolower($field->value))->freeze();
+                    return $this->creatorRepository
+                        ->countDistinctInActiveCreators(mb_strtolower($field->value))
+                        ->sorted(static fn (Pair $e1, Pair $e2) => $e1->key <=> $e2->key)
+                        ->freeze();
                 } else {
                     return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value)->freeze();
                 }
