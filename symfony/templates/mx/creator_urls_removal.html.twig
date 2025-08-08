@@ -8,7 +8,7 @@
     <p>
         Removing URLs:
 
-        {% for url in result.removedUrls.urls %}
+        {% for url in result.removedUrls %}
             <a class="text-decoration-none" href="{{ url.url }}" target="_blank">{{ url.label }}</a>
             {%- if loop.last %}.{% else %},{% endif %}
         {% endfor %}
@@ -17,7 +17,7 @@
     <p>
         Remaining URLs:
 
-        {% for url in result.remainingUrls.urls %}
+        {% for url in result.remainingUrls %}
             <a class="text-decoration-none" href="{{ url.url }}" target="_blank">{{ url.label }}</a>
             {%- if loop.last %}.{% else %},{% endif %}
         {% endfor %}

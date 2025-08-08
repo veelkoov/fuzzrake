@@ -5,22 +5,30 @@ declare(strict_types=1);
 namespace App\Tests\Management;
 
 use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
+use App\Service\EmailService;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
+use App\Utils\Mx\GroupedUrls;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
+use Throwable;
+use Veelkoov\Debris\StringList;
 
 #[Small]
-class UrlRemovalServiceGetRemovalDataForTest extends TestCase
+class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 {
-    public function testEmainNotSentWhenNoContactPermitted(): void
+    public function testEmailNotSentWhenNoContactPermitted(): void
     {
         $creator = new Creator()->setContactAllowed(ContactPermit::NO)
             ->setWebsiteUrl('https://localhost/');
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_WEBSITE_0']);
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
 
         self::assertFalse($result->sendEmail);
     }
@@ -30,7 +38,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
         $creator = new Creator()->setContactAllowed(ContactPermit::CORRECTIONS)
             ->setWebsiteUrl('https://localhost/');
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_WEBSITE_0']);
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
 
         self::assertTrue($result->sendEmail);
     }
@@ -42,7 +50,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
             ->setCommissionsUrls(['https://localhost/'])
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_WEBSITE_0']);
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
 
         self::assertTrue($result->hide);
     }
@@ -54,7 +62,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
             ->setCommissionsUrls(['https://localhost/'])
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_COMMISSIONS_0']);
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_COMMISSIONS_0'));
 
         self::assertFalse($result->hide);
     }
@@ -62,7 +70,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
     public function testNoRemovedUrlsThrowException(): void
     {
         self::expectException(InvalidArgumentException::class);
-        UrlRemovalService::getRemovalDataFor(new Creator(), []);
+        UrlRemovalService::getRemovalDataFor(new Creator(), StringList::of());
     }
 
     public function testUnknownUrlIdThrowException(): void
@@ -70,7 +78,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
         $creator = new Creator()->setWebsiteUrl('https://localhost/');
 
         self::expectException(InvalidArgumentException::class);
-        UrlRemovalService::getRemovalDataFor($creator, ['WRONG']);
+        UrlRemovalService::getRemovalDataFor($creator, StringList::of('WRONG'));
     }
 
     public function testRemovedAndRemainingAreCalculatedProperly(): void
@@ -82,16 +90,57 @@ class UrlRemovalServiceGetRemovalDataForTest extends TestCase
             ->setFaqUrl('https://localhost/faq')
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, ['URL_FAQ_0', 'URL_COMMISSIONS_1', 'URL_PRICES_0']);
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_FAQ_0', 'URL_COMMISSIONS_1', 'URL_PRICES_0'));
 
-        self::assertEqualsCanonicalizing(
+        self::assertSameItems(
             ['https://localhost/faq', 'https://com2.example.com/', 'https://prc1.example.com/'],
-            arr_map($result->removedUrls->urls, static fn (GroupedUrl $url): string => $url->url),
+            $result->removedUrls->mapInto(static fn (GroupedUrl $url) => $url->url, new StringList()),
         );
 
-        self::assertEqualsCanonicalizing(
+        self::assertSameItems(
             ['https://localhost/main', 'https://com1.example.com/', 'https://prc2.example.com/'],
-            arr_map($result->remainingUrls->urls, static fn (GroupedUrl $url): string => $url->url),
+            $result->remainingUrls->mapInto(static fn (GroupedUrl $url) => $url->url, new StringList()),
         );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function testHidingCreatorRemoves(): void
+    {
+        $creator = new Creator()
+            ->setWebsiteUrl('https://localhost/main')
+            ->setCommissionsUrls(['https://com1.example.com/', 'https://com2.example.com/'])
+            ->setFaqUrl('https://localhost/faq')
+        ;
+
+        $input = new CreatorUrlsRemovalData(
+            GroupedUrls::of(
+                new GroupedUrl(Field::URL_WEBSITE, 0, 'https://localhost/main'),
+            ),
+            GroupedUrls::of(
+                new GroupedUrl(Field::URL_COMMISSIONS, 0, 'https://com1.example.com/'),
+                new GroupedUrl(Field::URL_COMMISSIONS, 1, 'https://com2.example.com/'),
+                new GroupedUrl(Field::URL_FAQ, 0, 'https://localhost/faq'),
+            ),
+            true,
+            false,
+        );
+
+        $subject = new UrlRemovalService(
+            self::createStub(EntityManagerInterface::class),
+            '',
+            '',
+            self::createStub(RouterInterface::class),
+            self::createStub(EmailService::class),
+        );
+
+        $subject->handleRemoval($creator, $input);
+
+        self::assertEmpty($creator->getCommissionsUrls());
+        self::assertStringContainsString('https://com1.example.com/', $creator->getNotes(),
+            'Removed tracking URLs should be mentioned in the notes.');
+        self::assertStringContainsString('https://com2.example.com/', $creator->getNotes(),
+            'Removed tracking URLs should be mentioned in the notes.');
     }
 }

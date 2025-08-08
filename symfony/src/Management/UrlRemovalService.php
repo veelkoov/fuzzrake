@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Veelkoov\Debris\StringList;
 
 final class UrlRemovalService
 {
@@ -44,29 +45,23 @@ final class UrlRemovalService
     ) {
     }
 
-    /**
-     * @param string[] $urlIdsForRemoval
-     */
-    public static function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData
+    public static function getRemovalDataFor(Creator $creator, StringList $urlIdsForRemoval): CreatorUrlsRemovalData
     {
         $urls = GroupedUrls::from($creator);
 
-        if ([] === $urlIdsForRemoval) {
+        if ($urlIdsForRemoval->isEmpty()) {
             throw new InvalidArgumentException('No URL ID(s) to remove');
         }
 
         $removedUrls = $urls->onlyWithIds($urlIdsForRemoval);
-        $remainingUrls = $urls->minus($removedUrls);
+        $remainingUrls = $urls->onlyWithoutIds($urlIdsForRemoval);
 
-        if (count($urlIdsForRemoval) !== count($removedUrls->urls)) {
+        if ($urlIdsForRemoval->count() !== $removedUrls->count()) {
             throw new InvalidArgumentException('Referenced invalid URL ID(s) to remove');
         }
 
         // If there are no remaining valid URLs, hide the creator.
-        $hide = [] === array_filter(
-            $remainingUrls->urls,
-            static fn (GroupedUrl $url): bool => !arr_contains(self::IGNORED_URL_TYPES, $url->type),
-        );
+        $hide = $remainingUrls->all(static fn (GroupedUrl $url) => arr_contains(self::IGNORED_URL_TYPES, $url->type));
 
         $sendEmail = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
 
@@ -78,12 +73,14 @@ final class UrlRemovalService
      */
     public function handleRemoval(Creator $creator, CreatorUrlsRemovalData $data): void
     {
-        $creator->setNotes($this->getNewNotes($creator, $data));
-        $this->updateUrls($creator, $data);
-
         if ($data->hide) {
+            $data = $this->getDataWithTrackingUrlsRemoved($data);
+
             $creator->setInactiveReason('All previously known websites/social accounts are no longer working or are inactive');
         }
+
+        $creator->setNotes($this->getNewNotes($creator, $data));
+        $this->updateUrls($creator, $data);
 
         if ($data->sendEmail) {
             $this->sendNotification($creator, $data);
@@ -103,13 +100,19 @@ final class UrlRemovalService
         $dateAndTime = UtcClock::now()->format('Y-m-d H:i');
 
         return "On $dateAndTime UTC the following links have been found to no longer work or to be inactive".
-            " and have been removed:\n".$this->getUrlsBulletList($data).$oldNotes;
+            " and have been removed:\n".$this->getRemovedUrlsBulletList($data).$oldNotes;
     }
 
     private function updateUrls(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         foreach (Fields::urls() as $urlType) {
-            $creator->set($urlType, $data->remainingUrls->getStringOrStrList($urlType));
+            $newUrlsOrEmpty = $data->remainingUrls->getStringOrStrList($urlType);
+
+            if ($data->hide && Field::URL_COMMISSIONS === $urlType) {
+                $newUrlsOrEmpty = []; // Hidden makers should not be tracked, enforce removal
+            }
+
+            $creator->set($urlType, $newUrlsOrEmpty);
         }
     }
 
@@ -135,7 +138,7 @@ final class UrlRemovalService
         $contents .= "\n\nYour information at $this->websiteShortName ( $cardUrl ) may require your attention.".
             " $links were found to be either no longer working, or to lead to inactive social accounts,".
             ' and so have been removed:'.
-            "\n".$this->getUrlsBulletList($data);
+            "\n".$this->getRemovedUrlsBulletList($data);
 
         if ($data->hide) {
             $contents .= "\n\nSince the remaining information+links on your card are not sufficient,".
@@ -155,11 +158,22 @@ final class UrlRemovalService
         $this->emailService->send($subject, $contents, $creator->getEmailAddress());
     }
 
-    private function getUrlsBulletList(CreatorUrlsRemovalData $data): string
+    private function getRemovedUrlsBulletList(CreatorUrlsRemovalData $data): string
     {
-        return implode("\n", array_unique(arr_map(
-            $data->removedUrls->urls,
-            static fn (GroupedUrl $url): string => "- $url->url",
-        )));
+        return StringList::mapFrom($data->removedUrls, static fn (GroupedUrl $url) => "- $url->url")->join("\n");
+    }
+
+    private function getDataWithTrackingUrlsRemoved(CreatorUrlsRemovalData $data): CreatorUrlsRemovalData
+    {
+        $removedUrls = $data->removedUrls;
+        $remainingUrls = $data->remainingUrls;
+        $trackingUrls = $remainingUrls->filter(static fn (GroupedUrl $url) => Field::URL_COMMISSIONS === $url->type);
+
+        return new CreatorUrlsRemovalData(
+            $removedUrls->plusAll($trackingUrls)->freeze(),
+            $remainingUrls->minusAll($trackingUrls)->freeze(),
+            $data->hide,
+            $data->sendEmail,
+        );
     }
 }

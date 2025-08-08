@@ -22,7 +22,7 @@ class CreatorUrlsSelectionType extends AbstractType
     {
         $urls = Enforce::objectOf($options['urls'], GroupedUrls::class);
 
-        foreach ($urls->urls as $url) {
+        foreach ($urls as $url) {
             $builder->add($url->getId(), CheckboxType::class, [
                 'required' => false,
                 'label' => $url->getLabel(),

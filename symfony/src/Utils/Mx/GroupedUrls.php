@@ -6,23 +6,18 @@ namespace App\Utils\Mx;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
+use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\StringList;
 
-final readonly class GroupedUrls
+/**
+ * @extends DList<GroupedUrl>
+ */
+final class GroupedUrls extends DList
 {
-    /**
-     * @param list<GroupedUrl> $urls
-     */
-    public function __construct(
-        public array $urls,
-    ) {
-    }
-
-    public static function from(
-        Creator $creator,
-    ): self {
+    public static function from(Creator $creator): self
+    {
         $urls = [];
 
         foreach (Fields::urls() as $field) {
@@ -44,23 +39,14 @@ final readonly class GroupedUrls
         return new self($urls);
     }
 
-    /**
-     * @param string[] $urlIds
-     */
-    public function onlyWithIds(array $urlIds): self
+    public function onlyWithIds(StringList $urlIds): self
     {
-        return new self(arr_filterl($this->urls, static fn (GroupedUrl $url) => arr_contains($urlIds, $url->getId())));
+        return $this->filter(static fn (GroupedUrl $url) => $urlIds->contains($url->getId()));
     }
 
-    public function minus(self $removedUrls): self
+    public function onlyWithoutIds(StringList $urlIds): self
     {
-        return new self(arr_filterl(
-            $this->urls,
-            static fn (GroupedUrl $url): bool => !array_any(
-                $removedUrls->urls,
-                static fn (GroupedUrl $other): bool => $other->getId() === $url->getId(),
-            ),
-        ));
+        return $this->filterNot(static fn (GroupedUrl $url) => $urlIds->contains($url->getId()));
     }
 
     /**
@@ -68,15 +54,13 @@ final readonly class GroupedUrls
      */
     public function getStringOrStrList(Field $urlType): string|array
     {
-        $urls = arr_map(
-            arr_filterl($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
-            static fn (GroupedUrl $url): string => $url->url,
-        );
+        $urls = $this->filter(static fn (GroupedUrl $url) => $url->type === $urlType)
+            ->mapInto(static fn (GroupedUrl $url): string => $url->url, new StringList());
 
         if ($urlType->isList()) {
-            return $urls;
+            return $urls->getValuesArray();
         } else {
-            return [] === $urls ? '' : Arrays::single($urls);
+            return $urls->isEmpty() ? '' : $urls->single();
         }
     }
 }

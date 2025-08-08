@@ -23,6 +23,7 @@ class CreatorUrlsRemovalType extends AbstractType
         $builder
             ->add('hide', CheckboxType::class, [
                 'label'    => 'Hide the creator',
+                'help'     => 'Hiding the creator will force tracking URLs to be removed.',
                 'required' => false,
             ])
             ->add('sendEmail', CheckboxType::class, [
