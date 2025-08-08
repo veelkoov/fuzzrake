@@ -24,7 +24,7 @@
         {{ form_row(form.noContactBack) }}
         {{ form_row(form.creator) }}
 
-        <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
+        <p><strong>NOTE:</strong> English only. <small class="text-body-secondary">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
         {{ form_row(form.details) }}
 
         {{ render(controller('App\\Captcha\\Controller::challenge', {form: form.captcha})) }}

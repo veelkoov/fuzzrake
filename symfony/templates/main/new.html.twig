@@ -18,7 +18,7 @@
             <li>
                 <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }}</a>
                 {% if creator.formerly %}
-                    <span class="text-muted">
+                    <span class="text-body-secondary">
                         / {{ creator.formerly|join(' / ') }}
                     </span>
                 {% endif %}
