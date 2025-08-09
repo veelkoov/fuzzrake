@@ -12,6 +12,5 @@
 6. Admin form template
 7. I/U form required choices test (if required)
 8. E2E test (should fail on its own when new field is added)
-9. Completeness calculator
-10. Statistics page
-11. SchemaFixer class
+9. Statistics page
+10. SchemaFixer class

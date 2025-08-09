@@ -16,14 +16,6 @@ final class Paths
     /**
      * @return non-empty-string
      */
-    public static function getCompletenessCalcClassPath(): string
-    {
-        return __DIR__.'/../../src/Utils/Creator/CompletenessCalc.php';
-    }
-
-    /**
-     * @return non-empty-string
-     */
     public static function getDataDefinitionsPath(string $fileName): string
     {
         return __DIR__."/../../config/fuzzrake/$fileName";

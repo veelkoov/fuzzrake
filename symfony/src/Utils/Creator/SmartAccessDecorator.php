@@ -297,11 +297,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return Lists::nonEmptyStrings([$this->getName(), ...$this->getFormerly()]);
     }
 
-    public function getCompleteness(): int
-    {
-        return CompletenessCalc::count($this);
-    }
-
     public function allowsFeedback(): bool
     {
         return ContactPermit::FEEDBACK === $this->entity->getContactAllowed();
@@ -890,7 +885,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getValuesForJson(FieldsList $fields): array
     {
         $result = arr_map($fields->toArray(), fn (Field $field) => match ($field) {
-            Field::COMPLETENESS => $this->getCompleteness(),
             Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
             Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
             Field::DATE_UPDATED => StrUtils::asStr($this->getDateUpdated()),

@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Entity\Creator as CreatorE;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\CreatorRepository;
 use App\Repository\CreatorValueRepository;
@@ -20,7 +19,6 @@ use App\ValueObject\MainPageStats;
 use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\StringSet;
@@ -119,27 +117,6 @@ class DataService
             CacheTags::CREATORS,
             [__METHOD__, $field],
         );
-    }
-
-    public function getCompletenessStats(): StringToInt
-    {
-        return $this->cache->get(function (): StringToInt {
-            $completeness = DList::mapFrom($this->creatorRepository->getActivePaged(),
-                static fn (CreatorE $creator) => Creator::wrap($creator)->getCompleteness());
-
-            $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0];
-
-            $result = new StringToInt();
-
-            foreach ($levels as $description => $level) {
-                $result->set($description, $completeness->filter(static fn (int $percent) => $percent >= $level)->count());
-
-                $completeness = $completeness->filter(static fn (int $percent) => $percent < $level);
-            }
-
-            return $result->freeze();
-        }, CacheTags::CREATORS, __METHOD__);
     }
 
     /**
