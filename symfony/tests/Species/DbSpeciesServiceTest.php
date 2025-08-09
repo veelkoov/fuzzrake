@@ -10,10 +10,12 @@ use App\Species\DbSpeciesService;
 use App\Species\SpecieException;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use Override;
+use PHPUnit\Framework\Attributes\Medium;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
+#[Medium]
 class DbSpeciesServiceTest extends FuzzrakeKernelTestCase
 {
     private DbSpeciesService $subject;
