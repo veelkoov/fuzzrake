@@ -159,6 +159,7 @@ Available actions:
 
     docker-up    "ups" the Docker Compose project
     docker-down  "downs" the Docker Compose project
+    docker-re    docker-down + docker-up
 
     composer     run Composer
     yarn         run Yarn (needs to be installed locally)
@@ -198,6 +199,7 @@ function action() {
         ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
+        'docker-re')    action docker-down && action docker-up ;;
 
         'yep')          pushd "$SYMFONY_DIR_REL_PATH" ; yarn encore production ; popd ;;
 
