@@ -8,7 +8,6 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\NewCreator;
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
-use App\Utils\Creator\Completeness;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
@@ -60,18 +59,6 @@ class AppExtensions
     public function isNew(Creator $creator): bool
     {
         return NewCreator::isNew($creator);
-    }
-
-    #[AsTwigFunction('has_good_completeness')]
-    public function hasGoodCompleteness(Creator $creator): bool
-    {
-        return Completeness::hasGood($creator);
-    }
-
-    #[AsTwigFunction('completeness_text')]
-    public function completenessText(Creator $creator): string
-    {
-        return Completeness::getCompletenessText($creator);
     }
 
     /**

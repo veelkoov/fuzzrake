@@ -25,8 +25,6 @@ final class PrecomputeDataCommand
     ): int {
         $io->comment('Creators public data JSON string');
         $this->dataService->getCreatorsPublicDataJsonString();
-        $io->comment('Completeness stats');
-        $this->dataService->getCompletenessStats();
         $io->comment('Provided info stats');
         $this->dataService->getProvidedInfoStats();
 

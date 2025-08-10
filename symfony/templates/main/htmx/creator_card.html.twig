@@ -225,11 +225,8 @@
                 <h5>Links</h5>
 
                 <p class="small mb-1">
-                    Please mention "<mark class="user-select-all">I found you on getfursu.it
-                        {%- if not has_good_completeness(creator) %}
-                            (BTW it says your data could use some updates)
-                        {%- endif -%}
-                    </mark>" when contacting the maker, thank you! ❤️
+                    Please mention "<mark class="user-select-all">I found you on getfursu.it</mark>"
+                    when contacting the maker, thank you! ❤️
                 </p>
 
                 {# twig-cs-fixer-disable PunctuationSpacing.After #}
@@ -338,27 +335,21 @@
                     {% endif %}
                 </div>
             {% endif %}
-
-            <div class="col-md-12 p-1 pt-3">
-                <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
-
-                <p class="small">
-                    This maker/studio has {{ creator.completeness }}% data completeness.
-                    {{ completeness_text(creator) }}
-                    Click the button below to check update options.
-                </p>
-            </div>
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-light border border-warning"
-                    {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
-                Data outdated/inaccurate? <!-- grep-updates-button -->
-            </button>
+            <small>Last time updated: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</small>
 
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-            </button>
+            <span class="ms-auto">
+                <button type="button" class="btn btn-light border border-warning"
+                        {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
+                    Data outdated/inaccurate? <!-- grep-updates-button -->
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </span>
         </div>
     </div>
 </div>

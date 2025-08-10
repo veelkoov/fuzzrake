@@ -76,7 +76,6 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->items),
             'commissionsStats' => $dataService->getOfferStatusStats(),
-            'completeness'     => $dataService->getCompletenessStats(),
             'providedInfo'     => $dataService->getProvidedInfoStats(),
             'matchWords'       => self::MATCH_WORDS,
         ]);

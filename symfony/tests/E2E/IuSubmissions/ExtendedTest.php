@@ -36,7 +36,6 @@ class ExtendedTest extends IuSubmissionsTestCase
     ];
 
     private const array NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::COMPLETENESS,
         Field::CS_LAST_CHECK,
         Field::CS_TRACKER_ISSUE,
         Field::OPEN_FOR,

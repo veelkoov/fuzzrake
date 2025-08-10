@@ -225,9 +225,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('closedFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
     case CLOSED_FOR = 'CLOSED_FOR';
 
-    #[Props('completeness', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
-    case COMPLETENESS = 'COMPLETENESS';
-
     #[Props('contactAllowed', inStats: false, freeForm: false)]
     case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
 
