@@ -82,5 +82,6 @@
     <h2 id="other-features">Other features</h2>
     {{ include('statistics/_item_pills.html.twig', {items: otherFeatures}) }}
 
+    <h1 id="data-statistics">Data statistics</h1>
     {{ include('statistics/_data_table.html.twig', {data: providedInfo, name: 'Information provided', total: commissionsStats.Total}) }}
 {% endblock %}

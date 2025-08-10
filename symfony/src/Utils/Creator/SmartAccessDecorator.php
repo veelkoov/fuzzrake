@@ -371,6 +371,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    public function getLastUpdateDateTime(): ?DateTimeImmutable
+    {
+        return $this->getDateUpdated() ?? $this->getDateAdded();
+    }
+
     //
     // ===== VOLATILE DATA GETTERS AND SETTERS =====
     //

@@ -335,22 +335,21 @@
                     {% endif %}
                 </div>
             {% endif %}
-
-            <div class="col-md-12 p-1 pt-3">
-                {# TODO: Last time updated #}
-                <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
-            </div>
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-light border border-warning"
-                    {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
-                Data outdated/inaccurate? <!-- grep-updates-button -->
-            </button>
+            <small>Last time updated: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</small>
 
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-            </button>
+            <span class="ms-auto">
+                <button type="button" class="btn btn-light border border-warning"
+                        {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
+                    Data outdated/inaccurate? <!-- grep-updates-button -->
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </span>
         </div>
     </div>
 </div>
