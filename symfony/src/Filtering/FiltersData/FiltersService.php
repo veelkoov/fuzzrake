@@ -126,18 +126,11 @@ class FiltersService
 
     private function getPaymentPlans(): FilterData
     {
-        $unknown = SpecialItems::newUnknown();
-        $result = new MutableFilterData($unknown);
+        $stats = $this->creatorRepository->getOffersPaymentPlansStats();
 
-        foreach ($this->creatorRepository->getPaymentPlans() as $paymentPlan) {
-            if (Consts::DATA_VALUE_UNKNOWN === $paymentPlan) {
-                $unknown->incCount();
-            } elseif (Consts::DATA_PAYPLANS_NONE === $paymentPlan) {
-                $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE);
-            } else {
-                $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED);
-            }
-        }
+        $result = new MutableFilterData(SpecialItems::newUnknown($stats->get(null)));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->get(false));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->get(true));
 
         return FilterData::from($result);
     }

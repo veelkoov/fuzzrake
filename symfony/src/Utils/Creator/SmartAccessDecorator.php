@@ -1247,21 +1247,58 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    public function getHasAllergyWarning(): ?bool
+    {
+        return $this->entity->getHasAllergyWarning();
+    }
+
+    public function setHasAllergyWarning(?bool $hasAllergyWarning): self
+    {
+        $this->entity->setHasAllergyWarning($hasAllergyWarning);
+
+        return $this;
+    }
+
+    public function getAllergyWarningInfo(): string
+    {
+        return $this->entity->getAllergyWarningInfo();
+    }
+
+    #[Length(max: 4096)]
+    public function setAllergyWarningInfo(string $allergyWarningInfo): self
+    {
+        $this->entity->setAllergyWarningInfo($allergyWarningInfo);
+
+        return $this;
+    }
+
+    public function getOffersPaymentPlans(): ?bool
+    {
+        return $this->entity->getOffersPaymentPlans();
+    }
+
+    public function setOffersPaymentPlans(?bool $offersPaymentPlans): self
+    {
+        $this->entity->setOffersPaymentPlans($offersPaymentPlans);
+
+        return $this;
+    }
+
     /**
      * @return list<string>
      */
     #[StrListLength(max: 1024)]
-    public function getPaymentPlans(): array
+    public function getPaymentPlansInfo(): array
     {
-        return PackedStringList::unpack($this->entity->getPaymentPlans());
+        return PackedStringList::unpack($this->entity->getPaymentPlansInfo());
     }
 
     /**
-     * @param list<string> $paymentPlans
+     * @param list<string> $paymentPlansInfo
      */
-    public function setPaymentPlans(array $paymentPlans): self
+    public function setPaymentPlansInfo(array $paymentPlansInfo): self
     {
-        $this->entity->setPaymentPlans(PackedStringList::pack($paymentPlans));
+        $this->entity->setPaymentPlansInfo(PackedStringList::pack($paymentPlansInfo));
 
         return $this;
     }

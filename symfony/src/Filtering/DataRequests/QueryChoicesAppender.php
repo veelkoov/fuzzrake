@@ -10,7 +10,6 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use App\Utils\Collections\Arrays;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
@@ -232,62 +231,38 @@ class QueryChoicesAppender
         }
     }
 
-    /**
-     * FIXME: https://github.com/veelkoov/fuzzrake/issues/305.
-     *
-     * This is absolute garbage.
-     */
     private function applyPaymentPlans(QueryBuilder $builder): void
     {
-        $paymentPlansValue = $this->getUniqueId();
+        $this->applyOptionalBoolean($builder, 'd_c.offersPaymentPlans', $this->choices->wantsAnyPaymentPlans,
+            $this->choices->wantsNoPaymentPlans, $this->choices->wantsUnknownPaymentPlans);
+    }
 
-        if ($this->choices->wantsUnknownPaymentPlans) {
-            if ($this->choices->wantsAnyPaymentPlans) {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // Unknown + ANY + None
-                    return;
-                } else {
-                    // Unknown + ANY
-                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
-                    $parameter = Consts::DATA_PAYPLANS_NONE;
-                }
-            } else {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // Unknown + None
-                    $andWhere = "d_c.paymentPlans IN (:$paymentPlansValue)";
-                    $parameter = [Consts::DATA_VALUE_UNKNOWN, Consts::DATA_PAYPLANS_NONE];
-                } else {
-                    // Unknown
-                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
-                    $parameter = Consts::DATA_VALUE_UNKNOWN;
-                }
-            }
-        } else {
-            if ($this->choices->wantsAnyPaymentPlans) {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // ANY + None
-                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
-                    $parameter = Consts::DATA_VALUE_UNKNOWN;
-                } else {
-                    // ANY
-                    $andWhere = "d_c.paymentPlans NOT IN (:$paymentPlansValue)";
-                    $parameter = [Consts::DATA_PAYPLANS_NONE, Consts::DATA_VALUE_UNKNOWN];
-                }
-            } else {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // None
-                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
-                    $parameter = Consts::DATA_PAYPLANS_NONE;
-                } else {
-                    // Nothing selected
-                    return;
-                }
-            }
+    private function applyOptionalBoolean(QueryBuilder $builder, string $fieldReference, bool $wantsTrue,
+        bool $wantsFalse, bool $wantsNull): void
+    {
+        if ($wantsFalse && $wantsTrue && $wantsNull) {
+            return;
         }
 
-        $builder
-            ->andWhere($andWhere)
-            ->setParameter($paymentPlansValue, $parameter);
+        $conditions = [];
+
+        if ($wantsNull) {
+            $conditions[] = $builder->expr()->isNull($fieldReference);
+        }
+
+        if ($wantsTrue) {
+            $aTrue = $this->getUniqueId();
+            $conditions[] = $builder->expr()->eq($fieldReference, ":$aTrue");
+            $builder->setParameter($aTrue, true, ParameterType::BOOLEAN);
+        }
+
+        if ($wantsFalse) {
+            $aFalse = $this->getUniqueId();
+            $conditions[] = $builder->expr()->eq($fieldReference, ":$aFalse");
+            $builder->setParameter($aFalse, false, ParameterType::BOOLEAN);
+        }
+
+        $this->addWheres($builder, $conditions);
     }
 
     private function applyWantsInactive(QueryBuilder $builder): void
@@ -407,7 +382,7 @@ class QueryChoicesAppender
         if ([] === $conditions) {
             return;
         } elseif (1 === count($conditions)) {
-            $condition = Arrays::single($conditions);
+            $condition = array_first($conditions);
         } else {
             $condition = $builder->expr()->orX(...$conditions);
         }

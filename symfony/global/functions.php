@@ -135,7 +135,7 @@ function iter_sortl(iterable $iterable): array
  *
  * @param array<V> $array
  *
- * @return V|null
+ * @return ($array is non-empty-array ? V : null)
  */
 function array_first(array $array): mixed
 {

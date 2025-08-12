@@ -283,7 +283,7 @@ trait FiltersTestTrait
             ->setProductionModels($productionModels)
             ->setOpenFor($openFor)
             ->setSpeciesDoes($speciesDoes)
-            ->setPaymentPlans($paymentPlans)
+            ->setPaymentPlansInfo($paymentPlans)
             ->setAges(Ages::ADULTS)
             ->setNsfwSocial($nsfw)
             ->setNsfwWebsite($nsfw)
