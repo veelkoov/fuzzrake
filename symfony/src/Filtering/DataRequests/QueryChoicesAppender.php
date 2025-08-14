@@ -375,7 +375,7 @@ class QueryChoicesAppender
     }
 
     /**
-     * @param list<Func|Comparison> $conditions
+     * @param list<Func|Comparison|string> $conditions
      */
     private function addWheres(QueryBuilder $builder, array $conditions): void
     {
