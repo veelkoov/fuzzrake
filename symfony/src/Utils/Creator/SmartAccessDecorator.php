@@ -1259,12 +1259,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 4096)]
     public function getAllergyWarningInfo(): string
     {
         return $this->entity->getAllergyWarningInfo();
     }
 
-    #[Length(max: 4096)]
     public function setAllergyWarningInfo(string $allergyWarningInfo): self
     {
         $this->entity->setAllergyWarningInfo($allergyWarningInfo);

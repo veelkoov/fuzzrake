@@ -33,7 +33,11 @@
     "DOES_NSFW": false,
     "WORKS_WITH_MINORS": false,
 
-    "PAYMENT_PLANS": [
+    "HAS_ALLERGY_WARNING": false,
+    "ALLERGY_WARNING_INFO": "No worries",
+
+    "OFFERS_PAYMENT_PLANS": true,
+    "PAYMENT_PLANS_INFO": [
         "30% upfront, rest in 100 Eur/mth until fully paid",
         "50%/50%",
         "Creator1 before update"

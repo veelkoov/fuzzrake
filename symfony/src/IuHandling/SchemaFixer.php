@@ -57,9 +57,9 @@ final class SchemaFixer
                 // no break
 
             case 18:
-                $paymentPlansInfo = Enforce::string($data[Field::PAYMENT_PLANS_INFO->value]);
+                $paymentPlans = implode("\n", Enforce::strList($data['PAYMENT_PLANS']));
                 // Better handle all cases manually
-                $data[Field::PAYMENT_PLANS_INFO->value] = '' === $paymentPlansInfo ? '' : "(FIXME: supports payment plans?) $paymentPlansInfo";
+                $data[Field::PAYMENT_PLANS_INFO->value] = '' === $paymentPlans ? '' : "(FIXME: supports payment plans?) $paymentPlans";
                 $data[Field::OFFERS_PAYMENT_PLANS->value] = null; // See above
 
                 $data[Field::HAS_ALLERGY_WARNING->value] = null;

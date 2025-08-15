@@ -52,9 +52,11 @@
         <div class="row">
             <div class="col-md-6">
                 {{ form_row(form.contactAllowed) }}
+                {{ form_row(form.emailAddress) }}
             </div>
             <div class="col-md-6">
-                {{ form_row(form.emailAddress) }}
+                {{ form_row(form.hasAllergyWarning) }}
+                {{ form_row(form.allergyWarningInfo) }}
             </div>
         </div>
         <div class="row">
@@ -120,7 +122,8 @@
                 {{ form_row(form.currenciesAccepted) }}
             </div>
             <div class="col-md-4">
-                {{ form_row(form.paymentPlans) }}
+                {{ form_row(form.offersPaymentPlans) }}
+                {{ form_row(form.paymentPlansInfo) }}
             </div>
         </div>
         <div class="row">

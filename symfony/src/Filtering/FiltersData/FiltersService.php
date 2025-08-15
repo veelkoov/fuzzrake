@@ -128,9 +128,10 @@ class FiltersService
     {
         $stats = $this->creatorRepository->getOffersPaymentPlansStats();
 
-        $result = new MutableFilterData(SpecialItems::newUnknown($stats->get(null)));
-        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->get(false));
-        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->get(true));
+        // grep-code-debris-needs-improvements This getOrDefault fun requirement is tiring
+        $result = new MutableFilterData(SpecialItems::newUnknown($stats->getOrDefault(null, static fn () => 0)));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->getOrDefault(false, static fn () => 0));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->getOrDefault(true, static fn () => 0));
 
         return FilterData::from($result);
     }
