@@ -1,9 +1,4 @@
 parameters:
-  noPayPlans: # TODO: Remove
-    regex_prefix: ""
-    regex_suffix: ""
-    replacements: []
-
   currencies:
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'
