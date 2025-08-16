@@ -68,7 +68,24 @@ class CreatorType extends AbstractTypeWithDelete
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
                 'expanded' => true,
             ])
-            ->add('paymentPlans', TextareaType::class, [
+            ->add('hasAllergyWarning', ChoiceType::class, [
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+                'label'    => 'Allergy warning',
+                'required' => true,
+            ])
+            ->add('allergyWarningInfo', TextareaType::class, [
+                'empty_data' => '',
+                'label'      => 'Allergy warning - additional information',
+                'required'   => false,
+            ])
+            ->add('offersPaymentPlans', ChoiceType::class, [
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+                'label'    => 'Offers payment plans?',
+                'required' => true,
+            ])
+            ->add('paymentPlansInfo', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -349,13 +366,16 @@ class CreatorType extends AbstractTypeWithDelete
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlansInfo', 'photoUrls', 'pricesUrls', 'speciesDoes',
             'speciesDoesnt', 'formerCreatorIds', 'miniatureUrls',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
 
-        $builder->get('worksWithMinors')->addModelTransformer(new BooleanTransformer());
+        foreach (['worksWithMinors', 'offersPaymentPlans', 'hasAllergyWarning'] as $fieldName) {
+            $builder->get($fieldName)->addModelTransformer(new BooleanTransformer());
+        }
+
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
         $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
