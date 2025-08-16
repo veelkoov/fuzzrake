@@ -9,7 +9,6 @@ use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
 use App\Entity\CreatorValue;
 use App\Filtering\DataRequests\QueryChoicesAppender;
-use App\Utils\Collections\StringList;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
@@ -28,6 +27,7 @@ use Generator;
 use Veelkoov\Debris\IntList;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
 /**

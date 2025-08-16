@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tracking\Patterns;
 
-use App\Utils\Collections\StringList;
 use App\Utils\Regexp\Replacements;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\StringList;
 
 class Patterns
 {

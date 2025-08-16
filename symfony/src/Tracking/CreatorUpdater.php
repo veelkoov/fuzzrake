@@ -6,7 +6,6 @@ namespace App\Tracking;
 
 use App\Entity\Event;
 use App\Tracking\Data\AnalysisResults;
-use App\Utils\Collections\StringList;
 use App\Utils\Creator\Changes\Description;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -14,6 +13,7 @@ use App\Utils\PackedStringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\StringList;
 
 class CreatorUpdater
 {
