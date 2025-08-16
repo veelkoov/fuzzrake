@@ -28,6 +28,7 @@ use Veelkoov\Debris\IntList;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
 /**

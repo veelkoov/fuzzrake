@@ -8,10 +8,10 @@ use App\Species\CreatorSpeciesResolver;
 use App\Species\Hierarchy\MutableSpecies;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
-use App\Utils\Collections\StringList;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
 #[Small]

@@ -10,7 +10,6 @@ use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
 use App\Service\DataService;
-use App\Utils\Collections\StringList;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +18,7 @@ use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Veelkoov\Debris\Base\DIntMap;
 use Veelkoov\Debris\Maps\StringToInt;
+use Veelkoov\Debris\StringList;
 
 class StatisticsController extends AbstractController
 {

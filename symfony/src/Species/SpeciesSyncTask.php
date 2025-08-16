@@ -8,7 +8,7 @@ use App\Entity\Creator;
 use App\Entity\CreatorSpecie;
 use App\Repository\CreatorRepository;
 use App\Species\Hierarchy\Species;
-use App\Utils\Collections\StringList;
+use App\Utils\PackedStringList;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -75,8 +75,8 @@ final class SpeciesSyncTask
     public function resolveSpecies(Creator $creator): StringSet
     {
         $doneSpecies = $this->resolver->resolveDoes(
-            StringList::unpack($creator->getSpeciesDoes()),
-            StringList::unpack($creator->getSpeciesDoesnt()),
+            PackedStringList::unpacked($creator->getSpeciesDoes()),
+            PackedStringList::unpacked($creator->getSpeciesDoesnt()),
         );
 
         return $this->resolver->resolveForFilters($doneSpecies);

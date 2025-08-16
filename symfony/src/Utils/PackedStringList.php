@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
+use Veelkoov\Debris\StringList;
 
 final class PackedStringList
 {
@@ -23,6 +24,11 @@ final class PackedStringList
         }
 
         return explode(self::STD_SEPARATOR, $input);
+    }
+
+    public static function unpacked(?string $input): StringList
+    {
+        return new StringList(self::unpack($input));
     }
 
     /**

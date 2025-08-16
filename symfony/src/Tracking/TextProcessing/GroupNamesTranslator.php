@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tracking\TextProcessing;
 
-use App\Utils\Collections\StringList;
 use App\Utils\Traits\UtilityClass;
+use Veelkoov\Debris\StringList;
 
 final class GroupNamesTranslator
 {

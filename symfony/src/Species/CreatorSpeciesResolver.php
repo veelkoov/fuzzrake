@@ -7,9 +7,9 @@ namespace App\Species;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Species\Hierarchy\SpecieSet;
-use App\Utils\Collections\StringList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
 final class CreatorSpeciesResolver
