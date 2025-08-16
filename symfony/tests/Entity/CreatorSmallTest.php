@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Entity\Creator;
 use App\Entity\CreatorId;
@@ -40,6 +41,7 @@ class CreatorSmallTest extends TestCase
     {
         $subject = new Creator()
             ->setContactAllowed(ContactPermit::CORRECTIONS)
+            ->setAges(Ages::ADULTS)
             ->setHasAllergyWarning(true)
             ->setOffersPaymentPlans(false)
         ;

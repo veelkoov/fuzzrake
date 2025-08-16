@@ -187,12 +187,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getAges(): ?Ages
     {
-        return Ages::get($this->getStringValue(Field::AGES));
+        return $this->entity->getAges();
     }
 
     public function setAges(?Ages $ages): self
     {
-        return $this->setStringValue(Field::AGES, $ages?->value);
+        $this->entity->setAges($ages);
+
+        return $this;
     }
 
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]

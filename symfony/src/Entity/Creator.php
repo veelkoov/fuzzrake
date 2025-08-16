@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator;
@@ -53,6 +54,9 @@ class Creator implements Stringable
 
     #[ORM\Column(type: Types::TEXT)]
     private string $city = '';
+
+    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: Ages::class)]
+    private ?Ages $ages = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private string $productionModelsComment = '';
@@ -300,6 +304,18 @@ class Creator implements Stringable
     public function setCity(string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getAges(): ?Ages
+    {
+        return $this->ages;
+    }
+
+    public function setAges(?Ages $ages): self
+    {
+        $this->ages = $ages;
 
         return $this;
     }
