@@ -233,8 +233,11 @@ class QueryChoicesAppender
 
     private function applyPaymentPlans(QueryBuilder $builder): void
     {
-        $this->applyOptionalBoolean($builder, 'd_c.offersPaymentPlans', $this->choices->wantsAnyPaymentPlans,
-            $this->choices->wantsNoPaymentPlans, $this->choices->wantsUnknownPaymentPlans);
+        $this->applyOptionalBoolean($builder, 'd_c.offersPaymentPlans',
+            $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+            $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_PAYPLANS_NONE),
+            $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_UNKNOWN),
+        );
     }
 
     private function applyOptionalBoolean(QueryBuilder $builder, string $fieldReference, bool $wantsTrue,

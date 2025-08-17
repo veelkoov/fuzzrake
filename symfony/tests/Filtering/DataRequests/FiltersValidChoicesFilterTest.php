@@ -6,29 +6,30 @@ namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FiltersValidChoicesFilter;
-use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Service\DataService;
+use App\Species\SpeciesService;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use Exception;
-use PHPUnit\Framework\Attributes\Medium;
+use PHPUnit\Framework\Attributes\Small;
 use Veelkoov\Debris\StringSet;
 
-#[Medium]
-class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
+#[Small]
+class FiltersValidChoicesFilterTest extends FuzzrakeTestCase
 {
     /**
      * @throws Exception
      */
     public function testGetOnlyAllowed(): void
     {
-        $creator = new Creator()
-            ->setLanguages(['Czech', 'Finnish'])
-            ->setOpenFor(['Pancakes', 'Waffles'])
-            ->setCountry('FI')
-            ->setState('Liquid');
+        $dataServiceMock = $this->createMock(DataService::class);
+        $dataServiceMock->method('getCountries')->willReturn(StringSet::of('FI'));
+        $dataServiceMock->method('getStates')->willReturn(StringSet::of('Liquid'));
+        $dataServiceMock->method('getOpenFor')->willReturn(StringSet::of('Pancakes', 'Waffles'));
+        $dataServiceMock->method('getLanguages')->willReturn(StringSet::of('Czech', 'Finnish'));
+        $speciesServiceMock = $this->createMock(SpeciesService::class);
+        $speciesServiceMock->method('getValidNames')->willReturn(StringSet::of('Birds'));
 
-        self::persistAndFlush($creator);
-
-        $subject = self::getContainerService(FiltersValidChoicesFilter::class);
+        $subject = new FiltersValidChoicesFilter($dataServiceMock, $speciesServiceMock);
 
         $choices = new Choices(
             '',
@@ -42,18 +43,20 @@ class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase
             StringSet::of('Standard commissions', '?', 'Waffles', '*'),
             StringSet::of('Pancakes', '!', '-', 'Kettles', '*'),
             StringSet::of('Birds', '?', 'Furniture', '*'),
-            false, false, false, false, false, false, false, 1);
+            StringSet::of('None', 'Not supported', 'Supported', '?', '*', 'Waffles', ''),
+            false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
 
-        self::assertEquals(['FI', '?'], $result->countries->getValuesArray());
-        self::assertEquals(['Liquid', '?'], $result->states->getValuesArray());
-        self::assertEquals(['Finnish', 'Czech', '?'], $result->languages->getValuesArray());
-        self::assertEquals(['Toony', '?', '*'], $result->styles->getValuesArray());
-        self::assertEquals(['LED eyes', '?', '*'], $result->features->getValuesArray());
-        self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes->getValuesArray());
-        self::assertEquals(['Standard commissions', '?'], $result->productionModels->getValuesArray());
-        self::assertEquals(['Pancakes', '!', '-'], $result->openFor->getValuesArray());
-        self::assertEquals(['Birds', '?'], $result->species->getValuesArray());
+        self::assertSameItems(['FI', '?'], $result->countries);
+        self::assertSameItems(['Liquid', '?'], $result->states);
+        self::assertSameItems(['Finnish', 'Czech', '?'], $result->languages);
+        self::assertSameItems(['Toony', '?', '*'], $result->styles);
+        self::assertSameItems(['LED eyes', '?', '*'], $result->features);
+        self::assertSameItems(['Full plantigrade', '?', '*'], $result->orderTypes);
+        self::assertSameItems(['Standard commissions', '?'], $result->productionModels);
+        self::assertSameItems(['Pancakes', '!', '-'], $result->openFor);
+        self::assertSameItems(['Birds', '?'], $result->species);
+        self::assertSameItems(['Not supported', 'Supported', '?'], $result->paymentPlans);
     }
 }
