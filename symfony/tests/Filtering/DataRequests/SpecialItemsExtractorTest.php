@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataRequests;
 
-use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use InvalidArgumentException;
+use App\Filtering\DataRequests\SpecialItemsExtractor;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\StringSet;
 
 #[Small]
@@ -23,7 +23,7 @@ class SpecialItemsExtractorTest extends TestCase
 
         try {
             $subject->hasSpecial('333');
-        } catch (InvalidArgumentException) {
+        } catch (MissingKeyException) {
             // Expected
         }
     }

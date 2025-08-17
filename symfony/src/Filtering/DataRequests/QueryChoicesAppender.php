@@ -9,7 +9,6 @@ use App\Entity\Creator;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
-use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
