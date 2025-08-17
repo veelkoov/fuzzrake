@@ -16,7 +16,7 @@ use Veelkoov\Debris\StringSet;
  * @phpstan-type TSubspecies          null|array<string, TNextLevelSubspecies>
  * @phpstan-type TNextLevelSubspecies null|array<string, mixed>
  */
-final class SpeciesService
+class SpeciesService
 {
     public readonly Species $species;
     private readonly Replacements $fixerReplacements;

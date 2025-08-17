@@ -18,7 +18,6 @@ use App\Data\Fixer\StrList\FreeListFixer;
 use App\Data\Fixer\StrList\LanguagesFixer;
 use App\Data\Fixer\StrList\NoopStrListFixer;
 use App\Data\Fixer\StrList\PayMethodFixer;
-use App\Data\Fixer\StrList\PayPlanFixer;
 use App\Data\Fixer\StrList\SpeciesListFixer;
 use App\Data\Fixer\StrList\UrlListStringFixer;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -38,7 +37,6 @@ class Fixer
         private readonly NoopStringFixer $noopFixer,
         private readonly NoopStrListFixer $noopListFixer,
         private readonly StateFixerConfigurable $stateFixer,
-        private readonly PayPlanFixer $payPlanFixer,
         private readonly CurrencyFixer $currencyFixer,
         private readonly PayMethodFixer $payMethodFixer,
     ) {
@@ -97,7 +95,6 @@ class Fixer
             F::URL_COMMISSIONS, F::URL_PRICES, F::URL_PHOTOS => $this->urlListFixer,
 
             F::LANGUAGES           => $this->languagesFixer,
-            F::PAYMENT_PLANS       => $this->payPlanFixer,
             F::PAYMENT_METHODS     => $this->payMethodFixer,
             F::CURRENCIES_ACCEPTED => $this->currencyFixer,
 

@@ -29,7 +29,11 @@
     "DOES_NSFW": null,
     "WORKS_WITH_MINORS": null,
 
-    "PAYMENT_PLANS": [
+    "HAS_ALLERGY_WARNING": null,
+    "ALLERGY_WARNING_INFO": "",
+
+    "OFFERS_PAYMENT_PLANS": null,
+    "PAYMENT_PLANS_INFO": [
     ],
     "PAYMENT_METHODS": [
     ],

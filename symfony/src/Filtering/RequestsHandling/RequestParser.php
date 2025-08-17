@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
+use App\Filtering\Consts;
 use Symfony\Component\HttpFoundation\Request;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
@@ -63,9 +64,7 @@ class RequestParser
             new StringSet($strArrays->get('productionModels')),
             new StringSet($strArrays->get('openFor')),
             new StringSet($strArrays->get('species')),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_UNKNOWN),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_NONE),
+            new StringSet($strArrays->get('paymentPlans')),
             $booleans->get('isAdult'),
             $booleans->get('wantsSfw'),
             $strArrays->get('inactive')->contains(Consts::FILTER_VALUE_INCLUDE_INACTIVE),

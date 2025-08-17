@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
-use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\FilteredDataProvider;
+use App\Filtering\RequestsHandling\Choices;
+use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -36,10 +36,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, false, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, 1));
         self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, true, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, true, false, false, 1));
         self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
     }
 
@@ -57,10 +57,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, true, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), true, true, false, false, 1));
         self::assertSame('M000001', self::creatorsListToCreatorIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, false, false, false, 1));
+        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), true, false, false, false, 1));
         self::assertSame('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
     }
 
@@ -102,7 +102,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $input = new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), true, true, true, true, false, true, false, $pageRequested);
+        $input = new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), true, false, true, false, $pageRequested);
 
         $result = $subject->getCreatorsPage($input);
 
