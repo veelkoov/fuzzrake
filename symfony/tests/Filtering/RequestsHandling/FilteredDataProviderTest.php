@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
-use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\FilteredDataProvider;
+use App\Filtering\RequestsHandling\Choices;
+use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;

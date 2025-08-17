@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
-use App\Filtering\DataRequests\SpecialItemsExtractor;
+use App\Filtering\RequestsHandling\SpecialItemsExtractor;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Exception\MissingKeyException;

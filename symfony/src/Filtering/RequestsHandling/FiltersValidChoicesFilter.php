@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
 use App\Data\Definitions\Features;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
+use App\Filtering\Consts;
 use App\Service\DataService;
 use App\Species\SpeciesService;
 use Veelkoov\Debris\StringSet;

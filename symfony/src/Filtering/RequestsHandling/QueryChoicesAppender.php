@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
+use App\Filtering\Consts;
 use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;

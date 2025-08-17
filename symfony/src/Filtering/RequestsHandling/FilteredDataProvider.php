@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
 use App\Repository\CreatorRepository;
 use App\Service\Cache;

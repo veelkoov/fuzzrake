@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
-use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\FiltersValidChoicesFilter;
+use App\Filtering\RequestsHandling\Choices;
+use App\Filtering\RequestsHandling\FiltersValidChoicesFilter;
 use App\Service\DataService;
 use App\Species\SpeciesService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;

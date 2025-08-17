@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
 use App\Entity\CreatorValue;
-use App\Filtering\DataRequests\QueryChoicesAppender;
+use App\Filtering\RequestsHandling\QueryChoicesAppender;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
