@@ -14,7 +14,7 @@ use App\Utils\Parse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Psr\Cache\InvalidArgumentException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Medium]
 class FilteredDataProviderTest extends FuzzrakeKernelTestCase

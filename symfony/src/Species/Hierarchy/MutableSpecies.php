@@ -7,7 +7,7 @@ namespace App\Species\Hierarchy;
 use App\Species\SpecieException;
 use Override;
 use Veelkoov\Debris\Exception\MissingKeyException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class MutableSpecies implements Species
 {

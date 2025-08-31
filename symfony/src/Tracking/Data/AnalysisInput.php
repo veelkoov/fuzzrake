@@ -7,7 +7,7 @@ namespace App\Tracking\Data;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 class AnalysisInput
 {

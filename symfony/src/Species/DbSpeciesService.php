@@ -9,7 +9,7 @@ use App\Repository\SpecieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Exception\MissingKeyException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 final class DbSpeciesService
 {

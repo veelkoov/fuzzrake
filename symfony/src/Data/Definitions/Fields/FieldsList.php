@@ -6,7 +6,7 @@ namespace App\Data\Definitions\Fields;
 
 use Override;
 use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @extends DStringMap<Field>

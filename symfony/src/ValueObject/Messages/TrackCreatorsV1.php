@@ -6,7 +6,7 @@ namespace App\ValueObject\Messages;
 
 use App\Tracking\TrackCreatorsTask;
 use Symfony\Component\Messenger\Attribute\AsMessage;
-use Veelkoov\Debris\IntList;
+use Veelkoov\Debris\Lists\IntList;
 
 #[AsMessage('async-msg-queue')]
 final readonly class TrackCreatorsV1

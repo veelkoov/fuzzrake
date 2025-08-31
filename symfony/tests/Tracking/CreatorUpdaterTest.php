@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Throwable;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 #[Small]
 class CreatorUpdaterTest extends FuzzrakeTestCase

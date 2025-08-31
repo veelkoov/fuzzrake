@@ -19,9 +19,9 @@ use App\ValueObject\MainPageStats;
 use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class DataService
 {

@@ -9,7 +9,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 final class StrUtils
 {

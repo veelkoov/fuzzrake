@@ -18,7 +18,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Small;
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 #[Small]
 class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase

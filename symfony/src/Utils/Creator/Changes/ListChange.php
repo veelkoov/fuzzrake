@@ -6,7 +6,7 @@ namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use Override;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 readonly class ListChange implements ChangeInterface
 {

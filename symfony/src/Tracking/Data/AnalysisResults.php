@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracking\Data;
 
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 readonly class AnalysisResults
 {

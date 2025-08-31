@@ -8,7 +8,7 @@ use App\Entity\CreatorValue;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @method CreatorValue|null find($id, $lockMode = null, $lockVersion = null)

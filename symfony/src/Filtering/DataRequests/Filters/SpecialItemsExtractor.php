@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests\Filters;
 
 use InvalidArgumentException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class SpecialItemsExtractor
 {

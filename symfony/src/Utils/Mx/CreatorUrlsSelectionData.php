@@ -7,7 +7,7 @@ namespace App\Utils\Mx;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Veelkoov\Debris\Maps\StringToBool;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class CreatorUrlsSelectionData
 {
@@ -25,7 +25,7 @@ class CreatorUrlsSelectionData
 
     public function get(string $name): bool
     {
-        return $this->urlIds->getOrDefault($name, static fn () => false);
+        return $this->urlIds->getOrDefaultOf($name, false);
     }
 
     public function getChosenUrls(): StringSet

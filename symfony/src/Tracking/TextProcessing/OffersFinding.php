@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracking\TextProcessing;
 
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 final readonly class OffersFinding
 {

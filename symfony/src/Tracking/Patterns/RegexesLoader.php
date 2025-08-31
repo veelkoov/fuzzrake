@@ -7,8 +7,8 @@ namespace App\Tracking\Patterns;
 use App\Utils\ConfigurationException;
 use Composer\Pcre\Preg;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringList;
 
 class RegexesLoader
 {
@@ -30,10 +30,8 @@ class RegexesLoader
         $this->loadTokensReplacements($patterns['tokens_replacements']);
         $this->tokensReplacements->freeze();
 
-        $this->falsePositives = StringList::fromUnsafe($patterns['false_positives'])
-            ->mapInto($this->resolve(...), new StringList())->freeze(); // grep-code-debris-needs-improvements
-        $this->offersStatuses = StringList::fromUnsafe($patterns['offers_statuses'])
-            ->mapInto($this->resolve(...), new StringList())->freeze(); // grep-code-debris-needs-improvements
+        $this->falsePositives = StringList::fromUnsafe($patterns['false_positives'])->map($this->resolve(...))->freeze();
+        $this->offersStatuses = StringList::fromUnsafe($patterns['offers_statuses'])->map($this->resolve(...))->freeze();
     }
 
     /**

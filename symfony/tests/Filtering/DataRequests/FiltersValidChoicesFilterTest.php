@@ -10,7 +10,7 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Exception;
 use PHPUnit\Framework\Attributes\Medium;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Medium]
 class FiltersValidChoicesFilterTest extends FuzzrakeKernelTestCase

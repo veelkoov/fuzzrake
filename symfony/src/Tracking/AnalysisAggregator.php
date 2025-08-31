@@ -9,8 +9,8 @@ use App\Tracking\Data\AnalysisResults;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Sets\StringSet;
 
 class AnalysisAggregator
 {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tracking\Patterns;
 
 use App\Utils\Regexp\Replacements;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringList;
 
 class Patterns
 {
@@ -20,7 +20,7 @@ class Patterns
         $this->falsePositives = new Replacements(StringToString::fromKeys($regexesLoader->falsePositives,
             static fn () => 'FALSE_POSITIVE')->toArray(), 'sxJ');
 
-        $this->offersStatuses = $regexesLoader->offersStatuses->mapInto(self::regexToPattern(...), new StringList());
+        $this->offersStatuses = $regexesLoader->offersStatuses->map(self::regexToPattern(...));
     }
 
     public static function regexToPattern(string $regex): string

@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Utils\Creator\Changes\ListChange;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 #[Small]
 class ListChangeTest extends TestCase
