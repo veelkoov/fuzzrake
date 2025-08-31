@@ -25,7 +25,7 @@ class CreatorUrlsSelectionData
 
     public function get(string $name): bool
     {
-        return $this->urlIds->getOrDefault($name, static fn () => false);
+        return $this->urlIds->getOrDefaultOf($name, false);
     }
 
     public function getChosenUrls(): StringSet
