@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Species\Hierarchy;
 
 use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @extends DStringMap<MutableSpecie>

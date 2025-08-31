@@ -12,8 +12,8 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use Override;
 use PHPUnit\Framework\Attributes\Medium;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Medium]
 class DbSpeciesServiceTest extends FuzzrakeKernelTestCase

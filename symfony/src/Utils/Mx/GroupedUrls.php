@@ -9,7 +9,7 @@ use App\Data\Definitions\Fields\Fields;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 /**
  * @extends DList<GroupedUrl>

@@ -11,8 +11,8 @@ use App\Species\Hierarchy\Species;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Small]
 class CreatorSpeciesResolverTest extends TestCase

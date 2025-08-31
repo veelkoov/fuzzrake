@@ -14,8 +14,8 @@ use Composer\Pcre\Regex;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringList;
 
 class SnapshotProcessor
 {

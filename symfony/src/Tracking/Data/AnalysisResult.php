@@ -6,7 +6,7 @@ namespace App\Tracking\Data;
 
 use App\Utils\StrUtils;
 use Stringable;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 readonly class AnalysisResult implements Stringable
 {

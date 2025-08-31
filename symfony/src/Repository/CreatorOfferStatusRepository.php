@@ -12,7 +12,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @method CreatorOfferStatus|null find($id, $lockMode = null, $lockVersion = null)

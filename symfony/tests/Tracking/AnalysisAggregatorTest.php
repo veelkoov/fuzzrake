@@ -11,7 +11,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 #[Small]
 class AnalysisAggregatorTest extends FuzzrakeTestCase

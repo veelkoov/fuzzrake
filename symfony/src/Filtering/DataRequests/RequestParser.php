@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests;
 
 use Symfony\Component\HttpFoundation\Request;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Maps\StringToStringList;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class RequestParser
 {

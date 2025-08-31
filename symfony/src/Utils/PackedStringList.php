@@ -6,7 +6,7 @@ namespace App\Utils;
 
 use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 final class PackedStringList
 {

@@ -9,7 +9,7 @@ use App\Species\Hierarchy\MutableSpecies;
 use App\Species\Hierarchy\Species;
 use App\Utils\Regexp\Replacements;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @phpstan-type TSpecies             array<string, TSubspecies>

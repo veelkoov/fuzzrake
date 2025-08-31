@@ -6,7 +6,7 @@ namespace App\Utils\Pagination;
 
 use App\Utils\Traits\UtilityClass;
 use Countable;
-use Veelkoov\Debris\IntSet;
+use Veelkoov\Debris\Sets\IntSet;
 
 final class Pagination
 {

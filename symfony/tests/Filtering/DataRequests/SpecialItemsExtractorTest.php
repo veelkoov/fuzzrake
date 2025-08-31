@@ -8,7 +8,7 @@ use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Small]
 class SpecialItemsExtractorTest extends TestCase
