@@ -7,7 +7,7 @@ namespace App\Utils\Mx;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Veelkoov\Debris\Maps\StringToBool;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class CreatorUrlsSelectionData
 {

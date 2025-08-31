@@ -24,11 +24,12 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
-use Veelkoov\Debris\IntList;
+use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Maps\NullBoolToInt;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @extends ServiceEntityRepository<Creator>

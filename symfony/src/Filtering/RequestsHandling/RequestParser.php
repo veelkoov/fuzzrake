@@ -6,11 +6,11 @@ namespace App\Filtering\RequestsHandling;
 
 use App\Filtering\Consts;
 use Symfony\Component\HttpFoundation\Request;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Maps\StringToStringList;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class RequestParser
 {

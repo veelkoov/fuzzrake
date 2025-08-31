@@ -11,7 +11,7 @@ use App\Species\SpeciesService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use Exception;
 use PHPUnit\Framework\Attributes\Small;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Small]
 class FiltersValidChoicesFilterTest extends FuzzrakeTestCase

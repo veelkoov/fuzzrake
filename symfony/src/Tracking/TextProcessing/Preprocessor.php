@@ -8,7 +8,7 @@ use App\Tracking\ContextLogger;
 use App\Tracking\Data\AnalysisInput;
 use App\Tracking\Patterns\Patterns;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 class Preprocessor
 {

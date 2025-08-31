@@ -8,7 +8,7 @@ use App\Filtering\RequestsHandling\SpecialItemsExtractor;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Exception\MissingKeyException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Small]
 class SpecialItemsExtractorTest extends TestCase

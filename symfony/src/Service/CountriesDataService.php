@@ -7,7 +7,7 @@ namespace App\Service;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class CountriesDataService
 {

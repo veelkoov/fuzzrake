@@ -9,7 +9,7 @@ use App\Utils\Web\Url\Url;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class CookieEagerHttpClient implements HttpClientInterface
 {

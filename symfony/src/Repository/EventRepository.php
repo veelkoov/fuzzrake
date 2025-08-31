@@ -10,7 +10,7 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)

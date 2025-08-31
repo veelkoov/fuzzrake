@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Veelkoov\Debris\Base\DIntMap;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\StringList;
 
 class StatisticsController extends AbstractController
 {

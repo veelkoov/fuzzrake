@@ -6,7 +6,7 @@ namespace App\Filtering\RequestsHandling;
 
 use App\Filtering\Consts;
 use Doctrine\ORM\QueryBuilder;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 readonly class SingleColumnSingleValueFilter
 {

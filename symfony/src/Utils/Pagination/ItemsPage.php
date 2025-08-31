@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Pagination;
 
-use Veelkoov\Debris\IntSet;
+use Veelkoov\Debris\Sets\IntSet;
 
 /**
  * @template T

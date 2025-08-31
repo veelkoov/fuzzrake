@@ -11,7 +11,7 @@ use App\Data\Definitions\Styles;
 use App\Filtering\Consts;
 use App\Service\DataService;
 use App\Species\SpeciesService;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 class FiltersValidChoicesFilter
 {

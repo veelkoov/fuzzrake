@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
-use Veelkoov\Debris\IntList;
+use Veelkoov\Debris\Lists\IntList;
 
 #[Medium]
 class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase

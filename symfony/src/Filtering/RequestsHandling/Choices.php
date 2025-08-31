@@ -8,7 +8,7 @@ use App\Utils\Json;
 use App\Utils\Pagination\Pagination;
 use JsonException;
 use RuntimeException;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 readonly class Choices
 {
