@@ -25,6 +25,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Maps\AnyToInt;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
@@ -208,7 +209,7 @@ class CreatorRepository extends ServiceEntityRepository
         return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    public function getOffersPaymentPlansStats(): NullBoolToInt
+    public function getActiveOffersPaymentPlansStats(): NullBoolToInt
     {
         $result = $this->createQueryBuilder('d_c')
             ->select('d_c.offersPaymentPlans AS offers', 'COUNT(d_c) AS count')
@@ -219,6 +220,19 @@ class CreatorRepository extends ServiceEntityRepository
             ->getArrayResult();
 
         return NullBoolToInt::fromRows($result, 'offers', 'count');
+    }
+
+    public function getActiveAgesStats(): AnyToInt
+    {
+        $result = $this->createQueryBuilder('d_c')
+            ->select('d_c.ages AS ages', 'COUNT(d_c) AS count')
+            ->where('d_c.inactiveReason = :empty')
+            ->groupBy('d_c.ages')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        return AnyToInt::fromRows($result, 'ages', 'count');
     }
 
     /**

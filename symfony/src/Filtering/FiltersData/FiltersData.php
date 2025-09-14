@@ -17,6 +17,7 @@ readonly class FiltersData
         public FilterData $countries,
         public FilterData $states,
         public FilterData $species,
+        public FilterData $ages,
         public FilterData $inactive,
     ) {
     }
