@@ -26,7 +26,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Maps\NullBoolToInt;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;

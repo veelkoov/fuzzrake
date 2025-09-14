@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\Traits\CreatorByCreatorIdTrait;
+use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Filtering\RequestsHandling\RequestParser;
-use App\Filtering\FiltersData\FiltersService;
 use App\Repository\CreatorRepository;
 use App\Service\DataService;
 use App\Utils\Creator\CreatorId;

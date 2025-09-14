@@ -109,7 +109,7 @@ class Data extends AbstractType
             ->add('ages', ChoiceType::class, [
                 'label'      => 'What is your age?',
                 'required'   => true,
-                'choices'    => Ages::getChoices(false),
+                'choices'    => Ages::getFormChoices(false),
                 'expanded'   => true,
             ])
             ->add('nsfwWebsite', ChoiceType::class, [
@@ -483,7 +483,7 @@ class Data extends AbstractType
             ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
                 'required'   => true,
-                'choices'    => ContactPermit::getChoices(false),
+                'choices'    => ContactPermit::getFormChoices(false),
                 'expanded'   => true,
             ])
             ->add('emailAddress', TextType::class, [

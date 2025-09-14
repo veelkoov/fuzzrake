@@ -26,7 +26,7 @@ readonly class SingleColumnSingleValueFilter
         $conditions = ["$this->columnRef IN (:$values)"];
 
         if (!$this->nullable) {
-            $selected = $selected->map(static fn($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+            $selected = $selected->map(static fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
         } elseif ($selected->contains(Consts::FILTER_VALUE_UNKNOWN)) {
             $conditions[] = "$this->columnRef IS NULL";
             $selected = $selected->minus(Consts::FILTER_VALUE_UNKNOWN);
@@ -36,4 +36,3 @@ readonly class SingleColumnSingleValueFilter
         QueryBuilderUtils::andWhere($builder, $conditions);
     }
 }
-

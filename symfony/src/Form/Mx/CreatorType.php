@@ -59,7 +59,7 @@ class CreatorType extends AbstractTypeWithDelete
             ->add('ages', ChoiceType::class, [
                 'label'    => 'Age',
                 'required' => true,
-                'choices'  => Ages::getChoices(true),
+                'choices'  => Ages::getFormChoices(true),
                 'expanded' => true,
             ])
             ->add('worksWithMinors', ChoiceType::class, [
@@ -343,7 +343,7 @@ class CreatorType extends AbstractTypeWithDelete
             ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'   => 'Contact allowed?',
-                'choices' => ContactPermit::getChoices(true),
+                'choices' => ContactPermit::getFormChoices(true),
             ])
             ->add('emailAddress', TextType::class, [
                 'label'      => 'Email address',
