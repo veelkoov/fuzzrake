@@ -88,15 +88,10 @@ class AppExtensions
         $result = '';
 
         if ($addText) {
-            $result .= match ($creator->getAges()) {
-                Ages::MINORS => 'Everyone is under 18',
-                Ages::MIXED => 'There is a mix of people over and under 18',
-                Ages::ADULTS => 'Everyone is over 18',
-                default => '',
-            };
-
             if (null === $creator->getAges()) {
                 $result .= $this->unknownValue();
+            } else {
+                $result .= $creator->getAges()->getLabel();
             }
         }
 

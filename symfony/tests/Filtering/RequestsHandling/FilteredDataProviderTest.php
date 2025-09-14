@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
-use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\FilteredDataProvider;
+use App\Filtering\RequestsHandling\Choices;
+use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -13,15 +13,11 @@ use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use Psr\Cache\InvalidArgumentException;
 use Veelkoov\Debris\Sets\StringSet;
 
 #[Medium]
 class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 {
-    /**
-     * @throws InvalidArgumentException
-     */
     public function testWorkingWithMinors(): void
     {
         $a1 = new Creator()->setCreatorId('M000001')->setWorksWithMinors(false);
@@ -36,10 +32,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, false, false, false, 1));
+        $result = $subject->getCreatorsPage($this->getChoices(isAdult: false, wantsSfw: false, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, false, true, false, false, 1));
+        $result = $subject->getCreatorsPage($this->getChoices(isAdult: false, wantsSfw: true, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
     }
 
@@ -57,10 +53,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, true, false, false, 1));
+        $result = $subject->getCreatorsPage($this->getChoices(isAdult: true, wantsSfw: true, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000001', self::creatorsListToCreatorIdList($result));
 
-        $result = $subject->getCreatorsPage(new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), false, false, false, true, false, false, false, 1));
+        $result = $subject->getCreatorsPage($this->getChoices(isAdult: true, wantsSfw: false, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToCreatorIdList($result));
     }
 
@@ -88,8 +84,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     }
 
     #[DataProvider('paginatedResultsDataProvider')]
-    public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount,
-        int $expectedFirst, int $expectedLast): void
+    public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount, int $expectedFirst, int $expectedLast): void
     {
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
             self::persist(new Creator()
@@ -102,7 +97,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
-        $input = new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), true, true, true, true, false, true, false, $pageRequested);
+        $input = $this->getChoices(isAdult: true, wantsSfw: false, wantsInactive: true, pageNumber: $pageRequested);
 
         $result = $subject->getCreatorsPage($input);
 
@@ -125,5 +120,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         $creatorIds = arr_map($pageData->items, static fn (Creator $creator) => $creator->getCreatorId());
 
         return implode(', ', arr_sortl($creatorIds));
+    }
+
+    private function getChoices(bool $isAdult, bool $wantsSfw, bool $wantsInactive, int $pageNumber): Choices
+    {
+        return new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), $isAdult, $wantsSfw, $wantsInactive, creatorMode: false, pageNumber: $pageNumber);
     }
 }

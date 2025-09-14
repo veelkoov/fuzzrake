@@ -27,7 +27,11 @@
     "DOES_NSFW": true,
     "WORKS_WITH_MINORS": true,
 
-    "PAYMENT_PLANS": [
+    "HAS_ALLERGY_WARNING": true,
+    "ALLERGY_WARNING_INFO": "Worries!",
+
+    "OFFERS_PAYMENT_PLANS": true,
+    "PAYMENT_PLANS_INFO": [
         "30% upfront, rest in 100 Eur/mth until fully paid (a2_2)"
     ],
     "PAYMENT_METHODS": [
