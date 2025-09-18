@@ -14,6 +14,7 @@ final class Strategies
     {
         return match (true) {
             TwitterProfileStrategy::isSuitableFor($url) => new TwitterProfileStrategy(),
+            BlueskyProfileStrategy::isSuitableFor($url) => new BlueskyProfileStrategy(),
             InstagramProfileStrategy::isSuitableFor($url) => new InstagramProfileStrategy(),
             TrelloStrategy::isSuitableFor($url) => new TrelloStrategy(),
             FurAffinityProfileStrategy::isSuitableFor($url) => new FurAffinityProfileStrategy(),
