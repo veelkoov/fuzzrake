@@ -1,8 +1,0 @@
----
-- name: 'Clear cache'
-  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear'
-  changed_when: 'not ansible_check_mode'
-
-- name: 'Precompute data'
-  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console app:precompute-data'
-  changed_when: 'not ansible_check_mode'

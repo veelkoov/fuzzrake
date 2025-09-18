@@ -12,12 +12,16 @@
   tags: 'build'
 
 - name: 'Clear cache'
-  ansible.builtin.import_tasks: 'clear_cache.yaml'
-  tags: 'cache'
+  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear'
+  changed_when: 'not ansible_check_mode'
 
 - name: 'Migrate DB schema'
   ansible.builtin.import_tasks: 'migrate_db_schema.yaml'
   tags: 'migrate'
+
+- name: 'Precompute data'
+  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console app:precompute-data'
+  changed_when: 'not ansible_check_mode'
 
 - name: 'Setup automation'
   when: 'setup_automation | default(false)'
