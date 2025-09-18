@@ -8,6 +8,7 @@ use App\Tracking\ContextLogger;
 use App\Tracking\Data\AnalysisInput;
 use App\Tracking\Patterns\Patterns;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Lists\StringList;
 
 class Preprocessor
@@ -17,6 +18,7 @@ class Preprocessor
     private readonly ContextLogger $logger;
 
     public function __construct(
+        #[Autowire(service: 'monolog.logger.tracking')]
         LoggerInterface $logger,
         private readonly Patterns $patterns,
     ) {
