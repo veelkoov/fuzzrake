@@ -10,6 +10,7 @@ use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url\Url;
 use Override;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\Exception\ExceptionInterface as BrowserKitExceptionInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
@@ -90,6 +91,12 @@ class GenericHttpClient implements HttpClientInterface
         }
 
         return $result;
+    }
+
+    #[Override]
+    public function getCookieJar(): CookieJar
+    {
+        return $this->browser->getCookieJar();
     }
 
     #[Override]

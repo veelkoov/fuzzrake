@@ -8,6 +8,7 @@ use App\Utils\Web\HostCallsQueue;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
 use Override;
+use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Maps\StringToString;
 
@@ -26,6 +27,12 @@ class GentleHttpClient implements HttpClientInterface
     public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
         return $this->queue->patiently($url, fn () => $this->client->fetch($url, $method, $addHeaders, $content));
+    }
+
+    #[Override]
+    public function getCookieJar(): CookieJar
+    {
+        return $this->client->getCookieJar();
     }
 
     #[Override]

@@ -4,37 +4,38 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\HttpClient;
 
+use App\Utils\Web\HttpClient\Utils\CookieJarPersistence;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
 use Override;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\Sets\StringSet;
 
-class CookieEagerHttpClient implements HttpClientInterface
+class CookiePersistentHttpClient implements HttpClientInterface
 {
-    private readonly StringSet $prefetched;
+    private readonly CookieJarPersistence $cookiePersistence;
 
     public function __construct(
-        #[Autowire(service: CookiePersistentHttpClient::class)]
+        #[Autowire(service: GenericHttpClient::class)]
         private readonly HttpClientInterface $client,
+        #[Autowire(param: 'kernel.project_dir')]
+        string $projectDirectory,
     ) {
-        $this->prefetched = new StringSet();
+        $this->cookiePersistence = new CookieJarPersistence(
+            "$projectDirectory/var/http-client-cookie-jar.json",
+            $this->client->getCookieJar(),
+        );
     }
 
     #[Override]
     public function fetch(Url $url, string $method = 'GET', StringToString $addHeaders = new StringToString(), ?string $content = null): Snapshot
     {
-        $cookieInitUrl = $url->getStrategy()->getCookieInitUrl();
-
-        if (null !== $cookieInitUrl && !$this->prefetched->contains($cookieInitUrl->getUrl())) {
-            $this->client->fetch($cookieInitUrl);
-
-            $this->prefetched->add($cookieInitUrl->getUrl());
+        try {
+            return $this->client->fetch($url, $method, $addHeaders, $content);
+        } finally {
+            $this->cookiePersistence->save();
         }
-
-        return $this->client->fetch($url, $method, $addHeaders, $content);
     }
 
     #[Override]

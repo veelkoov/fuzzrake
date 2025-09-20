@@ -6,6 +6,7 @@ namespace App\Utils\Web\HttpClient;
 
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
+use Symfony\Component\BrowserKit\CookieJar;
 use Veelkoov\Debris\Maps\StringToString;
 
 interface HttpClientInterface
@@ -16,6 +17,8 @@ interface HttpClientInterface
         StringToString $addHeaders = new StringToString(),
         ?string $content = null,
     ): Snapshot;
+
+    public function getCookieJar(): CookieJar;
 
     public function getSingleCookieValue(string $cookieName, string $domain): ?string;
 }
