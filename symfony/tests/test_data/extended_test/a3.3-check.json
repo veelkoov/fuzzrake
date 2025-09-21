@@ -31,7 +31,11 @@
     "DOES_NSFW": false,
     "WORKS_WITH_MINORS": false,
 
-    "PAYMENT_PLANS": [
+    "HAS_ALLERGY_WARNING": true,
+    "ALLERGY_WARNING_INFO": "Worries!",
+
+    "OFFERS_PAYMENT_PLANS": true,
+    "PAYMENT_PLANS_INFO": [
         "Payment plans 3"
     ],
     "PAYMENT_METHODS": [
