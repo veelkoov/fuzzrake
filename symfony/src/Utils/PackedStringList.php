@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Regexp\Patterns;
+use App\Utils\Regexp\Pattern;
 use App\Utils\Traits\UtilityClass;
 use Veelkoov\Debris\Lists\StringList;
 
@@ -55,7 +55,7 @@ final class PackedStringList
 
         $input = self::replaceNonsplittables($input, $nonsplittables);
 
-        $result = Patterns::get($separatorRegexp)->split($input);
+        $result = new Pattern($separatorRegexp)->split($input);
 
         $nonsplittables = array_flip($nonsplittables);
 

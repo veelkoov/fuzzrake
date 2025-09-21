@@ -6,12 +6,9 @@ namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\String\ConfigurableStringFixer;
 use App\Data\Fixer\String\GenericStringFixer;
-use App\Utils\UnbelievableRuntimeException;
+use App\Utils\Regexp\Pattern;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Detail;
-use TRegx\CleanRegex\Pattern;
 
 final class LanguagesFixer extends AbstractListFixer
 {
@@ -25,7 +22,7 @@ final class LanguagesFixer extends AbstractListFixer
         #[Autowire(param: 'languages')] array $languages,
         private readonly GenericStringFixer $genericStringFixer,
     ) {
-        $this->replacementPattern = Pattern::of($languages['regexp'], 'i');
+        $this->replacementPattern = new Pattern($languages['regexp'], 'i');
 
         $this->fixer = new ConfigurableStringFixer($languages);
     }
@@ -42,17 +39,15 @@ final class LanguagesFixer extends AbstractListFixer
         $subject = $this->genericStringFixer->fix($subject);
         $subject = $this->fixer->fix($subject);
 
-        return $this->replacementPattern->replace($subject)->first()->callback(function (Detail $detail): string {
-            try {
-                $language = $detail->get('language');
-                $limited = $detail->matched('prefix') || $detail->matched('suffix');
-            } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
-                throw new UnbelievableRuntimeException($e);
-            } // @codeCoverageIgnoreEnd
+        $match = $this->replacementPattern->match($subject);
 
-            $language = mb_ucfirst($language);
+        if (null === $match->matches['language']) {
+            return $subject;
+        }
 
-            return $language.($limited ? ' (limited)' : '');
-        });
+        $language = mb_ucfirst($match->matches['language']);
+        $limited = null !== $match->matches['prefix'] || null !== $match->matches['suffix'];
+
+        return $language.($limited ? ' (limited)' : '');
     }
 }

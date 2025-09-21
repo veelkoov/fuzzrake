@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use TRegx\CleanRegex\Pattern;
-use TRegx\CleanRegex\PatternList;
+use App\Utils\Regexp\Pattern;
+use App\Utils\Regexp\Patterns;
 use Twig\Attribute\AsTwigFilter;
 
 class ReadabilityExtensions
@@ -16,14 +16,13 @@ class ReadabilityExtensions
         '[()?]',
     ];
 
-    private readonly PatternList $regexPatterns;
+    private readonly Patterns $regexPatterns;
     private readonly Pattern $shortUrlPattern;
 
     public function __construct()
     {
-        $this->regexPatterns = Pattern::list(arr_map(self::READABILITY_REGEXES,
-            static fn ($item) => Pattern::of($item, 'i')));
-        $this->shortUrlPattern = Pattern::of('^https?://(www\.)?|/?$', 'n');
+        $this->regexPatterns = new Patterns(self::READABILITY_REGEXES, 'i');
+        $this->shortUrlPattern = new Pattern('^https?://(www\.)?|/?$', 'n');
     }
 
     #[AsTwigFilter('event_url')]
