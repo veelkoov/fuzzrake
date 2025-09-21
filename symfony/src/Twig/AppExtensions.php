@@ -10,7 +10,7 @@ use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
-use App\Utils\Regexp\Patterns;
+use App\Utils\Regexp\Pattern;
 use JsonException;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
@@ -50,9 +50,9 @@ class AppExtensions
             $items[] = 'Other'; // grep-special-label-other
         }
 
-        $explanation = Patterns::get(' \([^)]+\)');
+        $explanation = new Pattern(' \([^)]+\)');
 
-        return implode(', ', arr_map($items, static fn (string $item): string => $explanation->prune($item)));
+        return implode(', ', arr_map($items, $explanation->prune(...)));
     }
 
     #[AsTwigFunction('is_new')]

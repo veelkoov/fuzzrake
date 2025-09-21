@@ -7,9 +7,9 @@ namespace App\Data\Fixer\StrList;
 use App\Data\Fixer\String\ConfigurableStringFixer;
 use App\Data\Fixer\String\GenericStringFixer;
 use App\Utils\PackedStringList;
+use App\Utils\Regexp\Pattern;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use TRegx\CleanRegex\Pattern;
 
 final class PayMethodFixer extends AbstractListFixer
 {
@@ -24,7 +24,7 @@ final class PayMethodFixer extends AbstractListFixer
         private readonly GenericStringFixer $genericStringFixer,
     ) {
         $this->fixer = new ConfigurableStringFixer($paymentMethods);
-        $this->nsp = Pattern::of('\([^)\n]+\)');
+        $this->nsp = new Pattern('\([^)\n]+\)');
     }
 
     #[Override]
@@ -32,11 +32,11 @@ final class PayMethodFixer extends AbstractListFixer
     {
         $joinedSubject = PackedStringList::pack($subject); // Cheap and lame
 
-        return array_values([
+        return [
             'wise.com',
             'boosty.to',
-            ...$this->nsp->search($joinedSubject)->all(),
-        ]);
+            ...$this->nsp->allMatches($joinedSubject),
+        ];
     }
 
     #[Override]

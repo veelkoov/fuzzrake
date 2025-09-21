@@ -252,3 +252,10 @@ Case 39
 --------------------------------
 <p class="" style="white-space:pre-wrap;">Commissions are closed</p>
 <p class="" style="white-space:pre-wrap;">For the first week after commissions open, applying for a commission
+================================================================
+Case 40
+-Commissions
+--------------------------------
+<div> <i class="fa-solid fa-times"></i> Commissions are closed </div>
+<div class="col-12 fs-1 text-center"> Next Opening <span class="text-capitalize">March 2026</span> </div>
+<p>(...) our quotes/budget page <a href="/get-a-quote">here</a>. That budget will only be valid for that period that we open commissions.</p>

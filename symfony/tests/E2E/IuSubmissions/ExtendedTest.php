@@ -11,6 +11,7 @@ use App\Tests\TestUtils\JsonCreatorDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
+use App\Utils\Regexp\Pattern;
 use BackedEnum;
 use Composer\Pcre\Preg;
 use Composer\Pcre\Regex;
@@ -21,8 +22,6 @@ use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
-use TRegx\CleanRegex\Match\Detail;
-use TRegx\CleanRegex\Pattern;
 
 #[Medium]
 class ExtendedTest extends IuSubmissionsTestCase
@@ -244,9 +243,15 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         $items = Enforce::strList($value);
 
-        $optionalArraySuffix = arr_contains(self::EXPANDED_CHECKBOXES, $field) ? '[]' : '';
-        $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $optionalArraySuffix])
-            ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
+        $allMatches = Pattern::fromTemplate('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [
+            $field->modelName(),
+            arr_contains(self::EXPANDED_CHECKBOXES, $field) ? '[]' : '',
+        ])->strictMatchAll($htmlBody)->matches;
+
+        $selected = [];
+        foreach ($allMatches[0] as $index => $wholeMatch) {
+            $selected[$allMatches['value'][$index]] = str_contains($wholeMatch, 'checked="checked"');
+        }
 
         foreach ($items as $item) {
             self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->value'.");

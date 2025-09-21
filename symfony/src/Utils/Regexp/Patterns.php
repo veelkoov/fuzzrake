@@ -4,22 +4,31 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\Traits\UtilityClass;
-use Deprecated;
-use TRegx\CleanRegex\Pattern;
+use Composer\Pcre\Preg;
 
 final class Patterns
 {
-    use UtilityClass;
+    /**
+     * @var list<Pattern>
+     */
+    private readonly array $patterns;
 
     /**
-     * @var array<string, Pattern>
+     * @var list<string>
      */
-    private static array $cache = [];
+    private readonly array $compiled;
 
-    /** @deprecated */
-    public static function get(string $pattern): Pattern
+    /**
+     * @param iterable<string> $regexes
+     */
+    public function __construct(iterable $regexes, string $flags = '')
     {
-        return self::$cache[$pattern] ??= Pattern::of($pattern);
+        $this->patterns = iter_mapl($regexes, static fn ($regex) => new Pattern($regex, $flags));
+        $this->compiled = array_map(static fn (Pattern $pattern) => $pattern->compiled, $this->patterns);
+    }
+
+    public function prune(string $input): string
+    {
+        return Preg::replace($this->compiled, '', $input);
     }
 }

@@ -7,6 +7,7 @@ namespace App\Photos\MiniatureUrlResolver;
 use App\Photos\MiniaturesUpdateException;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Json;
+use App\Utils\Regexp\Pattern;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\HttpClient\HttpClientInterface;
 use App\Utils\Web\Snapshots\Snapshot;
@@ -16,7 +17,6 @@ use InvalidArgumentException;
 use JsonException;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use TRegx\CleanRegex\Pattern;
 use Veelkoov\Debris\Maps\StringToString;
 
 class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
@@ -27,13 +27,13 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
         #[Autowire(service: GentleHttpClient::class)]
         private readonly HttpClientInterface $httpClient,
     ) {
-        $this->pattern = Pattern::of('^https://scritch\.es/pictures/(?<pictureId>[-a-f0-9]{36})$');
+        $this->pattern = new Pattern('^https://scritch\.es/pictures/(?<pictureId>[-a-f0-9]{36})$');
     }
 
     #[Override]
     public function supports(string $url): bool
     {
-        return $this->pattern->test($url);
+        return $this->pattern->isMatch($url);
     }
 
     #[Override]
@@ -108,6 +108,6 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
 
     private function getPictureIdFor(Url $url): string
     {
-        return $this->pattern->match($url->getUrl())->first()->get('pictureId');
+        return $this->pattern->strictMatch($url->getUrl())->matches['pictureId'];
     }
 }

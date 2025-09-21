@@ -174,9 +174,6 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
-    "rawr/t-regx": {
-        "version": "v0.13.0"
-    },
     "rector/rector": {
         "version": "0.12.5"
     },

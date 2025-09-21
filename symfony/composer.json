@@ -27,7 +27,6 @@
         "doctrine/orm": "*",
         "nette/utils": "^v4.0.5",
         "phpoffice/phpspreadsheet": "^3.7.0",
-        "rawr/t-regx": "dev-applied-ExplicitNullableParamTypeRector-rule",
         "symfony/apache-pack": "^1.0",
         "symfony/browser-kit": "*",
         "symfony/clock": "*",

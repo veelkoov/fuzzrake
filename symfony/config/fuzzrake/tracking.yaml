@@ -165,6 +165,7 @@ parameters:
           (we|i)\ open\ commissions                  )
 
       - '(if|when|while|after)(\ OUR)?\ OFFER(\ are)?\ STATUS_ANY'
+      - 'that\ (we|i)\ open\ COMMISSIONS'
 
       - 'WE_ARE\ (now\ )?opening\ for\ quotes\ a\ few\ weeks\ before\ commission\ slots\ open'
       - '(when|if)\ (my\ |our\ |the\ )(COMMISSIONS|QUOTES)\ (are\ )?open'

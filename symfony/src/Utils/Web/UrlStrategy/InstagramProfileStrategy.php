@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\UrlStrategy;
 
-use App\Utils\Regexp\Patterns;
 use App\Utils\Web\Url\Url;
 use App\Utils\Web\Url\UrlForTracking;
+use Composer\Pcre\Regex;
 use Override;
 use Symfony\Component\DomCrawler\Crawler;
 
 class InstagramProfileStrategy extends Strategy
 {
-    private const string instagramProfileUrl = '^https?://(www\.)?instagram\.com/(?<username>[^/]+)/?$';
+    private const string instagramProfileUrl = '~^https?://(www\.)?instagram\.com/(?<username>[^/]+)/?$~n';
 
     #[Override]
     public static function isSuitableFor(string $url): bool
     {
-        return Patterns::get(self::instagramProfileUrl)->test($url);
+        return Regex::isMatch(self::instagramProfileUrl, $url);
     }
 
     #[Override]
     public function getUrlForTracking(Url $url): Url
     {
-        $match = Patterns::get(self::instagramProfileUrl)->match($url->getUrl());
+        $match = Regex::matchStrictGroups(self::instagramProfileUrl, $url->getUrl());
 
-        if ($match->fails()) {
+        if (!$match->matched) {
             return $url;
         }
 
-        return new UrlForTracking("https://www.instagram.com/{$match->first()->get('username')}/profilecard/", $url);
+        return new UrlForTracking("https://www.instagram.com/{$match->matches['username']}/profilecard/", $url);
     }
 
     #[Override]
