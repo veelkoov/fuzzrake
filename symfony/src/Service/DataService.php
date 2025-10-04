@@ -136,7 +136,7 @@ class DataService
                          * fake ("mock") former IDs, so we can rely on SmartAccessDecorator::getLastCreatorId() etc.
                          * Those IDs are "M000000", part where the digits is zero-padded creator database ID. */
 
-                        $placeholder = sprintf('M%06d', $creator->getId());
+                        $placeholder = sprintf('M%06d', $creator->getId() ?? 0);
 
                         if ($creator->get($field) === [$placeholder]) {
                             continue; // Fake former creator ID - don't add to the result

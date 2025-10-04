@@ -2,159 +2,159 @@
 parameters:
   tracking:
     tokens_replacements:
-      'OPEN_TAG':
-        - '<(h[123456]|p|div)[^>]*>'
-      'END_TAG':
-        - '</(h[123456]|p|div)>'
+      "OPEN_TAG":
+        - "<(h[123456]|p|div)[^>]*>"
+      "END_TAG":
+        - "</(h[123456]|p|div)>"
 
-      'END_OPEN_TAGS':
+      "END_OPEN_TAGS":
         - 'END_TAG\s*OPEN_TAG'
         - 'END_TAG\s*END_TAG\s*OPEN_TAG\s*OPEN_TAG'
         - 'END_TAG\s*END_TAG\s*END_TAG\s*OPEN_TAG\s*OPEN_TAG\s*OPEN_TAG'
 
-      'STATUS_ANY':
-        - 'STATUS_OPEN'
-        - 'STATUS_CLOSED'
+      "STATUS_ANY":
+        - "STATUS_OPEN"
+        - "STATUS_CLOSED"
 
-      'STATUS_OPEN=StatusOpen':
-        - 'open(?!ing)'
+      "STATUS_OPEN=StatusOpen":
+        - "open(?!ing)"
         - 'only\s+making'
-        - 'taking'
+        - "taking"
 
-      'STATUS_CLOSED=StatusClosed':
-        - 'closed?(?![a-z])'
+      "STATUS_CLOSED=StatusClosed":
+        - "closed?(?![a-z])"
         - 'not\s+(taking(\s+on)?|accepting|open)'
         - 'don''t\s+(do|take|provide|accept)'
 
-      'SIMPLE_OFFER':
+      "SIMPLE_OFFER":
         - 'COMMISSIONS (\ slots)? ( AND QUOTES)?'
-        - 'QUOTES ( AND COMMISSIONS)?'
+        - "QUOTES ( AND COMMISSIONS)?"
 
-      'OFFER':
-        'HANDPAWS_AND_SOCKPAWS=HandpawsCmsAndSockpawsCms':
+      "OFFER":
+        "HANDPAWS_AND_SOCKPAWS=HandpawsCmsAndSockpawsCms":
           - 'handpaws AND sockpaws\s+COMMISSIONS'
 
-        'PARTS_AND_REFURBISHMENTS=PartsAndRefurbishments':
+        "PARTS_AND_REFURBISHMENTS=PartsAndRefurbishments":
           - 'parts AND refurbishments\s+COMMISSIONS'
 
-        'COMMISSIONS_AND_QUOTES=CommissionsAndQuotes':
-          - '(COMMISSIONS AND quotes?)'
-          - '(quotes? AND COMMISSIONS)'
-          - 'quote/com' # Hmmm... FIXME?
+        "COMMISSIONS_AND_QUOTES=CommissionsAndQuotes":
+          - "(COMMISSIONS AND quotes?)"
+          - "(quotes? AND COMMISSIONS)"
+          - "quote/com" # Hmmm... FIXME?
 
-        'FULLSUIT_COMMISSIONS=FullsuitCommissions':
+        "FULLSUIT_COMMISSIONS=FullsuitCommissions":
           - 'fullsuit\s+COMMISSIONS'
 
-        'PARTIAL_COMMISSIONS=PartialCommissions':
+        "PARTIAL_COMMISSIONS=PartialCommissions":
           - 'partial\s+COMMISSIONS'
 
-        'HEAD_COMMISSIONS=HeadCommissions':
+        "HEAD_COMMISSIONS=HeadCommissions":
           - 'head\s+COMMISSIONS'
 
-        'PARTS=Parts':
+        "PARTS=Parts":
           - '(fursuit\s+)?parts?\s+COMMISSIONS'
 
-        'COMPLEX_COMMISSIONS_WORDING=Commissions':
+        "COMPLEX_COMMISSIONS_WORDING=Commissions":
           - '(custom\s+)?(costume\s+|fursuit\s+)?COMMISSIONS'
           - '(custom\s+|COMMISSIONS\s+)?slots?'
           - 'fursuits?(\s+queue)?'
 
-        'PROJECTS=Projects':
-          - 'projects?'
+        "PROJECTS=Projects":
+          - "projects?"
 
-        'TRADES=Trades':
-          - 'trades?'
+        "TRADES=Trades":
+          - "trades?"
 
-        'REFURBISHMENTS=Refurbishments':
-          - 'refurbishments?'
+        "REFURBISHMENTS=Refurbishments":
+          - "refurbishments?"
 
-        'PREMADES=Premades':
+        "PREMADES=Premades":
           - 'pre-?mades?(\s+designs?)?'
 
-        'ARTISTIC_LIBERTY=ArtisticLiberty':
+        "ARTISTIC_LIBERTY=ArtisticLiberty":
           - 'artistic\s+liberty'
 
-        'QUOTES=Quotes':
-          - 'quotes?'
+        "QUOTES=Quotes":
+          - "quotes?"
 
-        'ORDERS=Orders':
+        "ORDERS=Orders":
           - '(custom\s+)?orders?'
 
-      ' AND ':
+      " AND ":
         - '\s+and\s+'
         - '\s?(&|&amp;|[/+])\s?'
 
-      'COMMISSIONS':
-        - 'comm?iss?ions?'
-        - 'comms'
+      "COMMISSIONS":
+        - "comm?iss?ions?"
+        - "comms"
 
-      'WE_ARE':
+      "WE_ARE":
         - 'we(''re|\s+are|\s+will)?'
         - 'i(''m|\s+am|\s+will)?'
         - 'CREATOR_NAME\s+(is|are)'
 
-      'OUR':
-        - 'my'
-        - 'mine'
-        - 'ours?'
+      "OUR":
+        - "my"
+        - "mine"
+        - "ours?"
 
-      'ANY_TIME_DESC':
+      "ANY_TIME_DESC":
         - >-
           (\d{1,2} (st|rd|th)? (\s+ of)? \s+)?
           MONTHS
-        - 'spring|summer|autumn|winter|late|early'
+        - "spring|summer|autumn|winter|late|early"
 
-      'MONTHS':
-        - 'jan(uary)?'
-        - 'feb(ruary)?'
-        - 'mar(ch)?'
-        - 'apr(il)?'
-        - 'may'
-        - 'june?'
-        - 'july?'
-        - 'aug(ust)?'
-        - 'sep(tember)?'
-        - 'oct(ober)?'
-        - 'nov(ember)?'
-        - 'dec(ember)?'
+      "MONTHS":
+        - "jan(uary)?"
+        - "feb(ruary)?"
+        - "mar(ch)?"
+        - "apr(il)?"
+        - "may"
+        - "june?"
+        - "july?"
+        - "aug(ust)?"
+        - "sep(tember)?"
+        - "oct(ober)?"
+        - "nov(ember)?"
+        - "dec(ember)?"
 
-    cleaners:  # Used to remove noise / simplify information
-      '<style[^>]*>.*?</style>':                         ' '
+    cleaners: # Used to remove noise / simplify information
+      "<style[^>]*>.*?</style>": " "
 
       # First is the NBSP
-      "\u00A0|&nbsp;|\t":                                ' '
-      '❗':                                              '!' # Emoji exclamation mark
-      '<br[^>]*>':                                       "\n"
-      '<!--.*?-->':                                      ' '
-      '</?(?:strong|b|i|span|center|u|a|em|font)( [^>]*)?>': ''
+      "\u00A0|&nbsp;|\t": " "
+      "❗": "!" # Emoji exclamation mark
+      "<br[^>]*>": "\n"
+      "<!--.*?-->": " "
+      "</?(?:strong|b|i|span|center|u|a|em|font)( [^>]*)?>": ""
 
-      '&#(?:39|8217);': "'"
+      "&#(?:39|8217);": "'"
 
-      ' {2,}':  ' '
+      " {2,}": " "
       '\n{2,}': "\n"
 
       # square.site
       # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
       # This is obviously naive and will fail if anyone uses { or } in actual site text.
-      ',"attributes":\{[^{}]*(\{[^{}]*(\{[^{}]*(\{[^{}]*\})?[^{}]*\})?[^{}]*\})?[^{}]*\}': ''
-      '"\},\{"insert":"': ''
+      ',"attributes":\{[^{}]*(\{[^{}]*(\{[^{}]*(\{[^{}]*\})?[^{}]*\})?[^{}]*\})?[^{}]*\}': ""
+      '"\},\{"insert":"': ""
 
       # always / currently / now
-      '(?<![a-z])(currently|basically always|always|permanently)(?![a-z])': 'now'
+      "(?<![a-z])(currently|basically always|always|permanently)(?![a-z])": "now"
 
       # Change order to reduce the number of alterations
-      '(?<![a-z])we are now(?![a-z])': 'now we are'
-      '(?<![a-z])not now(?![a-z])':    'now not'
+      "(?<![a-z])we are now(?![a-z])": "now we are"
+      "(?<![a-z])not now(?![a-z])": "now not"
 
       # Remove decorations
-      '(\*\*\*|!)(open|closed)(\*\*\*|!)':               '$2'
-      '&gt;&gt; ?(open|closed) ?&lt;&lt;':               '$1'
+      '(\*\*\*|!)(open|closed)(\*\*\*|!)': "$2"
+      "&gt;&gt; ?(open|closed) ?&lt;&lt;": "$1"
 
       # [ Commissions . . . Open ]
-      '\[ ([a-z]+) ?\.(?: ?\.)+ ?([a-z]+) \]': '$1: $2'
+      '\[ ([a-z]+) ?\.(?: ?\.)+ ?([a-z]+) \]': "$1: $2"
 
       # | - Commissions: - CLOSED |
-      '\| - ([a-z]+): - ([a-z]+) \|': '$1: $2'
+      '\| - ([a-z]+): - ([a-z]+) \|': "$1: $2"
 
     false_positives:
       - >-
@@ -186,7 +186,6 @@ parameters:
           in\                          |
           (in\ |from\ )? ANY_TIME_DESC )
       - 'next\ COMMISSIONS\ opening'
-
       # "art commissions"
       - '(?<=[^a-z])art(work)?\ COMMISSIONS'
 
@@ -209,7 +208,7 @@ parameters:
 
       # Inverted order - careful!
       - '(WE_ARE|now)\s+STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
-      -                'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER(\s+and\s+OFFER)?'
+      - 'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER(\s+and\s+OFFER)?'
 
       - 'OPEN_TAG\s*OFFER(\s+status:?|\s+?:)?\s*END_OPEN_TAGS(\s*now)?\s*STATUS_ANY'
 

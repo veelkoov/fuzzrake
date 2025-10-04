@@ -214,6 +214,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
+        // grep-code-matched-multiple-creators
         self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
         self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
 

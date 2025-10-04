@@ -7,7 +7,8 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\JsonCreatorDataLoader;
+use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\YamlCreatorsDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
@@ -32,21 +33,6 @@ class ExtendedTest extends IuSubmissionsTestCase
     private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::EMAIL_ADDRESS,
         Field::PASSWORD,
-    ];
-
-    private const array NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::CS_LAST_CHECK,
-        Field::CS_TRACKER_ISSUE,
-        Field::OPEN_FOR,
-        Field::CLOSED_FOR,
-        Field::SAFE_DOES_NSFW,
-        Field::SAFE_WORKS_WITH_MINORS,
-
-        Field::FORMER_MAKER_IDS,
-        Field::URL_MINIATURES,
-        Field::INACTIVE_REASON,
-        Field::DATE_ADDED,
-        Field::DATE_UPDATED,
     ];
 
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
@@ -94,59 +80,37 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         self::sanityChecks();
 
-        $repo = self::getCreatorRepository();
-        $loader = new JsonCreatorDataLoader('extended_test');
+        $loader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
 
-        $initialCreators = [
-            $loader->getCreatorData('a1.1-persisted'),
-            $loader->getCreatorData('a3.1-persisted'),
-            $loader->getCreatorData('a5.1-persisted'),
-        ];
-        $initialCount = count($initialCreators);
+        self::persistAndFlush(...$loader->before);
+        self::assertCount($loader->before->count(), self::getCreatorRepository()->findAll(),
+            "Expected {$loader->before->count()} creators in the DB before import.");
 
-        $expectedCreators = [
-            $loader->getCreatorData('a1.3-check'),
-            $loader->getCreatorData('a2.3-check'),
-            $loader->getCreatorData('a3.3-check'),
-            $loader->getCreatorData('a4.3-check'),
-            $loader->getCreatorData('a5.3-check'),
-        ];
-        $finalCount = count($expectedCreators);
+        $solveCaptcha = true;
 
-        self::persistAndFlush(...$initialCreators);
-        self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount creators in the DB before import");
+        foreach ($loader->aliases as $label) {
+            if ($loader->before->hasKey($label)) {
+                $oldData = $loader->before->get($label);
+                $oldCreatorId = $oldData->getLastCreatorId();
+            } else {
+                $oldData = new Creator();
+                $oldCreatorId = '';
+            }
 
-        $oldData1 = $loader->getCreatorData('a1.1-persisted');
-        $newData1 = $loader->getCreatorData('a1.2-send', self::NOT_IN_FORM);
-        $creatorId1 = $oldData1->getCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId1, $oldData1, $newData1, true);
+            $newData = $loader->update->get($label);
 
-        $oldData2 = new Creator();
-        $newData2 = $loader->getCreatorData('a2.2-send', self::NOT_IN_FORM);
-        $creatorId2 = '';
-        self::validateIuFormOldDataSubmitNew($creatorId2, $oldData2, $newData2);
+            self::validateIuFormOldDataSubmitNew($oldCreatorId, $oldData, $newData, $solveCaptcha);
 
-        $oldData3 = $loader->getCreatorData('a3.1-persisted');
-        $newData3 = $loader->getCreatorData('a3.2-send', self::NOT_IN_FORM);
-        $creatorId3 = $oldData3->getLastCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId3, $oldData3, $newData3);
+            $solveCaptcha = false;
+        }
 
-        $oldData4 = new Creator();
-        $newData4 = $loader->getCreatorData('a4.2-send', self::NOT_IN_FORM);
-        $creatorId4 = '';
-        self::validateIuFormOldDataSubmitNew($creatorId4, $oldData4, $newData4);
-
-        $oldData5 = $loader->getCreatorData('a5.1-persisted');
-        $newData5 = $loader->getCreatorData('a5.2-send', self::NOT_IN_FORM);
-        $creatorId5 = $oldData5->getLastCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
-
-        $this->performImport(true, $finalCount);
+        $this->performImport(true, $loader->after->count());
 
         self::flush();
-        self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount creators in the DB after import");
+        self::assertCount($loader->after->count(), self::getCreatorRepository()->findAll(),
+            "Expected {$loader->after->count()} creators in the DB after import.");
 
-        foreach ($expectedCreators as $expectedCreator) {
+        foreach ($loader->after as $expectedCreator) {
             self::validateCreatorAfterImport($expectedCreator);
         }
     }
@@ -189,7 +153,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             'Sanity check - checking field presence on page - failed.');
 
         foreach (Fields::all() as $field) {
-            if (arr_contains(self::NOT_IN_FORM, $field)) {
+            if (!$field->isInIuForm()) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
                 self::assertFalse($field->isInIuForm());
@@ -344,7 +308,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
-            if (arr_contains(self::NOT_IN_FORM, $field)) {
+            if (!$field->isInIuForm()) {
                 continue;
             }
 

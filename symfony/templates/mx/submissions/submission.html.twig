@@ -7,7 +7,7 @@
 
     {% if update.matchedCreators|length > 1 %}
         <p>
-            Matched multiple creators:
+            Matched multiple creators: {# grep-code-matched-multiple-creators #}
 
             {% for creator in update.matchedCreators %}
                 <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>

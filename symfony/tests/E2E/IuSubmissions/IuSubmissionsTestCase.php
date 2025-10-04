@@ -32,6 +32,9 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
         foreach ($links as $link) {
             $crawler = self::$client->request('GET', $link->getUri());
             self::assertResponseIsSuccessful();
+            self::assertSelectorTextNotContains('p',
+                'Matched multiple creators', // grep-code-matched-multiple-creators
+                'A single creator must be matched.');
 
             $form = $crawler->selectButton('Import')->form([
                 'submission[directives]' => $acceptAll ? 'accept' : '',
