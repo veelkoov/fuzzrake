@@ -39,9 +39,6 @@ class YamlCreatorsDataLoader
     /** @var list<string> */
     final public array $aliases = ['max_to_max', 'new_max', 'min_to_max', 'new_min', 'just_id'];
 
-    /** @var list<string> */
-    final public static array $times = ['before', 'update', 'after'];
-
     /** @var array<string, array<string, array<string, FieldValue>>> */
     private array $data = ['before' => [], 'update' => [], 'after' => []];
 
@@ -108,18 +105,20 @@ class YamlCreatorsDataLoader
      */
     private function ingest(string $outKey, string $midKey, string $inKey, array|bool|string|null $value): void
     {
-        if (arr_contains(self::$times, $outKey)) {
+        if ($this->isTimeKey($outKey)) {
             $time = $outKey;
-            if (arr_contains($this->aliases, $midKey)) {
+
+            if ($this->isAliasKey($midKey)) {
                 $creatorAlias = $midKey;
                 $fieldName = $inKey;
             } else {
                 $creatorAlias = $inKey;
                 $fieldName = $midKey;
             }
-        } elseif (arr_contains($this->aliases, $outKey)) {
+        } elseif ($this->isAliasKey($outKey)) {
             $creatorAlias = $outKey;
-            if (arr_contains(self::$times, $midKey)) {
+
+            if ($this->isTimeKey($midKey)) {
                 $time = $midKey;
                 $fieldName = $inKey;
             } else {
@@ -128,7 +127,8 @@ class YamlCreatorsDataLoader
             }
         } else {
             $fieldName = $outKey;
-            if (arr_contains(self::$times, $midKey)) {
+
+            if ($this->isTimeKey($midKey)) {
                 $time = $midKey;
                 $creatorAlias = $inKey;
             } else {
@@ -142,6 +142,16 @@ class YamlCreatorsDataLoader
         }
 
         $this->setData($creatorAlias, $fieldName, $time, $value);
+    }
+
+    private function isTimeKey(string $outKey): bool
+    {
+        return array_key_exists($outKey, $this->data);
+    }
+
+    private function isAliasKey(string $midKey): bool
+    {
+        return arr_contains($this->aliases, $midKey);
     }
 
     /**
