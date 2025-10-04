@@ -1,1075 +1,1075 @@
 ---
 test_data:
-    - max_to_max:
-          MAKER_ID:
-              before: "TESTA02"
-              update+after: "TESTA03"
-          FORMER_MAKER_IDS:
-              before: ["TESTA01"]
-              after: ["TESTA02", "TESTA01"]
-
-    - new_max:
-          MAKER_ID:
-              update+after: "TESTB01"
-          FORMER_MAKER_IDS:
-              after: []
-
-    - min_to_max:
-          MAKER_ID:
-              before: ""
-              update+after: "TESTC01"
-          FORMER_MAKER_IDS:
-              before: ["M000003"]
-              after: ["M000003"]
-
-    - new_min:
-          MAKER_ID:
-              update: "TESTD01"
-              after: "TESTD01"
-          FORMER_MAKER_IDS:
-              after: []
-
-    - just_id:
-          MAKER_ID:
-              before: "TESTE01"
-              update+after: "TESTE02"
-          FORMER_MAKER_IDS:
-              before: []
-              after: ["TESTE01"]
-
-    - NAME:
-          max_to_max:
-              before: "Creator 1 NAME before update"
-              update+after: "Creator 1 NAME after update"
-          new_max:
-              update+after: "Creator 2 NAME"
-          min_to_max:
-              before: "Creator 3 NAME before update"
-              update+after: "Creator 3 NAME after update"
-          new_min:
-              update+after: "Creator 4 NAME"
-          just_id:
-              before: "Creator 5 NAME before update"
-              update+after: "Creator 5 NAME after update"
-
-    - FORMERLY:
-          max_to_max:
-              before: ["Creator 1 FORMERLY before update"]
-              update+after:
-                  - "Creator 1 NAME before update"
-                  - "Creator 1 FORMERLY before update"
-          new_max:
-              update+after: ["Creator 2 FORMERLY"]
-          min_to_max:
-              before: []
-              update+after: ["Creator 3 FORMERLY"]
-          new_min:
-              update+after: []
-          just_id:
-              before: []
-              update+after: ["Creator 5 NAME before update"]
-
-    - PASSWORD:
-          max_to_max:
-              before: "Creator 1 PASSWORD before update"
-              update+after: "Creator 1 PASSWORD after update"
-          new_max:
-              update+after: "Creator 2 PASSWORD"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 PASSWORD after update"
-          new_min:
-              update+after: "Creator 4 PASSWORD"
-          just_id:
-              before: ""
-              update+after: "Creator 5 PASSWORD after update"
-
-    - EMAIL_ADDRESS:
-          max_to_max:
-              before: "creator_1@before.update"
-              update+after: "creator_1@after.update"
-          new_max:
-              update+after: "creator_2_email@address"
-          min_to_max:
-              before: ""
-              update+after: "creator_3@after.update"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - CONTACT_ALLOWED:
-          max_to_max:
-              before: "CORRECTIONS"
-              update+after: "ANNOUNCEMENTS"
-          new_max:
-              update+after: "FEEDBACK"
-          min_to_max:
-              before: null
-              update+after: "CORRECTIONS"
-          new_min:
-              update+after: "NO"
-          just_id:
-              before: null
-              update+after: "NO"
-
-    - INTRO:
-          max_to_max:
-              before: "Creator 1 INTRO before update"
-              update+after: "Creator 1 INTRO after update"
-          new_max:
-              update+after: "Creator 2 INTRO"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 INTRO after update"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - SINCE:
-          max_to_max:
-              before: "2019-10"
-              update+after: "2020-09"
-          new_max:
-              update+after: "2018-03"
-          min_to_max:
-              before: ""
-              update+after: "2016-05"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - LANGUAGES:
-          max_to_max:
-              before: ["Czech (limited)", "Creator1 before update", "English"]
-              update+after: ["Czech (limited)", "English", "Creator1 after"]
-          new_max:
-              update+after: ["Czecha2_2 (limited)", "Englisha2_2"]
-          min_to_max:
-              before: []
-              update+after: ["Finnish"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - COUNTRY:
-          max_to_max:
-              before: "FR"
-              update+after: "BE"
-          new_max:
-              update+after: "GB"
-          min_to_max:
-              before: ""
-              update+after: "SE"
-          new_min:
-              update+after: "CZ"
-          just_id:
-              before: ""
-              update+after: "FI"
-
-    - STATE:
-          max_to_max:
-              before: "Creator 1 STATE before update"
-              update+after: "Creator 1 STATE after update"
-          new_max:
-              update+after: "Creator 2 STATE"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 STATE"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - CITY:
-          max_to_max:
-              before: "Creator 1 CITY before update"
-              update+after: "Creator 1 CITY after update"
-          new_max:
-              update+after: "Creator 2 CITY"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 CITY"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - DATE_ADDED:
-          max_to_max:
-              before+after: "2001-01-01 00:00:00"
-          new_max:
-              after: "/now/"
-          min_to_max:
-              before+after: "2003-01-01 00:00:00"
-          new_min:
-              after: "/now/"
-          just_id:
-              before+after: "2005-01-01 00:00:00"
-
-    - DATE_UPDATED:
-          max_to_max:
-              before: "2001-05-05 00:00:00"
-              after: "/now/"
-          new_max:
-              after: null
-          min_to_max:
-              before: null
-              after: "/now/"
-          new_min:
-              after: null
-          just_id:
-              before: null
-              after: "/now/"
-
-    - max_to_max:
-          before:
-              AGES: "MINORS"
-              NSFW_WEBSITE: false
-              NSFW_SOCIAL: true
-              DOES_NSFW: false
-              WORKS_WITH_MINORS: false
-          update+after:
-              AGES: "ADULTS"
-              NSFW_WEBSITE: true
-              NSFW_SOCIAL: false
-              DOES_NSFW: true
-              WORKS_WITH_MINORS: false
-    - new_max:
-          update:
-              AGES: "MINORS"
-              NSFW_WEBSITE: true
-              NSFW_SOCIAL: true
-              DOES_NSFW: true
-              WORKS_WITH_MINORS: true
-          after:
-              AGES: "MINORS"
-              NSFW_WEBSITE: true
-              NSFW_SOCIAL: true
-              DOES_NSFW: false
-              WORKS_WITH_MINORS: false
-    - min_to_max:
-          before:
-              AGES: null
-              NSFW_WEBSITE: null
-              NSFW_SOCIAL: null
-              DOES_NSFW: null
-              WORKS_WITH_MINORS: null
-          update+after:
-              AGES: "ADULTS"
-              NSFW_WEBSITE: true
-              NSFW_SOCIAL: true
-              DOES_NSFW: false
-              WORKS_WITH_MINORS: false
-    - new_min:
-          update+after:
-              AGES: "MINORS"
-              NSFW_WEBSITE: false
-              NSFW_SOCIAL: true
-              DOES_NSFW: false
-              WORKS_WITH_MINORS: false
-    - just_id:
-          before:
-              AGES: null
-              NSFW_WEBSITE: null
-              NSFW_SOCIAL: null
-              DOES_NSFW: null
-              WORKS_WITH_MINORS: null
-          update+after:
-              AGES: "MINORS"
-              NSFW_WEBSITE: false
-              NSFW_SOCIAL: true
-              DOES_NSFW: false
-              WORKS_WITH_MINORS: false
-
-    - PAYMENT_PLANS:
-          max_to_max:
-              before: ["PP C1 A", "PP C1 B before", "PP C1 C"]
-              update+after: ["PP C1 B after", "PP C1 C", "PP C1 D"]
-          new_max:
-              update+after: ["PP C2 A", "PP C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["PP C3 A", "PP C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - PAYMENT_METHODS:
-          max_to_max:
-              before: ["PM C1 A", "PM C1 B before", "PM C1 C"]
-              update+after: ["PM C1 B after", "PM C1 C", "PM C1 D"]
-          new_max:
-              update+after: ["PM C2 A", "PM C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["PM C3 A", "PM C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - CURRENCIES_ACCEPTED:
-          max_to_max:
-              before: ["CA C1 A", "CA C1 B before", "CA C1 C"]
-              update+after: ["CA C1 B AFTER", "CA C1 C", "CA C1 D"]
-          new_max:
-              update+after: ["CA C2 A", "CA C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["CA C3 A", "CA C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - PRODUCTION_MODELS_COMMENT:
-          max_to_max:
-              before: "Creator 1 PRODUCTION_MODELS_COMMENT before update"
-              update+after: "Creator 1 PRODUCTION_MODELS_COMMENT after update"
-          new_max:
-              update+after: "Creator 2 PRODUCTION_MODELS_COMMENT"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 PRODUCTION_MODELS_COMMENT"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - PRODUCTION_MODELS:
-          max_to_max:
-              before:
-                  - "Premades"
-              update+after:
-                  - "Artistic liberty commissions"
-                  - "Standard commissions"
-          new_max:
-              update+after:
-                  - "Artistic liberty commissions"
-                  - "Premades"
-                  - "Standard commissions"
-          min_to_max:
-              before: []
-              update+after:
-                  - "Premades"
-                  - "Standard commissions"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - STYLES_COMMENT:
-          max_to_max:
-              before: "Creator 1 STYLES_COMMENT before update"
-              update+after: "Creator 1 STYLES_COMMENT after update"
-          new_max:
-              update+after: "Creator 2 STYLES_COMMENT"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 STYLES_COMMENT"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - STYLES:
-          max_to_max:
-              before:
-                  - "Kemono"
-                  - "Realistic"
-                  - "Semi Toony"
-              update+after:
-                  - "Anime"
-                  - "Kigurumi"
-                  - "Semi Realistic"
-                  - "Toony"
-          new_max:
-              update+after:
-                  - "Anime"
-                  - "Kemono"
-                  - "Kigurumi"
-                  - "Realistic"
-                  - "Semi Realistic"
-                  - "Semi Toony"
-                  - "Toony"
-          min_to_max:
-              before: []
-              update+after:
-                  - "Anime"
-                  - "Kemono"
-                  - "Kigurumi"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - OTHER_STYLES:
-          max_to_max:
-              before: ["OTH_STL C1 A", "OTH_STL C1 B before", "OTH_STL C1 C"]
-              update+after: ["OTH_STL C1 B after", "OTH_STL C1 C", "OTH_STL C1 D"]
-          new_max:
-              update+after: ["OTH_STL C2 A", "OTH_STL C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["OTH_STL C3 A", "OTH_STL C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - ORDER_TYPES_COMMENT:
-          max_to_max:
-              before: "Creator 1 ORDER_TYPES_COMMENT before update"
-              update+after: "Creator 1 ORDER_TYPES_COMMENT after update"
-          new_max:
-              update+after: "Creator 2 ORDER_TYPES_COMMENT"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 ORDER_TYPES_COMMENT"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - ORDER_TYPES:
-          max_to_max:
-              before:
-                  - "Feetpaws (as parts/separate)"
-                  - "Full plantigrade"
-                  - "Head (as parts/separate)"
-                  - "Partial (head + handpaws + tail + feetpaws)"
-                  - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
-              update+after:
-                  - "Bodysuits (as parts/separate)"
-                  - "Full digitigrade"
-                  - "Handpaws (as parts/separate)"
-                  - "Mini partial (head + handpaws + tail)"
-                  - "Tails (as parts/separate)"
-          new_max:
-              update+after:
-                  - "Bodysuits (as parts/separate)"
-                  - "Feetpaws (as parts/separate)"
-                  - "Full digitigrade"
-                  - "Full plantigrade"
-                  - "Handpaws (as parts/separate)"
-                  - "Head (as parts/separate)"
-                  - "Mini partial (head + handpaws + tail)"
-                  - "Partial (head + handpaws + tail + feetpaws)"
-                  - "Tails (as parts/separate)"
-                  - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
-          min_to_max:
-              before: []
-              update+after:
-                  - "Full digitigrade"
-                  - "Full plantigrade"
-                  - "Partial (head + handpaws + tail + feetpaws)"
-                  - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - OTHER_ORDER_TYPES:
-          max_to_max:
-              before: ["OTH_OTP C1 A", "OTH_OTP C1 B before", "OTH_OTP C1 C"]
-              update+after: ["OTH_OTP C1 B after", "OTH_OTP C1 C", "OTH_OTP C1 D"]
-          new_max:
-              update+after: ["OTH_OTP C2 A", "OTH_OTP C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["OTH_OTP C3 A", "OTH_OTP C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - FEATURES_COMMENT:
-          max_to_max:
-              before: "Creator 1 FEATURES_COMMENT before update"
-              update+after: "Creator 1 FEATURES_COMMENT after update"
-          new_max:
-              update+after: "Creator 2 FEATURES_COMMENT"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 FEATURES_COMMENT"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - FEATURES:
-          max_to_max:
-              before:
-                  - "Adjustable/wiggle ears"
-                  - "Attached tail"
-                  - "Exchangeable hairs"
-                  - "Follow-me eyes"
-                  - "Indoor feet"
-                  - "LED/EL lights"
-                  - "Outdoor feet"
-                  - "Removable eyelids"
-                  - "Washable heads"
-              update+after:
-                  - "Adjustable eyebrows"
-                  - "Attached handpaws and feetpaws"
-                  - "Electronics/animatronics"
-                  - "Exchangeable tongues"
-                  - "In-head fans"
-                  - "LED eyes"
-                  - "Movable jaw"
-                  - "Removable blush"
-                  - "Removable horns/antlers"
-          new_max:
-              update+after:
-                  - "Adjustable eyebrows"
-                  - "Adjustable/wiggle ears"
-                  - "Attached handpaws and feetpaws"
-                  - "Attached tail"
-                  - "Electronics/animatronics"
-                  - "Exchangeable hairs"
-                  - "Exchangeable tongues"
-                  - "Follow-me eyes"
-                  - "In-head fans"
-                  - "Indoor feet"
-                  - "LED eyes"
-                  - "LED/EL lights"
-                  - "Movable jaw"
-                  - "Outdoor feet"
-                  - "Removable blush"
-                  - "Removable eyelids"
-                  - "Removable horns/antlers"
-                  - "Washable heads"
-          min_to_max:
-              before: []
-              update+after:
-                  - "Adjustable eyebrows"
-                  - "Adjustable/wiggle ears"
-                  - "Attached handpaws and feetpaws"
-                  - "Attached tail"
-                  - "Exchangeable hairs"
-                  - "Exchangeable tongues"
-                  - "Follow-me eyes"
-                  - "In-head fans"
-                  - "Indoor feet"
-                  - "Outdoor feet"
-                  - "Removable blush"
-                  - "Removable eyelids"
-                  - "Removable horns/antlers"
-                  - "Washable heads"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - OTHER_FEATURES:
-          max_to_max:
-              before: ["OTH_FTR C1 A", "OTH_FTR C1 B before", "OTH_FTR C1 C"]
-              update+after: ["OTH_FTR C1 B after", "OTH_FTR C1 C", "OTH_FTR C1 D"]
-          new_max:
-              update+after: ["OTH_FTR C2 A", "OTH_FTR C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["OTH_FTR C3 A", "OTH_FTR C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - SPECIES_COMMENT:
-          max_to_max:
-              before: "Creator 1 SPECIES_COMMENT before update"
-              update+after: "Creator 1 SPECIES_COMMENT after update"
-          new_max:
-              update+after: "Creator 2 SPECIES_COMMENT"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 SPECIES_COMMENT"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - SPECIES_DOES:
-          max_to_max:
-              before: ["SP_DOES C1 A", "SP_DOES C1 B before", "SP_DOES C1 C"]
-              update+after: ["SP_DOES C1 B after", "SP_DOES C1 C", "SP_DOES C1 D"]
-          new_max:
-              update+after: ["SP_DOES C2 A", "SP_DOES C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["SP_DOES C3 A", "SP_DOES C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - SPECIES_DOESNT:
-          max_to_max:
-              before: ["SP_DSNT C1 A", "SP_DSNT C1 B before", "SP_DSNT C1 C"]
-              update+after: ["SP_DSNT C1 B after", "SP_DSNT C1 C", "SP_DSNT C1 D"]
-          new_max:
-              update+after: ["SP_DSNT C2 A", "SP_DSNT C2 B"]
-          min_to_max:
-              before: []
-              update+after: ["SP_DSNT C3 A", "SP_DSNT C3 B"]
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - NOTES:
-          max_to_max:
-              before: "Creator 1 NOTES before update"
-              update+after: "Creator 1 NOTES after update"
-          new_max:
-              update+after: "Creator 2 NOTES"
-          min_to_max:
-              before: ""
-              update+after: "Creator 3 NOTES"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - INACTIVE_REASON:
-          max_to_max:
-              before+after: "Inactive reason creator 1 - not updated"
-          new_max:
-              after: ""
-          min_to_max:
-              before+after: ""
-          new_min:
-              after: ""
-          just_id:
-              before+after: ""
-
-    - URL_FURSUITREVIEW:
-          max_to_max:
-              before: "https://example.com/c1/URL_FURSUITREVIEW/before"
-              update+after: "https://example.com/c1/URL_FURSUITREVIEW/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FURSUITREVIEW"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FURSUITREVIEW"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_WEBSITE:
-          max_to_max:
-              before: "https://example.com/c1/URL_WEBSITE/before"
-              update+after: "https://example.com/c1/URL_WEBSITE/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_WEBSITE"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_WEBSITE"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_LINKLIST:
-          max_to_max:
-              before: "https://example.com/c1/URL_LINKLIST/before"
-              update+after: "https://example.com/c1/URL_LINKLIST/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_LINKLIST"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_LINKLIST"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_FAQ:
-          max_to_max:
-              before: "https://example.com/c1/URL_FAQ/before"
-              update+after: "https://example.com/c1/URL_FAQ/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FAQ"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FAQ"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_QUEUE:
-          max_to_max:
-              before: "https://example.com/c1/URL_QUEUE/before"
-              update+after: "https://example.com/c1/URL_QUEUE/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_QUEUE"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_QUEUE"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_FUR_AFFINITY:
-          max_to_max:
-              before: "https://example.com/c1/URL_FUR_AFFINITY/before"
-              update+after: "https://example.com/c1/URL_FUR_AFFINITY/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FUR_AFFINITY"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FUR_AFFINITY"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_DEVIANTART:
-          max_to_max:
-              before: "https://example.com/c1/URL_DEVIANTART/before"
-              update+after: "https://example.com/c1/URL_DEVIANTART/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_DEVIANTART"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_DEVIANTART"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_MASTODON:
-          max_to_max:
-              before: "https://example.com/c1/URL_MASTODON/before"
-              update+after: "https://example.com/c1/URL_MASTODON/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_MASTODON"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_MASTODON"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_BLUESKY:
-          max_to_max:
-              before: "https://example.com/c1/URL_BLUESKY/before"
-              update+after: "https://example.com/c1/URL_BLUESKY/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_BLUESKY"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_BLUESKY"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_FACEBOOK:
-          max_to_max:
-              before: "https://example.com/c1/URL_FACEBOOK/before"
-              update+after: "https://example.com/c1/URL_FACEBOOK/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FACEBOOK"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FACEBOOK"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_TUMBLR:
-          max_to_max:
-              before: "https://example.com/c1/URL_TUMBLR/before"
-              update+after: "https://example.com/c1/URL_TUMBLR/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_TUMBLR"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_TUMBLR"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_TWITTER:
-          max_to_max:
-              before: "https://example.com/c1/URL_TWITTER/before"
-              update+after: "https://example.com/c1/URL_TWITTER/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_TWITTER"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_TWITTER"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_INSTAGRAM:
-          max_to_max:
-              before: "https://example.com/c1/URL_INSTAGRAM/before"
-              update+after: "https://example.com/c1/URL_INSTAGRAM/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_INSTAGRAM"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_INSTAGRAM"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_FURRY_AMINO:
-          max_to_max:
-              before: "https://example.com/c1/URL_FURRY_AMINO/before"
-              update+after: "https://example.com/c1/URL_FURRY_AMINO/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FURRY_AMINO"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FURRY_AMINO"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_YOUTUBE:
-          max_to_max:
-              before: "https://example.com/c1/URL_YOUTUBE/before"
-              update+after: "https://example.com/c1/URL_YOUTUBE/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_YOUTUBE"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_YOUTUBE"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_TIKTOK:
-          max_to_max:
-              before: "https://example.com/c1/URL_TIKTOK/before"
-              update+after: "https://example.com/c1/URL_TIKTOK/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_TIKTOK"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_TIKTOK"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_TELEGRAM_CHANNEL:
-          max_to_max:
-              before: "https://example.com/c1/URL_TELEGRAM_CHANNEL/before"
-              update+after: "https://example.com/c1/URL_TELEGRAM_CHANNEL/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_TELEGRAM_CHANNEL"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_TELEGRAM_CHANNEL"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_ETSY:
-          max_to_max:
-              before: "https://example.com/c1/URL_ETSY/before"
-              update+after: "https://example.com/c1/URL_ETSY/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_ETSY"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_ETSY"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_THE_DEALERS_DEN:
-          max_to_max:
-              before: "https://example.com/c1/URL_THE_DEALERS_DEN/before"
-              update+after: "https://example.com/c1/URL_THE_DEALERS_DEN/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_THE_DEALERS_DEN"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_THE_DEALERS_DEN"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_OTHER_SHOP:
-          max_to_max:
-              before: "https://example.com/c1/URL_OTHER_SHOP/before"
-              update+after: "https://example.com/c1/URL_OTHER_SHOP/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_OTHER_SHOP"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_OTHER_SHOP"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_DONATIONS:
-          max_to_max:
-              before: "https://example.com/c1/URL_DONATIONS/before"
-              update+after: "https://example.com/c1/URL_DONATIONS/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_DONATIONS"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_DONATIONS"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_SCRITCH:
-          max_to_max:
-              before: "https://example.com/c1/URL_SCRITCH/before"
-              update+after: "https://example.com/c1/URL_SCRITCH/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_SCRITCH"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_SCRITCH"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_FURTRACK:
-          max_to_max:
-              before: "https://example.com/c1/URL_FURTRACK/before"
-              update+after: "https://example.com/c1/URL_FURTRACK/after"
-          new_max:
-              update+after: "https://example.com/c2/URL_FURTRACK"
-          min_to_max:
-              before: ""
-              update+after: "https://example.com/c3/URL_FURTRACK"
-          new_min:
-              update+after: ""
-          just_id:
-              before+update+after: ""
-
-    - URL_PRICES:
-          max_to_max:
-              before:
-                  - "https://example.com/c1/URL_PRICES/before/1"
-                  - "https://example.com/c1/URL_PRICES/2"
-                  - "https://example.com/c1/URL_PRICES/before/3"
-              update+after:
-                  - "https://example.com/c1/URL_PRICES/after/1"
-                  - "https://example.com/c1/URL_PRICES/2"
-                  - "https://example.com/c1/URL_PRICES/after/3"
-          new_max:
-              update+after:
-                  - "https://example.com/c2/URL_PRICES/1"
-                  - "https://example.com/c2/URL_PRICES/2"
-          min_to_max:
-              before: []
-              update+after:
-                  - "https://example.com/c3/URL_PRICES/1"
-                  - "https://example.com/c3/URL_PRICES/2"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - URL_PHOTOS:
-          max_to_max:
-              before:
-                  - "https://example.com/c1/URL_PHOTOS/before/1"
-                  - "https://example.com/c1/URL_PHOTOS/2"
-              update+after:
-                  - "https://example.com/c1/URL_PHOTOS/after/1"
-                  - "https://example.com/c1/URL_PHOTOS/2"
-          new_max:
-              update+after:
-                  - "https://example.com/c2/URL_PHOTOS/1"
-                  - "https://example.com/c2/URL_PHOTOS/2"
-          min_to_max:
-              before: []
-              update+after:
-                  - "https://example.com/c3/URL_PHOTOS/1"
-                  - "https://example.com/c3/URL_PHOTOS/2"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - URL_MINIATURES:
-          max_to_max:
-              before+after:
-                  - "https://example.com/c1/URL_MINIATURES/1"
-                  - "https://example.com/c1/URL_MINIATURES/2"
-          new_max:
-              after: []
-          min_to_max:
-              before+after: []
-          new_min:
-              after: []
-          just_id:
-              before+after: []
-
-    - URL_OTHER:
-          max_to_max:
-              before:
-                  - "https://example.com/c1/URL_OTHER/before/1"
-                  - "https://example.com/c1/URL_OTHER/2"
-              update+after:
-                  - "https://example.com/c1/URL_OTHER/after/1"
-                  - "https://example.com/c1/URL_OTHER/2"
-          new_max:
-              update+after:
-                  - "https://example.com/c2/URL_OTHER/1"
-                  - "https://example.com/c2/URL_OTHER/2"
-          min_to_max:
-              before: []
-              update+after:
-                  - "https://example.com/c3/URL_OTHER/1"
-                  - "https://example.com/c3/URL_OTHER/2"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
-
-    - URL_COMMISSIONS:
-          max_to_max:
-              before:
-                  - "https://example.com/c1/URL_COMMISSIONS/before/1"
-                  - "https://example.com/c1/URL_COMMISSIONS/2"
-              update+after:
-                  - "https://example.com/c1/URL_COMMISSIONS/after/1"
-                  - "https://example.com/c1/URL_COMMISSIONS/2"
-          new_max:
-              update+after:
-                  - "https://example.com/c2/URL_COMMISSIONS/1"
-                  - "https://example.com/c2/URL_COMMISSIONS/2"
-          min_to_max:
-              before: []
-              update+after:
-                  - "https://example.com/c3/URL_COMMISSIONS/1"
-                  - "https://example.com/c3/URL_COMMISSIONS/2"
-          new_min:
-              update+after: []
-          just_id:
-              before+update+after: []
+  - max_to_max:
+      MAKER_ID:
+        before: "TESTA02"
+        update+after: "TESTA03"
+      FORMER_MAKER_IDS:
+        before: ["TESTA01"]
+        after: ["TESTA02", "TESTA01"]
+
+  - new_max:
+      MAKER_ID:
+        update+after: "TESTB01"
+      FORMER_MAKER_IDS:
+        after: []
+
+  - min_to_max:
+      MAKER_ID:
+        before: ""
+        update+after: "TESTC01"
+      FORMER_MAKER_IDS:
+        before: ["M000003"]
+        after: ["M000003"]
+
+  - new_min:
+      MAKER_ID:
+        update: "TESTD01"
+        after: "TESTD01"
+      FORMER_MAKER_IDS:
+        after: []
+
+  - just_id:
+      MAKER_ID:
+        before: "TESTE01"
+        update+after: "TESTE02"
+      FORMER_MAKER_IDS:
+        before: []
+        after: ["TESTE01"]
+
+  - NAME:
+      max_to_max:
+        before: "Creator 1 NAME before update"
+        update+after: "Creator 1 NAME after update"
+      new_max:
+        update+after: "Creator 2 NAME"
+      min_to_max:
+        before: "Creator 3 NAME before update"
+        update+after: "Creator 3 NAME after update"
+      new_min:
+        update+after: "Creator 4 NAME"
+      just_id:
+        before: "Creator 5 NAME before update"
+        update+after: "Creator 5 NAME after update"
+
+  - FORMERLY:
+      max_to_max:
+        before: ["Creator 1 FORMERLY before update"]
+        update+after:
+          - "Creator 1 NAME before update"
+          - "Creator 1 FORMERLY before update"
+      new_max:
+        update+after: ["Creator 2 FORMERLY"]
+      min_to_max:
+        before: []
+        update+after: ["Creator 3 FORMERLY"]
+      new_min:
+        update+after: []
+      just_id:
+        before: []
+        update+after: ["Creator 5 NAME before update"]
+
+  - PASSWORD:
+      max_to_max:
+        before: "Creator 1 PASSWORD before update"
+        update+after: "Creator 1 PASSWORD after update"
+      new_max:
+        update+after: "Creator 2 PASSWORD"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 PASSWORD after update"
+      new_min:
+        update+after: "Creator 4 PASSWORD"
+      just_id:
+        before: ""
+        update+after: "Creator 5 PASSWORD after update"
+
+  - EMAIL_ADDRESS:
+      max_to_max:
+        before: "creator_1@before.update"
+        update+after: "creator_1@after.update"
+      new_max:
+        update+after: "creator_2_email@address"
+      min_to_max:
+        before: ""
+        update+after: "creator_3@after.update"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - CONTACT_ALLOWED:
+      max_to_max:
+        before: "CORRECTIONS"
+        update+after: "ANNOUNCEMENTS"
+      new_max:
+        update+after: "FEEDBACK"
+      min_to_max:
+        before: null
+        update+after: "CORRECTIONS"
+      new_min:
+        update+after: "NO"
+      just_id:
+        before: null
+        update+after: "NO"
+
+  - INTRO:
+      max_to_max:
+        before: "Creator 1 INTRO before update"
+        update+after: "Creator 1 INTRO after update"
+      new_max:
+        update+after: "Creator 2 INTRO"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 INTRO after update"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - SINCE:
+      max_to_max:
+        before: "2019-10"
+        update+after: "2020-09"
+      new_max:
+        update+after: "2018-03"
+      min_to_max:
+        before: ""
+        update+after: "2016-05"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - LANGUAGES:
+      max_to_max:
+        before: ["Czech (limited)", "Creator1 before update", "English"]
+        update+after: ["Czech (limited)", "English", "Creator1 after"]
+      new_max:
+        update+after: ["Czecha2_2 (limited)", "Englisha2_2"]
+      min_to_max:
+        before: []
+        update+after: ["Finnish"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - COUNTRY:
+      max_to_max:
+        before: "FR"
+        update+after: "BE"
+      new_max:
+        update+after: "GB"
+      min_to_max:
+        before: ""
+        update+after: "SE"
+      new_min:
+        update+after: "CZ"
+      just_id:
+        before: ""
+        update+after: "FI"
+
+  - STATE:
+      max_to_max:
+        before: "Creator 1 STATE before update"
+        update+after: "Creator 1 STATE after update"
+      new_max:
+        update+after: "Creator 2 STATE"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 STATE"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - CITY:
+      max_to_max:
+        before: "Creator 1 CITY before update"
+        update+after: "Creator 1 CITY after update"
+      new_max:
+        update+after: "Creator 2 CITY"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 CITY"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - DATE_ADDED:
+      max_to_max:
+        before+after: "2001-01-01 00:00:00"
+      new_max:
+        after: "/now/"
+      min_to_max:
+        before+after: "2003-01-01 00:00:00"
+      new_min:
+        after: "/now/"
+      just_id:
+        before+after: "2005-01-01 00:00:00"
+
+  - DATE_UPDATED:
+      max_to_max:
+        before: "2001-05-05 00:00:00"
+        after: "/now/"
+      new_max:
+        after: null
+      min_to_max:
+        before: null
+        after: "/now/"
+      new_min:
+        after: null
+      just_id:
+        before: null
+        after: "/now/"
+
+  - max_to_max:
+      before:
+        AGES: "MINORS"
+        NSFW_WEBSITE: false
+        NSFW_SOCIAL: true
+        DOES_NSFW: false
+        WORKS_WITH_MINORS: false
+      update+after:
+        AGES: "ADULTS"
+        NSFW_WEBSITE: true
+        NSFW_SOCIAL: false
+        DOES_NSFW: true
+        WORKS_WITH_MINORS: false
+  - new_max:
+      update:
+        AGES: "MINORS"
+        NSFW_WEBSITE: true
+        NSFW_SOCIAL: true
+        DOES_NSFW: true
+        WORKS_WITH_MINORS: true
+      after:
+        AGES: "MINORS"
+        NSFW_WEBSITE: true
+        NSFW_SOCIAL: true
+        DOES_NSFW: false
+        WORKS_WITH_MINORS: false
+  - min_to_max:
+      before:
+        AGES: null
+        NSFW_WEBSITE: null
+        NSFW_SOCIAL: null
+        DOES_NSFW: null
+        WORKS_WITH_MINORS: null
+      update+after:
+        AGES: "ADULTS"
+        NSFW_WEBSITE: true
+        NSFW_SOCIAL: true
+        DOES_NSFW: false
+        WORKS_WITH_MINORS: false
+  - new_min:
+      update+after:
+        AGES: "MINORS"
+        NSFW_WEBSITE: false
+        NSFW_SOCIAL: true
+        DOES_NSFW: false
+        WORKS_WITH_MINORS: false
+  - just_id:
+      before:
+        AGES: null
+        NSFW_WEBSITE: null
+        NSFW_SOCIAL: null
+        DOES_NSFW: null
+        WORKS_WITH_MINORS: null
+      update+after:
+        AGES: "MINORS"
+        NSFW_WEBSITE: false
+        NSFW_SOCIAL: true
+        DOES_NSFW: false
+        WORKS_WITH_MINORS: false
+
+  - PAYMENT_PLANS:
+      max_to_max:
+        before: ["PP C1 A", "PP C1 B before", "PP C1 C"]
+        update+after: ["PP C1 B after", "PP C1 C", "PP C1 D"]
+      new_max:
+        update+after: ["PP C2 A", "PP C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["PP C3 A", "PP C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - PAYMENT_METHODS:
+      max_to_max:
+        before: ["PM C1 A", "PM C1 B before", "PM C1 C"]
+        update+after: ["PM C1 B after", "PM C1 C", "PM C1 D"]
+      new_max:
+        update+after: ["PM C2 A", "PM C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["PM C3 A", "PM C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - CURRENCIES_ACCEPTED:
+      max_to_max:
+        before: ["CA C1 A", "CA C1 B before", "CA C1 C"]
+        update+after: ["CA C1 B AFTER", "CA C1 C", "CA C1 D"]
+      new_max:
+        update+after: ["CA C2 A", "CA C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["CA C3 A", "CA C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - PRODUCTION_MODELS_COMMENT:
+      max_to_max:
+        before: "Creator 1 PRODUCTION_MODELS_COMMENT before update"
+        update+after: "Creator 1 PRODUCTION_MODELS_COMMENT after update"
+      new_max:
+        update+after: "Creator 2 PRODUCTION_MODELS_COMMENT"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 PRODUCTION_MODELS_COMMENT"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - PRODUCTION_MODELS:
+      max_to_max:
+        before:
+          - "Premades"
+        update+after:
+          - "Artistic liberty commissions"
+          - "Standard commissions"
+      new_max:
+        update+after:
+          - "Artistic liberty commissions"
+          - "Premades"
+          - "Standard commissions"
+      min_to_max:
+        before: []
+        update+after:
+          - "Premades"
+          - "Standard commissions"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - STYLES_COMMENT:
+      max_to_max:
+        before: "Creator 1 STYLES_COMMENT before update"
+        update+after: "Creator 1 STYLES_COMMENT after update"
+      new_max:
+        update+after: "Creator 2 STYLES_COMMENT"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 STYLES_COMMENT"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - STYLES:
+      max_to_max:
+        before:
+          - "Kemono"
+          - "Realistic"
+          - "Semi Toony"
+        update+after:
+          - "Anime"
+          - "Kigurumi"
+          - "Semi Realistic"
+          - "Toony"
+      new_max:
+        update+after:
+          - "Anime"
+          - "Kemono"
+          - "Kigurumi"
+          - "Realistic"
+          - "Semi Realistic"
+          - "Semi Toony"
+          - "Toony"
+      min_to_max:
+        before: []
+        update+after:
+          - "Anime"
+          - "Kemono"
+          - "Kigurumi"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - OTHER_STYLES:
+      max_to_max:
+        before: ["OTH_STL C1 A", "OTH_STL C1 B before", "OTH_STL C1 C"]
+        update+after: ["OTH_STL C1 B after", "OTH_STL C1 C", "OTH_STL C1 D"]
+      new_max:
+        update+after: ["OTH_STL C2 A", "OTH_STL C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["OTH_STL C3 A", "OTH_STL C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - ORDER_TYPES_COMMENT:
+      max_to_max:
+        before: "Creator 1 ORDER_TYPES_COMMENT before update"
+        update+after: "Creator 1 ORDER_TYPES_COMMENT after update"
+      new_max:
+        update+after: "Creator 2 ORDER_TYPES_COMMENT"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 ORDER_TYPES_COMMENT"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - ORDER_TYPES:
+      max_to_max:
+        before:
+          - "Feetpaws (as parts/separate)"
+          - "Full plantigrade"
+          - "Head (as parts/separate)"
+          - "Partial (head + handpaws + tail + feetpaws)"
+          - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
+        update+after:
+          - "Bodysuits (as parts/separate)"
+          - "Full digitigrade"
+          - "Handpaws (as parts/separate)"
+          - "Mini partial (head + handpaws + tail)"
+          - "Tails (as parts/separate)"
+      new_max:
+        update+after:
+          - "Bodysuits (as parts/separate)"
+          - "Feetpaws (as parts/separate)"
+          - "Full digitigrade"
+          - "Full plantigrade"
+          - "Handpaws (as parts/separate)"
+          - "Head (as parts/separate)"
+          - "Mini partial (head + handpaws + tail)"
+          - "Partial (head + handpaws + tail + feetpaws)"
+          - "Tails (as parts/separate)"
+          - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
+      min_to_max:
+        before: []
+        update+after:
+          - "Full digitigrade"
+          - "Full plantigrade"
+          - "Partial (head + handpaws + tail + feetpaws)"
+          - "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - OTHER_ORDER_TYPES:
+      max_to_max:
+        before: ["OTH_OTP C1 A", "OTH_OTP C1 B before", "OTH_OTP C1 C"]
+        update+after: ["OTH_OTP C1 B after", "OTH_OTP C1 C", "OTH_OTP C1 D"]
+      new_max:
+        update+after: ["OTH_OTP C2 A", "OTH_OTP C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["OTH_OTP C3 A", "OTH_OTP C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - FEATURES_COMMENT:
+      max_to_max:
+        before: "Creator 1 FEATURES_COMMENT before update"
+        update+after: "Creator 1 FEATURES_COMMENT after update"
+      new_max:
+        update+after: "Creator 2 FEATURES_COMMENT"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 FEATURES_COMMENT"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - FEATURES:
+      max_to_max:
+        before:
+          - "Adjustable/wiggle ears"
+          - "Attached tail"
+          - "Exchangeable hairs"
+          - "Follow-me eyes"
+          - "Indoor feet"
+          - "LED/EL lights"
+          - "Outdoor feet"
+          - "Removable eyelids"
+          - "Washable heads"
+        update+after:
+          - "Adjustable eyebrows"
+          - "Attached handpaws and feetpaws"
+          - "Electronics/animatronics"
+          - "Exchangeable tongues"
+          - "In-head fans"
+          - "LED eyes"
+          - "Movable jaw"
+          - "Removable blush"
+          - "Removable horns/antlers"
+      new_max:
+        update+after:
+          - "Adjustable eyebrows"
+          - "Adjustable/wiggle ears"
+          - "Attached handpaws and feetpaws"
+          - "Attached tail"
+          - "Electronics/animatronics"
+          - "Exchangeable hairs"
+          - "Exchangeable tongues"
+          - "Follow-me eyes"
+          - "In-head fans"
+          - "Indoor feet"
+          - "LED eyes"
+          - "LED/EL lights"
+          - "Movable jaw"
+          - "Outdoor feet"
+          - "Removable blush"
+          - "Removable eyelids"
+          - "Removable horns/antlers"
+          - "Washable heads"
+      min_to_max:
+        before: []
+        update+after:
+          - "Adjustable eyebrows"
+          - "Adjustable/wiggle ears"
+          - "Attached handpaws and feetpaws"
+          - "Attached tail"
+          - "Exchangeable hairs"
+          - "Exchangeable tongues"
+          - "Follow-me eyes"
+          - "In-head fans"
+          - "Indoor feet"
+          - "Outdoor feet"
+          - "Removable blush"
+          - "Removable eyelids"
+          - "Removable horns/antlers"
+          - "Washable heads"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - OTHER_FEATURES:
+      max_to_max:
+        before: ["OTH_FTR C1 A", "OTH_FTR C1 B before", "OTH_FTR C1 C"]
+        update+after: ["OTH_FTR C1 B after", "OTH_FTR C1 C", "OTH_FTR C1 D"]
+      new_max:
+        update+after: ["OTH_FTR C2 A", "OTH_FTR C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["OTH_FTR C3 A", "OTH_FTR C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - SPECIES_COMMENT:
+      max_to_max:
+        before: "Creator 1 SPECIES_COMMENT before update"
+        update+after: "Creator 1 SPECIES_COMMENT after update"
+      new_max:
+        update+after: "Creator 2 SPECIES_COMMENT"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 SPECIES_COMMENT"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - SPECIES_DOES:
+      max_to_max:
+        before: ["SP_DOES C1 A", "SP_DOES C1 B before", "SP_DOES C1 C"]
+        update+after: ["SP_DOES C1 B after", "SP_DOES C1 C", "SP_DOES C1 D"]
+      new_max:
+        update+after: ["SP_DOES C2 A", "SP_DOES C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["SP_DOES C3 A", "SP_DOES C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - SPECIES_DOESNT:
+      max_to_max:
+        before: ["SP_DSNT C1 A", "SP_DSNT C1 B before", "SP_DSNT C1 C"]
+        update+after: ["SP_DSNT C1 B after", "SP_DSNT C1 C", "SP_DSNT C1 D"]
+      new_max:
+        update+after: ["SP_DSNT C2 A", "SP_DSNT C2 B"]
+      min_to_max:
+        before: []
+        update+after: ["SP_DSNT C3 A", "SP_DSNT C3 B"]
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - NOTES:
+      max_to_max:
+        before: "Creator 1 NOTES before update"
+        update+after: "Creator 1 NOTES after update"
+      new_max:
+        update+after: "Creator 2 NOTES"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 NOTES"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - INACTIVE_REASON:
+      max_to_max:
+        before+after: "Inactive reason creator 1 - not updated"
+      new_max:
+        after: ""
+      min_to_max:
+        before+after: ""
+      new_min:
+        after: ""
+      just_id:
+        before+after: ""
+
+  - URL_FURSUITREVIEW:
+      max_to_max:
+        before: "https://example.com/c1/URL_FURSUITREVIEW/before"
+        update+after: "https://example.com/c1/URL_FURSUITREVIEW/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FURSUITREVIEW"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FURSUITREVIEW"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_WEBSITE:
+      max_to_max:
+        before: "https://example.com/c1/URL_WEBSITE/before"
+        update+after: "https://example.com/c1/URL_WEBSITE/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_WEBSITE"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_WEBSITE"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_LINKLIST:
+      max_to_max:
+        before: "https://example.com/c1/URL_LINKLIST/before"
+        update+after: "https://example.com/c1/URL_LINKLIST/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_LINKLIST"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_LINKLIST"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_FAQ:
+      max_to_max:
+        before: "https://example.com/c1/URL_FAQ/before"
+        update+after: "https://example.com/c1/URL_FAQ/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FAQ"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FAQ"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_QUEUE:
+      max_to_max:
+        before: "https://example.com/c1/URL_QUEUE/before"
+        update+after: "https://example.com/c1/URL_QUEUE/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_QUEUE"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_QUEUE"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_FUR_AFFINITY:
+      max_to_max:
+        before: "https://example.com/c1/URL_FUR_AFFINITY/before"
+        update+after: "https://example.com/c1/URL_FUR_AFFINITY/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FUR_AFFINITY"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FUR_AFFINITY"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_DEVIANTART:
+      max_to_max:
+        before: "https://example.com/c1/URL_DEVIANTART/before"
+        update+after: "https://example.com/c1/URL_DEVIANTART/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_DEVIANTART"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_DEVIANTART"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_MASTODON:
+      max_to_max:
+        before: "https://example.com/c1/URL_MASTODON/before"
+        update+after: "https://example.com/c1/URL_MASTODON/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_MASTODON"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_MASTODON"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_BLUESKY:
+      max_to_max:
+        before: "https://example.com/c1/URL_BLUESKY/before"
+        update+after: "https://example.com/c1/URL_BLUESKY/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_BLUESKY"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_BLUESKY"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_FACEBOOK:
+      max_to_max:
+        before: "https://example.com/c1/URL_FACEBOOK/before"
+        update+after: "https://example.com/c1/URL_FACEBOOK/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FACEBOOK"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FACEBOOK"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_TUMBLR:
+      max_to_max:
+        before: "https://example.com/c1/URL_TUMBLR/before"
+        update+after: "https://example.com/c1/URL_TUMBLR/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_TUMBLR"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_TUMBLR"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_TWITTER:
+      max_to_max:
+        before: "https://example.com/c1/URL_TWITTER/before"
+        update+after: "https://example.com/c1/URL_TWITTER/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_TWITTER"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_TWITTER"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_INSTAGRAM:
+      max_to_max:
+        before: "https://example.com/c1/URL_INSTAGRAM/before"
+        update+after: "https://example.com/c1/URL_INSTAGRAM/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_INSTAGRAM"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_INSTAGRAM"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_FURRY_AMINO:
+      max_to_max:
+        before: "https://example.com/c1/URL_FURRY_AMINO/before"
+        update+after: "https://example.com/c1/URL_FURRY_AMINO/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FURRY_AMINO"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FURRY_AMINO"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_YOUTUBE:
+      max_to_max:
+        before: "https://example.com/c1/URL_YOUTUBE/before"
+        update+after: "https://example.com/c1/URL_YOUTUBE/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_YOUTUBE"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_YOUTUBE"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_TIKTOK:
+      max_to_max:
+        before: "https://example.com/c1/URL_TIKTOK/before"
+        update+after: "https://example.com/c1/URL_TIKTOK/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_TIKTOK"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_TIKTOK"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_TELEGRAM_CHANNEL:
+      max_to_max:
+        before: "https://example.com/c1/URL_TELEGRAM_CHANNEL/before"
+        update+after: "https://example.com/c1/URL_TELEGRAM_CHANNEL/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_TELEGRAM_CHANNEL"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_TELEGRAM_CHANNEL"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_ETSY:
+      max_to_max:
+        before: "https://example.com/c1/URL_ETSY/before"
+        update+after: "https://example.com/c1/URL_ETSY/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_ETSY"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_ETSY"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_THE_DEALERS_DEN:
+      max_to_max:
+        before: "https://example.com/c1/URL_THE_DEALERS_DEN/before"
+        update+after: "https://example.com/c1/URL_THE_DEALERS_DEN/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_THE_DEALERS_DEN"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_THE_DEALERS_DEN"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_OTHER_SHOP:
+      max_to_max:
+        before: "https://example.com/c1/URL_OTHER_SHOP/before"
+        update+after: "https://example.com/c1/URL_OTHER_SHOP/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_OTHER_SHOP"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_OTHER_SHOP"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_DONATIONS:
+      max_to_max:
+        before: "https://example.com/c1/URL_DONATIONS/before"
+        update+after: "https://example.com/c1/URL_DONATIONS/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_DONATIONS"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_DONATIONS"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_SCRITCH:
+      max_to_max:
+        before: "https://example.com/c1/URL_SCRITCH/before"
+        update+after: "https://example.com/c1/URL_SCRITCH/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_SCRITCH"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_SCRITCH"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_FURTRACK:
+      max_to_max:
+        before: "https://example.com/c1/URL_FURTRACK/before"
+        update+after: "https://example.com/c1/URL_FURTRACK/after"
+      new_max:
+        update+after: "https://example.com/c2/URL_FURTRACK"
+      min_to_max:
+        before: ""
+        update+after: "https://example.com/c3/URL_FURTRACK"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - URL_PRICES:
+      max_to_max:
+        before:
+          - "https://example.com/c1/URL_PRICES/before/1"
+          - "https://example.com/c1/URL_PRICES/2"
+          - "https://example.com/c1/URL_PRICES/before/3"
+        update+after:
+          - "https://example.com/c1/URL_PRICES/after/1"
+          - "https://example.com/c1/URL_PRICES/2"
+          - "https://example.com/c1/URL_PRICES/after/3"
+      new_max:
+        update+after:
+          - "https://example.com/c2/URL_PRICES/1"
+          - "https://example.com/c2/URL_PRICES/2"
+      min_to_max:
+        before: []
+        update+after:
+          - "https://example.com/c3/URL_PRICES/1"
+          - "https://example.com/c3/URL_PRICES/2"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - URL_PHOTOS:
+      max_to_max:
+        before:
+          - "https://example.com/c1/URL_PHOTOS/before/1"
+          - "https://example.com/c1/URL_PHOTOS/2"
+        update+after:
+          - "https://example.com/c1/URL_PHOTOS/after/1"
+          - "https://example.com/c1/URL_PHOTOS/2"
+      new_max:
+        update+after:
+          - "https://example.com/c2/URL_PHOTOS/1"
+          - "https://example.com/c2/URL_PHOTOS/2"
+      min_to_max:
+        before: []
+        update+after:
+          - "https://example.com/c3/URL_PHOTOS/1"
+          - "https://example.com/c3/URL_PHOTOS/2"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - URL_MINIATURES:
+      max_to_max:
+        before+after:
+          - "https://example.com/c1/URL_MINIATURES/1"
+          - "https://example.com/c1/URL_MINIATURES/2"
+      new_max:
+        after: []
+      min_to_max:
+        before+after: []
+      new_min:
+        after: []
+      just_id:
+        before+after: []
+
+  - URL_OTHER:
+      max_to_max:
+        before:
+          - "https://example.com/c1/URL_OTHER/before/1"
+          - "https://example.com/c1/URL_OTHER/2"
+        update+after:
+          - "https://example.com/c1/URL_OTHER/after/1"
+          - "https://example.com/c1/URL_OTHER/2"
+      new_max:
+        update+after:
+          - "https://example.com/c2/URL_OTHER/1"
+          - "https://example.com/c2/URL_OTHER/2"
+      min_to_max:
+        before: []
+        update+after:
+          - "https://example.com/c3/URL_OTHER/1"
+          - "https://example.com/c3/URL_OTHER/2"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
+
+  - URL_COMMISSIONS:
+      max_to_max:
+        before:
+          - "https://example.com/c1/URL_COMMISSIONS/before/1"
+          - "https://example.com/c1/URL_COMMISSIONS/2"
+        update+after:
+          - "https://example.com/c1/URL_COMMISSIONS/after/1"
+          - "https://example.com/c1/URL_COMMISSIONS/2"
+      new_max:
+        update+after:
+          - "https://example.com/c2/URL_COMMISSIONS/1"
+          - "https://example.com/c2/URL_COMMISSIONS/2"
+      min_to_max:
+        before: []
+        update+after:
+          - "https://example.com/c3/URL_COMMISSIONS/1"
+          - "https://example.com/c3/URL_COMMISSIONS/2"
+      new_min:
+        update+after: []
+      just_id:
+        before+update+after: []
