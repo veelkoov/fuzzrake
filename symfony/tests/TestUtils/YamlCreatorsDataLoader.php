@@ -27,7 +27,7 @@ use UnexpectedValueException;
  */
 class YamlCreatorsDataLoader
 {
-    private const array FIELDS_NOT_IN_TEST_DATA = [ // Fields which are not loaded from YAML, they are not impacted by import
+    private const array FIELDS_NOT_IN_TEST_DATA = [ // Fields that are not impacted by import
         Field::CS_LAST_CHECK,
         Field::CS_TRACKER_ISSUE,
         Field::OPEN_FOR,
@@ -67,7 +67,7 @@ class YamlCreatorsDataLoader
             }
         }
 
-        $fieldsNotInIuForm = Fields::all()->minusAllKeys(Fields::inIuForm()->getKeys())->getValuesArray();
+        $fieldsNotInIuForm = Fields::all()->getValues()->minusAll(Fields::inIuForm()->getValues())->getValuesArray();
 
         $this->before = StringToCreator::mapFrom($this->data['before'],
             fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
