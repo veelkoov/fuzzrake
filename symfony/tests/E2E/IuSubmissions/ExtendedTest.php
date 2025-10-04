@@ -35,21 +35,6 @@ class ExtendedTest extends IuSubmissionsTestCase
         Field::PASSWORD,
     ];
 
-    private const array NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::CS_LAST_CHECK,
-        Field::CS_TRACKER_ISSUE,
-        Field::OPEN_FOR,
-        Field::CLOSED_FOR,
-        Field::SAFE_DOES_NSFW,
-        Field::SAFE_WORKS_WITH_MINORS,
-
-        Field::FORMER_MAKER_IDS,
-        Field::URL_MINIATURES,
-        Field::INACTIVE_REASON,
-        Field::DATE_ADDED,
-        Field::DATE_UPDATED,
-    ];
-
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
         Field::PRODUCTION_MODELS,
         Field::FEATURES,
@@ -163,7 +148,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             'Sanity check - checking field presence on page - failed.');
 
         foreach (Fields::all() as $field) {
-            if (arr_contains(self::NOT_IN_FORM, $field)) {
+            if (!$field->isInIuForm()) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
                 self::assertFalse($field->isInIuForm());
@@ -313,7 +298,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
         foreach (Fields::all() as $field) {
-            if (arr_contains(self::NOT_IN_FORM, $field)) {
+            if (!$field->isInIuForm()) {
                 continue;
             }
 

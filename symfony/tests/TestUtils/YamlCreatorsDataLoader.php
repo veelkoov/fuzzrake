@@ -8,15 +8,13 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Utils\Collections\ArrayReader;
 use App\Utils\Collections\StringToCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
-use App\Utils\Json;
-use Exception;
-use Symfony\Component\Filesystem\Filesystem;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use UnexpectedValueException;
 
@@ -36,21 +34,6 @@ class YamlCreatorsDataLoader
         Field::CLOSED_FOR,
         Field::SAFE_DOES_NSFW,
         Field::SAFE_WORKS_WITH_MINORS,
-    ];
-
-    private const array NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::CS_LAST_CHECK,
-        Field::CS_TRACKER_ISSUE,
-        Field::OPEN_FOR,
-        Field::CLOSED_FOR,
-        Field::SAFE_DOES_NSFW,
-        Field::SAFE_WORKS_WITH_MINORS,
-
-        Field::FORMER_MAKER_IDS,
-        Field::URL_MINIATURES,
-        Field::INACTIVE_REASON,
-        Field::DATE_ADDED,
-        Field::DATE_UPDATED,
     ];
 
     /** @var list<string> */
@@ -84,17 +67,21 @@ class YamlCreatorsDataLoader
             }
         }
 
+        $fieldsNotInIuForm = Fields::all()->minusAllKeys(Fields::inIuForm()->getKeys())->getValuesArray();
+
         $this->before = StringToCreator::mapFrom($this->data['before'],
             fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
         $this->update = StringToCreator::mapFrom($this->data['update'],
-            fn (array $data, string $key) => [$key, self::toObject($data, self::NOT_IN_FORM)]);
+            fn (array $data, string $key) => [$key, self::toObject($data, $fieldsNotInIuForm)]);
         $this->after = StringToCreator::mapFrom($this->data['after'],
             fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
     }
 
     /**
      * @template T
+     *
      * @param array<string, T> $data
+     *
      * @return array<string, T>
      */
     private function solvePluses(array $data): array
@@ -105,7 +92,7 @@ class YamlCreatorsDataLoader
             $keys = explode('+', $keyOrKeys);
 
             if ($keys !== array_unique($keys)) {
-                throw new \InvalidArgumentException("Key '$keyOrKeys' contains duplicate items.");
+                throw new InvalidArgumentException("Key '$keyOrKeys' contains duplicate items.");
             }
 
             foreach ($keys as $key) {
@@ -151,7 +138,7 @@ class YamlCreatorsDataLoader
         }
 
         if (!Fields::all()->names()->contains($fieldName)) {
-            throw new \InvalidArgumentException("Invalid specification: '$outKey'/'$midKey'/'$inKey'.");
+            throw new InvalidArgumentException("Invalid specification: '$outKey'/'$midKey'/'$inKey'.");
         }
 
         $this->setData($creatorAlias, $fieldName, $time, $value);
@@ -168,7 +155,7 @@ class YamlCreatorsDataLoader
         $target = &$this->data[$time][$creatorAlias];
 
         if (array_key_exists($time, $target)) {
-            throw new \InvalidArgumentException("Redefined value: '$time'/'$creatorAlias'/'$fieldName'.");
+            throw new InvalidArgumentException("Redefined value: '$time'/'$creatorAlias'/'$fieldName'.");
         }
 
         $target[$fieldName] = $value;
@@ -176,7 +163,7 @@ class YamlCreatorsDataLoader
 
     /**
      * @param array<string, FieldValue> $data
-     * @param list<Field> $skippedFields
+     * @param list<Field>               $skippedFields
      */
     private static function toObject(array $data, array $skippedFields): Creator
     {
@@ -201,7 +188,7 @@ class YamlCreatorsDataLoader
                 try {
                     $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
                 } catch (DateTimeException $exception) {
-                    throw new \RuntimeException(previous: $exception);
+                    throw new RuntimeException(previous: $exception);
                 }
             }
 
