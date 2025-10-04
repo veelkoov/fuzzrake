@@ -9,7 +9,9 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Collections\ArrayReader;
+use App\Utils\Collections\StringToCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\Json;
@@ -52,7 +54,7 @@ class YamlCreatorsDataLoader
     ];
 
     /** @var list<string> */
-    final public static array $aliases = ['max_to_max', 'new_max', 'min_to_max', 'new_min', 'just_id'];
+    final public array $aliases = ['max_to_max', 'new_max', 'min_to_max', 'new_min', 'just_id'];
 
     /** @var list<string> */
     final public static array $times = ['before', 'update', 'after'];
@@ -60,12 +62,9 @@ class YamlCreatorsDataLoader
     /** @var array<string, array<string, array<string, FieldValue>>> */
     private array $data = ['before' => [], 'update' => [], 'after' => []];
 
-    /** @var list<Creator> */
-    public readonly array $before;
-    /** @var list<Creator> */
-    public readonly array $update;
-    /** @var list<Creator> */
-    public readonly array $after;
+    public readonly StringToCreator $before;
+    public readonly StringToCreator $update;
+    public readonly StringToCreator $after;
 
     public function __construct(
         private readonly string $dataFilePath,
@@ -85,9 +84,12 @@ class YamlCreatorsDataLoader
             }
         }
 
-        $this->before = arr_mapl($this->data['before'], self::toPersisted(...));
-        $this->update = arr_mapl($this->data['update'], self::toUpdated(...));
-        $this->after = arr_mapl($this->data['after'], self::toPersisted(...));
+        $this->before = StringToCreator::mapFrom($this->data['before'],
+            fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
+        $this->update = StringToCreator::mapFrom($this->data['update'],
+            fn (array $data, string $key) => [$key, self::toObject($data, self::NOT_IN_FORM)]);
+        $this->after = StringToCreator::mapFrom($this->data['after'],
+            fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
     }
 
     /**
@@ -121,14 +123,14 @@ class YamlCreatorsDataLoader
     {
         if (arr_contains(self::$times, $outKey)) {
             $time = $outKey;
-            if (arr_contains(self::$aliases, $midKey)) {
+            if (arr_contains($this->aliases, $midKey)) {
                 $creatorAlias = $midKey;
                 $fieldName = $inKey;
             } else {
                 $creatorAlias = $inKey;
                 $fieldName = $midKey;
             }
-        } elseif (arr_contains(self::$aliases, $outKey)) {
+        } elseif (arr_contains($this->aliases, $outKey)) {
             $creatorAlias = $outKey;
             if (arr_contains(self::$times, $midKey)) {
                 $time = $midKey;
@@ -174,22 +176,6 @@ class YamlCreatorsDataLoader
 
     /**
      * @param array<string, FieldValue> $data
-     */
-    private function toPersisted(array $data): Creator
-    {
-        return self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA);
-    }
-
-    /**
-     * @param array<string, FieldValue> $data
-     */
-    private function toUpdated(array $data): Creator
-    {
-        return self::toObject($data, self::NOT_IN_FORM);
-    }
-
-    /**
-     * @param array<string, FieldValue> $data
      * @param list<Field> $skippedFields
      */
     private static function toObject(array $data, array $skippedFields): Creator
@@ -212,7 +198,11 @@ class YamlCreatorsDataLoader
             } elseif (Field::CONTACT_ALLOWED === $field) {
                 $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED], true)) {
-                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
+                try {
+                    $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
+                } catch (DateTimeException $exception) {
+                    throw new \RuntimeException(previous: $exception);
+                }
             }
 
             if ($field->isList()) {

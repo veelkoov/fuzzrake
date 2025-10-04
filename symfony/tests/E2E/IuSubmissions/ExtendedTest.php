@@ -7,7 +7,6 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\JsonCreatorDataLoader;
 use App\Tests\TestUtils\Paths;
 use App\Tests\TestUtils\YamlCreatorsDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -91,57 +90,37 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         self::sanityChecks();
 
-        $repo = self::getCreatorRepository();
-        $loader = new JsonCreatorDataLoader('extended_test');
-        $newLoader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
+        $loader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
 
-        $initialCreators = $newLoader->before;
-        $initialCount = count($initialCreators);
+        self::persistAndFlush(...$loader->before);
+        self::assertCount($loader->before->count(), self::getCreatorRepository()->findAll(),
+            "Expected {$loader->before->count()} creators in the DB before import.");
 
-        self::persistAndFlush(...$initialCreators);
-        self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount creators in the DB before import");
+        $solveCaptcha = true;
 
-        $oldData1 = $loader->getCreatorData('a1.1-persisted');
-        $newData1 = $loader->getCreatorData('a1.2-send', self::NOT_IN_FORM);
-        $creatorId1 = $oldData1->getLastCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId1, $oldData1, $newData1, true);
+        foreach ($loader->aliases as $label) {
+            if ($loader->before->hasKey($label)) {
+                $oldData = $loader->before->get($label);
+                $oldCreatorId = $oldData->getLastCreatorId();
+            } else {
+                $oldData = new Creator();
+                $oldCreatorId = '';
+            }
 
-        $oldData2 = new Creator();
-        $newData2 = $loader->getCreatorData('a2.2-send', self::NOT_IN_FORM);
-        $creatorId2 = '';
-        self::validateIuFormOldDataSubmitNew($creatorId2, $oldData2, $newData2);
+            $newData = $loader->update->get($label);
 
-        $oldData3 = $loader->getCreatorData('a3.1-persisted');
-        $newData3 = $loader->getCreatorData('a3.2-send', self::NOT_IN_FORM);
-        $creatorId3 = $oldData3->getLastCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId3, $oldData3, $newData3);
+            self::validateIuFormOldDataSubmitNew($oldCreatorId, $oldData, $newData, $solveCaptcha);
 
-        $oldData4 = new Creator();
-        $newData4 = $loader->getCreatorData('a4.2-send', self::NOT_IN_FORM);
-        $creatorId4 = '';
-        self::validateIuFormOldDataSubmitNew($creatorId4, $oldData4, $newData4);
+            $solveCaptcha = false;
+        }
 
-        $oldData5 = $loader->getCreatorData('a5.1-persisted');
-        $newData5 = $loader->getCreatorData('a5.2-send', self::NOT_IN_FORM);
-        $creatorId5 = $oldData5->getLastCreatorId();
-        self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
-
-//        $expectedCreators = [
-//            $loader->getCreatorData('a1.3-check'),
-//            $loader->getCreatorData('a2.3-check'),
-//            $loader->getCreatorData('a3.3-check'),
-//            $loader->getCreatorData('a4.3-check'),
-//            $loader->getCreatorData('a5.3-check'),
-//        ];
-        $expectedCreators = $newLoader->after;
-        $finalCount = count($expectedCreators);
-
-        $this->performImport(true, $finalCount);
+        $this->performImport(true, $loader->after->count());
 
         self::flush();
-        self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount creators in the DB after import");
+        self::assertCount($loader->after->count(), self::getCreatorRepository()->findAll(),
+            "Expected {$loader->after->count()} creators in the DB after import.");
 
-        foreach ($expectedCreators as $expectedCreator) {
+        foreach ($loader->after as $expectedCreator) {
             self::validateCreatorAfterImport($expectedCreator);
         }
     }
