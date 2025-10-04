@@ -5,7 +5,10 @@
 !/config/fuzzrake
 /package.json
 /src/
-/tests/
+/tests/*
+!/tests/test_data
+/tests/test_data/*
+!/tests/test_data/extended_test.yaml
 
 # Libraries, var, etc.
 /public/build/
