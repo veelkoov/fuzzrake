@@ -1,11 +1,9 @@
 {
     "MAKER_ID": "TESTE02",
 
-    "NAME": "Some completely different creator name",
-    "FORMERLY": [
-        "Some old creator name, but changed a little"
-    ],
-    "PASSWORD": "Creator 5 password",
+    "NAME": "Creator 5 NAME after update",
+    "FORMERLY": ["Creator 5 NAME before update"],
+    "PASSWORD": "Creator 5 PASSWORD after update",
 
     "EMAIL_ADDRESS": "",
     "CONTACT_ALLOWED": "NO",

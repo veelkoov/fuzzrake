@@ -1,10 +1,10 @@
 {
     "MAKER_ID": "TESTD01",
 
-    "NAME": "Creator name 4",
+    "NAME": "Creator 4 NAME",
     "FORMERLY": [
     ],
-    "PASSWORD": "Creator 4 password",
+    "PASSWORD": "Creator 4 PASSWORD",
 
     "EMAIL_ADDRESS": "",
     "CONTACT_ALLOWED": "NO",

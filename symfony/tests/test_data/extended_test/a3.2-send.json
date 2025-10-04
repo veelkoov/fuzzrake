@@ -1,23 +1,21 @@
 {
     "MAKER_ID": "TESTC01",
 
-    "NAME": "Creator name 3",
+    "NAME": "Creator 3 NAME after update",
     "FORMERLY": [
-        "Formerly 3"
+        "Creator 3 FORMERLY"
     ],
-    "PASSWORD": "Password creator 3",
+    "PASSWORD": "Creator 3 PASSWORD after update",
 
-    "EMAIL_ADDRESS": "art3e-mail-address3@ema.il",
+    "EMAIL_ADDRESS": "creator_3@after.update",
     "CONTACT_ALLOWED": "CORRECTIONS",
 
-    "INTRO": "Intro creator 3",
+    "INTRO": "Creator 3 INTRO after update",
     "SINCE": "2016-05",
-    "LANGUAGES": [
-        "Finnish"
-    ],
-    "COUNTRY": "FI",
-    "STATE": "State 3",
-    "CITY": "City 3",
+    "LANGUAGES": ["Finnish"],
+    "COUNTRY": "SE",
+    "STATE": "Creator 3 STATE",
+    "CITY": "Creator 3 CITY",
 
 
     "AGES": "ADULTS",
@@ -26,44 +24,34 @@
     "DOES_NSFW": false,
     "WORKS_WITH_MINORS": false,
 
-    "PAYMENT_PLANS": [
-        "Payment plans 3"
-    ],
-    "PAYMENT_METHODS": [
-        "Methods 3"
-    ],
-    "CURRENCIES_ACCEPTED": [
-        "CU3"
-    ],
+    "PAYMENT_PLANS": ["PP C3 A", "PP C3 B"],
+    "PAYMENT_METHODS": ["PM C3 A", "PM C3 B"],
+    "CURRENCIES_ACCEPTED": ["CA C3 A", "CA C3 B"],
 
-    "PRODUCTION_MODELS_COMMENT": "Comment about production models creator 3",
+    "PRODUCTION_MODELS_COMMENT": "Creator 3 PRODUCTION_MODELS_COMMENT",
     "PRODUCTION_MODELS": [
         "Premades",
         "Standard commissions"
     ],
 
-    "STYLES_COMMENT": "Comment about styles creator 3",
+    "STYLES_COMMENT": "Creator 3 STYLES_COMMENT",
     "STYLES": [
         "Anime",
         "Kemono",
         "Kigurumi"
     ],
-    "OTHER_STYLES": [
-        "Other styles creator 3"
-    ],
+    "OTHER_STYLES": ["OTH_STL C3 A", "OTH_STL C3 B"],
 
-    "ORDER_TYPES_COMMENT": "Comment for order types creator 3",
+    "ORDER_TYPES_COMMENT": "Creator 3 ORDER_TYPES_COMMENT",
     "ORDER_TYPES": [
         "Full digitigrade",
         "Full plantigrade",
         "Partial (head + handpaws + tail + feetpaws)",
         "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
     ],
-    "OTHER_ORDER_TYPES": [
-        "Other order types creator 3"
-    ],
+    "OTHER_ORDER_TYPES": ["OTH_OTP C3 A", "OTH_OTP C3 B"],
 
-    "FEATURES_COMMENT": "Comment about features creator 3",
+    "FEATURES_COMMENT": "Creator 3 FEATURES_COMMENT",
     "FEATURES": [
         "Adjustable eyebrows",
         "Adjustable/wiggle ears",
@@ -80,61 +68,52 @@
         "Removable horns/antlers",
         "Washable heads"
     ],
-    "OTHER_FEATURES": [
-        "Other features creator 3"
-    ],
+    "OTHER_FEATURES": ["OTH_FTR C3 A", "OTH_FTR C3 B"],
 
-    "SPECIES_COMMENT": "Species comment creator 3",
-    "SPECIES_DOES": [
-        "Does creator 3"
-    ],
-    "SPECIES_DOESNT": [
-        "Doesn't creator 3"
-    ],
+    "SPECIES_COMMENT": "Creator 3 SPECIES_COMMENT",
+    "SPECIES_DOES": ["SP_DOES C3 A", "SP_DOES C3 B"],
+    "SPECIES_DOESNT":  ["SP_DSNT C3 A", "SP_DSNT C3 B"],
 
-    "NOTES": "Notes creator 3",
+    "NOTES": "Creator 3 NOTES",
 
-    "URL_FURSUITREVIEW": "https://fursuitreview.com/creator3.html",
+    "URL_FURSUITREVIEW": "https://example.com/c3/URL_FURSUITREVIEW",
+    "URL_WEBSITE": "https://example.com/c3/URL_WEBSITE",
+    "URL_LINKLIST": "https://example.com/c3/URL_LINKLIST",
+    "URL_FAQ": "https://example.com/c3/URL_FAQ",
+    "URL_QUEUE": "https://example.com/c3/URL_QUEUE",
+    "URL_FUR_AFFINITY": "https://example.com/c3/URL_FUR_AFFINITY",
+    "URL_DEVIANTART": "https://example.com/c3/URL_DEVIANTART",
+    "URL_MASTODON": "https://example.com/c3/URL_MASTODON",
+    "URL_BLUESKY": "https://example.com/c3/URL_BLUESKY",
+    "URL_FACEBOOK": "https://example.com/c3/URL_FACEBOOK",
+    "URL_TUMBLR": "https://example.com/c3/URL_TUMBLR",
+    "URL_TWITTER": "https://example.com/c3/URL_TWITTER",
+    "URL_INSTAGRAM": "https://example.com/c3/URL_INSTAGRAM",
+    "URL_FURRY_AMINO": "https://example.com/c3/URL_FURRY_AMINO",
+    "URL_YOUTUBE": "https://example.com/c3/URL_YOUTUBE",
+    "URL_TIKTOK": "https://example.com/c3/URL_TIKTOK",
+    "URL_TELEGRAM_CHANNEL": "https://example.com/c3/URL_TELEGRAM_CHANNEL",
+    "URL_ETSY": "https://example.com/c3/URL_ETSY",
+    "URL_THE_DEALERS_DEN": "https://example.com/c3/URL_THE_DEALERS_DEN",
+    "URL_OTHER_SHOP": "https://example.com/c3/URL_OTHER_SHOP",
+    "URL_DONATIONS": "https://example.com/c3/URL_DONATIONS",
+    "URL_SCRITCH": "https://example.com/c3/URL_SCRITCH",
+    "URL_FURTRACK": "https://example.com/c3/URL_FURTRACK",
 
-    "URL_WEBSITE": "https://mywebsite.com/creator3.html",
-    "URL_LINKLIST": "https://linklist.com/value_creator3.html",
     "URL_PRICES": [
-        "https://mywebsite.com/creator3.html",
-        "https://mywebsite.com/prices-more_creator3.html"
+                   "https://example.com/c3/URL_PRICES/1",
+                   "https://example.com/c3/URL_PRICES/2"
     ],
-    "URL_FAQ": "https://mywebsite.com/faq_creator3.html",
-    "URL_QUEUE": "https://queue.com/value_creator3.html",
-
-    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/value_creator3/",
-    "URL_DEVIANTART": "https://www.deviantart.com/value_creator3.html",
-    "URL_MASTODON": "https://mastodon.social/value_creator3.html",
-    "URL_BLUESKY": "https://bluesky.com/value_creator3.html",
-    "URL_FACEBOOK": "https://www.facebook.com/value_creator3.html/",
-    "URL_TUMBLR": "https://tumblr.com/value_creator3.html",
-    "URL_TWITTER": "https://twitter.com/value_creator3.html",
-    "URL_INSTAGRAM": "https://www.instagram.com/value_creator3.html/",
-    "URL_FURRY_AMINO": "https://furryamino.com/value_creator3.html",
-    "URL_YOUTUBE": "https://www.youtube.com/value_creator3.html",
-    "URL_TIKTOK": "https://tiktok.com/value_creator3.html",
-    "URL_TELEGRAM_CHANNEL": "https://telegram.com/value_creator3.html",
-
-    "URL_ETSY": "https://etsy.com/value_creator3.html",
-    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/value_creator3.html",
-    "URL_OTHER_SHOP": "https://othershop.com/value_creator3.html",
-    "URL_DONATIONS": "https://donations.example.com/value_creator3.html",
-
-    "URL_SCRITCH": "https://scritch.es/value_creator3.html",
-    "URL_FURTRACK": "https://www.furtrack.com/value_creator3.html",
-
     "URL_PHOTOS": [
-        "https://scritchphotos.com/value_creator3.html",
-        "https://www.furtrack.com/value_creator3.html"
+                   "https://example.com/c3/URL_PHOTOS/1",
+                   "https://example.com/c3/URL_PHOTOS/2"
     ],
     "URL_OTHER": [
-        "https://other.com/value_creator3.html"
+                      "https://example.com/c3/URL_OTHER/1",
+                   "https://example.com/c3/URL_OTHER/2"
     ],
     "URL_COMMISSIONS": [
-        "https://cst.com/value_creator3.html",
-        "https://cst2.com/value2creator3.html"
+                  "https://example.com/c3/URL_COMMISSIONS/1",
+                   "https://example.com/c3/URL_COMMISSIONS/2"
     ]
 }

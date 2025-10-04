@@ -1,54 +1,41 @@
 {
     "MAKER_ID": "TESTB01",
 
-    "NAME": "Creator name a2_2",
+    "NAME": "Creator 2 NAME",
     "FORMERLY": [
-        "Formerly a2_2"
+        "Creator 2 FORMERLY"
     ],
-    "PASSWORD": "Password a2_2",
+    "PASSWORD": "Creator 2 PASSWORD",
 
-    "EMAIL_ADDRESS": "2emaa2_2il2@ema.il",
+    "EMAIL_ADDRESS": "creator_2_email@address",
     "CONTACT_ALLOWED": "FEEDBACK",
 
-    "INTRO": "Le intro a2_2",
+    "INTRO": "Creator 2 INTRO",
     "SINCE": "2018-03",
-    "LANGUAGES": [
-        "Czecha2_2 (limited)",
-        "Englisha2_2"
-    ],
-    "COUNTRY": "C2",
-    "STATE": "of mind a2_2",
-    "CITY": "Lisek a2_2",
+    "LANGUAGES": ["Czecha2_2 (limited)", "Englisha2_2"],
+    "COUNTRY": "GB",
+    "STATE": "Creator 2 STATE",
+    "CITY": "Creator 2 CITY",
 
 
     "AGES": "MINORS",
     "NSFW_WEBSITE": true,
     "NSFW_SOCIAL": true,
-    "DOES_NSFW": true,
-    "WORKS_WITH_MINORS": true,
+    "DOES_NSFW": false,
+    "WORKS_WITH_MINORS": false,
 
-    "PAYMENT_PLANS": [
-        "30% upfront, rest in 100 Eur/mth until fully paid (a2_2)"
-    ],
-    "PAYMENT_METHODS": [
-        "Cash",
-        "Baa2_2nk transfer",
-        "PalPay",
-        "Hugs_a2_2"
-    ],
-    "CURRENCIES_ACCEPTED": [
-        "USD",
-        "EUA2_2"
-    ],
+    "PAYMENT_PLANS": ["PP C2 A", "PP C2 B"],
+    "PAYMENT_METHODS": ["PM C2 A", "PM C2 B"],
+    "CURRENCIES_ACCEPTED": ["CA C2 A", "CA C2 B"],
 
-    "PRODUCTION_MODELS_COMMENT": "Comment about production models a2_2",
+    "PRODUCTION_MODELS_COMMENT": "Creator 2 PRODUCTION_MODELS_COMMENT",
     "PRODUCTION_MODELS": [
         "Artistic liberty commissions",
         "Premades",
         "Standard commissions"
     ],
 
-    "STYLES_COMMENT": "Comment about styles a2_2",
+    "STYLES_COMMENT": "Creator 2 STYLES_COMMENT",
     "STYLES": [
         "Anime",
         "Kemono",
@@ -58,11 +45,9 @@
         "Semi Toony",
         "Toony"
     ],
-    "OTHER_STYLES": [
-        "OTHER_STYLES_a2_2"
-    ],
+    "OTHER_STYLES": ["OTH_STL C2 A", "OTH_STL C2 B"],
 
-    "ORDER_TYPES_COMMENT": "Comment for order types a2_2",
+    "ORDER_TYPES_COMMENT": "Creator 2 ORDER_TYPES_COMMENT",
     "ORDER_TYPES": [
         "Bodysuits (as parts/separate)",
         "Feetpaws (as parts/separate)",
@@ -75,11 +60,9 @@
         "Tails (as parts/separate)",
         "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
     ],
-    "OTHER_ORDER_TYPES": [
-        "Other order a2_2 types"
-    ],
+    "OTHER_ORDER_TYPES": ["OTH_OTP C2 A", "OTH_OTP C2 B"],
 
-    "FEATURES_COMMENT": "Comment about features a2_2",
+    "FEATURES_COMMENT": "Creator 2 FEATURES_COMMENT",
     "FEATURES": [
         "Adjustable eyebrows",
         "Adjustable/wiggle ears",
@@ -100,62 +83,52 @@
         "Removable horns/antlers",
         "Washable heads"
     ],
-    "OTHER_FEATURES": [
-        "Other features a2_2",
-        "Other feature a2_2 2"
-    ],
+    "OTHER_FEATURES": ["OTH_FTR C2 A", "OTH_FTR C2 B"],
 
-    "SPECIES_COMMENT": "Species comment a2_2",
-    "SPECIES_DOES": [
-        "Does a2_2"
-    ],
-    "SPECIES_DOESNT": [
-        "Doesn't a2_2"
-    ],
+    "SPECIES_COMMENT": "Creator 2 SPECIES_COMMENT",
+    "SPECIES_DOES": ["SP_DOES C2 A", "SP_DOES C2 B"],
+    "SPECIES_DOESNT": ["SP_DSNT C2 A", "SP_DSNT C2 B"],
 
-    "NOTES": "Notes a2_2",
+    "NOTES": "Creator 2 NOTES",
 
-    "URL_FURSUITREVIEW": "https://fursuitreview.com/value_a2_2.html",
+    "URL_FURSUITREVIEW": "https://example.com/c2/URL_FURSUITREVIEW",
+    "URL_WEBSITE": "https://example.com/c2/URL_WEBSITE",
+    "URL_LINKLIST": "https://example.com/c2/URL_LINKLIST",
+    "URL_FAQ": "https://example.com/c2/URL_FAQ",
+    "URL_QUEUE": "https://example.com/c2/URL_QUEUE",
+    "URL_FUR_AFFINITY": "https://example.com/c2/URL_FUR_AFFINITY",
+    "URL_DEVIANTART": "https://example.com/c2/URL_DEVIANTART",
+    "URL_MASTODON": "https://example.com/c2/URL_MASTODON",
+    "URL_BLUESKY": "https://example.com/c2/URL_BLUESKY",
+    "URL_FACEBOOK": "https://example.com/c2/URL_FACEBOOK",
+    "URL_TUMBLR": "https://example.com/c2/URL_TUMBLR",
+    "URL_TWITTER": "https://example.com/c2/URL_TWITTER",
+    "URL_INSTAGRAM": "https://example.com/c2/URL_INSTAGRAM",
+    "URL_FURRY_AMINO": "https://example.com/c2/URL_FURRY_AMINO",
+    "URL_YOUTUBE": "https://example.com/c2/URL_YOUTUBE",
+    "URL_TIKTOK": "https://example.com/c2/URL_TIKTOK",
+    "URL_TELEGRAM_CHANNEL": "https://example.com/c2/URL_TELEGRAM_CHANNEL",
+    "URL_ETSY": "https://example.com/c2/URL_ETSY",
+    "URL_THE_DEALERS_DEN": "https://example.com/c2/URL_THE_DEALERS_DEN",
+    "URL_OTHER_SHOP": "https://example.com/c2/URL_OTHER_SHOP",
+    "URL_DONATIONS": "https://example.com/c2/URL_DONATIONS",
+    "URL_SCRITCH": "https://example.com/c2/URL_SCRITCH",
+    "URL_FURTRACK": "https://example.com/c2/URL_FURTRACK",
 
-    "URL_WEBSITE": "https://mywebsite.com/value_a2_2.html",
-    "URL_LINKLIST": "https://linklist.com/value_a2_2.html",
     "URL_PRICES": [
-        "https://mywebsite.com/prices_a2_2.html",
-        "https://mywebsite.com/prices-more_a2_2.html"
+                   "https://example.com/c2/URL_PRICES/1",
+                   "https://example.com/c2/URL_PRICES/2"
     ],
-    "URL_FAQ": "https://mywebsite.com/faq_a2_2.html",
-    "URL_QUEUE": "https://queue.com/value_a2_2.html",
-
-    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/value_a2_2/",
-    "URL_DEVIANTART": "https://www.deviantart.com/value_a2_2.html",
-    "URL_MASTODON": "https://mastodon.social/value_a2_2.html",
-    "URL_BLUESKY": "https://bluesky.com/value_a2_2.html",
-    "URL_FACEBOOK": "https://www.facebook.com/value_a2_2.html/",
-    "URL_TUMBLR": "https://tumblr.com/value_a2_2.html",
-    "URL_TWITTER": "https://twitter.com/value_a2_2.html",
-    "URL_INSTAGRAM": "https://www.instagram.com/value_a2_2.html/",
-    "URL_FURRY_AMINO": "https://furryamino.com/value_a2_2.html",
-    "URL_YOUTUBE": "https://www.youtube.com/value_a2_2.html",
-    "URL_TIKTOK": "https://tiktok.com/value_a2_2.html",
-    "URL_TELEGRAM_CHANNEL": "https://telegram.com/value_a2_2.html",
-
-    "URL_ETSY": "https://etsy.com/value_a2_2.html",
-    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/value_a2_2.html",
-    "URL_OTHER_SHOP": "https://othershop.com/value_a2_2.html",
-    "URL_DONATIONS": "https://donations.example.com/value_a2_2.html",
-
-    "URL_SCRITCH": "https://scritch.es/value_a2_2.html",
-    "URL_FURTRACK": "https://www.furtrack.com/value_a2_2.html",
-
     "URL_PHOTOS": [
-        "https://scritchphotos.com/value_a2_2.html",
-        "https://www.furtrack.com/value_a2_2.html"
+                  "https://example.com/c2/URL_PHOTOS/1",
+                   "https://example.com/c2/URL_PHOTOS/2"
     ],
     "URL_OTHER": [
-        "https://other.com/value_a2_2.html"
+                   "https://example.com/c2/URL_OTHER/1",
+                   "https://example.com/c2/URL_OTHER/2"
     ],
     "URL_COMMISSIONS": [
-        "https://cst.com/value_a2_2.html",
-        "https://cst2.com/value2a2_2.html"
+                   "https://example.com/c2/URL_COMMISSIONS/1",
+                   "https://example.com/c2/URL_COMMISSIONS/2"
     ]
 }

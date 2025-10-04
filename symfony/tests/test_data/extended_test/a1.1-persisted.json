@@ -3,71 +3,62 @@
     "FORMER_MAKER_IDS": [
         "TESTA01"
     ],
-
-    "NAME": "Name creator1 before update",
+    "NAME": "Creator 1 NAME before update",
     "FORMERLY": [
-        "Formerly creator1 before update"
+        "Creator 1 FORMERLY before update"
     ],
-    "PASSWORD": "Password creator1 before update",
+    "PASSWORD": "Creator 1 PASSWORD before update",
 
     "EMAIL_ADDRESS": "creator1-email-update-before@ema.il",
     "CONTACT_ALLOWED": "CORRECTIONS",
-
-    "INTRO": "Intro creator1 before update",
+    "INTRO": "Creator 1 INTRO before update",
     "SINCE": "2019-10",
     "LANGUAGES": [
         "Czech (limited)",
         "Creator1 before update",
         "English"
     ],
-    "COUNTRY": "C0",
-    "STATE": "State creator1 before update",
-    "CITY": "City creator1 before update",
-
-    "DATE_ADDED": "2022-01-01 00:00:00",
-    "DATE_UPDATED": "2022-01-01 00:00:00",
-
+    "COUNTRY": "FR",
+    "STATE": "Creator 1 STATE before update",
+    "CITY": "Creator 1 CITY before update",
+    "DATE_ADDED": "2001-01-01 00:00:00",
+    "DATE_UPDATED": "2001-05-05 00:00:00",
     "AGES": "MINORS",
     "NSFW_WEBSITE": false,
     "NSFW_SOCIAL": true,
     "DOES_NSFW": false,
     "WORKS_WITH_MINORS": false,
-
     "PAYMENT_PLANS": [
-        "30% upfront, rest in 100 Eur/mth until fully paid",
-        "50%/50%",
-        "Creator1 before update"
+        "PP C1 A",
+        "PP C1 B before",
+        "PP C1 C"
     ],
     "PAYMENT_METHODS": [
-        "Cash",
-        "Bank transfers",
-        "Before update creator1",
-        "PalPay"
+        "PM C1 A",
+        "PM C1 B before",
+        "PM C1 C"
     ],
     "CURRENCIES_ACCEPTED": [
-        "USD",
-        "EUR",
-        "BUD"
+        "CA C1 A",
+        "CA C1 B before",
+        "CA C1 C"
     ],
-
-    "PRODUCTION_MODELS_COMMENT": "Before update prod models comment",
+    "PRODUCTION_MODELS_COMMENT": "Creator 1 PRODUCTION_MODELS_COMMENT before update",
     "PRODUCTION_MODELS": [
         "Premades"
     ],
-
-    "STYLES_COMMENT": "Styles comment before update",
+    "STYLES_COMMENT": "Creator 1 STYLES_COMMENT before update",
     "STYLES": [
         "Kemono",
         "Realistic",
         "Semi Toony"
     ],
     "OTHER_STYLES": [
-        "Other styles",
-        "Before update",
-        "Creator 1"
+        "OTH_STL C1 A",
+        "OTH_STL C1 B before",
+        "OTH_STL C1 C"
     ],
-
-    "ORDER_TYPES_COMMENT": "Order types comment before update",
+    "ORDER_TYPES_COMMENT": "Creator 1 ORDER_TYPES_COMMENT before update",
     "ORDER_TYPES": [
         "Feetpaws (as parts/separate)",
         "Full plantigrade",
@@ -76,12 +67,11 @@
         "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
     ],
     "OTHER_ORDER_TYPES": [
-        "Other order",
-        "Types creator 1",
-        "Before update"
+        "OTH_OTP C1 A",
+        "OTH_OTP C1 B before",
+        "OTH_OTP C1 C"
     ],
-
-    "FEATURES_COMMENT": "Features before update comment",
+    "FEATURES_COMMENT": "Creator 1 FEATURES_COMMENT before update",
     "FEATURES": [
         "Adjustable/wiggle ears",
         "Attached tail",
@@ -94,67 +84,65 @@
         "Washable heads"
     ],
     "OTHER_FEATURES": [
-        "Other features",
-        "Before update",
-        "Creator 1"
+        "OTH_FTR C1 A",
+        "OTH_FTR C1 B before",
+        "OTH_FTR C1 C"
     ],
-
-    "SPECIES_COMMENT": "Species comment before update",
+    "SPECIES_COMMENT": "Creator 1 SPECIES_COMMENT before update",
     "SPECIES_DOES": [
-        "Does before update"
+        "SP_DOES C1 A",
+        "SP_DOES C1 B before",
+        "SP_DOES C1 C"
     ],
     "SPECIES_DOESNT": [
-        "Doesn't before update"
+        "SP_DSNT C1 A",
+        "SP_DSNT C1 B before",
+        "SP_DSNT C1 C"
     ],
-
-    "NOTES": "Notes before update",
+    "NOTES": "Creator 1 NOTES before update",
     "INACTIVE_REASON": "Inactive reason creator 1 - not updated",
-
-    "URL_FURSUITREVIEW": "https://fursuitreview.com/creator1_before_update.html",
-
-    "URL_WEBSITE": "https://mywebsite.com/creator1_before_update.html",
-    "URL_LINKLIST": "https://linklist.com/creator1_before_update.html",
+    "URL_FURSUITREVIEW": "https://example.com/c1/URL_FURSUITREVIEW/before",
+    "URL_WEBSITE": "https://example.com/c1/URL_WEBSITE/before",
+    "URL_LINKLIST": "https://example.com/c1/URL_LINKLIST/before",
     "URL_PRICES": [
-        "https://mywebsite.com/prices1-creator1_before_update.html",
-        "https://mywebsite.com/prices2-creator1_before_update.html"
+        "https://example.com/c1/URL_PRICES/before/1",
+        "https://example.com/c1/URL_PRICES/2",
+        "https://example.com/c1/URL_PRICES/before/3"
     ],
-    "URL_FAQ": "https://mywebsite.com/faq_creator1_before_update.html",
-    "URL_QUEUE": "https://queue.com/creator1_before_update.html",
-
-    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/creator1_before_update/",
-    "URL_DEVIANTART": "https://www.deviantart.com/creator1_before_update.html",
-    "URL_MASTODON": "https://mastodon.social/creator1_before_update.html",
-    "URL_BLUESKY": "https://bluesky.com/creator1_before_update.html",
-    "URL_FACEBOOK": "https://www.facebook.com/creator1_before_update.html/",
-    "URL_TUMBLR": "https://tumblr.com/creator1_before_update.html",
-    "URL_TWITTER": "https://twitter.com/creator1_before_update.html",
-    "URL_INSTAGRAM": "https://www.instagram.com/creator1_before_update.html/",
-    "URL_FURRY_AMINO": "https://furryamino.com/creator1_before_update.html",
-    "URL_YOUTUBE": "https://www.youtube.com/creator1_before_update.html",
-    "URL_TIKTOK": "https://tiktok.com/creator1_before_update.html",
-    "URL_TELEGRAM_CHANNEL": "https://telegram.com/creator1_before_update.html",
-
-    "URL_ETSY": "https://etsy.com/creator1_before_update.html",
-    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/creator1_before_update.html",
-    "URL_OTHER_SHOP": "https://othershop.com/creator1_before_update.html",
-    "URL_DONATIONS": "https://donations.example.com/creator1_before_update.html",
-
-    "URL_SCRITCH": "https://scritch.es/creator1_before_update.html",
-    "URL_FURTRACK": "https://www.furtrack.com/creator1_before_update.html",
-
+    "URL_FAQ": "https://example.com/c1/URL_FAQ/before",
+    "URL_QUEUE": "https://example.com/c1/URL_QUEUE/before",
+    "URL_FUR_AFFINITY": "https://example.com/c1/URL_FUR_AFFINITY/before",
+    "URL_DEVIANTART": "https://example.com/c1/URL_DEVIANTART/before",
+    "URL_MASTODON": "https://example.com/c1/URL_MASTODON/before",
+    "URL_BLUESKY": "https://example.com/c1/URL_BLUESKY/before",
+    "URL_FACEBOOK": "https://example.com/c1/URL_FACEBOOK/before",
+    "URL_TUMBLR": "https://example.com/c1/URL_TUMBLR/before",
+    "URL_TWITTER": "https://example.com/c1/URL_TWITTER/before",
+    "URL_INSTAGRAM": "https://example.com/c1/URL_INSTAGRAM/before",
+    "URL_FURRY_AMINO": "https://example.com/c1/URL_FURRY_AMINO/before",
+    "URL_YOUTUBE": "https://example.com/c1/URL_YOUTUBE/before",
+    "URL_TIKTOK": "https://example.com/c1/URL_TIKTOK/before",
+    "URL_TELEGRAM_CHANNEL": "https://example.com/c1/URL_TELEGRAM_CHANNEL/before",
+    "URL_ETSY": "https://example.com/c1/URL_ETSY/before",
+    "URL_THE_DEALERS_DEN": "https://example.com/c1/URL_THE_DEALERS_DEN/before",
+    "URL_OTHER_SHOP": "https://example.com/c1/URL_OTHER_SHOP/before",
+    "URL_DONATIONS": "https://example.com/c1/URL_DONATIONS/before",
+    "URL_SCRITCH": "https://example.com/c1/URL_SCRITCH/before",
+    "URL_FURTRACK": "https://example.com/c1/URL_FURTRACK/before",
     "URL_PHOTOS": [
-        "https://scritchphotos.com/url1-creator1_before_update.html",
-        "https://www.furtrack.com/url2-creator1_before_update.html"
+        "https://example.com/c1/URL_PHOTOS/before/1",
+        "https://example.com/c1/URL_PHOTOS/2"
     ],
     "URL_MINIATURES": [
-        "https://scritchphotos.com/url1-creator1_before_update-mini.html",
-        "https://www.furtrack.com/url2-creator1_before_update-mini.html"
+        "https://example.com/c1/URL_MINIATURES/1",
+        "https://example.com/c1/URL_MINIATURES/2"
     ],
     "URL_OTHER": [
-        "https://other.com/creator1_before_update.html"
+        "https://example.com/c1/URL_OTHER/before/1",
+        "https://example.com/c1/URL_OTHER/2"
     ],
     "URL_COMMISSIONS": [
-        "https://cst.com/cst1-creator1_before_update.html",
-        "https://cst2.com/cst2-creator1_before_update.html"
+        "https://example.com/c1/URL_COMMISSIONS/before/1",
+        "https://example.com/c1/URL_COMMISSIONS/2"
     ]
 }

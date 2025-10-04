@@ -26,7 +26,7 @@
     "STATE": "State creator1 after update",
     "CITY": "City creator1 after update",
 
-    "DATE_ADDED": "2022-01-01 00:00:00",
+    "DATE_ADDED": "2001-01-01 00:00:00",
     "DATE_UPDATED": "/now/",
 
     "AGES": "ADULTS",
@@ -102,15 +102,11 @@
         "After update"
     ],
 
-    "SPECIES_COMMENT": "Species comment after update",
-    "SPECIES_DOES": [
-        "Does after update"
-    ],
-    "SPECIES_DOESNT": [
-        "Doesn't after update"
-    ],
+    "SPECIES_COMMENT": "Creator 1 SPECIES_COMMENT after update",
+    "SPECIES_DOES": ["SP_DOES C1 B after", "SP_DOES C1 C", "SP_DOES C1 D"],
+    "SPECIES_DOESNT": ["SP_DSNT C1 B after", "SP_DSNT C1 C", "SP_DSNT C1 D"],
 
-    "NOTES": "Notes after update",
+    "NOTES": "Creator 1 NOTES after update",
     "INACTIVE_REASON": "Inactive reason creator 1 - not updated",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/creator1_after_update.html",
@@ -150,8 +146,8 @@
         "https://www.furtrack.com/url2-creator1_after_update.html"
     ],
     "URL_MINIATURES": [
-        "https://scritchphotos.com/url1-creator1_before_update-mini.html",
-        "https://www.furtrack.com/url2-creator1_before_update-mini.html"
+        "https://example.com/c1/URL_MINIATURES/1",
+        "https://example.com/c1/URL_MINIATURES/2"
     ],
     "URL_OTHER": [
         "https://other.com/creator1_fater_update.html"

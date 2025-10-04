@@ -41,7 +41,7 @@ final class Fields
 
     public static function readFromSubmissionData(): FieldsList
     {
-        return self::inIuForm()->plus(Field::FORMER_MAKER_IDS->value, Field::FORMER_MAKER_IDS);
+        return self::inIuForm()->plus(Field::FORMER_MAKER_IDS->value, Field::FORMER_MAKER_IDS)->freeze();
     }
 
     public static function iuFormAffected(): FieldsList

@@ -8,6 +8,8 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\JsonCreatorDataLoader;
+use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\YamlCreatorsDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
@@ -91,29 +93,17 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         $repo = self::getCreatorRepository();
         $loader = new JsonCreatorDataLoader('extended_test');
+        $newLoader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
 
-        $initialCreators = [
-            $loader->getCreatorData('a1.1-persisted'),
-            $loader->getCreatorData('a3.1-persisted'),
-            $loader->getCreatorData('a5.1-persisted'),
-        ];
+        $initialCreators = $newLoader->before;
         $initialCount = count($initialCreators);
-
-        $expectedCreators = [
-            $loader->getCreatorData('a1.3-check'),
-            $loader->getCreatorData('a2.3-check'),
-            $loader->getCreatorData('a3.3-check'),
-            $loader->getCreatorData('a4.3-check'),
-            $loader->getCreatorData('a5.3-check'),
-        ];
-        $finalCount = count($expectedCreators);
 
         self::persistAndFlush(...$initialCreators);
         self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount creators in the DB before import");
 
         $oldData1 = $loader->getCreatorData('a1.1-persisted');
         $newData1 = $loader->getCreatorData('a1.2-send', self::NOT_IN_FORM);
-        $creatorId1 = $oldData1->getCreatorId();
+        $creatorId1 = $oldData1->getLastCreatorId();
         self::validateIuFormOldDataSubmitNew($creatorId1, $oldData1, $newData1, true);
 
         $oldData2 = new Creator();
@@ -135,6 +125,16 @@ class ExtendedTest extends IuSubmissionsTestCase
         $newData5 = $loader->getCreatorData('a5.2-send', self::NOT_IN_FORM);
         $creatorId5 = $oldData5->getLastCreatorId();
         self::validateIuFormOldDataSubmitNew($creatorId5, $oldData5, $newData5);
+
+//        $expectedCreators = [
+//            $loader->getCreatorData('a1.3-check'),
+//            $loader->getCreatorData('a2.3-check'),
+//            $loader->getCreatorData('a3.3-check'),
+//            $loader->getCreatorData('a4.3-check'),
+//            $loader->getCreatorData('a5.3-check'),
+//        ];
+        $expectedCreators = $newLoader->after;
+        $finalCount = count($expectedCreators);
 
         $this->performImport(true, $finalCount);
 
