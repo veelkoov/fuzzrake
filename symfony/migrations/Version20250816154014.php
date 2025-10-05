@@ -13,7 +13,7 @@ final class Version20250816154014 extends AbstractMigration
     #[Override]
     public function getDescription(): string
     {
-        return 'Add allergy warning fields, refactor payment plans into boolean + text info. Migrate ages from creator_values to creators table.';
+        return 'Add allergy warning fields, refactor payment plans into boolean + text info (instead of list of strings). Migrate ages from creator_values to creators table.';
     }
 
     public function up(Schema $schema): void
@@ -39,6 +39,9 @@ final class Version20250816154014 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             UPDATE creators SET payment_plans_info = '' WHERE payment_plans_info = 'None'
+        SQL);
+        $this->addSql(<<<'SQL'
+            UPDATE creators SET payment_plans_info = '• ' || REPLACE(payment_plans_info, char(10), char(10) || '• ') WHERE payment_plans_info LIKE '%' || char(10) || '%'
         SQL);
         $this->addSql(<<<'SQL'
             UPDATE creators SET ages = (SELECT value FROM creators_values AS cv WHERE cv.creator_id = creators.id AND cv.field_name = 'AGES')

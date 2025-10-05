@@ -1286,21 +1286,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    /**
-     * @return list<string>
-     */
-    #[StrListLength(max: 1024)]
-    public function getPaymentPlansInfo(): array
+    #[Length(max: 4096)]
+    public function getPaymentPlansInfo(): string
     {
-        return PackedStringList::unpack($this->entity->getPaymentPlansInfo());
+        return $this->entity->getPaymentPlansInfo();
     }
 
-    /**
-     * @param list<string> $paymentPlansInfo
-     */
-    public function setPaymentPlansInfo(array $paymentPlansInfo): self
+    public function setPaymentPlansInfo(string $paymentPlansInfo): self
     {
-        $this->entity->setPaymentPlansInfo(PackedStringList::pack($paymentPlansInfo));
+        $this->entity->setPaymentPlansInfo($paymentPlansInfo);
 
         return $this;
     }

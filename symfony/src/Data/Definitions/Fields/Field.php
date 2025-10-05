@@ -84,13 +84,13 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('hasAllergyWarning', type: Type::BOOLEAN)]
     case HAS_ALLERGY_WARNING = 'HAS_ALLERGY_WARNING';
 
-    #[Props('allergyWarningInfo', type: Type::STRING)]
+    #[Props('allergyWarningInfo')]
     case ALLERGY_WARNING_INFO = 'ALLERGY_WARNING_INFO';
 
     #[Props('offersPaymentPlans', type: Type::BOOLEAN)]
     case OFFERS_PAYMENT_PLANS = 'OFFERS_PAYMENT_PLANS';
 
-    #[Props('paymentPlansInfo', type: Type::STR_LIST)]
+    #[Props('paymentPlansInfo')]
     case PAYMENT_PLANS_INFO = 'PAYMENT_PLANS_INFO';
 
     #[Props('paymentMethods', type: Type::STR_LIST, validationRegex: V::PAY_METHODS)]

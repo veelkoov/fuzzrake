@@ -285,19 +285,61 @@ test_data:
         DOES_NSFW: false
         WORKS_WITH_MINORS: false
 
-  - PAYMENT_PLANS:
+  - OFFERS_PAYMENT_PLANS:
       max_to_max:
-        before: ["PP C1 A", "PP C1 B before", "PP C1 C"]
-        update+after: ["PP C1 B after", "PP C1 C", "PP C1 D"]
+        before: false
+        update+after: true
       new_max:
-        update+after: ["PP C2 A", "PP C2 B"]
+        update+after: true
       min_to_max:
-        before: []
-        update+after: ["PP C3 A", "PP C3 B"]
+        before: null
+        update+after: true
       new_min:
-        update+after: []
+        update+after: null
       just_id:
-        before+update+after: []
+        before+update+after: null
+
+  - PAYMENT_PLANS_INFO:
+      max_to_max:
+        before: "Creator 1 PAYMENT_PLANS_INFO before"
+        update+after: "Creator 1 PAYMENT_PLANS_INFO after"
+      new_max:
+        update+after: "Creator 2 PAYMENT_PLANS_INFO"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 PAYMENT_PLANS_INFO"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
+
+  - HAS_ALLERGY_WARNING:
+      max_to_max:
+        before: false
+        update+after: true
+      new_max:
+        update+after: true
+      min_to_max:
+        before: null
+        update+after: true
+      new_min:
+        update+after: null
+      just_id:
+        before+update+after: null
+
+  - ALLERGY_WARNING_INFO:
+      max_to_max:
+        before: "Creator 1 ALLERGY_WARNING_INFO before"
+        update+after: "Creator 1 ALLERGY_WARNING_INFO after"
+      new_max:
+        update+after: "Creator 2 ALLERGY_WARNING_INFO"
+      min_to_max:
+        before: ""
+        update+after: "Creator 3 ALLERGY_WARNING_INFO"
+      new_min:
+        update+after: ""
+      just_id:
+        before+update+after: ""
 
   - PAYMENT_METHODS:
       max_to_max:

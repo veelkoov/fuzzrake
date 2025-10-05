@@ -208,7 +208,7 @@
                     {% if creator.offersPaymentPlans is null %}
                         {{ unknown_value() }}
                     {% elseif creator.offersPaymentPlans %}
-                        {{ _self.list_with_others_comment_opt(creator.paymentPlansInfo) }}
+                        <span class="nl2br">{{ creator.paymentPlansInfo }}</span><br>
                     {% else %}
                         Not available
                     {% endif %}

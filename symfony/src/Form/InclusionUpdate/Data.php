@@ -155,7 +155,6 @@ class Data extends AbstractType
             ])
             ->add('paymentPlansInfo', TextareaType::class, [
                 'label'      => 'Payment plans - additional information',
-                'help'       => 'Each line will become a list item.',
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
@@ -523,8 +522,7 @@ class Data extends AbstractType
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlansInfo', 'photoUrls', 'pricesUrls', 'speciesDoes',
-            'speciesDoesnt',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }

@@ -366,8 +366,8 @@ class CreatorType extends AbstractTypeWithDelete
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlansInfo', 'photoUrls', 'pricesUrls', 'speciesDoes',
-            'speciesDoesnt', 'formerCreatorIds', 'miniatureUrls',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
+            'formerCreatorIds', 'miniatureUrls',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
