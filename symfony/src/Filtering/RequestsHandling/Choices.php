@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
 use App\Utils\Json;
 use App\Utils\Pagination\Pagination;
@@ -24,9 +24,8 @@ readonly class Choices
         public StringSet $productionModels,
         public StringSet $openFor,
         public StringSet $species,
-        public bool $wantsUnknownPaymentPlans,
-        public bool $wantsAnyPaymentPlans,
-        public bool $wantsNoPaymentPlans,
+        public StringSet $paymentPlans,
+        public StringSet $ages,
         public bool $isAdult,
         public bool $wantsSfw,
         public bool $wantsInactive,
@@ -50,9 +49,8 @@ readonly class Choices
             $this->productionModels,
             $this->openFor,
             $this->species,
-            $this->wantsUnknownPaymentPlans,
-            $this->wantsAnyPaymentPlans,
-            $this->wantsNoPaymentPlans,
+            $this->paymentPlans,
+            $this->ages,
             $this->isAdult,
             $this->wantsSfw,
             $this->wantsInactive,

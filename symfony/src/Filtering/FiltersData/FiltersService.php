@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Field;
-use App\Filtering\DataRequests\Consts;
+use App\Filtering\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Filtering\FiltersData\Data\ItemList;
@@ -49,6 +50,7 @@ class FiltersService
             $this->getCountriesFilterData(),
             $this->getStatesFilterData(),
             $this->speciesFilterService->getFilterData(),
+            $this->getAgesData(),
             $this->getInactiveFilterData(),
         ), CacheTags::CREATORS, __METHOD__);
     }
@@ -126,17 +128,22 @@ class FiltersService
 
     private function getPaymentPlans(): FilterData
     {
-        $unknown = SpecialItems::newUnknown();
-        $result = new MutableFilterData($unknown);
+        $stats = $this->creatorRepository->getActiveOffersPaymentPlansStats();
 
-        foreach ($this->creatorRepository->getPaymentPlans() as $paymentPlan) {
-            if (Consts::DATA_VALUE_UNKNOWN === $paymentPlan) {
-                $unknown->incCount();
-            } elseif (Consts::DATA_PAYPLANS_NONE === $paymentPlan) {
-                $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE);
-            } else {
-                $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED);
-            }
+        $result = new MutableFilterData(SpecialItems::newUnknown($stats->getOrDefaultOf(null, 0)));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->getOrDefaultOf(false, 0));
+        $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->getOrDefaultOf(true, 0));
+
+        return FilterData::from($result);
+    }
+
+    private function getAgesData(): FilterData
+    {
+        $stats = $this->creatorRepository->getActiveAgesStats();
+
+        $result = new MutableFilterData(SpecialItems::newUnknown($stats->getOrDefaultOf(null, 0)));
+        foreach (Ages::getFormChoices(false) as $label => $value) {
+            $result->items->addOrIncItem($label, $stats->getOrDefaultOf(Ages::get($value), 0));
         }
 
         return FilterData::from($result);

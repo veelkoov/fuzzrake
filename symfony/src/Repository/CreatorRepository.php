@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
 use App\Entity\CreatorValue;
-use App\Filtering\DataRequests\QueryChoicesAppender;
+use App\Filtering\RequestsHandling\QueryChoicesAppender;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
@@ -25,7 +25,8 @@ use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Veelkoov\Debris\Lists\IntList;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Maps\AnyToInt;
+use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
@@ -208,16 +209,30 @@ class CreatorRepository extends ServiceEntityRepository
         return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    public function getPaymentPlans(): StringList
+    public function getActiveOffersPaymentPlansStats(): NullBoolToInt
     {
         $result = $this->createQueryBuilder('d_c')
-            ->select('d_c.paymentPlans AS paymentPlans')
+            ->select('d_c.offersPaymentPlans AS offers', 'COUNT(d_c) AS count')
             ->where('d_c.inactiveReason = :empty')
+            ->groupBy('d_c.offersPaymentPlans')
             ->setParameter('empty', '')
             ->getQuery()
-            ->getSingleColumnResult();
+            ->getArrayResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return NullBoolToInt::fromRows($result, 'offers', 'count');
+    }
+
+    public function getActiveAgesStats(): AnyToInt
+    {
+        $result = $this->createQueryBuilder('d_c')
+            ->select('d_c.ages AS ages', 'COUNT(d_c) AS count')
+            ->where('d_c.inactiveReason = :empty')
+            ->groupBy('d_c.ages')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        return AnyToInt::fromRows($result, 'ages', 'count');
     }
 
     /**
