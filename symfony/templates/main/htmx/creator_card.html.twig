@@ -136,6 +136,20 @@
                 </div>
             {% endif %}
 
+            {% if creator.hasAllergyWarning == true %}
+                <div class="col-md-12 p-1 alert alert-warning" role="alert">
+                    <strong>Note to allergic customers</strong> <br>
+
+                    {% if '' == creator.allergyWarningInfo %}
+                        Please seek details in the provided links or ask the maker to learn about safety related to your allergies. {{ unknown_value() }}
+                    {% else %}
+                        {{ creator.allergyWarningInfo|nl2br }}
+                    {% endif %}
+                </div>
+            {% elseif creator.hasAllergyWarning is null %}
+                {# Do not show unknow at this stage. Not enough info. #}
+            {% endif %}
+
             <div class="col-md-12 p-1">
                 <p class="mb-0 small">
                     Ages of studio members: {{ ages_description(creator, true) }}
