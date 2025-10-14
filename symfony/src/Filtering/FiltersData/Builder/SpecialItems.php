@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData\Builder;
 
-use App\Filtering\DataRequests\Consts;
+use App\Filtering\Consts;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 

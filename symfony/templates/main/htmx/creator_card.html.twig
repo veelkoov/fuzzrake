@@ -136,6 +136,20 @@
                 </div>
             {% endif %}
 
+            {% if creator.hasAllergyWarning == true %}
+                <div class="col-md-12 p-1 alert alert-warning" role="alert">
+                    <strong>Note to allergic customers</strong> <br>
+
+                    {% if '' == creator.allergyWarningInfo %}
+                        Please seek details in the provided links or ask the maker to learn about safety related to your allergies. {{ unknown_value() }}
+                    {% else %}
+                        {{ creator.allergyWarningInfo|nl2br }}
+                    {% endif %}
+                </div>
+            {% elseif creator.hasAllergyWarning is null %}
+                {# Do not show "unknown sign" at this stage. Not enough info. #}
+            {% endif %}
+
             <div class="col-md-12 p-1">
                 <p class="mb-0 small">
                     Ages of studio members: {{ ages_description(creator, true) }}
@@ -205,7 +219,13 @@
                 <h5>Payment plans</h5>
 
                 <div class="small pb-2">
-                    {{ _self.list_with_others_comment_opt(creator.paymentPlans) }}
+                    {% if creator.offersPaymentPlans is null %}
+                        {{ unknown_value() }}
+                    {% elseif creator.offersPaymentPlans %}
+                        <span class="nl2br">{{ creator.paymentPlansInfo }}</span><br>
+                    {% else %}
+                        Not available
+                    {% endif %}
                 </div>
 
                 <h5>Currencies</h5>
