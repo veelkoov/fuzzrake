@@ -22,7 +22,7 @@
         "ext-pdo": "*",
         "composer/package-versions-deprecated": "*",
         "composer/pcre": "^3.3",
-        "doctrine/doctrine-bundle": "*",
+        "doctrine/doctrine-bundle": "2.*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "*",
         "nette/utils": "^v4.0.5",

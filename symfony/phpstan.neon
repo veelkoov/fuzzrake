@@ -58,5 +58,11 @@ parameters:
       count: 2
       path: tests/bootstrap.php
 
+    - # Inherited interface
+      message: '#^Method DoctrineMigrations\\Version\d+::down\(\) has Doctrine\\DBAL\\Exception in PHPDoc @throws tag but it''s not thrown\.$#'
+      identifier: throws.unusedType
+      count: 5
+      path: migrations/Version*.php
+
 includes:
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon

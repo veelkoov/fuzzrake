@@ -31,7 +31,13 @@
         "version": "3.2.0"
     },
     "doctrine/deprecations": {
-        "version": "v0.5.3"
+        "version": "1.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "87424683adc81d7dc305eefec1fced883084aab9"
+        }
     },
     "doctrine/doctrine-bundle": {
         "version": "2.14",
@@ -292,7 +298,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "7.3",
-            "ref": "a64726446f6dcf3721f192c1df35418d69b3ba92"
+            "ref": "5a1497d539f691b96afd45ae397ce5fe30beb4b9"
         },
         "files": [
             ".editorconfig",
@@ -375,7 +381,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "1.0",
-            "ref": "4c58f84379c1b1ed80c62b00146f4f934686a3cc"
+            "ref": "4380502301e68b744b21d2a0c917693676a72f33"
         }
     },
     "symfony/password-hasher": {
@@ -419,12 +425,12 @@
         ]
     },
     "symfony/routing": {
-        "version": "7.1",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "7.0",
-            "ref": "21b72649d5622d8f7da329ffb5afb232a023619d"
+            "ref": "ab1e60e2afd5c6f4a6795908f646e235f2564eb2"
         },
         "files": [
             "config/packages/routing.yaml",
@@ -526,7 +532,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "7.3",
-            "ref": "5b2b543e13942495c0003f67780cb4448af9e606"
+            "ref": "a363460c1b0b4a4d0242f2ce1a843ca0f6ac9026"
         },
         "files": [
             "config/packages/web_profiler.yaml",
