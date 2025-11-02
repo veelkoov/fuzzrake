@@ -5,10 +5,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/veelkoov/debris"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/veelkoov/t-regx"
         }
     ],
     "require": {
