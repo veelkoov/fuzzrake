@@ -1,0 +1,77 @@
+#!ansible/run.sh
+---
+- name: 'Prechecks'
+  hosts: 'deploy_host'
+  gather_facts: false
+  tasks:
+    - name: 'Assure git status is clear'
+      ansible.builtin.command:
+        cmd: 'git status --porcelain'
+      changed_when: false
+      check_mode: false
+      register: 'git_status_cmd'
+      failed_when: 'git_status_cmd.rc != 0 or git_status_cmd.stdout != "" or git_status_cmd.stderr != ""'
+      tags:
+        - 'always'
+
+    - name: 'Assure we are on the default branch'
+      ansible.builtin.command:
+        cmd: 'git branch --show-current'
+      changed_when: false
+      check_mode: false
+      register: 'git_status_cmd'
+      failed_when: 'git_status_cmd.rc != 0 or git_status_cmd.stdout != default_branch or git_status_cmd.stderr != ""'
+      tags:
+        - 'always'
+
+- name: 'Update the beta branch'
+  hosts: 'deploy_host'
+  gather_facts: false
+  tasks:
+    - name: 'Update the beta branch'
+      ansible.builtin.import_role:
+        name: 'deploy_host'
+        tasks_from: 'update_beta_branch'
+      tags:
+        - 'beta'
+
+- name: 'Copy PROD database to BETA'
+  hosts: 'public_host'
+  gather_facts: false
+  become: true
+  tasks:
+    - name: 'Copy the database file'
+      ansible.builtin.copy:
+        dest: '{{ hostvars["beta_env"]["database_path"] }}'
+        mode: '0666'
+        remote_src: true
+        src: '{{ hostvars["prod_env"]["database_path"] }}'
+      tags:
+        - 'beta'
+
+- name: 'Release on BETA'
+  hosts: 'beta_env'
+  become: true
+  roles:
+    - role: 'environment'
+      tags:
+        - 'beta'
+
+- name: 'Update the prod branch'
+  hosts: 'deploy_host'
+  gather_facts: false
+  tasks:
+    - name: 'Update the prod branch'
+      ansible.builtin.import_role:
+        name: 'deploy_host'
+        tasks_from: 'merge_into_prod_and_back'
+      tags:
+        - 'prod'
+
+- name: 'Release on PROD'
+  hosts: 'prod_env'
+  become: true
+  roles:
+    - role: 'environment'
+      tags:
+        - 'prod'

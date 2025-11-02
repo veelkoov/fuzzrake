@@ -52,27 +52,6 @@ function run_yarn() {
     popd
 }
 
-function action_release_prod() {
-    run_command git checkout main
-    run_command git merge --no-edit develop
-    run_command git push
-    run_command git checkout develop
-    run_command git merge main
-    run_command git push
-    run_command ansible/setup_envs.yaml --limit prod_env
-}
-
-function action_release_beta() {
-    PREVIOUS_BRANCH="$(git branch --show-current)"
-
-    run_command git branch -D beta
-    run_command git checkout -b beta
-    run_command git push --force origin beta
-    run_command ansible/setup_envs.yaml --limit beta_env --diff
-
-    git checkout "$PREVIOUS_BRANCH"
-}
-
 function action_get_snapshots() {
     run_command rsync --recursive --progress --human-readable --compress --checksum \
         "$PROD_ENV_SSH_PATH/$SNAPSHOTS_REL_PATH/" "$SNAPSHOTS_REL_PATH"
@@ -236,8 +215,7 @@ function action() {
         'dbpush-beta')  action_dbpush_beta ;;
         'dbpush-prod')  action_dbpush_prod ;;
 
-        'release-beta') action_release_beta ;;
-        'release-prod') action_release_prod ;;
+        'release')      run_command ansible/release.yaml --diff "$@" ;;
 
         'get-snapshots') action_get_snapshots ;;
 
