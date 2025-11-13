@@ -84,7 +84,7 @@ class DataQuery
     }
 
     /**
-     * @return array<string, int>
+     * @return array<string, string>
      */
     public function getMatchedItems(): array
     {
