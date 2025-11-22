@@ -29,14 +29,12 @@ class Preprocessor
     {
         $this->logger->resetContextFor($input);
 
-        $result = $this->getWithLengthLimit($input);
-        $result = $input->url->getStrategy()->filterContents($result);
-        $result = strtolower($result);
-        $result = $this->patterns->cleaners->do($result);
-        $result = $this->replaceCreatorAliases($result, $input->creatorAliases);
-        $result = $this->patterns->falsePositives->do($result);
-
-        return $result;
+        return $this->getWithLengthLimit($input)
+            |> $input->url->getStrategy()->filterContents(...)
+            |> strtolower(...)
+            |> $this->patterns->cleaners->do(...)
+            |> (fn ($contents) => $this->replaceCreatorAliases($contents, $input->creatorAliases))
+            |> $this->patterns->falsePositives->do(...);
     }
 
     private function replaceCreatorAliases(string $input, StringList $aliases): string
