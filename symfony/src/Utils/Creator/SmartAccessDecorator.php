@@ -889,14 +889,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        $result = arr_map($fields->toArray(), fn (Field $field) => match ($field) {
-            Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
-            Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
-            Field::DATE_UPDATED => StrUtils::asStr($this->getDateUpdated()),
-            default => $this->get($field),
-        });
+        return arr_map($fields->toArray(), function (Field $field) {
+            $value = $this->get($field);
 
-        return $result; // @phpstan-ignore return.type (FIXME)
+            if (is_object($value)) {
+                $value = StrUtils::asStr($value);
+            }
+
+            return $value;
+        });
     }
 
     /**

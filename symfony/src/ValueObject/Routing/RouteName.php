@@ -10,6 +10,7 @@ final class RouteName
 {
     use UtilityClass;
 
+    final public const string API_CREATOR = 'api_creator';
     final public const string API_CREATORS = 'api_creators';
     final public const string CONTACT = 'contact';
     final public const string DONATE = 'donate';
