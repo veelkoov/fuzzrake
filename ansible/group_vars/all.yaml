@@ -13,3 +13,7 @@ database_path:      '{{ symfony_dir_path }}/var/db.sqlite'  # grep-code-database
 dkim_private_key_src: 'dkim_rsa_1_private.pem'
 dkim_private_key_path: '{{ symfony_dir_path }}/var/dkim_rsa_1_private.pem'
 dkim_private_key_url: 'file://%kernel.project_dir%/var/dkim_rsa_1_private.pem'
+
+default_branch: 'develop'
+beta_branch: 'beta'
+prod_branch: 'main'

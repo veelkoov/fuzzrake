@@ -1,7 +1,7 @@
 ---
 deployment_path: '/var/www/prod'
 
-branch:      'main'
+branch:      '{{ prod_branch }}'
 app_env:     'prod'
 server_name: 'getfursu.it'
 

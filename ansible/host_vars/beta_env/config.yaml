@@ -1,7 +1,7 @@
 ---
 deployment_path: '/var/www/beta'
 
-branch:      'beta'
+branch:      '{{ beta_branch }}'
 app_env:     'beta'
 server_name: 'beta.getfursu.it'
 
