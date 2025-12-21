@@ -8,7 +8,6 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
-use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\SubmissionService;
@@ -18,9 +17,12 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Random\RandomException;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -31,6 +33,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 {
     use ClockSensitiveTrait;
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesNewEmailProperly(): void
     {
         $submission = SubmissionService::getEntityForSubmission(new Creator()
@@ -47,6 +50,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesEmailChangeProperly(): void
     {
         $existing = $this->getPersistedCreatorMock()
@@ -68,6 +72,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertSame('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesUnchangedEmailProperly(): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -89,6 +94,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesRevokedContactPermitProperly(): void
     {
         $existing = $this->getPersistedCreatorMock()
@@ -111,6 +117,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertSame('', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testAddedDateIsHandledProperly(): void
     {
         self::mockTime();
@@ -135,8 +142,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws SubmissionException|DateTimeException
+     * @throws DateTimeException|JsonException|RandomException
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdatedDateIsHandledProperly(): void
     {
         self::mockTime();
@@ -167,6 +175,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testResolvingMultipleMatchedByCreatorId(): void
     {
         $creator1 = $this->getPersistedCreatorMock()
@@ -197,6 +206,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesCreatorIdChangeProperly(): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -261,6 +271,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         return new UpdatesService($creatorRepoMock, $entityManagerStub, $this->getNoopFixerMock(), $messageBusStub, $loggerStub);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
@@ -270,6 +281,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject->import($update);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');

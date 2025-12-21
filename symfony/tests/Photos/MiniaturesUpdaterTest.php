@@ -10,6 +10,7 @@ use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Url\Url;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
 
@@ -22,7 +23,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
     {
         parent::setUp();
 
-        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock = self::createStub(LoggerInterface::class);
 
         $furtrackResolverMock = $this->createMock(FurtrackMiniatureUrlResolver::class);
         $furtrackResolverMock->method('supports')->willReturnCallback(
@@ -39,6 +40,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         $this->subject = new MiniaturesUpdater($loggerMock, $furtrackResolverMock, $scritchResolverMock);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testWhenPhotosCountEqualsMiniatureCountCreatorIsUnchangedWithoutForce(): void
     {
         $creator = new Creator()
@@ -51,6 +53,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame(['scritch_wrongMiniature_1', 'scritch_wrongMiniature_2'], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testWhenPhotosCountEqualsMiniatureCountCreatorIsUpdatedWithForce(): void
     {
         $creator = new Creator()
@@ -63,6 +66,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame(['scritch_miniature_1', 'scritch_miniature_2'], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testMiniaturesGetClearedWhenPhotosAreEmpty(): void
     {
         $creator = new Creator()
@@ -75,6 +79,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame([], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testNothingChangesWhenAtLeastOnePhotoIsUnsupported(): void
     {
         $creator = new Creator()
@@ -92,6 +97,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame([], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testAddingMiniaturesWorksProperly(): void
     {
         $creator = new Creator()
@@ -104,6 +110,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame(['scritch_miniature_1', 'furtrack_miniature_2'], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdatingMiniaturesWorksProperly(): void
     {
         $creator = new Creator()
@@ -116,6 +123,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame(['scritch_miniature_1', 'furtrack_miniature_2'], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testReorderingMiniaturesWorksProperly(): void
     {
         $creator = new Creator()
@@ -128,6 +136,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         self::assertSame(['furtrack_miniature_1', 'furtrack_miniature_2'], $creator->getMiniatureUrls());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testPhotosAreNotDeduplicatedToAvoidRefetchingDuringEachUpdate(): void
     {
         $creator = new Creator()

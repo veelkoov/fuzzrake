@@ -50,12 +50,12 @@ class DataServiceTest extends FuzzrakeKernelTestCase
     {
         return new DataService(
             self::getCreatorRepository(),
-            self::createMock(CreatorValueRepository::class),
-            self::createMock(CreatorVolatileDataRepository::class),
-            self::createMock(CreatorOfferStatusRepository::class),
-            self::createMock(EventRepository::class),
+            self::createStub(CreatorValueRepository::class),
+            self::createStub(CreatorVolatileDataRepository::class),
+            self::createStub(CreatorOfferStatusRepository::class),
+            self::createStub(EventRepository::class),
             CacheUtils::getArrayBased(),
-            self::createMock(LoggerInterface::class),
+            self::createStub(LoggerInterface::class),
         );
     }
 }
