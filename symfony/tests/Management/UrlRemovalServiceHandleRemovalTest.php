@@ -15,6 +15,7 @@ use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
@@ -50,6 +51,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     /**
      * @throws TransportExceptionInterface
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testEmptyNotesGetSet(): void
     {
         $creator = new Creator();
@@ -73,6 +75,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     /**
      * @throws TransportExceptionInterface
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testNonEmptyNotesGetUpdated(): void
     {
         $creator = new Creator()->setNotes("  Some previous stuff\nBlah blah\n");
@@ -98,6 +101,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     /**
      * @throws TransportExceptionInterface
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testCreatorGettingHiddenWhenDesired(): void
     {
         $creator = new Creator();
@@ -112,6 +116,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     /**
      * @throws TransportExceptionInterface
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testCreatorNotGettingHiddenWhenNotDesired(): void
     {
         $creator = new Creator();
@@ -125,6 +130,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
     /**
      * @throws TransportExceptionInterface
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testUrlsAreUpdatedAsDesired(): void
     {
         $creator = new Creator()
