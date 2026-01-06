@@ -29,7 +29,7 @@ class DisrespectfulLegacyScraper implements EventSubscriberInterface
         if ($request->isMethod(Request::METHOD_POST)) {
             $inputs = $request->request->all();
             self::removeUselessCrapFromArray($inputs);
-            $request->request->replace($inputs);
+            $request->request->replace($inputs); // @phpstan-ignore argument.type (Keys are not being modified)
         }
     }
 
