@@ -240,11 +240,10 @@ class CreatorRepository extends ServiceEntityRepository
 
     /**
      * @param string[] $names
-     * @param string[] $creatorIds
      *
      * @return Creator[]
      */
-    public function findBestMatches(array $names, array $creatorIds): array
+    public function findNamedSimilarly(array $names): array
     {
         $builder = $this->createQueryBuilder('d_c')
             ->leftJoin('d_c.creatorIds', 'd_ci');
@@ -258,15 +257,28 @@ class CreatorRepository extends ServiceEntityRepository
             ++$i;
         }
 
+        return $builder->getQuery()->getResult();
+    }
+
+    /**
+     * @param string[] $creatorIds
+     *
+     * @return Creator[]
+     */
+    public function findByCreatorIds(array $creatorIds): array
+    {
+        $builder = $this->createQueryBuilder('d_c')
+            ->leftJoin('d_c.creatorIds', 'd_ci');
+
+        $i = 0;
+
         foreach ($creatorIds as $creatorId) {
             $builder->orWhere("d_ci.creatorId = :eq$i");
             $builder->setParameter("eq$i", $creatorId);
             ++$i;
         }
 
-        $resultData = $builder->getQuery()->getResult();
-
-        return $resultData;
+        return $builder->getQuery()->getResult();
     }
 
     /**

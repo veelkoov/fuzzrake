@@ -8,9 +8,11 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\Submission;
 use App\Form\Mx\SubmissionType;
+use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
+use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -78,24 +80,38 @@ class SubmissionsController extends AbstractController
         $update = $this->updates->getUpdateFor($submission);
 
         if ($form->isSubmitted()) {
-            $this->entityManager->flush();
-        }
+            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid() && $update->isAccepted) {
+                $this->updates->import($update);
 
-        if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
-                && $form->isValid() && $update->isAccepted) {
-            $this->updates->import($update);
-
-            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+            } else {
+                $this->entityManager->flush(); // Save the directives
+            }
         }
 
         foreach ($update->errors as $error) {
             $form->get('directives')->addError(new FormError($error));
         }
 
+        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update);
+
         return $this->render('mx/submissions/submission.html.twig', [
             'update' => $update,
+            'similarlyNamedCreators' => $similarlyNamedCreators,
             'fields' => Fields::iuFormAffected(),
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @return Creator[]
+     */
+    private function getSimilarlyNamedCreators(Update $update): array
+    {
+        return Creator::wrapAll($this->creatorRepository
+            ->findNamedSimilarly(Arrays::nonEmptyStrings(array_unique([
+                ...$update->originalInput->getAllNames(),
+                ...$update->updatedCreator->getAllNames(),
+            ]))));
     }
 }

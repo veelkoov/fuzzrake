@@ -89,32 +89,49 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
         self::assertEquals($retrieved1, $retrieved2);
     }
 
-    public function testFindBestMatches(): void
+    public function testFindNamedSimilarly(): void
     {
         $commonPart = 'creator A';
 
         $creator1name = 'Creator 1';
         $creator1oldName1 = "Old $commonPart";
         $creator1oldName2 = "Older $commonPart";
-        $creator1creatorId = 'TESTI11';
-        $creator1oldCreatorId1 = 'TESTI12';
 
         Creator::wrap($creator1 = new CreatorE())
             ->setName($creator1name)
-            ->setFormerly([$creator1oldName1, $creator1oldName2])
-            ->setCreatorId($creator1creatorId)
-            ->setFormerCreatorIds([$creator1oldCreatorId1]);
+            ->setFormerly([$creator1oldName1, $creator1oldName2]);
 
         $creator2name = 'Creator 2';
         $creator2oldName1 = 'Old creator B';
         $creator2oldName2 = $commonPart;
-        $creator2creatorId = 'TESTI21';
-        $creator2oldCreatorId1 = 'TESTI22';
-        $creator2oldCreatorId2 = 'TESTI23';
 
         Creator::wrap($creator2 = new CreatorE())
             ->setName($creator2name)
-            ->setFormerly([$creator2oldName1, $creator2oldName2])
+            ->setFormerly([$creator2oldName1, $creator2oldName2]);
+
+        self::persistAndFlush($creator1, $creator2);
+
+        $repo = self::getCreatorRepository();
+
+        self::assertEquals([$creator1], $repo->findNamedSimilarly([$creator1name]));
+        self::assertEquals([$creator1], $repo->findNamedSimilarly([$creator1oldName1]));
+        self::assertEquals([$creator1, $creator2], $repo->findNamedSimilarly([$creator2oldName2])); // Shares common part
+    }
+
+    public function testFindByCreatorIds(): void
+    {
+        $creator1creatorId = 'C01ID01';
+        $creator1oldCreatorId1 = 'C01ID02';
+
+        Creator::wrap($creator1 = new CreatorE())
+            ->setCreatorId($creator1creatorId)
+            ->setFormerCreatorIds([$creator1oldCreatorId1]);
+
+        $creator2creatorId = 'C02ID01';
+        $creator2oldCreatorId1 = 'C02ID02';
+        $creator2oldCreatorId2 = 'C02ID03';
+
+        Creator::wrap($creator2 = new CreatorE())
             ->setCreatorId($creator2creatorId)
             ->setFormerCreatorIds([$creator2oldCreatorId1, $creator2oldCreatorId2]);
 
@@ -122,10 +139,10 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
 
         $repo = self::getCreatorRepository();
 
-        self::assertEquals([$creator1], $repo->findBestMatches([$creator1name], [$creator1oldCreatorId1]));
-        self::assertEquals([$creator1], $repo->findBestMatches([$creator1oldName1], ['NEWCRID']));
-        self::assertEquals([$creator2], $repo->findBestMatches([], [$creator2oldCreatorId2]));
-        self::assertEquals([$creator1, $creator2], $repo->findBestMatches([$creator2oldName2], [])); // Shares common part
-        self::assertEquals([$creator1, $creator2], $repo->findBestMatches([], [$creator1creatorId, $creator2oldCreatorId1]));
+        self::assertEquals([$creator1], $repo->findByCreatorIds([$creator1creatorId]));
+        self::assertEquals([$creator1], $repo->findByCreatorIds([$creator1oldCreatorId1]));
+        self::assertEquals([], $repo->findByCreatorIds(['NEWCRID']));
+        self::assertEquals([$creator2], $repo->findByCreatorIds([$creator2oldCreatorId2]));
+        self::assertEquals([$creator1, $creator2], $repo->findByCreatorIds([$creator1creatorId, $creator2oldCreatorId1]));
     }
 }

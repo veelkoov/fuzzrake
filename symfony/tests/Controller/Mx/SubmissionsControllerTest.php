@@ -202,12 +202,15 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testSubmissionMatchingMultipleCreators(): void
     {
+        // grep-code: At this point could only be a result of an error or unpredictable condition, but keeping this test
+
         $creator1 = new Creator()->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
         $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
 
         self::persistAndFlush($creator1, $creator2);
 
-        $submissionData = new Creator()->setCreatorId('TEST001')->setName('Testing creator')->setCity('Oulu');
+        $submissionData = new Creator()->setCreatorId('TEST001')->setFormerCreatorIds(['TEST002'])
+            ->setName('Testing creator')->setCity('Oulu');
         $submission = $this->createSubmission($submissionData);
         self::persistAndFlush($submission);
 
@@ -230,6 +233,24 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         // With a single creator selected, display actual difference
         self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
+    }
+
+    public function testShowingSimilarlyNamedCreators(): void
+    {
+        $creator1 = new Creator()->setCreatorId('TEST001')->setName('Catbert');
+        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Why')->setFormerly(['Dogbert & Catbert']);
+
+        self::persistAndFlush($creator1, $creator2);
+
+        $submission = $this->createSubmission(new Creator()->setCreatorId('TEST003')->setName('Catbert'));
+        self::persistAndFlush($submission);
+
+        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::assertResponseStatusCodeIs(200);
+
+        self::assertAnySelectorTextContains('p', 'Creators named similarly:');
+        self::assertAnySelectorTextContains('p > a[href="/#TEST001"]', 'Catbert');
+        self::assertAnySelectorTextContains('p > a[href="/#TEST002"]', 'Why / Dogbert & Catbert');
     }
 
     public function testUpdatingExistingSubmissionWithoutImport(): void
