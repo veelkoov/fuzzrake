@@ -12,7 +12,7 @@ use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
-use App\Utils\Collections\Arrays;
+use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Route(path: '/mx')]
 class SubmissionsController extends AbstractController
@@ -93,7 +94,7 @@ class SubmissionsController extends AbstractController
             $form->get('directives')->addError(new FormError($error));
         }
 
-        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update);
+        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update)->getValuesArray();
 
         return $this->render('mx/submissions/submission.html.twig', [
             'update' => $update,
@@ -103,15 +104,13 @@ class SubmissionsController extends AbstractController
         ]);
     }
 
-    /**
-     * @return Creator[]
-     */
-    private function getSimilarlyNamedCreators(Update $update): array
+    private function getSimilarlyNamedCreators(Update $update): CreatorList
     {
-        return Creator::wrapAll($this->creatorRepository
-            ->findNamedSimilarly(Arrays::nonEmptyStrings(array_unique([
-                ...$update->originalInput->getAllNames(),
-                ...$update->updatedCreator->getAllNames(),
-            ]))));
+        return CreatorList::wrap($this->creatorRepository->findNamedSimilarly(
+            new StringSet($update->originalInput->getAllNames())
+                ->plusAll($update->updatedCreator->getAllNames())
+                ->minus('')
+                ->getValuesArray()
+        ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->originalCreator->entity);
     }
 }
