@@ -11,6 +11,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
+use Veelkoov\Debris\Lists\StringList;
 
 #[Medium]
 class CreatorRepositoryTest extends FuzzrakeKernelTestCase
@@ -113,9 +114,9 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
 
         $repo = self::getCreatorRepository();
 
-        self::assertEquals([$creator1], $repo->findNamedSimilarly([$creator1name]));
-        self::assertEquals([$creator1], $repo->findNamedSimilarly([$creator1oldName1]));
-        self::assertEquals([$creator1, $creator2], $repo->findNamedSimilarly([$creator2oldName2])); // Shares common part
+        self::assertEquals([$creator1], $repo->findNamedSimilarly(StringList::of($creator1name)));
+        self::assertEquals([$creator1], $repo->findNamedSimilarly(StringList::of($creator1oldName1)));
+        self::assertEquals([$creator1, $creator2], $repo->findNamedSimilarly(StringList::of($creator2oldName2))); // Shares common part
     }
 
     public function testFindByCreatorIds(): void

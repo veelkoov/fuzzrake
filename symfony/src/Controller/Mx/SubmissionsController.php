@@ -110,7 +110,6 @@ class SubmissionsController extends AbstractController
             new StringSet($update->originalInput->getAllNames())
                 ->plusAll($update->updatedCreator->getAllNames())
                 ->minus('')
-                ->getValuesArray()
         ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->originalCreator->entity);
     }
 }

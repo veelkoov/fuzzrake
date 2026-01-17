@@ -24,6 +24,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use Veelkoov\Debris\Collections\Strings;
 use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToInt;
@@ -239,11 +240,9 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $names
-     *
      * @return Creator[]
      */
-    public function findNamedSimilarly(array $names): array
+    public function findNamedSimilarly(Strings $names): array
     {
         $builder = $this->createQueryBuilder('d_c')
             ->leftJoin('d_c.creatorIds', 'd_ci');
