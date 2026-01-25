@@ -117,7 +117,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
      */
     public static function objectOf(mixed $input, string $class): mixed
     {
-        if (!($input instanceof $class)) {
+        if (!$input instanceof $class) {
             throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
         }
 

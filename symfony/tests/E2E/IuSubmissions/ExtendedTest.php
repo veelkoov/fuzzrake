@@ -367,7 +367,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     private static function setValuesInExpandedField(array $value, array $fields): void
     {
         foreach ($fields as $formField) {
-            if (!($formField instanceof ChoiceFormField)) {
+            if (!$formField instanceof ChoiceFormField) {
                 throw new InvalidArgumentException('Expected choice field');
             }
 

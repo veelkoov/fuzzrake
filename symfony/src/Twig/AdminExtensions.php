@@ -18,7 +18,7 @@ class AdminExtensions
     #[AsTwigFilter('smart')]
     public function smartFilter(Creator|CreatorE $creator): Creator
     {
-        if (!($creator instanceof Creator)) {
+        if (!$creator instanceof Creator) {
             $creator = Creator::wrap($creator);
         }
 

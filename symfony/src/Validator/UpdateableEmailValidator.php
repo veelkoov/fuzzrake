@@ -28,7 +28,7 @@ class UpdateableEmailValidator extends ConstraintValidator
     #[Override]
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!($value instanceof Creator)) {
+        if (!$value instanceof Creator) {
             throw new InvalidArgumentException(self::class.' supports only '.Creator::class.' instances');
         }
 
