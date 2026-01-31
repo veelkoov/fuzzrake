@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\RequestsHandling;
 
+use App\Data\Definitions\Ages;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
@@ -45,6 +46,12 @@ class FiltersValidChoicesFilter
         $openFor = self::onlyValidValues($choices->openFor,
             $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
 
+        $paymentPlans = self::onlyValidValues($choices->paymentPlans,
+            StringSet::of(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, Consts::FILTER_VALUE_PAYPLANS_NONE, Consts::FILTER_VALUE_UNKNOWN));
+
+        $ages = self::onlyValidValues($choices->ages, StringSet::mapFrom(Ages::cases(), static fn (Ages $ages) => $ages->value)
+            ->plus(Consts::FILTER_VALUE_UNKNOWN));
+
         return new Choices(
             $choices->creatorId,
             $choices->textSearch,
@@ -57,9 +64,8 @@ class FiltersValidChoicesFilter
             $productionModels,
             $openFor,
             $species,
-            $choices->wantsUnknownPaymentPlans,
-            $choices->wantsAnyPaymentPlans,
-            $choices->wantsNoPaymentPlans,
+            $paymentPlans,
+            $ages,
             $choices->isAdult,
             $choices->wantsSfw,
             $choices->wantsInactive,

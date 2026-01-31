@@ -25,6 +25,7 @@ class RequestParser
         'openFor',
         'species',
         'paymentPlans',
+        'ages',
         'inactive',
     ];
 
@@ -64,9 +65,8 @@ class RequestParser
             new StringSet($strArrays->get('productionModels')),
             new StringSet($strArrays->get('openFor')),
             new StringSet($strArrays->get('species')),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_UNKNOWN),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
-            $strArrays->get('paymentPlans')->contains(Consts::FILTER_VALUE_PAYPLANS_NONE),
+            new StringSet($strArrays->get('paymentPlans')),
+            new StringSet($strArrays->get('ages')),
             $booleans->get('isAdult'),
             $booleans->get('wantsSfw'),
             $strArrays->get('inactive')->contains(Consts::FILTER_VALUE_INCLUDE_INACTIVE),
