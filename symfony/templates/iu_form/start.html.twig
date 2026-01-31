@@ -15,6 +15,10 @@
 {% block body %}
     <h1 id="iu-form-data" data-step="start">{{ block('title')|capitalize }}</h1>
 
+    <div class="alert alert-warning" role="alert">
+        Adding new makers/studios is suspended until further notice.
+    </div>
+
     <p class="mt-3">
         <a class="disable-filters-goto-main-page text-decoration-none" href="{{ path('main') }}" target="_blank">
             <i class="fa-solid fa-filter-circle-xmark"></i>

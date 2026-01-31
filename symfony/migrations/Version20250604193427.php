@@ -16,6 +16,7 @@ final class Version20250604193427 extends AbstractMigration
         return 'Add creator_id to events.';
     }
 
+    #[Override]
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'

@@ -130,40 +130,44 @@ function iter_sortl(iterable $iterable): array
     return arr_sortl([...$iterable]);
 }
 
-/**
- * @template V
- *
- * @param array<V> $array
- *
- * @return ($array is non-empty-array ? V : null)
- */
-function array_first(array $array): mixed
-{
-    $key = array_key_first($array);
+if (!function_exists('array_first')) {
+    /**
+     * @template V
+     *
+     * @param array<V> $array
+     *
+     * @return ($array is non-empty-array ? V : null)
+     */
+    function array_first(array $array): mixed
+    {
+        $key = array_key_first($array);
 
-    if (null === $key) {
-        return null;
+        if (null === $key) {
+            return null;
+        }
+
+        return $array[$key];
     }
-
-    return $array[$key];
 }
 
-/**
- * @template V
- *
- * @param array<V> $array
- *
- * @return V|null
- */
-function array_last(array $array): mixed
-{
-    $key = array_key_last($array);
+if (!function_exists('array_last')) {
+    /**
+     * @template V
+     *
+     * @param array<V> $array
+     *
+     * @return V|null
+     */
+    function array_last(array $array): mixed
+    {
+        $key = array_key_last($array);
 
-    if (null === $key) {
-        return null;
+        if (null === $key) {
+            return null;
+        }
+
+        return $array[$key];
     }
-
-    return $array[$key];
 }
 
 function str_strip_prefix(string $subject, string $prefix): string

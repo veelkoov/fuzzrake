@@ -600,7 +600,7 @@ class Creator implements Stringable
 
     public function addCreatorId(CreatorId|string $creatorId): self
     {
-        if (!($creatorId instanceof CreatorId)) {
+        if (!$creatorId instanceof CreatorId) {
             if ($this->hasCreatorId($creatorId)) {
                 return $this;
             }

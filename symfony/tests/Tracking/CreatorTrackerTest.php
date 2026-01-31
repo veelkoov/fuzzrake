@@ -16,6 +16,8 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshots\SnapshotsManager;
 use App\Utils\Web\Url\Url;
+use Override;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -23,6 +25,7 @@ use Throwable;
 use Veelkoov\Debris\Lists\StringList;
 
 #[Small]
+#[AllowMockObjectsWithoutExpectations]
 class CreatorTrackerTest extends FuzzrakeTestCase
 {
     private CreatorTracker $subject;
@@ -34,6 +37,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
     /**
      * @throws Throwable
      */
+    #[Override]
     protected function setUp(): void
     {
         $this->snapshotsManagerMock = self::createMock(SnapshotsManager::class);

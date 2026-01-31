@@ -68,7 +68,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
 
     private function getSubject(CreatorRepository $creatorRepositoryMock, MiniaturesUpdater $updaterMock): UpdateMiniaturesMessageHandler
     {
-        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock = self::createStub(LoggerInterface::class);
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $entityManagerMock->expects(self::once())->method('flush');
 

@@ -16,6 +16,7 @@ final class Version20250412094516 extends AbstractMigration
         return 'Remove obsolete table "kotlin_data". Rename "creators_private_data" table, columns, remove unused column "notes".';
     }
 
+    #[Override]
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'

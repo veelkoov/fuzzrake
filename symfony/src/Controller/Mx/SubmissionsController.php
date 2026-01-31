@@ -8,9 +8,11 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\Submission;
 use App\Form\Mx\SubmissionType;
+use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
+use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -24,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Veelkoov\Debris\Sets\StringSet;
 
 #[Route(path: '/mx')]
 class SubmissionsController extends AbstractController
@@ -78,24 +81,35 @@ class SubmissionsController extends AbstractController
         $update = $this->updates->getUpdateFor($submission);
 
         if ($form->isSubmitted()) {
-            $this->entityManager->flush();
-        }
+            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid() && $update->isAccepted) {
+                $this->updates->import($update);
 
-        if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
-                && $form->isValid() && $update->isAccepted) {
-            $this->updates->import($update);
-
-            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+            } else {
+                $this->entityManager->flush(); // Save the directives
+            }
         }
 
         foreach ($update->errors as $error) {
             $form->get('directives')->addError(new FormError($error));
         }
 
+        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update)->getValuesArray();
+
         return $this->render('mx/submissions/submission.html.twig', [
             'update' => $update,
+            'similarlyNamedCreators' => $similarlyNamedCreators,
             'fields' => Fields::iuFormAffected(),
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ]);
+    }
+
+    private function getSimilarlyNamedCreators(Update $update): CreatorList
+    {
+        return CreatorList::wrap($this->creatorRepository->findNamedSimilarly(
+            new StringSet($update->originalInput->getAllNames())
+                ->plusAll($update->updatedCreator->getAllNames())
+                ->minus('')
+        ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->originalCreator->entity);
     }
 }

@@ -30,6 +30,17 @@
         </p>
     {% endif %}
 
+    {% if similarlyNamedCreators %}
+        <p>
+            Creators named similarly:
+
+            {% for creator in similarlyNamedCreators %}
+                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.allNames | join(' / ') }} ({{ creator.lastCreatorId }})</a>
+                {%- if loop.last %}.{% else %},{% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+
     <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>

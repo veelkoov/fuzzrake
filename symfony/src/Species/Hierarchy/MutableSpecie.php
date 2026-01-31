@@ -57,6 +57,7 @@ final class MutableSpecie implements Specie
         return $this->parents;
     }
 
+    #[Override]
     public function getAncestors(): SpecieSet
     {
         $result = new SpecieSet();

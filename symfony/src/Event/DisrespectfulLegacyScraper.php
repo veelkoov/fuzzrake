@@ -34,16 +34,22 @@ class DisrespectfulLegacyScraper implements EventSubscriberInterface
     }
 
     /**
-     * @param array<mixed> $array
+     * @template T
+     *
+     * @param array<T, mixed> $subject
+     *
+     * @return array<T, mixed>
      */
-    private static function removeUselessCrapFromArray(array &$array): void
+    private static function removeUselessCrapFromArray(array $subject): array
     {
-        foreach ($array as &$value) {
+        foreach ($subject as &$value) {
             if (is_string($value)) {
                 $value = str_replace(self::USELESS_CRAP_FOLLOWED_BY_A_NEWLINE, "\n", $value);
             } elseif (is_array($value)) {
-                self::removeUselessCrapFromArray($value);
+                $value = self::removeUselessCrapFromArray($value);
             }
         }
+
+        return $subject;
     }
 }

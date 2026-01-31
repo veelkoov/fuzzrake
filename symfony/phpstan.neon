@@ -6,6 +6,8 @@ parameters:
     - src
     - tests
 
+  checkMissingOverrideMethodAttribute: true
+
   doctrine:
     objectManagerLoader: tests/object-manager.php
   symfony:

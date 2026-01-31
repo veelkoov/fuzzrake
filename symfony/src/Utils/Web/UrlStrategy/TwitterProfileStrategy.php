@@ -49,6 +49,7 @@ class TwitterProfileStrategy extends Strategy
         return "$ogTitle\n$ogDescription";
     }
 
+    #[Override]
     public function getCookieInitUrl(): Url
     {
         return new FreeUrl('https://x.com/', ''); // Space Karen

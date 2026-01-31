@@ -8,18 +8,27 @@ use App\Entity\Creator as CreatorE;
 use App\Tracking\Data\AnalysisInput;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url\FreeUrl;
+use ReflectionClass;
+use ReflectionException;
 
 trait MocksTrait
 {
     protected function getPersistedCreatorMock(): Creator
     {
-        $result = $this->getMockBuilder(CreatorE::class)->onlyMethods(['getId'])->getMock();
-        $result->method('getId')->willReturn(1);
+        try {
+            $idReflectionProperty = new ReflectionClass(CreatorE::class)->getProperty('id');
+        } catch (ReflectionException $exception) {
+            throw new UnbelievableRuntimeException($exception);
+        }
 
-        return Creator::wrap($result);
+        $result = new Creator();
+        $idReflectionProperty->setValue($result->entity, 1);
+
+        return $result;
     }
 
     /**

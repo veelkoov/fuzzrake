@@ -76,9 +76,7 @@ class ScritchMiniatureUrlResolver implements MiniatureUrlResolver
             {
                 "operationName": "Medium",
                 "variables": {"id": "$pictureId"},
-                "query": "query Medium(\$id: ID!, \$tagging: Boolean) {
-                    medium(id: \$id, tagging: \$tagging) { thumbnail }
-                }"
+                "query": "query Medium(\$id: ID!, \$tagging: Boolean) { medium(id: \$id, tagging: \$tagging) { thumbnail } }"
             }
         GRAPHQL;
     }

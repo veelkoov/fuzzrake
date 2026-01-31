@@ -118,17 +118,11 @@ class UpdatesService
      */
     private function getCreators(Creator $submissionData, ?string $matchedCreatorId): array
     {
-        if (null !== $matchedCreatorId) {
-            $creatorIds = [$matchedCreatorId];
-            $names = [];
-        } else {
-            $creatorIds = $submissionData->getAllCreatorIds();
-            $names = [$submissionData->getName(), ...$submissionData->getFormerly()];
-        }
-
-        $results = $this->creatorRepository->findBestMatches($names, $creatorIds);
-
-        return Creator::wrapAll($results);
+        return Creator::wrapAll($this->creatorRepository->findByCreatorIds(
+            null !== $matchedCreatorId
+                ? [$matchedCreatorId]
+                : $submissionData->getAllCreatorIds(),
+        ));
     }
 
     private function handleSpecialFieldsInInput(Creator $submission, Creator $original): void

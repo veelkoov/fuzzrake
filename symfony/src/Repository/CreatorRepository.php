@@ -24,6 +24,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use Veelkoov\Debris\Collections\Strings;
 use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Maps\AnyToInt;
 use Veelkoov\Debris\Maps\NullBoolToInt;
@@ -254,12 +255,9 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $names
-     * @param string[] $creatorIds
-     *
      * @return Creator[]
      */
-    public function findBestMatches(array $names, array $creatorIds): array
+    public function findNamedSimilarly(Strings $names): array
     {
         $builder = $this->createQueryBuilder('d_c')
             ->leftJoin('d_c.creatorIds', 'd_ci');
@@ -273,15 +271,28 @@ class CreatorRepository extends ServiceEntityRepository
             ++$i;
         }
 
+        return $builder->getQuery()->getResult();
+    }
+
+    /**
+     * @param string[] $creatorIds
+     *
+     * @return Creator[]
+     */
+    public function findByCreatorIds(array $creatorIds): array
+    {
+        $builder = $this->createQueryBuilder('d_c')
+            ->leftJoin('d_c.creatorIds', 'd_ci');
+
+        $i = 0;
+
         foreach ($creatorIds as $creatorId) {
             $builder->orWhere("d_ci.creatorId = :eq$i");
             $builder->setParameter("eq$i", $creatorId);
             ++$i;
         }
 
-        $resultData = $builder->getQuery()->getResult();
-
-        return $resultData;
+        return $builder->getQuery()->getResult();
     }
 
     /**

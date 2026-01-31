@@ -12,7 +12,7 @@ trait ButtonClickedTrait
 {
     protected function clicked(FormInterface $form, string $buttonId): bool
     {
-        if (!($form instanceof Form)) {
+        if (!$form instanceof Form) {
             return false;
         }
 

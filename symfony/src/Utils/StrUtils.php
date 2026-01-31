@@ -42,7 +42,7 @@ final class StrUtils
     public static function asStr(mixed $value): string
     {
         if (null === $value) {
-            return 'unknown'; // TODO: It should not be used in API results; https://github.com/veelkoov/fuzzrake/issues/174
+            return 'unknown';
         } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof Ages) {

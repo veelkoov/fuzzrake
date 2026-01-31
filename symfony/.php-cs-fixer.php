@@ -19,6 +19,7 @@ return new PhpCsFixer\Config()
             'imports_order'  => ['const', 'class', 'function'],
         ],
         'nullable_type_declaration_for_default_null_value' => false, // Explicit over implicit
+        'no_useless_else' => false, // Context-dependent readability
     ])
     ->setFinder($finder)
 ;

@@ -75,6 +75,7 @@ class CreatorUrl implements Stringable, Url
         return $this;
     }
 
+    #[Override]
     public function getUrl(): string
     {
         return $this->url;
@@ -153,6 +154,7 @@ class CreatorUrl implements Stringable, Url
         return UrlUtils::getHost($this->url);
     }
 
+    #[Override]
     public function getCreatorId(): string
     {
         return $this->creator->getLastCreatorId();

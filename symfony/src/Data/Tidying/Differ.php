@@ -47,6 +47,7 @@ class Differ
 
             $item = StrUtils::strSafeForCli($item);
         }
+        unset($item);
 
         foreach ($newValItems as &$item) {
             if (!arr_contains($oldValItems, $item)) {
@@ -55,6 +56,7 @@ class Differ
 
             $item = StrUtils::strSafeForCli($item);
         }
+        unset($item);
 
         $q = Formatter::shy('"');
         $n = Formatter::shy('\n');

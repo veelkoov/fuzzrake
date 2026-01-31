@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Captcha\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -12,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class StandaloneCaptchaType extends AbstractType
 {
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('captcha', CaptchaType::class);

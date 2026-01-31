@@ -5,10 +5,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/veelkoov/debris"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/veelkoov/t-regx"
         }
     ],
     "require": {
@@ -22,11 +18,11 @@
         "ext-pdo": "*",
         "composer/package-versions-deprecated": "*",
         "composer/pcre": "^3.3",
-        "doctrine/doctrine-bundle": "*",
-        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/doctrine-bundle": "^3.1.0",
+        "doctrine/doctrine-migrations-bundle": "^4.0.0",
         "doctrine/orm": "*",
         "nette/utils": "^v4.0.5",
-        "phpoffice/phpspreadsheet": "^3.7.0",
+        "phpoffice/phpspreadsheet": "^5.3.0",
         "symfony/apache-pack": "^1.0",
         "symfony/browser-kit": "*",
         "symfony/clock": "*",
@@ -40,11 +36,11 @@
         "symfony/http-client": "*",
         "symfony/mailer": "*",
         "symfony/messenger": "*",
-        "symfony/monolog-bundle": "^3.6",
+        "symfony/monolog-bundle": "v4.0.1",
         "symfony/process": "*",
         "symfony/rate-limiter": "*",
         "symfony/runtime": "*",
-        "symfony/scheduler": "7.3.*",
+        "symfony/scheduler": "*",
         "symfony/security-bundle": "*",
         "symfony/security-csrf": "*",
         "symfony/serializer": "*",
@@ -116,7 +112,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.3.*"
+            "require": "7.4.*"
         }
     }
 }

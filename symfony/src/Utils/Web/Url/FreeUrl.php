@@ -15,6 +15,7 @@ readonly class FreeUrl extends AbstractBaseUrl
         parent::__construct($url);
     }
 
+    #[Override]
     public function getCreatorId(): string
     {
         return $this->creatorId;

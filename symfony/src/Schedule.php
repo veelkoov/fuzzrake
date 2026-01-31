@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\ValueObject\Messages\InitiateTrackingV1;
+use Override;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule as SymfonySchedule;
@@ -19,6 +20,7 @@ class Schedule implements ScheduleProviderInterface
     ) {
     }
 
+    #[Override]
     public function getSchedule(): SymfonySchedule
     {
         return new SymfonySchedule()

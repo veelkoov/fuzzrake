@@ -8,7 +8,6 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
-use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\SubmissionService;
@@ -18,9 +17,12 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Random\RandomException;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -31,6 +33,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 {
     use ClockSensitiveTrait;
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesNewEmailProperly(): void
     {
         $submission = SubmissionService::getEntityForSubmission(new Creator()
@@ -39,7 +42,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['A creator'], ['TEST001'], []]]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertSame('', $result->originalCreator->getEmailAddress());
@@ -47,6 +50,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesEmailChangeProperly(): void
     {
         $existing = $this->getPersistedCreatorMock()
@@ -61,13 +65,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('an-update.2@localhost.localdomain')
         );
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['A creator'], ['TEST001'], [$existing]]]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertSame('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesUnchangedEmailProperly(): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -82,13 +87,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setEmailAddress('')
         );
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['A creator'], ['TEST001'], [$creator]]]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesRevokedContactPermitProperly(): void
     {
         $existing = $this->getPersistedCreatorMock()
@@ -104,13 +110,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setContactAllowed(ContactPermit::NO)
         );
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['A creator'], ['TEST001'], [$existing]]]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$existing]]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
         self::assertSame('', $result->updatedCreator->getEmailAddress());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testAddedDateIsHandledProperly(): void
     {
         self::mockTime();
@@ -119,9 +126,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setCreatorId('TEST001')
         );
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([
-            [[''], ['TEST001'], []],
-        ]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertNull($result->originalCreator->getDateAdded());
@@ -135,8 +140,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws SubmissionException|DateTimeException
+     * @throws DateTimeException|JsonException|RandomException
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdatedDateIsHandledProperly(): void
     {
         self::mockTime();
@@ -148,13 +154,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setDateAdded($dateAdded)
         ;
 
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setCreatorId('TEST001')
-        );
+        $submission = SubmissionService::getEntityForSubmission(new Creator()->setCreatorId('TEST001'));
 
-        $subject = $this->getUpdatesServiceForGetUpdateFor([
-            [[''], ['TEST001'], [$creator]],
-        ]);
+        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor($submission);
 
         self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->originalCreator->getDateAdded());
@@ -167,26 +169,24 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testResolvingMultipleMatchedByCreatorId(): void
     {
-        $creator1 = $this->getPersistedCreatorMock()
-            ->setCreatorId('TEST0A1')
-            ->setName('Common name')
-        ;
+        // grep-code: At this point could only be a result of an error or unpredictable condition, but keeping this test
 
-        $creator2 = $this->getPersistedCreatorMock()
-            ->setCreatorId('TEST0B1')
-            ->setName('Common part')
-        ;
+        $creator1 = $this->getPersistedCreatorMock()->setCreatorId('TEST0A1')->setName('Creator 1');
+        $creator2 = $this->getPersistedCreatorMock()->setCreatorId('TEST0B1')->setName('Creator 2');
 
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setCreatorId('TEST0A2')
-            ->setName('Common')
+        $submission = SubmissionService::getEntityForSubmission(
+            new Creator()
+                ->setCreatorId('TEST0A1')
+                ->setFormerCreatorIds(['TEST0B1'])
+                ->setName('Creator X')
         );
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([
-            [['Common'], ['TEST0A2'], [$creator1, $creator2]],
-            [[], ['TEST0A1'], [$creator1]],
+            [['TEST0A1', 'TEST0B1'], [$creator1, $creator2]],
+            [['TEST0A1'], [$creator1]],
         ]);
 
         $result = $subject->getUpdateFor($submission);
@@ -197,6 +197,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesCreatorIdChangeProperly(): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -212,9 +213,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerly(['The old creator name'])
         );
 
-        $result1 = $this->getUpdatesServiceForGetUpdateFor([
-            [['The new creator name', 'The old creator name'], ['TEST003'], [$creator]],
-        ])->getUpdateFor($submission1);
+        $result1 = $this->getUpdatesServiceForGetUpdateFor([[['TEST003'], [$creator]]])->getUpdateFor($submission1);
 
         self::assertSame('The new creator name', $result1->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
@@ -228,9 +227,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerly(['The old creator name'])
         );
 
-        $result2 = $this->getUpdatesServiceForGetUpdateFor([
-            [['The new creator name', 'The old creator name'], ['TEST001'], [$creator]],
-        ])->getUpdateFor($submission2);
+        $result2 = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]])->getUpdateFor($submission2);
 
         self::assertSame('The new creator name', $result2->updatedCreator->getName());
         self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());
@@ -239,19 +236,19 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @param list<array{list<string>, list<string>, list<Creator>}> $calls
+     * @param list<array{list<string>, list<Creator>}> $calls
      */
     private function getUpdatesServiceForGetUpdateFor(array $calls): UpdatesService
     {
         $creatorRepoMock = $this->createMock(CreatorRepository::class);
-        $creatorRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $creatorIds) use ($calls) {
+        $creatorRepoMock->method('findByCreatorIds')->willReturnCallback(function (array $creatorIds) use ($calls) {
             foreach ($calls as $call) {
-                if ($call[0] === $names && $call[1] === $creatorIds) {
-                    return arr_map($call[2], static fn (Creator $creator) => $creator->entity);
+                if ($call[0] === $creatorIds) {
+                    return arr_map($call[1], static fn (Creator $creator) => $creator->entity);
                 }
             }
 
-            self::fail('findBestMatches was called with unexpected parameters');
+            self::fail('findByCreatorIds was called with unexpected parameters');
         });
 
         $entityManagerStub = self::createStub(EntityManagerInterface::class);
@@ -261,6 +258,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         return new UpdatesService($creatorRepoMock, $entityManagerStub, $this->getNoopFixerMock(), $messageBusStub, $loggerStub);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
@@ -270,6 +268,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject->import($update);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');

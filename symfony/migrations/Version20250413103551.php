@@ -16,6 +16,7 @@ final class Version20250413103551 extends AbstractMigration
         return 'Remove column "contact_info_obfuscated" from "artisans" table.';
     }
 
+    #[Override]
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'

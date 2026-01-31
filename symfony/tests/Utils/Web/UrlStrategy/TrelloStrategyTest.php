@@ -6,6 +6,7 @@ namespace App\Tests\Utils\Web\UrlStrategy;
 
 use App\Utils\Web\Url\FreeUrl;
 use App\Utils\Web\UrlStrategy\TrelloStrategy;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,7 @@ class TrelloStrategyTest extends TestCase
 {
     private TrelloStrategy $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

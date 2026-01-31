@@ -36,6 +36,7 @@ parameters:
       "^poland$": "PL"
       "^portugal$": "PT"
       "^russia$": "RU"
+      "^serbia$": "RS"
       "^slovakia$": "SK"
       "^spain$": "ES"
       "^sweden$": "SE"
@@ -152,6 +153,7 @@ parameters:
       NO: Norway
       PL: Poland
       PT: Portugal
+      RS: Serbia
       SE: Sweden
       SK: Slovakia
       UA: Ukraine

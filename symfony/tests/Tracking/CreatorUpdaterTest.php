@@ -12,6 +12,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -42,6 +43,7 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
         );
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testChangesAreApplied(): void
     {
         self::mockTime();
