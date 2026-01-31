@@ -16,6 +16,7 @@ final class Version20250424214005 extends AbstractMigration
         return 'Rename all legacy names in tables and columns.';
     }
 
+    #[Override]
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'

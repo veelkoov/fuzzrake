@@ -10,6 +10,7 @@ use App\Photos\MiniatureUrlResolver\ScritchMiniatureUrlResolver;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Url\Url;
+use Override;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
@@ -19,6 +20,7 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
 {
     private MiniaturesUpdater $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -8,6 +8,7 @@ use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\Data\AnalysisResult;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
@@ -19,6 +20,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     private AnalysisAggregator $subject;
     private Creator $creator;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = new AnalysisAggregator(self::createStub(LoggerInterface::class));

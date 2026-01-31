@@ -16,6 +16,7 @@ final class Version20250426132032 extends AbstractMigration
         return 'Removes old submissions (backups kept separately). Add timestamp and payload columns to the submissions table.';
     }
 
+    #[Override]
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'

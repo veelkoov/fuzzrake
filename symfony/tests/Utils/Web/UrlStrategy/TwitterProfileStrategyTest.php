@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Web\UrlStrategy;
 
 use App\Utils\Web\UrlStrategy\TwitterProfileStrategy;
+use Override;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +14,7 @@ class TwitterProfileStrategyTest extends TestCase
 {
     private TwitterProfileStrategy $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tracking\Data;
 
 use App\Utils\StrUtils;
+use Override;
 use Stringable;
 use Veelkoov\Debris\Lists\StringList;
 
@@ -31,6 +32,7 @@ readonly class AnalysisResult implements Stringable
         );
     }
 
+    #[Override]
     public function __toString(): string
     {
         return "U: '$this->url'; O: {$this->openFor->join(',')}; C: {$this->closedFor->join(',')}; I: "

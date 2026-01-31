@@ -8,6 +8,7 @@ use App\Species\Hierarchy\Species;
 use App\Species\SpecieException;
 use App\Species\SpeciesService;
 use App\Tests\TestUtils\DataDefinitions;
+use Override;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
@@ -16,6 +17,7 @@ class SpeciesServiceTest extends TestCase
 {
     private Species $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = (new SpeciesService([
