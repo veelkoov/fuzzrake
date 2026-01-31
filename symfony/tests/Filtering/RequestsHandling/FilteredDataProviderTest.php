@@ -124,6 +124,8 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
     private function getChoices(bool $isAdult, bool $wantsSfw, bool $wantsInactive, int $pageNumber): Choices
     {
-        return new Choices('', '', new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), new StringSet(), $isAdult, $wantsSfw, $wantsInactive, creatorMode: false, pageNumber: $pageNumber);
+        $none = new StringSet()->freeze();
+
+        return new Choices('', '', $none, $none, $none, $none, $none, $none, $none, $none, $none, $none, $none, $isAdult, $wantsSfw, $wantsInactive, creatorMode: false, pageNumber: $pageNumber);
     }
 }

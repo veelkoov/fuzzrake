@@ -266,11 +266,8 @@ class QueryChoicesAppender
     private function applyWantsInactive(QueryBuilder $builder): void
     {
         if (!$this->choices->wantsInactive) {
-            $inactiveReasonValue = QueryBuilderUtils::getUniqueId();
-
-            $builder
-                ->andWhere("d_c.inactiveReason = :$inactiveReasonValue")
-                ->setParameter($inactiveReasonValue, '');
+            new SingleColumnSingleValueFilter('d_c.inactiveReason', nullable: false)
+                ->applyChoicesTo(StringSet::of(''), $builder);
         }
     }
 

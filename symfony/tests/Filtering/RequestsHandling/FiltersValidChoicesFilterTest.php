@@ -22,12 +22,12 @@ class FiltersValidChoicesFilterTest extends FuzzrakeTestCase
     public function testGetOnlyAllowed(): void
     {
         $dataServiceMock = $this->createMock(DataService::class);
-        $dataServiceMock->method('getCountries')->willReturn(StringSet::of('FI'));
-        $dataServiceMock->method('getStates')->willReturn(StringSet::of('Liquid'));
-        $dataServiceMock->method('getOpenFor')->willReturn(StringSet::of('Pancakes', 'Waffles'));
-        $dataServiceMock->method('getLanguages')->willReturn(StringSet::of('Czech', 'Finnish'));
+        $dataServiceMock->expects($this->once())->method('getCountries')->willReturn(StringSet::of('FI'));
+        $dataServiceMock->expects($this->once())->method('getStates')->willReturn(StringSet::of('Liquid'));
+        $dataServiceMock->expects($this->once())->method('getOpenFor')->willReturn(StringSet::of('Pancakes', 'Waffles'));
+        $dataServiceMock->expects($this->once())->method('getLanguages')->willReturn(StringSet::of('Czech', 'Finnish'));
         $speciesServiceMock = $this->createMock(SpeciesService::class);
-        $speciesServiceMock->method('getValidNames')->willReturn(StringSet::of('Birds'));
+        $speciesServiceMock->expects($this->once())->method('getValidNames')->willReturn(StringSet::of('Birds'));
 
         $subject = new FiltersValidChoicesFilter($dataServiceMock, $speciesServiceMock);
 
