@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests;
+namespace App\Filtering\RequestsHandling;
 
+use App\Filtering\Consts;
 use Symfony\Component\HttpFoundation\Request;
 use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToBool;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataRequests;
+namespace App\Tests\Filtering\RequestsHandling;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Pagination\Pagination;
