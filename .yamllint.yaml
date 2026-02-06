@@ -1,8 +1,28 @@
 ---
-rules:
-  colons:
-    max-spaces-after: -1 # Allow manual indentation of properties
+extends: default
 
-  quoted-strings:
-    quote-type:          'single'
-    allow-quoted-quotes: true
+ignore:
+  - /node_modules/
+  - /public/build/
+  - /var/
+  - /vendor/
+
+  # Sandbox/scratchpad
+  - /_admin/
+  - /_sandbox/
+
+  # Primarily Symfony recipes/packages
+  - /config/packages/
+  - /config/routes/
+
+rules:
+  line-length:
+    max: 160
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true

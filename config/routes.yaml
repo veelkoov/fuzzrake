@@ -7,8 +7,9 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
+---
 controllers:
-    resource: routing.controllers
+  resource: routing.controllers
 
 legacy_index:
   path: /index.html

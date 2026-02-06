@@ -1,18 +1,18 @@
 ---
-ansible_ssh_host: '158.69.0.250'
+ansible_ssh_host: "158.69.0.250"
 ansible_ssh_port: 33520
-ansible_ssh_user: 'rocky'
+ansible_ssh_user: "rocky"
 
-user_group: 'rocky'
+user_group: "rocky"
 
-yarn_cache_dirpath: '{{ deployment_path }}/var/yarn-cache'
-database_url:       'sqlite:///%kernel.project_dir%/var/db.sqlite'  # grep-code-database-path
-database_path:      '{{ deployment_path }}/var/db.sqlite'  # grep-code-database-path
+yarn_cache_dirpath: "{{ deployment_path }}/var/yarn-cache"
+database_url: "sqlite:///%kernel.project_dir%/var/db.sqlite" # grep-code-database-path
+database_path: "{{ deployment_path }}/var/db.sqlite" # grep-code-database-path
 
-dkim_private_key_src: 'dkim_rsa_1_private.pem'
-dkim_private_key_path: '{{ deployment_path }}/var/dkim_rsa_1_private.pem'
-dkim_private_key_url: 'file://%kernel.project_dir%/var/dkim_rsa_1_private.pem'
+dkim_private_key_src: "dkim_rsa_1_private.pem"
+dkim_private_key_path: "{{ deployment_path }}/var/dkim_rsa_1_private.pem"
+dkim_private_key_url: "file://%kernel.project_dir%/var/dkim_rsa_1_private.pem"
 
-default_branch: 'develop'
-beta_branch: 'beta'
-prod_branch: 'main'
+default_branch: "develop"
+beta_branch: "beta"
+prod_branch: "main"

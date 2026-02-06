@@ -7,8 +7,6 @@
 /src/
 /tests/*
 !/tests/test_data
-/tests/test_data/*
-!/tests/test_data/extended_test.yaml
 
 # Libraries, var, etc.
 /public/build/
@@ -21,10 +19,3 @@
 # Sandbox/scratchpad
 /_admin
 /_sandbox
-
-# TODO
-/README.md
-/ansible/
-/docs/
-/docker/
-/.yamllint.yaml

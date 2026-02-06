@@ -3,12 +3,12 @@
 Examples below are based on the following species tree:
 
 - Most species
-  - Canines
-    - Dogs
-    - Wolves
-  - Felines
-    - Lions
-  - Deer
+    - Canines
+        - Dogs
+        - Wolves
+    - Felines
+        - Lions
+    - Deer
 
 1.  Calculate list of species with depth:
 
@@ -67,8 +67,7 @@ Examples below are based on the following species tree:
 
         { does: [Most species, Lions], doesn't: [Felines, Dogs] }
 
-    "in" = (remaining) input data, "RD" = "resolved does".  
-
+    "in" = (remaining) input data, "RD" = "resolved does".
     1.  Initial state
 
             in = [+Most species (0), -Felines (1), +Lions (2), -Dogs (2)]
@@ -106,7 +105,6 @@ Examples below are based on the following species tree:
           resolved does: [Most species, Canines, Wolves, Lions, Deer] }
 
     On the example species tree:
-
     - Most species
         - Canines
             - ~~Dogs~~

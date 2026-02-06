@@ -1,3 +1,4 @@
+---
 parameters:
   country_fixes:
     regex_prefix: ""
@@ -150,7 +151,7 @@ parameters:
       LT: Lithuania
       LV: Latvia
       NL: Netherlands
-      NO: Norway
+      "NO": Norway
       PL: Poland
       PT: Portugal
       RS: Serbia

@@ -1,51 +1,52 @@
-- name: 'Check current working branch'
+---
+- name: "Check current working branch"
   ansible.builtin.command:
-    cmd: 'git branch --show-current'
-  register: 'git_branch_cmd'
+    cmd: "git branch --show-current" # noqa: command-instead-of-module
+  register: "deploy_host_cmd_res"
   check_mode: false
   changed_when: false
 
-- name: 'Set helper variable'
+- name: "Set helper variable"
   ansible.builtin.set_fact:
-    working_branch: '{{ git_branch_cmd.stdout }}'
+    deploy_host_working_branch: "{{ deploy_host_cmd_res.stdout }}"
 
-- name: 'Merge working into prod branch'
+- name: "Merge working into prod branch"
   block:
-    - name: 'Checkout the prod branch'
+    - name: "Checkout the prod branch"
       ansible.builtin.command:
-        cmd: 'git checkout {{ prod_branch | quote }}'
+        cmd: "git checkout {{ prod_branch | quote }}" # noqa: command-instead-of-module
       check_mode: false
       changed_when: false
 
-    - name: 'Merge the working branch into the prod branch'
+    - name: "Merge the working branch into the prod branch"
       ansible.builtin.command:
-        cmd: 'git merge --no-edit {{ working_branch | quote }}'
+        cmd: "git merge --no-edit {{ deploy_host_working_branch | quote }}" # noqa: command-instead-of-module
       changed_when: false
 
-    - name: 'Push the prod branch to origin'
+    - name: "Push the prod branch to origin"
       ansible.builtin.command:
-        cmd: 'git push origin {{ prod_branch | quote }}'
+        cmd: "git push origin {{ prod_branch | quote }}" # noqa: command-instead-of-module
       changed_when: true # Could show if anything actually was pushed/merged
 
-    - name: 'Checkout the working branch'
+    - name: "Checkout the working branch"
       ansible.builtin.command:
-        cmd: 'git checkout {{ working_branch | quote }}'
+        cmd: "git checkout {{ deploy_host_working_branch | quote }}" # noqa: command-instead-of-module
       check_mode: false
       changed_when: false
 
-    - name: 'Merge the prod branch back into the working branch'
+    - name: "Merge the prod branch back into the working branch"
       ansible.builtin.command:
-        cmd: 'git merge --no-edit {{ prod_branch | quote }}'
+        cmd: "git merge --no-edit {{ prod_branch | quote }}" # noqa: command-instead-of-module
       changed_when: false
 
-    - name: 'Push the working branch to origin'
+    - name: "Push the working branch to origin"
       ansible.builtin.command:
-        cmd: 'git push origin {{ working_branch | quote }}'
+        cmd: "git push origin {{ deploy_host_working_branch | quote }}" # noqa: command-instead-of-module
       changed_when: false
 
   always:
-    - name: 'Make sure to switch back to the working branch'
+    - name: "Make sure to switch back to the working branch"
       ansible.builtin.command:
-        cmd: 'git checkout {{ working_branch | quote }}'
+        cmd: "git checkout {{ deploy_host_working_branch | quote }}" # noqa: command-instead-of-module
       check_mode: false
       changed_when: false

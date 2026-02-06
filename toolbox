@@ -199,6 +199,8 @@ function action() {
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_yarn eslint assets/scripts/ "$@" ;;
         'prettier')     run_yarn prettier . --write "$@" ;;
+        'al')           pushd ansible; ansible-lint *.yaml ;;
+        'yl')           yamllint . ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
