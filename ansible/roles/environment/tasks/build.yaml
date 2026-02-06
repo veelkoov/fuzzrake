@@ -7,12 +7,12 @@
 - name: 'Execute: yarn install'
   ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} install --prod'
   args:
-    chdir: '{{ symfony_dir_path }}'
+    chdir: '{{ deployment_path }}'
   register:     'cmd_out'
   changed_when: '"success Already up-to-date." not in cmd_out.stdout'
 
 - name: 'Execute: yarn encore production'
   ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} encore production'
   args:
-    chdir: '{{ symfony_dir_path }}'
+    chdir: '{{ deployment_path }}'
   changed_when: 'not ansible_check_mode' # TODO: Make it real (if possible)

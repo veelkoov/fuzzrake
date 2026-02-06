@@ -19,4 +19,4 @@
     restart_policy:  'unless-stopped'
     user: 'root:root'
     volumes:
-      - '{{ symfony_dir_path }}:/var/www/html'
+      - '{{ deployment_path }}:/var/www/html'
