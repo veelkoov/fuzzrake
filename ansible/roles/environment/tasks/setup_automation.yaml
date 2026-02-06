@@ -1,16 +1,16 @@
 ---
-- name: 'Setup systemd services'
-  loop: '{{ environment_systemd_services }}'
+- name: "Setup systemd services"
+  loop: "{{ environment_systemd_services }}"
   ansible.builtin.template:
-    dest: '/etc/systemd/system/{{ item.name }}.service'
-    mode: '0644'
-    src:  '{{ item.template_src }}'
-  register: 'service_result'
+    dest: "/etc/systemd/system/{{ item.name }}.service"
+    mode: "0644"
+    src: "{{ item.template_src }}"
+  register: "environment_cmd_res"
 
-- name: 'Enable and (re)start systemd services'
-  loop: '{{ environment_systemd_services }}'
+- name: "Enable and (re)start systemd services"
+  loop: "{{ environment_systemd_services }}"
   ansible.builtin.systemd_service:
-    daemon_reload: '{{ service_result.changed }}'
-    enabled:       true
-    name:          '{{ item.name }}'
-    state:         '{{ "restarted" if service_result.changed else "started" }}'
+    daemon_reload: "{{ environment_cmd_res.changed }}"
+    enabled: true
+    name: "{{ item.name }}"
+    state: '{{ "restarted" if environment_cmd_res.changed else "started" }}'

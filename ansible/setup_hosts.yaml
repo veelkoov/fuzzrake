@@ -1,7 +1,7 @@
 #!ansible/run.sh
 ---
-- name:   'Setup hosts'
-  hosts:  'public_hosts'
+- name: "Setup hosts"
+  hosts: "public_hosts"
   become: true
   roles:
-    - role: 'public_host'
+    - role: "public_host"

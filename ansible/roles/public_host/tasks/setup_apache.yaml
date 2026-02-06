@@ -1,102 +1,102 @@
 ---
-- name: 'Install Certbot'
+- name: "Install Certbot"
   ansible.builtin.pip:
     name:
-      - 'certbot'
-      - 'certbot-apache'
-    virtualenv:         '/opt/certbot/'
-    virtualenv_command: 'python3 -m venv'
+      - "certbot"
+      - "certbot-apache"
+    virtualenv: "/opt/certbot/"
+    virtualenv_command: "python3 -m venv"
 
-- name: 'Link Certbot into /usr/bin/'
+- name: "Link Certbot into /usr/bin/"
   ansible.builtin.file:
-    state: 'link'
-    path:  '/usr/bin/certbot'
-    src:   '/opt/certbot/bin/certbot'
+    state: "link"
+    path: "/usr/bin/certbot"
+    src: "/opt/certbot/bin/certbot"
 
-- name: 'Install Apache HTTP'
+- name: "Install Apache HTTP"
   ansible.builtin.dnf:
-    name:  'httpd'
-    state: 'installed'
+    name: "httpd"
+    state: "installed"
 
 - name: 'Apache mod_ssl {{ "install" if ssl_ready else "removal" }}' # Easier
   ansible.builtin.dnf:
-    name:  'mod_ssl'
+    name: "mod_ssl"
     state: '{{ "present" if ssl_ready else "absent" }}'
-  notify: 'Reload Apache'
+  notify: "Reload Apache"
 
-- name: 'Setup firewalld for Apache'
+- name: "Setup firewalld for Apache"
   ansible.posix.firewalld:
     immediate: true
     permanent: true
-    service:   '{{ item }}'
-    state:     'enabled'
+    service: "{{ item }}"
+    state: "enabled"
   loop:
-    - 'http'
-    - 'https'
+    - "http"
+    - "https"
 
-- name: 'Create empty WWW dir'
+- name: "Create empty WWW dir"
   ansible.builtin.file:
-    group: 'root'
-    mode:  '0755'
-    owner: 'root'
-    path:  '/var/www/empty'
-    state: 'directory'
+    group: "root"
+    mode: "0755"
+    owner: "root"
+    path: "/var/www/empty"
+    state: "directory"
 
-- name: 'Create empty WWW index.html'
+- name: "Create empty WWW index.html"
   ansible.builtin.copy:
-    content: ''
-    dest:    '/var/www/empty/index.html'
-    group:   'root'
-    mode:    '0644'
-    owner:   'root'
+    content: ""
+    dest: "/var/www/empty/index.html"
+    group: "root"
+    mode: "0644"
+    owner: "root"
 
-- name: 'Create bewares dir'
+- name: "Create bewares dir"
   ansible.builtin.file:
-    group: '{{ user_group }}'
-    mode:  '0775'
-    owner: 'root'
-    path:  '{{ bewares_path }}'
-    state: 'directory'
+    group: "{{ user_group }}"
+    mode: "0775"
+    owner: "root"
+    path: "{{ bewares_path }}"
+    state: "directory"
 
-- name: 'Update Apache configuration'
+- name: "Update Apache configuration"
   ansible.builtin.template:
-    src:  'etc/httpd/{{ item }}'
+    src: "etc/httpd/{{ item }}"
     dest: '/etc/httpd/{{ item | regex_replace("\.j2\.conf$", ".conf") }}'
-    mode: '0644'
+    mode: "0644"
   with_items:
-    - 'conf/httpd.j2.conf'
-    - 'conf.d/autoindex.j2.conf'
-    - 'conf.d/bewares.j2.conf'
-    - 'conf.d/fuzzrake.j2.conf'
-    - 'conf.d/welcome.j2.conf'
-    - 'conf.modules.d/00-base.j2.conf'
-    - 'conf.modules.d/00-brotli.j2.conf'
-    - 'conf.modules.d/00-dav.j2.conf'
-    - 'conf.modules.d/00-lua.j2.conf'
-    - 'conf.modules.d/00-mpm.j2.conf'
-  notify: 'Reload Apache'
+    - "conf/httpd.j2.conf"
+    - "conf.d/autoindex.j2.conf"
+    - "conf.d/bewares.j2.conf"
+    - "conf.d/fuzzrake.j2.conf"
+    - "conf.d/welcome.j2.conf"
+    - "conf.modules.d/00-base.j2.conf"
+    - "conf.modules.d/00-brotli.j2.conf"
+    - "conf.modules.d/00-dav.j2.conf"
+    - "conf.modules.d/00-lua.j2.conf"
+    - "conf.modules.d/00-mpm.j2.conf"
+  notify: "Reload Apache"
 
-- name: 'Remove unused, default directories'
+- name: "Remove unused, default directories"
   ansible.builtin.file:
-    state: 'absent'
-    path:  '/var/www/{{ item }}'
-  loop: ['html', 'cgi-bin']
+    state: "absent"
+    path: "/var/www/{{ item }}"
+  loop: ["html", "cgi-bin"]
 
-- name: 'Enable Apache'
+- name: "Enable Apache"
   ansible.builtin.service:
     enabled: true
-    name:    'httpd'
-    state:   'started'
+    name: "httpd"
+    state: "started"
 
-- name: 'Update logrotate.d/httpd'
+- name: "Update logrotate.d/httpd"
   ansible.builtin.template:
-    src:    'etc/logrotate.d/httpd.j2'
-    dest:   '/etc/logrotate.d/httpd'
-    mode:   '0644'
+    src: "etc/logrotate.d/httpd.j2"
+    dest: "/etc/logrotate.d/httpd"
+    mode: "0644"
     backup: true
 
-- name: 'Setup certbot renew cronjob'
+- name: "Setup certbot renew cronjob"
   ansible.builtin.cron:
-    job:          '{ date; certbot renew; } >> /var/log/certbot_renew.log'
-    name:         'certbot renew'
-    special_time: 'weekly'
+    job: "{ date; certbot renew; } >> /var/log/certbot_renew.log"
+    name: "certbot renew"
+    special_time: "weekly"

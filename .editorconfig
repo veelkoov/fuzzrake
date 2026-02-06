@@ -15,7 +15,10 @@ trim_trailing_whitespace = false
 
 # Fuzzrake code & configuration
 
-[/{assets,config/fuzzrake,tests}/**]
+[{*.yaml,*.yml}]
+indent_size = 2
+
+[/assets/**]
 indent_size = 2
 
 [/{eslint.config.mjs,tsconfig.json}]

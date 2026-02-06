@@ -1,15 +1,15 @@
 ---
-- name: 'Check responses'
+- name: "Check responses"
   ansible.builtin.uri:
-    url: 'https://{{ server_name }}{{ item }}'
+    url: "https://{{ server_name }}{{ item }}"
   loop:
-    - '/'
-    - '/htmx/main/creators-in-table?isAdult=1&wantsSfw=0&page=1&creatorMode=0'
-    - '/contact'
-    - '/events'
-    - '/feedback'
-    - '/info'
-    - '/iu_form/start'
-    - '/stats'
+    - "/"
+    - "/htmx/main/creators-in-table?isAdult=1&wantsSfw=0&page=1&creatorMode=0"
+    - "/contact"
+    - "/events"
+    - "/feedback"
+    - "/info"
+    - "/iu_form/start"
+    - "/stats"
   changed_when: false
   check_mode: false

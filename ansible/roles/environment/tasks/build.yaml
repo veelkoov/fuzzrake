@@ -1,18 +1,18 @@
 ---
-- name: 'Execute: composer install'
-  ansible.builtin.command: 'docker exec -ti {{ php_fpm_container_name | quote }} composer install --no-dev'
-  register:     'cmd_out'
-  changed_when: '"Nothing to install, update or remove" not in cmd_out.stdout'
+- name: "Execute: composer install"
+  ansible.builtin.command: "docker exec -ti {{ php_fpm_container_name | quote }} composer install --no-dev"
+  register: "environment_cmd_res"
+  changed_when: '"Nothing to install, update or remove" not in environment_cmd_res.stdout'
 
-- name: 'Execute: yarn install'
-  ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} install --prod'
+- name: "Execute: yarn install"
+  ansible.builtin.command: "yarn --cache-folder {{ yarn_cache_dirpath | quote }} install --prod"
   args:
-    chdir: '{{ deployment_path }}'
-  register:     'cmd_out'
-  changed_when: '"success Already up-to-date." not in cmd_out.stdout'
+    chdir: "{{ deployment_path }}"
+  register: "environment_cmd_res"
+  changed_when: '"success Already up-to-date." not in environment_cmd_res.stdout'
 
-- name: 'Execute: yarn encore production'
-  ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} encore production'
+- name: "Execute: yarn encore production"
+  ansible.builtin.command: "yarn --cache-folder {{ yarn_cache_dirpath | quote }} encore production"
   args:
-    chdir: '{{ deployment_path }}'
-  changed_when: 'not ansible_check_mode' # TODO: Make it real (if possible)
+    chdir: "{{ deployment_path }}"
+  changed_when: "not ansible_check_mode" # TODO: Make it real (if possible)

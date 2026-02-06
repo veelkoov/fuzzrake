@@ -1,3 +1,4 @@
+---
 parameters:
   urls:
     regex_prefix: ""
@@ -14,7 +15,8 @@ parameters:
       '//x\.com/': "//twitter.com/"
       '^(?:https?://)?(?:www\.|mobile\.)?twitter\.com/([^/?]+(/status/.+)?).*$': "https://twitter.com/$1"
 
-      '^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(pg/)?([^/?]+)(/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?$': "https://www.facebook.com/$1$2$3/"
+      '^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/': "https://www.facebook.com/"
+      '^https://www\.facebook\.com/(pg/)?([^/?]+)(/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?$': "https://www.facebook.com/$1$2$3/"
       '^https://www\.facebook\.com/profile\.php\?id=(\d+)&ref=tn_tnmn$': "https://www.facebook.com/profile.php?id=$1"
 
       '^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$': "https://www.furaffinity.net/user/$1/"

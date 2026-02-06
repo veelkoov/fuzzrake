@@ -4,6 +4,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 # See also https://symfony.com/doc/current/service_container/import.html
 
+---
 imports:
     - { resource: fuzzrake/*.yaml }
 
@@ -29,7 +30,7 @@ services:
 
     App\Event\DisrespectfulLegacyScraper:
         tags:
-          - { name: 'kernel.event_subscriber' }
+            - { name: 'kernel.event_subscriber' }
 
     App\Event\Doctrine\PostFlushSubscriber:
         tags:
