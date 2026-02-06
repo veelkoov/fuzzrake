@@ -20,12 +20,12 @@
     group: 'root'
     mode:  '0777'
     owner: 'root'
-    path:  '{{ symfony_dir_path }}/var'
+    path:  '{{ deployment_path }}/var'
     state: 'directory'
 
 - name: 'Update .env.local'
   ansible.builtin.template:
-    dest:  '{{ symfony_dir_path }}/.env.local'
+    dest:  '{{ deployment_path }}/.env.local'
     group: 'root'
     mode:  '0644'
     owner: 'root'
