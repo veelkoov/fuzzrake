@@ -22,7 +22,7 @@ class EventsController extends AbstractController
      * @throws DateTimeException
      */
     #[Route(path: '/events', name: RouteName::EVENTS)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function events(EventRepository $eventRepository): Response
     {
         return $this->render('events/events.html.twig', [
@@ -39,7 +39,7 @@ class EventsController extends AbstractController
      * @throws DateTimeException
      */
     #[Route(path: '/events-atom.xml', name: RouteName::EVENTS_ATOM)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function events_atom(Request $request, EventRepository $eventRepository): Response
     {
         $types = $this->getChosenEventTypes($request);

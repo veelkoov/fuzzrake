@@ -35,7 +35,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/', name: RouteName::MAIN)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function main(): Response
     {
         return $this->render('main/main.html.twig', [
@@ -45,7 +45,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/new', name: RouteName::NEW_CREATORS)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function newCreators(): Response
     {
         return $this->render('main/new.html.twig', [
@@ -54,7 +54,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/htmx/main/creator-card/{creatorId}', name: RouteName::HTMX_MAIN_CREATOR_CARD)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function creatorCard(string $creatorId): Response
     {
         $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
@@ -65,7 +65,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/htmx/main/updates-dialog/{creatorId}', name: RouteName::HTMX_MAIN_UPDATES_DIALOG)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function updatesDialog(string $creatorId): Response
     {
         $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
@@ -76,7 +76,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/htmx/main/creators-in-table', name: RouteName::HTMX_MAIN_CREATORS_IN_TABLE)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function htmxCreatorsInTable(Request $request): Response
     {
         try {

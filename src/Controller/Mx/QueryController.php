@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Attribute\Route;
 class QueryController extends FuzzrakeAbstractController
 {
     #[Route(path: '/', name: RouteName::MX_QUERY)]
-    #[Cache(maxage: 0, public: false)]
     public function query(Request $request): Response
     {
         $form = $this->createForm(QueryType::class);

@@ -34,7 +34,7 @@ class RestApiController extends AbstractController
     }
 
     #[Route(path: '/api/creator/{creatorId}', name: RouteName::API_CREATOR)]
-    #[Cache(maxage: 3600, public: true)]
+    #[Cache(maxage: 900, public: true)]
     public function creatorCard(string $creatorId): Response
     {
         $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);

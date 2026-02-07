@@ -8,7 +8,9 @@ use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 
+#[Cache(noStore: true)]
 abstract class FuzzrakeAbstractController extends AbstractController
 {
     public function __construct(

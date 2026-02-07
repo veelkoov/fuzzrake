@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Veelkoov\Debris\Sets\StringSet;
 
+#[Cache(noStore: true)]
 #[Route(path: '/mx')]
 class SubmissionsController extends AbstractController
 {
@@ -45,7 +46,6 @@ class SubmissionsController extends AbstractController
      * @param positive-int $page
      */
     #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    #[Cache(maxage: 0, public: false)]
     public function submissions(int $page): Response
     {
         $submissionsPage = $this->submissionRepository->getPage($page);
@@ -59,7 +59,6 @@ class SubmissionsController extends AbstractController
      * @throws DateTimeException
      */
     #[Route(path: '/submissions/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
-    #[Cache(maxage: 0, public: false)]
     public function social(): Response
     {
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
@@ -73,7 +72,6 @@ class SubmissionsController extends AbstractController
     }
 
     #[Route(path: '/submission/{strId}', name: RouteName::MX_SUBMISSION)]
-    #[Cache(maxage: 0, public: false)]
     public function submission(#[MapEntity(mapping: ['strId' => 'strId'])] Submission $submission, Request $request): Response
     {
         $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);

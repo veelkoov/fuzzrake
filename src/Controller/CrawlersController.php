@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CrawlersController extends AbstractController
 {
     #[Route(path: '/sitemap.txt', name: RouteName::SITEMAP)]
-    #[Cache(maxage: 21600, public: true)]
+    #[Cache(maxage: 3600, public: true)]
     public function sitemap(): Response
     {
         $urls = arr_map([

@@ -29,7 +29,6 @@ class CreatorsController extends FuzzrakeAbstractController
 
     #[Route(path: '/{creatorId}/edit', name: RouteName::MX_CREATOR_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_CREATOR_NEW, methods: ['GET', 'POST'])]
-    #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?string $creatorId): Response
     {
         $creator = $this->getCreatorByCreatorIdOrNew($creatorId);

@@ -31,7 +31,6 @@ class EventsController extends FuzzrakeAbstractController
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
-    #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?Event $event): Response
     {
         $event ??= new Event();

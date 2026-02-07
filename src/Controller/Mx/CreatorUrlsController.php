@@ -23,7 +23,6 @@ use Veelkoov\Debris\Lists\StringList;
 class CreatorUrlsController extends FuzzrakeAbstractController
 {
     #[Route(path: '/', name: RouteName::MX_CREATORS_URLS)]
-    #[Cache(maxage: 0, public: false)]
     public function index(CreatorUrlRepository $repository): Response
     {
         $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
@@ -34,7 +33,6 @@ class CreatorUrlsController extends FuzzrakeAbstractController
     }
 
     #[Route('/{creatorId}', name: RouteName::MX_CREATOR_URLS_SELECTION)]
-    #[Cache(maxage: 0, public: false)]
     public function check(Request $request, string $creatorId): Response
     {
         $creator = $this->getCreatorOrThrow404($creatorId);
@@ -60,7 +58,6 @@ class CreatorUrlsController extends FuzzrakeAbstractController
     }
 
     #[Route('/{creatorId}/{urlIds}', name: RouteName::MX_CREATOR_URLS_REMOVAL)]
-    #[Cache(maxage: 0, public: false)]
     public function removal(
         UrlRemovalService $service,
         Request $request,
