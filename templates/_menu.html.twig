@@ -12,13 +12,15 @@
                 'latest-event': get_latest_event_timestamp(),
             },
         }) }}
-        {% if is_granted('ROLE_ADMIN') %}
+
+        {% if not no_session and is_granted('ROLE_ADMIN') %}
             {{ include('_menu_item.html.twig', {name: 'mx_creator_new', fa_icon: 'plus', label: 'Maker', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_creators_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_query', fa_icon: 'filter', label: 'Query', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_submissions', fa_icon: 'file-lines', label: 'Submissions', priority: 'low'}) }}
         {% endif %}
+
         <div class="nav-separator"></div>
         {{ include('_menu_item.html.twig', {name: 'iu_form_step_start', fa_icon: 'user-gear', label: 'Fursuit Makers', priority: 'medium'}) }}
         {{ include('_menu_item.html.twig', {name: 'donate', fa_icon: 'circle-dollar-to-slot', label: 'Donate', priority: 'medium'}) }}

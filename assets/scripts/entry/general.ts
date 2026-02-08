@@ -29,4 +29,6 @@ jQuery(() => {
   });
 });
 
-jQuery(() => Navbar.init());
+jQuery('#top-menu-container')
+  .on('navbar-init', () => Navbar.init())
+  .trigger('navbar-init');
