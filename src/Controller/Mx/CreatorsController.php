@@ -13,7 +13,6 @@ use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/mx/creators')]
