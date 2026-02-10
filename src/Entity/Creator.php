@@ -99,7 +99,8 @@ class Creator implements Stringable
     #[ORM\OneToOne(targetEntity: CreatorPrivateData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorPrivateData $privateData = null;
 
-    #[ORM\OneToOne(targetEntity: User::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'creator')]
+    #[ORM\JoinColumn(name: 'user_id', unique: true, nullable: true)] // For now, we do not support multiple studios for one user
     private ?User $user = null;
 
     /**

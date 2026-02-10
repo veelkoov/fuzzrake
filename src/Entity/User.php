@@ -10,7 +10,7 @@ use Override;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UserRepository::class)] // FIXME: table name
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -34,8 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private string $password = '';
 
-    #[ORM\OneToOne(targetEntity: Creator::class, inversedBy: 'user')]
-    #[ORM\JoinColumn(name: 'creator_id', unique: true, nullable: true)]
+    #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Creator $creator;
 
     public function getId(): ?int
