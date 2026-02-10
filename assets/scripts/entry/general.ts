@@ -2,6 +2,7 @@ import "../../styles/general.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "htmx.org";
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Navbar from "../class/navbar/Navbar";
 import { localizeDateTimes } from "../datetimes";
