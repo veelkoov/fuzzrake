@@ -1,0 +1,10 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}{{ app.user.userIdentifier }}{% endblock %}
+
+{% block body %}
+    <h1>TODO</h1>
+    <a href="{{ path('user_logout') }}">Log out</a>
+    <br>
+    <a href="{{ path('iu_form_step_start') }}">Update your studio</a>
+{% endblock %}

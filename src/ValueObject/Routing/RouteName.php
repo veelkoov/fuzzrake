@@ -48,4 +48,8 @@ final class RouteName
     final public const string MX_SUBMISSION = 'mx_submission';
     final public const string MX_SUBMISSIONS = 'mx_submissions';
     final public const string MX_SUBMISSIONS_SOCIAL = 'mx_submissions_social';
+
+    final public const string USER_LOGIN = 'user_login';
+    final public const string USER_LOGOUT = 'user_logout';
+    final public const string USER_MAIN = 'user_main';
 }

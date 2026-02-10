@@ -27,7 +27,7 @@
 
 <body>
     <div id="top-menu-container" hx-get="{{ path('htmx_menu') }}" hx-trigger="load" hx-on:htmx:after-on-load="jQuery(this).trigger('navbar-init');">
-        {{ render(path('htmx_menu', {no_session: true})) }}
+        {{ render(path('htmx_menu', {ignore_session: true})) }}
     </div>
 
     <div class="container">

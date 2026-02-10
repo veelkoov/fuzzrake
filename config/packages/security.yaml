@@ -1,3 +1,4 @@
+---
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -5,10 +6,11 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory:
-            memory:
-                users:
-                    admin: { password: '%env(ADMIN_PASSWORD_HASH)%', roles: [ 'ROLE_ADMIN' ] }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             # Ensure dev tools and static assets are always allowed
@@ -16,11 +18,17 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
-            http_basic:
-                realm: Management
+            provider: app_user_provider
             login_throttling:
                 max_attempts: 3
+            form_login:
+                login_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
+                check_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
+                enable_csrf: true
+            logout:
+                path: !php/const App\ValueObject\Routing\RouteName::USER_LOGOUT
+                # where to redirect after logout
+                target: !php/const App\ValueObject\Routing\RouteName::USER_MAIN
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -31,6 +39,7 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/mx, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_USER } # TODO: Can redirect to the login page instead?
 
 when@test:
     security:

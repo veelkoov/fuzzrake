@@ -45,11 +45,11 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/htmx/menu', name: RouteName::HTMX_MENU)]
-    #[Cache(maxage: 60, public: false)]
+    #[Cache(public: false, noStore: true)]
     public function menu(Request $request): Response
     {
         return $this->render('_menu.html.twig', [
-            'no_session' => $request->query->get('no_session'),
+            'ignore_session' => $request->query->get('ignore_session'),
         ]);
     }
 
