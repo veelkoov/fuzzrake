@@ -34,6 +34,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private string $password = '';
 
+    #[ORM\OneToOne(targetEntity: Creator::class, inversedBy: 'user')]
+    #[ORM\JoinColumn(name: 'creator_id', unique: true, nullable: true)]
+    private ?Creator $creator;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -117,8 +121,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[Deprecated]
+    #[Override]
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getCreator(): ?Creator
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?Creator $creator): void
+    {
+        $this->creator = $creator;
     }
 }
