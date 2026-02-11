@@ -1,8 +1,10 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}log in{% endblock %} {# FIXME #}
 
 {% block body %}
+    <a href="{{ path('user_register') }}">No account yet? Click here to register.</a>
+
     <form method="post">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

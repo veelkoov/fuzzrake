@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm\Utils;
+namespace App\Controller\User\IuFormUtils;
 
 use App\Data\Definitions\ContactPermit;
 use App\Utils\Creator\SmartAccessDecorator as Creator;

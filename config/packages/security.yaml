@@ -38,8 +38,10 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/mx, roles: ROLE_ADMIN }
-        - { path: ^/user, roles: ROLE_USER } # TODO: Can redirect to the login page instead?
+        # TODO: I *think* I saw 403 instead of redirect to login page?
+        - { path: ^/uuser, roles: ROLE_USER } # grep-code-route-uuser-prefix
+        - { path: ^/user, roles: ROLE_VERIFIED } # grep-code-route-user-prefix
+        - { path: ^/mx, roles: ROLE_ADMIN } # Administration
 
 when@test:
     security:

@@ -1,0 +1,8 @@
+Please confirm your email address by clicking the following link:
+
+{{ signedUrl }}
+
+This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+
+In case of any issues please contact support:
+{{ constant('App\\ValueObject\\Routing\\RouteName::CONTACT') }}

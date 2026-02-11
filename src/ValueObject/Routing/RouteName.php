@@ -19,9 +19,6 @@ final class RouteName
     final public const string FEEDBACK_SENT = 'feedback_sent';
     final public const string GUIDELINES = 'guidelines';
     final public const string INFO = 'info';
-    final public const string IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
-    final public const string IU_FORM_DATA = 'iu_form_step_data';
-    final public const string IU_FORM_START = 'iu_form_step_start';
     final public const string MAIN = 'main';
     final public const string NEW_CREATORS = 'new_creators';
     final public const string SHOULD_KNOW = 'should_know';
@@ -37,6 +34,17 @@ final class RouteName
     final public const string HTMX_MAIN_UPDATES_DIALOG = 'htmx_main_updates_dialog';
     final public const string HTMX_MENU = 'htmx_menu';
 
+    final public const string USER_LOGIN = 'user_login';
+    final public const string USER_LOGOUT = 'user_logout';
+    final public const string USER_MAIN = 'user_main';
+    final public const string USER_REGISTER = 'user_register';
+    final public const string USER_RESEND_VERIFICATION_EMAIL = 'user_resend_verification_email';
+    final public const string USER_VERIFY_EMAIL = 'user_verify_email';
+
+    final public const string USER_IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
+    final public const string USER_IU_FORM_DATA = 'iu_form_step_data';
+    final public const string USER_IU_FORM_START = 'iu_form_step_start';
+
     final public const string MX_CREATORS_URLS = 'mx_creators_urls';
     final public const string MX_CREATOR_EDIT = 'mx_creator_edit';
     final public const string MX_CREATOR_NEW = 'mx_creator_new';
@@ -48,8 +56,4 @@ final class RouteName
     final public const string MX_SUBMISSION = 'mx_submission';
     final public const string MX_SUBMISSIONS = 'mx_submissions';
     final public const string MX_SUBMISSIONS_SOCIAL = 'mx_submissions_social';
-
-    final public const string USER_LOGIN = 'user_login';
-    final public const string USER_LOGOUT = 'user_logout';
-    final public const string USER_MAIN = 'user_main';
 }

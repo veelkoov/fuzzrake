@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm\Utils;
+namespace App\Controller\User\IuFormUtils;
 
 // No validation here. If you play with the scripts and something goes wrong, blame yourself.
 class StartData

@@ -6,5 +6,10 @@
     <h1>TODO</h1>
     <a href="{{ path('user_logout') }}">Log out</a>
     <br>
+    {% if not is_granted('ROLE_VERIFIED') %}
+
+    <a href="{{ path('iu_form_step_start') }}">Re-send verification email</a>
+        {% else %}
     <a href="{{ path('iu_form_step_start') }}">Update your studio</a>
+    {% endif %}
 {% endblock %}

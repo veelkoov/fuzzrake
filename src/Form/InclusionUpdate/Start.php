@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\Controller\IuForm\Utils\StartData;
+use App\Controller\User\IuFormUtils\StartData;
 use App\Utils\Enforce;
 use Override;
 use Symfony\Component\Form\AbstractType;

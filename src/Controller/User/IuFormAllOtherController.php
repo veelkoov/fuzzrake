@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm;
+namespace App\Controller\User;
 
 use App\Utils\DateTime\UtcClock;
 use App\ValueObject\Routing\RouteName;
@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 
-class IuFormAllOtherController extends AbstractIuFormController
+#[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
+class IuFormAllOtherController extends IuFormAbstractController
 {
-    #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
+    #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormConfirmation(Request $request): Response
     {
@@ -27,11 +28,11 @@ class IuFormAllOtherController extends AbstractIuFormController
         ]);
     }
 
-    #[Route(path: '/iu_form/fill/{creatorId}')]
-    #[Route(path: '/iu_form/{creatorId}', priority: -10)]
+    #[Route(path: '/fill/{creatorId}')]
+    #[Route(path: '/{creatorId}', priority: -10)]
     #[Cache(maxage: 0, public: false)]
     public function oldAddressRedirect(?string $creatorId = null): Response
     {
-        return $this->redirectToRoute(RouteName::IU_FORM_START, ['creatorId' => $creatorId]);
+        return $this->redirectToRoute(RouteName::USER_IU_FORM_START, ['creatorId' => $creatorId]);
     }
 }
