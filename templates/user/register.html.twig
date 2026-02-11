@@ -1,13 +1,9 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}register!{% endblock %} {# FIXME #}
+{% block title %}registration{% endblock %} {# FIXME: Improve visuals #}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-
-    <h1>Register</h1>
+    <h1 class="my-4">Registration</h1>
 
     {{ form_errors(registrationForm) }}
 

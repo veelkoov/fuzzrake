@@ -34,8 +34,6 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/main', name: RouteName::USER_MAIN)]
     public function main(): Response
     {
-        // TODO: Make sure you're rendering success flash messages.
-
         return $this->render('user/main.html.twig');
     }
 

@@ -51,6 +51,10 @@ class AnonymousController extends AbstractController
     #[Route('/register', name: RouteName::USER_REGISTER)]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute(RouteName::USER_MAIN);
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -77,6 +81,7 @@ class AnonymousController extends AbstractController
             $this->addFlash('error', 'Failed to sent the notification. Please contact the site administration.');
         }
 
+        // FIXME: Redirect to user main instead of main
         return $security->login($user, 'form_login', 'main')
             ?? $this->redirectToRoute(RouteName::USER_LOGIN);
     }
@@ -87,25 +92,28 @@ class AnonymousController extends AbstractController
         $id = $request->query->get('id');
 
         if (null === $id) {
-            return $this->redirectToRoute(RouteName::USER_REGISTER);
+            $this->addFlash('danger', 'Unable to verify email, please retry or contact website administration.');
+
+            return $this->redirectToRoute(RouteName::USER_MAIN);
         }
 
         $user = $userRepository->find($id);
 
         if (null === $user) {
-            return $this->redirectToRoute(RouteName::USER_REGISTER);
+            $this->addFlash('danger', 'Unable to verify email, please retry or contact website administration.');
+
+            return $this->redirectToRoute(RouteName::USER_MAIN);
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason()); // TODO: Make sure you're rendering success flash messages.
+            $this->addFlash('danger', $exception->getReason());
 
-            return $this->redirectToRoute(RouteName::USER_REGISTER);
+            return $this->redirectToRoute(RouteName::USER_MAIN);
         }
 
-        // TODO: Make sure you're rendering success flash messages.
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute(RouteName::USER_MAIN);

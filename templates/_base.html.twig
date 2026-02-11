@@ -31,10 +31,18 @@
     </div>
 
     <div class="container">
-        {% block body %}{% endblock %}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} my-2" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
 
-        {{ include('_footer.html.twig') }}
+        {% block body %}{% endblock %}
     </div>
+
+    {{ include('_footer.html.twig') }}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('general') }}

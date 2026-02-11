@@ -4,5 +4,5 @@ Please confirm your email address by clicking the following link:
 
 This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
 
-In case of any issues please contact support:
-{{ constant('App\\ValueObject\\Routing\\RouteName::CONTACT') }}
+In case of any issues please contact the site administration:
+{{ url(constant('App\\ValueObject\\Routing\\RouteName::CONTACT')) }}

@@ -1,15 +1,24 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}{{ app.user.userIdentifier }}{% endblock %}
+{% block title %}{{ app.user.userIdentifier }}{% endblock %} {# FIXME: Improve visuals #}
 
 {% block body %}
-    <h1>TODO</h1>
-    <a href="{{ path('user_logout') }}">Log out</a>
-    <br>
-    {% if not is_granted('ROLE_VERIFIED') %}
+    <h1 class="my-4"><i class="fas fa-user-gear"></i> {{ app.user.userIdentifier }}</h1>
 
-    <a href="{{ path('iu_form_step_start') }}">Re-send verification email</a>
-        {% else %}
-    <a href="{{ path('iu_form_step_start') }}">Update your studio</a>
+    <a href="{{ path('user_logout') }}" class="btn btn-outline-secondary btn-large">
+        <i class="fa-solid fa-user-large-slash"></i> Log out
+    </a>
+    <a href="#" onclick="alert('TODO'); return void(0);" class="btn btn-outline-secondary btn-large">
+        <i class="fa-solid fa-at"></i> Update email address {# TODO #}
+    </a>
+
+    {% if not is_granted('ROLE_VERIFIED') %}
+        <a href="{{ path('user_resend_verification_email') }}" class="btn btn-outline-secondary btn-large">
+            <i class="fa-solid fa-envelope-circle-check"></i> Re-send verification email
+        </a>
+    {% else %}
+        <a href="{{ path('iu_form_step_start') }}" class="btn btn-outline-primary btn-large">
+            <i class="fa-solid fa-file-signature"></i> Update your studio information
+        </a>
     {% endif %}
 {% endblock %}
