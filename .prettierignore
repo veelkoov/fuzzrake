@@ -1,0 +1,21 @@
+# Only have Prettier control frontend/web files and our config YAMLs
+/composer.json
+/composer.lock
+/config/*
+!/config/fuzzrake
+/package.json
+/src/
+/tests/*
+!/tests/test_data
+
+# Libraries, var, etc.
+/public/build/
+/var/
+/vendor/
+
+# Based on Symfony recipes. Ignored to avoid resolving additional conflicts during every update.
+/webpack.config.js
+
+# Sandbox/scratchpad
+/_admin
+/_sandbox

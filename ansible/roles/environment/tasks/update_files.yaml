@@ -1,40 +1,40 @@
 ---
-- name: 'Assure directory exists'
+- name: "Assure directory exists"
   ansible.builtin.file:
-    group: 'root'
-    mode:  '0755'
-    owner: 'root'
-    path:  '{{ deployment_path }}'
-    state: 'directory'
+    group: "root"
+    mode: "0755"
+    owner: "root"
+    path: "{{ deployment_path }}"
+    state: "directory"
 
-- name: 'Checkout sources'
+- name: "Checkout sources"
   ansible.builtin.git:
-    dest:    '{{ deployment_path }}'
-    force:   true
-    repo:    'https://github.com/veelkoov/fuzzrake.git'
-    version: '{{ branch }}'
+    dest: "{{ deployment_path }}"
+    force: true
+    repo: "https://github.com/veelkoov/fuzzrake.git"
+    version: "{{ branch }}"
   diff: false
 
-- name: 'Assure var directory is writable'
+- name: "Assure var directory is writable"
   ansible.builtin.file:
-    group: 'root'
-    mode:  '0777'
-    owner: 'root'
-    path:  '{{ symfony_dir_path }}/var'
-    state: 'directory'
+    group: "root"
+    mode: "0777"
+    owner: "root"
+    path: "{{ deployment_path }}/var"
+    state: "directory"
 
-- name: 'Update .env.local'
+- name: "Update .env.local"
   ansible.builtin.template:
-    dest:  '{{ symfony_dir_path }}/.env.local'
-    group: 'root'
-    mode:  '0644'
-    owner: 'root'
-    src:   '.env.local.j2'
+    dest: "{{ deployment_path }}/.env.local"
+    group: "root"
+    mode: "0644"
+    owner: "root"
+    src: ".env.local.j2"
 
-- name: 'Update the DKIM private key file'
+- name: "Update the DKIM private key file"
   ansible.builtin.copy:
-    dest:  '{{ dkim_private_key_path }}'
-    group: 'root'
-    mode:  '0644'
-    owner: 'root'
-    src:   '{{ dkim_private_key_src }}'
+    dest: "{{ dkim_private_key_path }}"
+    group: "root"
+    mode: "0644"
+    owner: "root"
+    src: "{{ dkim_private_key_src }}"

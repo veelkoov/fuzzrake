@@ -1,19 +1,19 @@
 ---
-- name: 'Setup IPv6-related stuff in sysctl'
+- name: "Setup IPv6-related stuff in sysctl"
   ansible.builtin.template:
-    dest: '/etc/sysctl.d/05-ipv6.conf'
-    mode: '0644'
-    src:  'etc/sysctl.d/05-ipv6.conf'
+    dest: "/etc/sysctl.d/05-ipv6.conf"
+    mode: "0644"
+    src: "etc/sysctl.d/05-ipv6.conf"
   notify:
-    - 'Reload system'
+    - "Reload system"
 
-- name: 'Setup IPv6'
+- name: "Setup IPv6"
   community.general.nmcli:
     conn_name: '{{ ansible_facts["default_ipv4"]["interface"] }}'
-    gw6:       '{{ ipv6_defaultgw }}'
-    ip6:       '{{ ipv6_addr }}'
-    method6:   'manual'
-    type:      'ethernet'
-    state:     'present'
+    gw6: "{{ ipv6_defaultgw }}"
+    ip6: "{{ ipv6_addr }}"
+    method6: "manual"
+    type: "ethernet"
+    state: "present"
   notify:
-    - 'Reload system'
+    - "Reload system"

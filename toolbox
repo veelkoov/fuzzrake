@@ -4,9 +4,8 @@ set -euo pipefail
 
 readonly PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
-readonly SYMFONY_DIR_REL_PATH='symfony'
-readonly SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
-readonly DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
+readonly SNAPSHOTS_REL_PATH='var/snapshots' # grep-code-snapshots-dir-path
+readonly DATABASE_REL_PATH='var/db.sqlite' # grep-code-database-path
 readonly DB_DUMP_DIR_REL_PATH='db_dump'
 readonly DB_DUMP_COPY_DIR_REL_PATH="$DB_DUMP_DIR_REL_PATH/$(date -u '+%Y-%m-%d_%H-%M-%S')"
 
@@ -44,12 +43,8 @@ function run_console() {
 }
 
 function run_yarn() {
-    # Known issue: paths in additional arguments will contain symfony/ prefix
-    # Not using --cwd yarn switch because eslint ignored that
     # Known issue: requires local installation of Yarn
-    pushd "$SYMFONY_DIR_REL_PATH"
     run_command yarn "$@"
-    popd
 }
 
 function action_get_snapshots() {
@@ -180,7 +175,7 @@ function action() {
         'docker-down')  run_docker_compose down ;;
         'docker-re')    action docker-down && action docker-up ;;
 
-        'yep')          pushd "$SYMFONY_DIR_REL_PATH" ; yarn encore production ; popd ;;
+        'yep')          run_yarn encore production ;;
 
         'composer')     run_composer "$@" ;;
         'yarn')         run_yarn "$@" ;;
@@ -204,6 +199,8 @@ function action() {
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_yarn eslint assets/scripts/ "$@" ;;
         'prettier')     run_yarn prettier . --write "$@" ;;
+        'al')           pushd ansible; ansible-lint *.yaml ;;
+        'yl')           yamllint . ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;

@@ -1,5 +1,5 @@
 ---
-- name: 'Reload Apache' # grep-restart-apache-handler TODO: deduplicate?
+- name: "Reload Apache" # grep-restart-apache-handler TODO: deduplicate?
   ansible.builtin.shell:
-    cmd: 'apachectl configtest && apachectl graceful'
+    cmd: "apachectl configtest && apachectl graceful"
   changed_when: true

@@ -1,7 +1,7 @@
 #!ansible/run.sh
 ---
-- name:   'Setup environments'
-  hosts:  'public_envs'
+- name: "Setup environments"
+  hosts: "public_envs"
   become: true
   roles:
-    - role: 'environment'
+    - role: "environment"

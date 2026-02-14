@@ -1,58 +1,58 @@
 ---
-- name: 'Setup Yarn 1 repository'
+- name: "Setup Yarn 1 repository"
   ansible.builtin.yum_repository:
-    baseurl:     'https://dl.yarnpkg.com/rpm/'
-    description: 'Yarn Repository'
-    enabled:     '1'
-    gpgcheck:    '1'
-    gpgkey:      'https://dl.yarnpkg.com/rpm/pubkey.gpg'
-    name:        'yarn'
+    baseurl: "https://dl.yarnpkg.com/rpm/"
+    description: "Yarn Repository"
+    enabled: "1"
+    gpgcheck: "1"
+    gpgkey: "https://dl.yarnpkg.com/rpm/pubkey.gpg"
+    name: "yarn"
 
-- name: 'Install required packages'
+- name: "Install required packages"
   ansible.builtin.dnf:
     name:
-      - '@nodejs:18/common'
-      - 'augeas-libs' # Used by Certbot
-      - 'firewalld'
-      - 'git'
-      - 'python3-firewall'
-      - 'python3-pip'
-      - 'python3-requests'
-      - 'vim'
-      - 'yarn'
-    state: 'installed'
+      - "@nodejs:18/common"
+      - "augeas-libs" # Used by Certbot
+      - "firewalld"
+      - "git"
+      - "python3-firewall"
+      - "python3-pip"
+      - "python3-requests"
+      - "vim"
+      - "yarn"
+    state: "installed"
 
-- name: 'Enable firewalld'
+- name: "Enable firewalld"
   ansible.builtin.service:
     enabled: true
-    name:    'firewalld'
-    state:   'started'
+    name: "firewalld"
+    state: "started"
 
-- name: 'Remove unused cockpit service'
+- name: "Remove unused cockpit service"
   ansible.posix.firewalld:
     immediate: true
     permanent: true
-    service:   'cockpit'
-    state:     'disabled'
+    service: "cockpit"
+    state: "disabled"
 
-- name: 'Disable rpcbind'
+- name: "Disable rpcbind"
   ansible.builtin.service:
     enabled: false
-    name:    '{{ item }}'
-    state:   'stopped'
+    name: "{{ item }}"
+    state: "stopped"
   loop:
-    - 'rpcbind.socket'
-    - 'rpcbind.service'
+    - "rpcbind.socket"
+    - "rpcbind.service"
 
-- name: 'Disable SELinux'
+- name: "Disable SELinux"
   ansible.builtin.lineinfile:
-    line:  'SELINUX=disabled'
-    path:  '/etc/selinux/config'
-    regex: '^SELINUX='
+    line: "SELINUX=disabled"
+    path: "/etc/selinux/config"
+    regex: "^SELINUX="
   notify:
-    - 'Reload system'
+    - "Reload system"
 
-- name: 'Setup hostname'
+- name: "Setup hostname"
   ansible.builtin.hostname:
-    name: '{{ fqdn }}'
-    use:  'systemd'
+    name: "{{ fqdn }}"
+    use: "systemd"

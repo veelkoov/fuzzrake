@@ -1,34 +1,34 @@
 ---
-- name: 'Disable root login'
+- name: "Disable root login"
   when: 'ansible_ssh_user != "root"'
   ansible.builtin.lineinfile:
-    line:   'PermitRootLogin no'
-    path:   '/etc/ssh/sshd_config'
-    regexp: '^PermitRootLogin'
-    state:  'present'
-  notify: 'Reload sshd'
+    line: "PermitRootLogin no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^PermitRootLogin"
+    state: "present"
+  notify: "Reload sshd"
 
-- name: 'Disable login by password'
+- name: "Disable login by password"
   ansible.builtin.lineinfile:
-    line:   'PasswordAuthentication no'
-    path:   '/etc/ssh/sshd_config'
-    regexp: '^PasswordAuthentication'
-    state:  'present'
-  notify: 'Reload sshd'
+    line: "PasswordAuthentication no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^PasswordAuthentication"
+    state: "present"
+  notify: "Reload sshd"
 
-- name: 'Disable X11 forwarding'
+- name: "Disable X11 forwarding"
   ansible.builtin.lineinfile:
-    line:   'X11Forwarding no'
-    path:   '/etc/ssh/sshd_config'
-    regexp: '^X11Forwarding'
-    state:  'present'
-  notify: 'Reload sshd'
+    line: "X11Forwarding no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^X11Forwarding"
+    state: "present"
+  notify: "Reload sshd"
 
-- name: 'Remove default-port SSH service from firewalld'
-  when: 'ansible_ssh_port != 22'
+- name: "Remove default-port SSH service from firewalld"
+  when: "ansible_ssh_port != 22"
   ansible.posix.firewalld:
     immediate: true
     permanent: true
-    service:   'ssh'
-    state:     'disabled'
-    zone:      'public'
+    service: "ssh"
+    state: "disabled"
+    zone: "public"

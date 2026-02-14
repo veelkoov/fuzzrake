@@ -1,11 +1,12 @@
-- name: 'Set beta branch to HEAD'
+---
+- name: "Set beta branch to HEAD"
   ansible.builtin.command:
-    cmd: 'git branch -f {{ beta_branch | quote }} HEAD'
+    cmd: "git branch -f {{ beta_branch | quote }} HEAD" # noqa: command-instead-of-module
   check_mode: false
   changed_when: false
 
-- name: 'Push the beta branch to origin'
+- name: "Push the beta branch to origin"
   ansible.builtin.command:
-    cmd: 'git push --force --set-upstream origin {{ beta_branch | quote }}'
+    cmd: "git push --force --set-upstream origin {{ beta_branch | quote }}" # noqa: command-instead-of-module
   check_mode: false
   changed_when: false

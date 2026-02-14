@@ -1,0 +1,133 @@
+{% extends 'mx/_base.html.twig' %}
+
+{% block title %}Submission {{ update.submission.strId }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {% if update.matchedCreators|length > 1 %}
+        <p>
+            Matched multiple creators: {# grep-code-matched-multiple-creators #}
+
+            {% for creator in update.matchedCreators %}
+                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
+                {%- if loop.last %}.{% else %},{% endif %}
+            {% endfor %}
+
+            <span class="text-danger">Unable to continue.</span>
+        </p>
+    {% elseif update.matchedCreators is empty %}
+        <p>Adding a new creator.</p>
+    {% else %}
+        {% set creator = update.matchedCreators|first %}
+
+        <p>
+            Updating: <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
+
+            {% if '' != creator.inactiveReason %}
+                <span id="creator-hidden-warning" class="badge bg-warning text-dark">Hidden</span>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if similarlyNamedCreators %}
+        <p>
+            Creators named similarly:
+
+            {% for creator in similarlyNamedCreators %}
+                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.allNames|join(' / ') }} ({{ creator.lastCreatorId }})</a>
+                {%- if loop.last %}.{% else %},{% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+
+    <table class="table table-sm" id="mx-submission">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for field in fields %}
+                {% set submitted_different = update.submittedDifferent(field) %}
+                {% set fixes_applied = update.fixesApplied(field) %}
+                {% set is_changing = update.isChanging(field) %}
+
+                {% set row_class = (submitted_different ? 'submitted-different' : 'submitted-same')
+                    ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
+                    ~ ' ' ~ (is_changing ? 'changing' : 'not-changing')
+                    ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
+                    ~ ' ' ~ (field.isFreeForm ? 'free-form' : 'structured')
+                %}
+
+                {% set new_value_class = update.updatedCreator|is_valid(field) ? '' : 'table-danger' %}
+
+                {% if not update.isNew %}
+                    <tr class="{{ field.value }} before {{ row_class }}">
+                        <td>{{ field.name }}&nbsp;[before]</td>
+                        <td>{{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}</td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+
+                <tr class="{{ field.value }} submitted {{ row_class }}">
+                    <td>{{ field.name }}&nbsp;[submitted]</td>
+                    <td>{{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}</td>
+                    <td></td>
+                </tr>
+
+                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str }}">
+                    <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
+                    <td>{{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary fix-button">fix</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% set color = update.contact.isAllowed ? 'success' : 'danger' %}
+
+        <div id="contact-info-card" class="card border-{{ color }}">
+        <h5 class="card-header">
+            Contact &amp; text description
+        </h5>
+
+        <div class="card-body text-{{ color }}">
+            <h5 class="card-title">Allowed: {{ update.contact.description }}</h5>
+
+            {% if update.contact.isAllowed %}
+                <p class="card-text">
+                    <a href="mailto:{{ update.contact.address }}?subject=getfursu.it%20submission">{{ update.contact.address }}</a>
+                </p>
+            {% endif %}
+
+            <p class="cart-text text-body small user-select-all">{{ update.description.text|nl2br }}</p>
+        </div>
+    </div>
+
+    <div class="fixed-bottom bg-light p-3">
+        {{ form_start(form) }}
+
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_row(form.directives) }}
+            </div>
+            <div class="col-lg-6">
+                {{ form_row(form.comment) }}
+            </div>
+        </div>
+        <div class="text-end">
+            <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
+            {{ form_widget(form.save) }}
+            {{ form_widget(form.import) }}
+        </div>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

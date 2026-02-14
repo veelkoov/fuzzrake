@@ -1,0 +1,338 @@
+---
+# Will not make the following available in filters:
+# - Any kind of "Closed species"/"Copyrighted characters"
+#     will not make it easier for anyone to disrespect others' rights; "Closed species (with permission)" is OK
+
+parameters:
+  species_definitions:
+    valid_choices:
+      "Most species": # grep-assumed-does-specie-when-creator-has-only-doesnt
+        "Real life animals":
+          "i_Existing species": {}
+
+          Fishes:
+            Sharks:
+
+          Mammals:
+            Bears:
+              i_Giant pandas: {}
+            Canines:
+              Wolves:
+                i_Lupines: {} # Under "wolves" because we don't have anyone creating lupines BUT wolves
+              Foxes:
+                i_Vulpines: {} # Under "foxes" because we don't have anyone creating vulpines BUT foxes
+              Dogs:
+                "i_Domestic dogs":
+                  "i_Border collies": {}
+                  "i_Welsh corgis": {}
+              Coyotes: {}
+              i_Jackals: {}
+            Felines:
+              "Big cats":
+                i_Caracals: {}
+                Lions:
+                i_Lynxes: {}
+                i_Tigers: {}
+              "Small cats":
+                "Domestic cats":
+            Marsupials:
+              Kangaroos:
+              Opossums:
+            Mustelids:
+              Ferrets:
+              Otters:
+              Weasels: {}
+            Primates:
+              Apes:
+              Monkeys:
+            Rodents:
+              i_Mice: {}
+              Rats:
+            Ungulates:
+              "i_Ungulates (tests now)":
+              Bovines:
+                i_Antelopes: {}
+                i_Cows: {}
+              Cervines:
+                Deers:
+                  i_Caribous: {}
+              Equines: # Avoid?
+                i_Donkeys: {}
+                Horses:
+              Goats:
+              Rhinos:
+              Sheeps:
+            Bats:
+            Elephants:
+            Hyenas:
+            i_Pinnipeds: {}
+            Rabbits:
+            Raccoons:
+            Red pandas:
+            i_Sloths: {}
+
+          Reptiles:
+            Dinosaurs: # Introduce "Extinct" group?
+            Lizards:
+            "i_Most reptiles":
+            "i_Reptiles (not including dragons)": {}
+
+          Bugs:
+            Arachnids:
+              Spiders: {}
+            "i_Caterpillars": {}
+            Insects: {}
+
+          Amphibians:
+            "Axolotls": {}
+
+          Birds: {}
+
+        "Fantasy creatures":
+          "i_Any mythical or unique species": {}
+          "i_Avalis": {}
+          "i_Demon cats": {}
+          "i_Fantasy / mythical creatures": {}
+          "i_Fantasy": {}
+          "i_Fantasy/original species": {}
+          "i_Mythical": {}
+          "i_Please inquire about fantasy creatures": {}
+          "i_Specialises in mythical creatures/monsters":
+
+          Dragons:
+            "Angel Dragons":
+              "Dutch Angel Dragons":
+                "i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)": {}
+            "i_*Extremely intricate dragons": {}
+          Robotic/cybernetic/mechanical:
+            "i_Any mechanical/inorganic species": {}
+            "i_Anything electronic": {}
+            'i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)':
+              {}
+            "i_Ask for mechanic/electronic creatures": {}
+            "i_Cyborgs": {}
+            "i_Full robospecies": {}
+            "i_Mechanical species (protogens and the like)": {}
+            "i_Robots": {}
+            "i_Robotics": {}
+            "i_Species with robotic/cybernetic, or otherwise mechanical appearance":
+              {}
+            "i_3D printing & electronics required species (e.g. Protogens, Skullies)":
+              {}
+            Ampwaves: {}
+            Primagens: {}
+            Protogens:
+              "i_Protogens (for paws and tail ONLY)": {}
+            Synths: {}
+          Crux:
+          Drekkubuses:
+          "Ghost Bones Dragon":
+          Gryphons:
+          Lloteer: # WAT
+          Manokits:
+          MLP:
+          Monsters:
+          Pokemons:
+          Sergals:
+          "i_Skull-*":
+            "i_Skull":
+            "i_Skullsuits":
+            "i_Skull Creatures":
+            "i_Skulldogs":
+            "i_Skull animals":
+            "i_3D printing & electronics required species (e.g. Protogens, Skullies)":
+          Sparkledogs:
+          Wickerbeasts:
+
+        Aquatic: # Fill
+          Fishes:
+          Otters:
+          "i_Sea creatures": # Aquatic?
+
+        Hooved: # Fill
+          Ungulates: {}
+          "i_Deer&similar":
+          MLP: {}
+          "i_Pony": # Does it mean lil horse or MLP?
+
+        Scalies: # Fill
+          Dragons: {}
+          Reptiles: {}
+          "i_Some scalies": {}
+
+        Winged: # Fill
+          Dragons: {} # Has descendants
+          Bats: {}
+          Birds: {}
+          Gryphons: {}
+
+        With antlers: # Fill
+          Cervines: {}
+          Goats: {}
+
+        With beak:
+          Birds: {}
+
+        Hybrids:
+          "i_All hybrids":
+          "i_Hybrids of these":
+          "i_Mixed species":
+
+      Other: # grep-species-other
+        "i_Copyright-related classification?": # FIXME
+          "i_Copyrighted characters":
+            "i_Copyrighted characters (e.g. Pokemons)":
+          "i_Copyrighted species": # Alias of below?
+          "i_Closed species":
+          "i_Open species":
+          "i_Self-made species":
+          "i_Original species":
+          "i_I won't do closed species without the permission from the maker itself (some artists don't want their species made into a fursuit!)":
+          "i_Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
+          "i_Your own specific species":
+          "i_Own species":
+          "i_Most of author's species":
+
+        "i_Other/Unclassified": # Just to silence the validator, to be fixed/approved/categorized later
+          "i_Any animal and most mysticals (dragons*, serials, gryphons)":
+          "i_Rare species":
+          "i_Uncommon species":
+
+          "i_Some video game characters":
+          "i_Most any species": # ?!
+
+          "i_Anything cultural appropriation":
+          "i_Basic canines, vulpines, angel dragons. (Will consider if unique)":
+          "i_Cervidae/deer family species with large antlers":
+          "i_Critters":
+          "i_Etc.": # De hecc
+
+          "i_Complexity-related":
+            "i_Extremely intricate anything":
+            "i_Heavily complicated creatures":
+
+          "i_Fur-covered":
+            "i_All species and all fur based characters":
+            "i_Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
+            "i_I am willing to do all types of furry species at the moment": {}
+            "i_I'm happy to make most species as long as they're covered in fur":
+            "i_Most anything covered in fur":
+          "i_I can also do velvet or minky skinned characters":
+          "i_Most furless/featherless species":
+
+          "i_Furbies":
+          "i_Humanoids":
+            "i_Humans":
+          "i_I make exceptions on rare occasions":
+          "i_Invertibrates":
+          "i_I will not do anything representing satanism": {}
+          "i_No airbrushed / gradient markings on any species (all work is sewn)":
+
+          "i_Raptor masks":
+
+          "i_Saber-toothed tiger": {}
+          "i_Species with horizontal pupils":
+          "i_Things of an adult nature":
+          "i_Unsafe creations":
+
+          "i_Will not work with sequin for characters":
+
+    regex_prefix: '(?<=^|\n)'
+    regex_suffix: '(?=\n|$)'
+    replacements:
+      "^(any|all|most)( spi?ecies)?$": "Most species"
+
+      "AD's|(Ange?le? dragons?)": "Angel Dragons"
+      "Amphibians?": "Amphibians"
+      "Antelopes?": "Antelopes"
+      # 'Avians?':                                           'Birds'
+      "Badgers?": "Badgers"
+      "Bats?": "Bats"
+      "Bears?": "Bears"
+      "Big/small felines": "Big felines\nSmall felines"
+      "Big and small cats": "Big cats\nSmall cats"
+      "Big (cats|felines)( in general)?": "Big cats"
+      "Birds?": "Birds"
+      "Birds/avians in general": "Birds"
+      "Bisons?": "Bisons"
+      "Bovines?": "Bovines"
+      "Bunn(y|ies)": "Rabbits"
+      "Caracles|Caracals?": "Caracals"
+      "Cats?( in general)?": "Felines"
+      'Canines?( in)? ?(\(?general\)?)?': "Canines"
+      "Caribous?": "Caribous"
+      "Cervines?": "Cervines"
+      "Cheetahs?": "Cheetahs"
+      "copyrighted characters?[ !]*": "Copyrighted characters"
+      "(any )?Closed? species?": "Closed species"
+      "Coyotes?": "Coyotes"
+      "Cows?": "Cows"
+      "Deers?": "Deers"
+      "Dinosaurs?": "Dinosaurs"
+      "Dogs?": "Dogs"
+      "Domestic Cats?": "Domestic cats"
+      "Donkeys?": "Donkeys"
+      "Dragons?": "Dragons"
+      "Dre[ck]{2}ubus(es)?": "Drekkubuses"
+      "Dutch Angel Dragons/Angel Dragons": "Dutch Angel Dragons\nAngel Dragons"
+      "Dutchies|DAD's|Dutch ange?le? dragons?": "Dutch Angel Dragons"
+      "Equines?( in general)?": "Equines"
+      'Etc\.?': "Etc."
+      "Fantasie": "Fantasy creatures"
+      "Felines?( in general)?": "Felines"
+      "Ferrets?": "Ferrets"
+      "Fish(es)?": "Fishes"
+      "Fox(es)?": "Foxes"
+      "Gem Raptors?": "Gem raptors"
+      "Goats?": "Goats"
+      "Griff[io]ns?|Gryphons?": "Gryphons"
+      "Horses?": "Horses"
+      "Hybride?s?": "Hybrids"
+      "Hyenas?": "Hyenas"
+      "Humanoids?": "Humanoids"
+      "Humans?": "Humans"
+      "Jackals?": "Jackals"
+      "K-?9'?s": "Canines"
+      "Kangaroos?": "Kangaroos"
+      "Lions?": "Lions"
+      "Lynx(es)?": "Lynxes"
+      "Mammals?( in general)?": "Mammals"
+      "Mann?okits?": "Manokits"
+      "Monkeys?( in general)?": "Monkeys"
+      "Most Scalies": "Most scalies"
+      "Mouse": "Mice"
+      "Open species?": "Open species"
+      "Opossums?": "Opossums"
+      "Otters?": "Otters"
+      "Others?": "Other"
+      "Pandas?": "Giant pandas"
+      "Pinnipeds?( in general)?": "Pinnipeds"
+      "Primagens and protogens": "Primagens\nProtogens"
+      "Pokemons?": "Pokemons"
+      "Primagens?": "Primagens"
+      "Protogens?": "Protogens"
+      "Protogens?/primagens?": "Protogens\nPrimagens"
+      "Rabbits?": "Rabbits"
+      "Racc?oo?ns?": "Raccoons"
+      "Rams?": "Sheeps"
+      "Rats?": "Rats"
+      "Rare/closed species": "Rare species\nClosed species"
+      "Red pandas?": "Red pandas"
+      "Reptiles?": "Reptiles"
+      "Reptilians?( in general)?": "Reptiles"
+      "Robots?": "Robots"
+      "Rodents?( in general)?": "Rodents"
+      "Sables": "Sable antelope"
+      "(any )?Scalies?( in general)?": "Scalies"
+      "Ser[gi]als?": "Sergals"
+      "Sheeps?": "Sheeps"
+      "Skull Animals?": "Skull animals"
+      "Small felines?": "Small cats"
+      "Snow leopards?": "Snow leopards"
+      "Synths/protogens": "Synths\nProtogens"
+      "Tigers?": "Tigers"
+      "Weasels?": "Weasels"
+      "Wicker ?beas?ts?": "Wickerbeasts"
+      "Wolf": "Wolves"
+      'Ungulates?(( in)? \(?general\)?)?': "Ungulates"
+      "Vulpines?": "Vulpines"
