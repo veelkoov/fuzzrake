@@ -6,6 +6,7 @@ namespace App\Filtering\FiltersData\Builder;
 
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
+use App\Utils\Enforce;
 use ArrayAccess;
 use ArrayIterator;
 use Iterator;
@@ -79,7 +80,7 @@ class MutableSet implements IteratorAggregate, ArrayAccess
     #[Override]
     public function offsetSet($offset, $value): void
     {
-        $this->items[$offset] = $value;
+        $this->items[Enforce::string($offset)] = $value;
     }
 
     #[Override]
