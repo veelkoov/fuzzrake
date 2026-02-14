@@ -156,7 +156,7 @@ if (!function_exists('array_last')) {
      *
      * @param array<V> $array
      *
-     * @return V|null
+     * @return ($array is non-empty-array ? V : null)
      */
     function array_last(array $array): mixed
     {
