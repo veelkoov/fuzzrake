@@ -25,6 +25,7 @@ class RequestParser
         'openFor',
         'species',
         'paymentPlans',
+        'ages',
         'inactive',
     ];
 
@@ -65,6 +66,7 @@ class RequestParser
             new StringSet($strArrays->get('openFor')),
             new StringSet($strArrays->get('species')),
             new StringSet($strArrays->get('paymentPlans')),
+            new StringSet($strArrays->get('ages')),
             $booleans->get('isAdult'),
             $booleans->get('wantsSfw'),
             $strArrays->get('inactive')->contains(Consts::FILTER_VALUE_INCLUDE_INACTIVE),

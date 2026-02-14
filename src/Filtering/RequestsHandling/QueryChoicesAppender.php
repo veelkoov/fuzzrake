@@ -45,6 +45,7 @@ class QueryChoicesAppender
         $this->applyStates($builder);
         $this->applyOpenFor($builder);
         $this->applyPaymentPlans($builder);
+        $this->applyAges($builder);
         $this->applySpecies($builder);
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
@@ -226,6 +227,12 @@ class QueryChoicesAppender
                 $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_UNKNOWN),
             );
         }
+    }
+
+    private function applyAges(QueryBuilder $builder): void
+    {
+        new SingleColumnSingleValueFilter('d_c.ages', nullable: true)
+            ->applyChoicesTo($this->choices->ages, $builder);
     }
 
     private function applyOptionalBoolean(QueryBuilder $builder, string $fieldReference, bool $wantsTrue,
