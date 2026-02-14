@@ -1,4 +1,4 @@
-FROM php:8.5.0-fpm-alpine3.22
+FROM php:8.5.3-fpm-alpine3.23
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
@@ -21,9 +21,9 @@ RUN apk add --no-cache icu php-intl util-linux libzip libpng acl \
     && docker-php-ext-install -j$(nproc) intl zip gd bcmath \
     && if [ "$DEV_MACHINE" = "yes" ]; then \
         echo "Setting up develop software" \
-        && apk add git && git clone https://github.com/xdebug/xdebug.git && cd xdebug && phpize && ./configure --enable-xdebug && make && make install \
-        && docker-php-ext-enable xdebug.so \
         && apk add --no-cache chromium chromium-chromedriver git; \
+        && git clone https://github.com/xdebug/xdebug.git && cd xdebug && phpize && ./configure --enable-xdebug && make && make install \
+        && docker-php-ext-enable xdebug.so; \
     else \
         echo "Skipping develop software"; \
     fi \
