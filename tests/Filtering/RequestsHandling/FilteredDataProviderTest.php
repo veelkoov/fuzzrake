@@ -84,7 +84,8 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     }
 
     #[DataProvider('paginatedResultsDataProvider')]
-    public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount, int $expectedFirst, int $expectedLast): void
+    public function testPaginatedResults(int $numberOfCreators, int $pageRequested, int $pageReturned, int $pagesCount,
+        int $expectedFirst, int $expectedLast): void
     {
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
             self::persist(new Creator()
@@ -126,6 +127,6 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     {
         $none = new StringSet()->freeze();
 
-        return new Choices('', '', $none, $none, $none, $none, $none, $none, $none, $none, $none, $none, $none, $isAdult, $wantsSfw, $wantsInactive, creatorMode: false, pageNumber: $pageNumber);
+        return new Choices('', '', $none, $none, $none, $none, $none, $none, $none, $none, $none, $none, $isAdult, $wantsSfw, $wantsInactive, creatorMode: false, pageNumber: $pageNumber);
     }
 }

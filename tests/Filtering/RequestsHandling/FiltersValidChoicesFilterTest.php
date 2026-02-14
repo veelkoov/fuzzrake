@@ -44,7 +44,6 @@ class FiltersValidChoicesFilterTest extends FuzzrakeTestCase
             StringSet::of('Pancakes', '!', '-', 'Kettles', '*'),
             StringSet::of('Birds', '?', 'Furniture', '*'),
             StringSet::of('None', 'Not supported', 'Supported', '?', '*', 'Waffles', ''),
-            StringSet::of('ADULTS', 'MIXED', 'MINORS', '?', '*', 'Zombie', ''),
             false, false, false, false, 1);
 
         $result = $subject->getOnlyValidChoices($choices);
@@ -59,6 +58,5 @@ class FiltersValidChoicesFilterTest extends FuzzrakeTestCase
         self::assertSameItems(['Pancakes', '!', '-'], $result->openFor);
         self::assertSameItems(['Birds', '?'], $result->species);
         self::assertSameItems(['Not supported', 'Supported', '?'], $result->paymentPlans);
-        self::assertSameItems(['ADULTS', 'MIXED', 'MINORS', '?'], $result->ages);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
-use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Field;
 use App\Filtering\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
@@ -50,7 +49,6 @@ class FiltersService
             $this->getCountriesFilterData(),
             $this->getStatesFilterData(),
             $this->speciesFilterService->getFilterData(),
-            $this->getAgesData(),
             $this->getInactiveFilterData(),
         ), CacheTags::CREATORS, __METHOD__);
     }
@@ -133,18 +131,6 @@ class FiltersService
         $result = new MutableFilterData(SpecialItems::newUnknown($stats->getOrDefaultOf(null, 0)));
         $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->getOrDefaultOf(false, 0));
         $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->getOrDefaultOf(true, 0));
-
-        return FilterData::from($result);
-    }
-
-    private function getAgesData(): FilterData
-    {
-        $stats = $this->creatorRepository->getActiveAgesStats();
-
-        $result = new MutableFilterData(SpecialItems::newUnknown($stats->getOrDefaultOf(null, 0)));
-        foreach (Ages::getFormChoices(false) as $label => $value) {
-            $result->items->addOrIncItem($label, $stats->getOrDefaultOf(Ages::get($value), 0));
-        }
 
         return FilterData::from($result);
     }
