@@ -305,13 +305,26 @@
     </div>
 
     <hr class="mt-4" />
+    <h2>Buyer safety</h2>
+
+    <div class="row">
+        <div class="col-lg-6 important">
+            {{ form_row(form.hasAllergyWarning) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.allergyWarningInfo) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
     <h2>Payments</h2>
 
     <div class="row">
         <div class="col-lg-6">
             <div class="recommended">
-                {{ form_row(form.paymentPlans) }}
+                {{ form_row(form.offersPaymentPlans) }}
             </div>
+            {{ form_row(form.paymentPlansInfo) }}
             {{ form_row(form.paymentMethods) }}
         </div>
         <div class="col-lg-6">

@@ -136,8 +136,32 @@
                 </div>
             {% endif %}
 
-            <div class="col-md-12 p-1">
+            <div class="col-md-6 p-1">
                 <p class="mb-0 small">
+                    <strong>
+                        {% if creator.hasAllergyWarning is null %}
+                            {% if '' == creator.allergyWarningInfo %}
+                                No information for allergic customers {{ unknown_value() }}
+                            {% else %}
+                                Allergy warning {{ unknown_value() }}
+                            {% endif %}
+                        {% elseif creator.hasAllergyWarning %}
+                            Allergy warning <i class="text-warning fa-solid fa-triangle-exclamation"></i>
+                        {% else %}
+                            No allergy warning <i class="text-success fa-solid fa-circle-xmark"></i>
+                        {% endif %}
+                    </strong>
+
+                    {% if '' != creator.allergyWarningInfo %}
+                        <br>{{ creator.allergyWarningInfo|nl2br }}
+                    {% elseif creator.hasAllergyWarning %}
+                        <br>Please check the provided links for details or contact the maker regarding this matter.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="col-md-6 p-1">
+                <p class="mb-0 small text-md-end">
                     Ages of studio members: {{ ages_description(creator, true) }}
                 </p>
             </div>
@@ -202,11 +226,13 @@
             </div>
 
             <div class="col-md-6 p-1">
-                <h5>Payment plans</h5>
+                <h5>Payment plans {{ nullable_boolean_symbol(creator.offersPaymentPlans) }}</h5>
 
-                <div class="small pb-2">
-                    {{ _self.list_with_others_comment_opt(creator.paymentPlans) }}
-                </div>
+                {% if creator.paymentPlansInfo %}
+                    <div class="small pb-2">
+                        <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
+                    </div>
+                {% endif %}
 
                 <h5>Currencies</h5>
 

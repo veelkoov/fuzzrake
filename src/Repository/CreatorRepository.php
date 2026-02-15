@@ -26,7 +26,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use Veelkoov\Debris\Collections\Strings;
 use Veelkoov\Debris\Lists\IntList;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
@@ -212,16 +212,17 @@ class CreatorRepository extends ServiceEntityRepository
         return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    public function getPaymentPlans(): StringList
+    public function getActiveOffersPaymentPlansStats(): NullBoolToInt
     {
         $result = $this->createQueryBuilder('d_c')
-            ->select('d_c.paymentPlans AS paymentPlans')
+            ->select('d_c.offersPaymentPlans AS offers', 'COUNT(d_c) AS count')
             ->where('d_c.inactiveReason = :empty')
+            ->groupBy('d_c.offersPaymentPlans')
             ->setParameter('empty', '')
             ->getQuery()
-            ->getSingleColumnResult();
+            ->getArrayResult();
 
-        return new StringList($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        return NullBoolToInt::fromRows($result, 'offers', 'count');
     }
 
     /**

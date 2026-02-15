@@ -46,11 +46,16 @@ class ExtendedTest extends IuSubmissionsTestCase
         Field::AGES,
     ];
 
-    private const array BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
+    private const array BOOLEAN_REQUIRED = [ // These fields are in the form of radios with "YES" or "NO" values
         Field::DOES_NSFW,
         Field::NSFW_SOCIAL,
         Field::NSFW_WEBSITE,
         Field::WORKS_WITH_MINORS,
+    ];
+
+    private const array BOOLEAN_OPTIONAL = [ // These fields are in the form of radios with "YES" or "NO" or "Not specified" values
+        Field::HAS_ALLERGY_WARNING,
+        Field::OFFERS_PAYMENT_PLANS,
     ];
 
     /**
@@ -176,8 +181,10 @@ class ExtendedTest extends IuSubmissionsTestCase
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue(Enforce::string($value), $htmlBody);
-        } elseif (arr_contains(self::BOOLEAN, $field)) {
-            self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, $htmlBody);
+        } elseif (arr_contains(self::BOOLEAN_REQUIRED, $field)) {
+            self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, false, $htmlBody);
+        } elseif (arr_contains(self::BOOLEAN_OPTIONAL, $field)) {
+            self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, true, $htmlBody);
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
@@ -242,13 +249,16 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private static function assertYesNoFieldIsPresentWithValue(?bool $value, Field $field, string $htmlBody): void
+    private static function assertYesNoFieldIsPresentWithValue(?bool $value, Field $field, bool $optional, string $htmlBody): void
     {
-        if (null !== $value) {
-            $value = $value ? 'YES' : 'NO';
-        }
+        $value = match ($value) {
+            true => 'YES',
+            false => 'NO',
+            null => $optional ? '' : $value,
+        };
 
-        self::assertRadioFieldIsPresentWithValue($value, ['YES', 'NO'], $field, $htmlBody);
+        $choices = $optional ? ['YES', 'NO', ''] : ['YES', 'NO'];
+        self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
     private static function assertContactValueFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
@@ -305,6 +315,8 @@ class ExtendedTest extends IuSubmissionsTestCase
             $value = $data->get($field);
             if (is_bool($value)) {
                 $value = $value ? 'YES' : 'NO';
+            } elseif (arr_contains(self::BOOLEAN_OPTIONAL, $field) && null === $value) {
+                $value = '';
             } elseif ($value instanceof BackedEnum) {
                 $value = $value->value;
             }

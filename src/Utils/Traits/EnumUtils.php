@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace App\Utils\Traits;
 
+use Veelkoov\Debris\Maps\StringToNullString;
+
 trait EnumUtils
 {
-    /**
-     * @return array<string, string|null>
-     */
-    public static function getChoices(bool $includeUnknown): array
+    public static function getFormChoices(bool $includeUnknown): StringToNullString
     {
-        $result = [];
+        $result = new StringToNullString();
 
         if ($includeUnknown) {
-            $result['Unknown'] = null;
+            $result->set('Unknown', null);
         }
 
         foreach (static::cases() as $case) {
-            $result[$case->getLabel()] = $case->value;
+            $result->set($case->getLabel(), $case->value);
         }
 
         return $result;

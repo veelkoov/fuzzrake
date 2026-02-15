@@ -15,18 +15,18 @@ trait FiltersTestTrait
     private static function getCombinedFiltersTestSet(): array
     {
         return [
-            self::creator('M000001', 'CZ', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000002', 'FI', 'State2', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000003', 'FI', 'State1', ['Lang2'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000004', 'FI', 'State1', ['Lang1'], ['Realistic'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000005', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes', 'Indoor feet'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000006', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Tails (as parts/separate)'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000007', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Premades'], ['Open1'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000008', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open2'], ['Real life animals'], ['Supported'], false, false),
-            self::creator('M000009', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Fantasy creatures'], ['Supported'], false, false),
-            self::creator('M000010', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], [], ['None'], false, false),
-            self::creator('M000011', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], true, false),
-            self::creator('M000012', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], ['Supported'], false, true),
+            self::creator('M000001', 'CZ', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000002', 'FI', 'State2', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000003', 'FI', 'State1', ['Lang2'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000004', 'FI', 'State1', ['Lang1'], ['Realistic'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000005', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes', 'Indoor feet'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000006', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Tails (as parts/separate)'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000007', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Premades'], ['Open1'], ['Real life animals'], true, false, false),
+            self::creator('M000008', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open2'], ['Real life animals'], true, false, false),
+            self::creator('M000009', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Fantasy creatures'], true, false, false),
+            self::creator('M000010', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], [], false, false, false),
+            self::creator('M000011', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, true, false),
+            self::creator('M000012', 'FI', 'State1', ['Lang1'], ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'], ['Open1'], ['Real life animals'], true, false, true),
         ];
     }
 
@@ -38,61 +38,61 @@ trait FiltersTestTrait
         return [
             self::creator('NOCNTRY', '', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('NOSTATE', 'FI', '', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('NOLANGG', 'FI', 'State', [],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('NOSTLES', 'FI', 'State', ['Language'],
                 [], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('BOTHSTL', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherStyles: ['Other styles']),
 
             self::creator('OTHRSTL', 'FI', 'State', ['Language'],
                 [], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherStyles: ['Other styles']),
 
             self::creator('NOFTRES', 'FI', 'State', ['Language'],
                 ['Toony'], [], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('BOTHFTR', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherFeatures: ['Other features']),
 
             self::creator('OTHRFTR', 'FI', 'State', ['Language'],
                 ['Toony'], [], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherFeatures: ['Other features']),
 
             self::creator('NOORTPS', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], [], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
 
             self::creator('BOTHORT', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherOrderTypes: ['Other order types']),
 
             self::creator('OTHRORT', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], [], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Supported'], false, false,
+                ['Open for'], ['Most species'], true, false, false,
                 otherOrderTypes: ['Other order types']),
 
             self::creator('NOPRDMD', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], [],
-                ['Open for'], ['Most species'], ['Supported'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
         ];
     }
 
@@ -104,15 +104,15 @@ trait FiltersTestTrait
         return [
             self::creator('UNKPAYP', 'FI', 'State', ['Language'], ['Toony'],
                 ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], [], false, false),
+                ['Open for'], ['Most species'], null, false, false),
 
             self::creator('NOPAYPL', 'FI', 'State', ['Language'], ['Toony'],
                 ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['None'], false, false),
+                ['Open for'], ['Most species'], false, false, false),
 
             self::creator('PAYPLNS', 'FI', 'State', ['Language'], ['Toony'],
                 ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Most species'], ['Some plan'], false, false),
+                ['Open for'], ['Most species'], true, false, false),
         ];
     }
 
@@ -124,21 +124,21 @@ trait FiltersTestTrait
         return [
             self::creator('NTTRCKD', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                [], ['Most species'], ['Supported'], false, false),
+                [], ['Most species'], true, false, false),
 
             self::creator('TRACKIS', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Offer'], ['Most species'], ['Supported'], false, false)
+                ['Offer'], ['Most species'], true, false, false)
                 ->setCsTrackerIssue(true)->setCommissionsUrls(['url']),
 
             self::creator('TRKFAIL', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                [], ['Most species'], ['Supported'], false, false)
+                [], ['Most species'], true, false, false)
                 ->setCsTrackerIssue(true)->setCommissionsUrls(['url']),
 
             self::creator('TRACKOK', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Offer'], ['Most species'], ['Supported'], false, false)
+                ['Offer'], ['Most species'], true, false, false)
                 ->setCommissionsUrls(['url']),
         ];
     }
@@ -151,11 +151,11 @@ trait FiltersTestTrait
         return [
             self::creator('ACTIVE1', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Canines'], ['Supported'], false, false),
+                ['Open for'], ['Canines'], true, false, false),
 
             self::creator('INACTIV', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
-                ['Open for'], ['Canines'], ['Supported'], false, false,
+                ['Open for'], ['Canines'], true, false, false,
                 inactiveReason: 'Inactive'),
         ];
     }
@@ -181,7 +181,7 @@ trait FiltersTestTrait
             'c8'  => [self::getCombinedFiltersTestSet(), ['productionModels' => ['Premades']],                  ['M000007']],
             'c9'  => [self::getCombinedFiltersTestSet(), ['openFor'          => ['Open2']],                     ['M000008']],
             'c10' => [self::getCombinedFiltersTestSet(), ['species'          => ['Fantasy creatures']],         ['M000009']],
-            'c11' => [self::getCombinedFiltersTestSet(), ['paymentPlans'     => ['Not supported']],             ['M000010']],
+            'c11' => [self::getCombinedFiltersTestSet(), ['paymentPlans'     => ['Not available']],             ['M000010']],
 
             'c12' => [
                 self::getCombinedFiltersTestSet(),
@@ -208,7 +208,7 @@ trait FiltersTestTrait
                     'features'     => ['LED eyes'],
                     'openFor'      => ['Open1'],
                     'species'      => ['Real life animals'],
-                    'paymentPlans' => ['Supported'],
+                    'paymentPlans' => ['Available'],
                 ],
                 ['M000001', 'M000002', 'M000004', 'M000005', 'M000006', 'M000007', 'M000011', 'M000012'],
             ],
@@ -231,15 +231,15 @@ trait FiltersTestTrait
                 ['UNKPAYP', 'NOPAYPL', 'PAYPLNS']],
             'pp2' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['?']],
                 ['UNKPAYP']],
-            'pp3' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['?', 'Not supported']],
+            'pp3' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['?', 'Not available']],
                 ['UNKPAYP', 'NOPAYPL']],
-            'pp4' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported']],
+            'pp4' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Available']],
                 ['PAYPLNS']],
-            'pp5' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported', 'Not supported']],
+            'pp5' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Available', 'Not available']],
                 ['NOPAYPL', 'PAYPLNS']],
-            'pp6' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported', '?']],
+            'pp6' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Available', '?']],
                 ['UNKPAYP', 'PAYPLNS']],
-            'pp7' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported', 'Not supported', '?']],
+            'pp7' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Available', 'Not available', '?']],
                 ['UNKPAYP', 'NOPAYPL', 'PAYPLNS']],
 
             't0' => [self::getTrackingFiltersTestSet(), [],                                 ['NTTRCKD', 'TRKFAIL', 'TRACKIS', 'TRACKOK']],
@@ -263,13 +263,12 @@ trait FiltersTestTrait
      * @param list<string> $productionModels
      * @param list<string> $openFor
      * @param list<string> $speciesDoes
-     * @param list<string> $paymentPlans
      * @param list<string> $otherStyles
      * @param list<string> $otherFeatures
      * @param list<string> $otherOrderTypes
      * @param list<string> $speciesDoesnt
      */
-    private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, array $paymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
+    private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, ?bool $offersPaymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
     {
         return new Creator()
             ->setCreatorId($creatorIdAndName)
@@ -283,7 +282,7 @@ trait FiltersTestTrait
             ->setProductionModels($productionModels)
             ->setOpenFor($openFor)
             ->setSpeciesDoes($speciesDoes)
-            ->setPaymentPlans($paymentPlans)
+            ->setOffersPaymentPlans($offersPaymentPlans)
             ->setAges(Ages::ADULTS)
             ->setNsfwSocial($nsfw)
             ->setNsfwWebsite($nsfw)

@@ -109,7 +109,7 @@ class Data extends AbstractType
             ->add('ages', ChoiceType::class, [
                 'label'      => 'What is your age?',
                 'required'   => true,
-                'choices'    => Ages::getChoices(false),
+                'choices'    => Ages::getFormChoices(false),
                 'expanded'   => true,
             ])
             ->add('nsfwWebsite', ChoiceType::class, [
@@ -136,10 +136,25 @@ class Data extends AbstractType
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
                 'expanded' => true,
             ])
-            ->add('paymentPlans', TextareaType::class, [
-                'label'      => 'What payment plans do you support?',
-                'help'       => 'Please provide a precise description. If you leave this empty, getfursu.it will treat this information as missing! (see the first example). Examples: <em>None/100% upfront</em>, <em>40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months</em>, <em>50% upfront to reserve a slot, 10% each next month</em>, <em>50% upfront for slot reservation, 100$ each next month until fully paid</em>.',
-                'help_html'  => true,
+            ->add('hasAllergyWarning', ChoiceType::class, [
+                'label'    => 'Do you want to add allergy warning (e.g. you currently own animals)?',
+                'choices'  => ['Not specified' => '', 'Yes (allergy warning)' => 'YES', 'No (safe)' => 'NO'],
+                'expanded' => true,
+                'required' => true,
+            ])
+            ->add('allergyWarningInfo', TextareaType::class, [
+                'label'      => 'Allergy warning - additional information',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('offersPaymentPlans', ChoiceType::class, [
+                'label'    => 'Do you offer payment plans?',
+                'choices'  => ['Not specified' => '', 'Yes' => 'YES', 'No' => 'NO'],
+                'expanded' => true,
+                'required' => false,
+            ])
+            ->add('paymentPlansInfo', TextareaType::class, [
+                'label'      => 'Payment plans - additional information',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -466,7 +481,7 @@ class Data extends AbstractType
             ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
                 'required'   => true,
-                'choices'    => ContactPermit::getChoices(false),
+                'choices'    => ContactPermit::getFormChoices(false),
                 'expanded'   => true,
             ])
             ->add('emailAddress', TextType::class, [
@@ -506,8 +521,7 @@ class Data extends AbstractType
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
-            'speciesDoesnt',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
@@ -516,7 +530,7 @@ class Data extends AbstractType
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
         $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
 
-        foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
+        foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors', 'offersPaymentPlans', 'hasAllergyWarning'] as $field) {
             $builder->get($field)->addModelTransformer(new BooleanTransformer());
         }
     }
