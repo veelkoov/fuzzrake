@@ -137,7 +137,7 @@ class Data extends AbstractType
                 'expanded' => true,
             ])
             ->add('hasAllergyWarning', ChoiceType::class, [
-                'label'    => 'Do you own animals? Do you want to add allergy warning?',
+                'label'    => 'Do you want to add allergy warning (e.g. you currently own animals)?',
                 'choices'  => ['Not specified' => '', 'Yes (allergy warning)' => 'YES', 'No (safe)' => 'NO'],
                 'expanded' => true,
                 'required' => true,
@@ -155,7 +155,6 @@ class Data extends AbstractType
             ])
             ->add('paymentPlansInfo', TextareaType::class, [
                 'label'      => 'Payment plans - additional information',
-                'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
             ])
