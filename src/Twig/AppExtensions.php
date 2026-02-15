@@ -40,7 +40,7 @@ class AppExtensions
     #[AsTwigFunction('nullable_boolean_symbol', isSafe: ['html'])]
     public function nullableBooleanSymbol(?bool $input): string
     {
-        return match($input) {
+        return match ($input) {
             null => $this->unknownValue(),
             true => '<i class="text-success fa-solid fa-circle-check"></i>',
             false => '<i class="text-danger fa-solid fa-square-xmark"></i>',

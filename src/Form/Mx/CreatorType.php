@@ -69,9 +69,9 @@ class CreatorType extends AbstractTypeWithDelete
                 'expanded' => true,
             ])
             ->add('hasAllergyWarning', ChoiceType::class, [
-                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'choices'  => ['Yes (allergy warning)' => 'YES', 'No (safe)' => 'NO', 'Unknown' => null],
                 'expanded' => true,
-                'label'    => 'Allergy warning',
+                'label'    => 'Has allergy warning',
                 'required' => true,
             ])
             ->add('allergyWarningInfo', TextareaType::class, [
