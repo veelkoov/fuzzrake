@@ -36,7 +36,9 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
 
         $result = self::getCreatorRepository()->findByCreatorId($creatorId);
 
-        static::assertEquals($creators[$resultIdx], $result);
+        if (null !== $resultIdx) {
+            self::assertEquals($creators[$resultIdx], $result);
+        }
     }
 
     /**

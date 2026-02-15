@@ -19,12 +19,7 @@ class SpeciesListValidator implements ValidatorInterface
     #[Override]
     public function isValid(Field $field, string $subject): bool
     {
-        foreach (PackedStringList::unpack($subject) as $specie) {
-            if (!$this->speciesService->getValidNames()->contains($specie)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all(PackedStringList::unpack($subject),
+            fn ($specie) => $this->speciesService->getValidNames()->contains($specie));
     }
 }

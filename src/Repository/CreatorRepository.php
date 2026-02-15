@@ -81,6 +81,9 @@ class CreatorRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Generator<Creator>
+     */
     private function getPaged(QueryBuilder $queryBuilder): Generator
     {
         $query = $queryBuilder->getQuery();
@@ -95,7 +98,7 @@ class CreatorRepository extends ServiceEntityRepository
             $first += Pagination::PAGE_SIZE;
 
             foreach ($creatorsPage as $creator) {
-                yield $creator;
+                yield $creator; // @phpstan-ignore generator.valueType
             }
         }
     }
