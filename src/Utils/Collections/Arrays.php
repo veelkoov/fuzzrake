@@ -26,7 +26,7 @@ final class Arrays
             throw new InvalidArgumentException('Given array does not have exactly one element.');
         }
 
-        return $input[array_key_first($input)];
+        return array_first($input);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator;
@@ -54,6 +55,9 @@ class Creator implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $city = '';
 
+    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: Ages::class)]
+    private ?Ages $ages = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private string $productionModelsComment = '';
 
@@ -66,8 +70,17 @@ class Creator implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $featuresComment = '';
 
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private ?bool $hasAllergyWarning = null;
+
     #[ORM\Column(type: Types::TEXT)]
-    private string $paymentPlans = '';
+    private string $allergyWarningInfo = '';
+
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private ?bool $offersPaymentPlans = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $paymentPlansInfo = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $paymentMethods = '';
@@ -303,6 +316,18 @@ class Creator implements Stringable
         return $this;
     }
 
+    public function getAges(): ?Ages
+    {
+        return $this->ages;
+    }
+
+    public function setAges(?Ages $ages): self
+    {
+        $this->ages = $ages;
+
+        return $this;
+    }
+
     public function getProductionModelsComment(): string
     {
         return $this->productionModelsComment;
@@ -351,14 +376,50 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getPaymentPlans(): string
+    public function getHasAllergyWarning(): ?bool
     {
-        return $this->paymentPlans;
+        return $this->hasAllergyWarning;
     }
 
-    public function setPaymentPlans(string $paymentPlans): self
+    public function setHasAllergyWarning(?bool $hasAllergyWarning): self
     {
-        $this->paymentPlans = $paymentPlans;
+        $this->hasAllergyWarning = $hasAllergyWarning;
+
+        return $this;
+    }
+
+    public function getAllergyWarningInfo(): string
+    {
+        return $this->allergyWarningInfo;
+    }
+
+    public function setAllergyWarningInfo(string $allergyWarningInfo): self
+    {
+        $this->allergyWarningInfo = $allergyWarningInfo;
+
+        return $this;
+    }
+
+    public function getOffersPaymentPlans(): ?bool
+    {
+        return $this->offersPaymentPlans;
+    }
+
+    public function setOffersPaymentPlans(?bool $offersPaymentPlans): self
+    {
+        $this->offersPaymentPlans = $offersPaymentPlans;
+
+        return $this;
+    }
+
+    public function getPaymentPlansInfo(): string
+    {
+        return $this->paymentPlansInfo;
+    }
+
+    public function setPaymentPlansInfo(string $paymentPlansInfo): self
+    {
+        $this->paymentPlansInfo = $paymentPlansInfo;
 
         return $this;
     }

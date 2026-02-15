@@ -9,7 +9,7 @@ use Veelkoov\Debris\Sets\StringSet;
 
 class SpecialItemsExtractor
 {
-    private StringToBool $special;
+    private readonly StringToBool $special;
     public readonly StringSet $common;
 
     public function __construct(StringSet $items, string ...$allowedSpecialItems)

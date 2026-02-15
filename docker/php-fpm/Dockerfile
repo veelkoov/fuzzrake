@@ -1,4 +1,4 @@
-FROM php:8.4.17-fpm-alpine3.23
+FROM php:8.5.3-fpm-alpine3.23
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
@@ -17,12 +17,12 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
 # Git is needed for managing Symfony recipes in the container
 RUN apk add --no-cache icu php-intl util-linux libzip libpng acl \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev \
-    && docker-php-ext-install -j$(nproc) intl opcache zip gd bcmath \
+    && docker-php-ext-install -j$(nproc) intl zip gd bcmath \
     && if [ "$DEV_MACHINE" = "yes" ]; then \
         echo "Setting up develop software" \
+        && apk add --no-cache chromium chromium-chromedriver git \
         && pecl install xdebug \
-        && docker-php-ext-enable xdebug.so \
-        && apk add --no-cache chromium chromium-chromedriver git; \
+        && docker-php-ext-enable xdebug.so; \
     else \
         echo "Skipping develop software"; \
     fi \

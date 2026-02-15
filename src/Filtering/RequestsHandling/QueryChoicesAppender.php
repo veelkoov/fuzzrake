@@ -217,62 +217,43 @@ class QueryChoicesAppender
         }
     }
 
-    /**
-     * FIXME: https://github.com/veelkoov/fuzzrake/issues/305.
-     *
-     * This is absolute garbage.
-     */
     private function applyPaymentPlans(QueryBuilder $builder): void
     {
-        $paymentPlansValue = QueryBuilderUtils::getUniqueId();
+        if ($this->choices->paymentPlans->isNotEmpty()) {
+            $this->applyOptionalBoolean($builder, 'd_c.offersPaymentPlans',
+                $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+                $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_PAYPLANS_NONE),
+                $this->choices->paymentPlans->contains(Consts::FILTER_VALUE_UNKNOWN),
+            );
+        }
+    }
 
-        if ($this->choices->wantsUnknownPaymentPlans) {
-            if ($this->choices->wantsAnyPaymentPlans) {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // Unknown + ANY + None
-                    return;
-                } else {
-                    // Unknown + ANY
-                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
-                    $parameter = Consts::DATA_PAYPLANS_NONE;
-                }
-            } else {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // Unknown + None
-                    $andWhere = "d_c.paymentPlans IN (:$paymentPlansValue)";
-                    $parameter = [Consts::DATA_VALUE_UNKNOWN, Consts::DATA_PAYPLANS_NONE];
-                } else {
-                    // Unknown
-                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
-                    $parameter = Consts::DATA_VALUE_UNKNOWN;
-                }
-            }
-        } else {
-            if ($this->choices->wantsAnyPaymentPlans) {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // ANY + None
-                    $andWhere = "d_c.paymentPlans <> :$paymentPlansValue";
-                    $parameter = Consts::DATA_VALUE_UNKNOWN;
-                } else {
-                    // ANY
-                    $andWhere = "d_c.paymentPlans NOT IN (:$paymentPlansValue)";
-                    $parameter = [Consts::DATA_PAYPLANS_NONE, Consts::DATA_VALUE_UNKNOWN];
-                }
-            } else {
-                if ($this->choices->wantsNoPaymentPlans) {
-                    // None
-                    $andWhere = "d_c.paymentPlans = :$paymentPlansValue";
-                    $parameter = Consts::DATA_PAYPLANS_NONE;
-                } else {
-                    // Nothing selected
-                    return;
-                }
-            }
+    private function applyOptionalBoolean(QueryBuilder $builder, string $fieldReference, bool $wantsTrue,
+        bool $wantsFalse, bool $wantsNull): void
+    {
+        if ($wantsFalse && $wantsTrue && $wantsNull) {
+            return;
         }
 
-        $builder
-            ->andWhere($andWhere)
-            ->setParameter($paymentPlansValue, $parameter);
+        $conditions = [];
+
+        if ($wantsNull) {
+            $conditions[] = $builder->expr()->isNull($fieldReference);
+        }
+
+        if ($wantsTrue) {
+            $aTrue = QueryBuilderUtils::getUniqueId();
+            $conditions[] = $builder->expr()->eq($fieldReference, ":$aTrue");
+            $builder->setParameter($aTrue, true, ParameterType::BOOLEAN);
+        }
+
+        if ($wantsFalse) {
+            $aFalse = QueryBuilderUtils::getUniqueId();
+            $conditions[] = $builder->expr()->eq($fieldReference, ":$aFalse");
+            $builder->setParameter($aFalse, false, ParameterType::BOOLEAN);
+        }
+
+        QueryBuilderUtils::andWhere($builder, $conditions);
     }
 
     private function applyWantsInactive(QueryBuilder $builder): void

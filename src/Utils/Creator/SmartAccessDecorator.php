@@ -187,12 +187,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getAges(): ?Ages
     {
-        return Ages::get($this->getStringValue(Field::AGES));
+        return $this->entity->getAges();
     }
 
     public function setAges(?Ages $ages): self
     {
-        return $this->setStringValue(Field::AGES, $ages?->value);
+        $this->entity->setAges($ages);
+
+        return $this;
     }
 
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
@@ -1248,21 +1250,52 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    /**
-     * @return list<string>
-     */
-    #[StrListLength(max: 1024)]
-    public function getPaymentPlans(): array
+    public function getHasAllergyWarning(): ?bool
     {
-        return PackedStringList::unpack($this->entity->getPaymentPlans());
+        return $this->entity->getHasAllergyWarning();
     }
 
-    /**
-     * @param list<string> $paymentPlans
-     */
-    public function setPaymentPlans(array $paymentPlans): self
+    public function setHasAllergyWarning(?bool $hasAllergyWarning): self
     {
-        $this->entity->setPaymentPlans(PackedStringList::pack($paymentPlans));
+        $this->entity->setHasAllergyWarning($hasAllergyWarning);
+
+        return $this;
+    }
+
+    #[Length(max: 4096)]
+    public function getAllergyWarningInfo(): string
+    {
+        return $this->entity->getAllergyWarningInfo();
+    }
+
+    public function setAllergyWarningInfo(string $allergyWarningInfo): self
+    {
+        $this->entity->setAllergyWarningInfo($allergyWarningInfo);
+
+        return $this;
+    }
+
+    public function getOffersPaymentPlans(): ?bool
+    {
+        return $this->entity->getOffersPaymentPlans();
+    }
+
+    public function setOffersPaymentPlans(?bool $offersPaymentPlans): self
+    {
+        $this->entity->setOffersPaymentPlans($offersPaymentPlans);
+
+        return $this;
+    }
+
+    #[Length(max: 4096)]
+    public function getPaymentPlansInfo(): string
+    {
+        return $this->entity->getPaymentPlansInfo();
+    }
+
+    public function setPaymentPlansInfo(string $paymentPlansInfo): self
+    {
+        $this->entity->setPaymentPlansInfo($paymentPlansInfo);
 
         return $this;
     }

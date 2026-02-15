@@ -37,6 +37,16 @@ class AppExtensions
         return '<i class="fas fa-question-circle" title="Unknown"></i>';
     }
 
+    #[AsTwigFunction('nullable_boolean_symbol', isSafe: ['html'])]
+    public function nullableBooleanSymbol(?bool $input): string
+    {
+        return match ($input) {
+            null => $this->unknownValue(),
+            true => '<i class="text-success fa-solid fa-circle-check"></i>',
+            false => '<i class="text-danger fa-solid fa-square-xmark"></i>',
+        };
+    }
+
     /**
      * @param string[] $primary
      * @param string[] $other
@@ -88,15 +98,10 @@ class AppExtensions
         $result = '';
 
         if ($addText) {
-            $result .= match ($creator->getAges()) {
-                Ages::MINORS => 'Everyone is under 18',
-                Ages::MIXED => 'There is a mix of people over and under 18',
-                Ages::ADULTS => 'Everyone is over 18',
-                default => '',
-            };
-
             if (null === $creator->getAges()) {
                 $result .= $this->unknownValue();
+            } else {
+                $result .= $creator->getAges()->getLabel();
             }
         }
 

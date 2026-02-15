@@ -14,7 +14,7 @@ final class SchemaFixer
     use UtilityClass;
 
     private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const int CURRENT_SCHEMA_VERSION = 18;
+    private const int CURRENT_SCHEMA_VERSION = 19;
 
     /**
      * @param psJsonFieldsData $data
@@ -54,6 +54,16 @@ final class SchemaFixer
                 $data[Field::URL_DONATIONS->value] = '';
                 $data[Field::URL_TELEGRAM_CHANNEL->value] = '';
                 $data[Field::URL_TIKTOK->value] = '';
+                // no break
+
+            case 18:
+                $paymentPlans = implode("\n", Enforce::strList($data['PAYMENT_PLANS']));
+                // Better handle all cases manually
+                $data[Field::PAYMENT_PLANS_INFO->value] = '' === $paymentPlans ? '' : "(FIXME: supports payment plans?) $paymentPlans";
+                $data[Field::OFFERS_PAYMENT_PLANS->value] = null; // See above
+
+                $data[Field::HAS_ALLERGY_WARNING->value] = null;
+                $data[Field::ALLERGY_WARNING_INFO->value] = '';
         }
 
         return $data;

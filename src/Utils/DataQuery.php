@@ -166,6 +166,6 @@ class DataQuery
      */
     private function itemMatchesList(string $item, array $list): bool
     {
-        return array_any($list, static fn ($listItem) => false !== stripos($item, $listItem));
+        return array_any($list, static fn (string $listItem) => false !== stripos($item, $listItem));
     }
 }

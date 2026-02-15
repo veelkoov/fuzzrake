@@ -59,7 +59,7 @@ class CreatorType extends AbstractTypeWithDelete
             ->add('ages', ChoiceType::class, [
                 'label'    => 'Age',
                 'required' => true,
-                'choices'  => Ages::getChoices(true),
+                'choices'  => Ages::getFormChoices(true),
                 'expanded' => true,
             ])
             ->add('worksWithMinors', ChoiceType::class, [
@@ -68,7 +68,24 @@ class CreatorType extends AbstractTypeWithDelete
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
                 'expanded' => true,
             ])
-            ->add('paymentPlans', TextareaType::class, [
+            ->add('hasAllergyWarning', ChoiceType::class, [
+                'choices'  => ['Yes (allergy warning)' => 'YES', 'No (safe)' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+                'label'    => 'Has allergy warning',
+                'required' => true,
+            ])
+            ->add('allergyWarningInfo', TextareaType::class, [
+                'empty_data' => '',
+                'label'      => 'Allergy warning - additional information',
+                'required'   => false,
+            ])
+            ->add('offersPaymentPlans', ChoiceType::class, [
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+                'label'    => 'Offers payment plans?',
+                'required' => true,
+            ])
+            ->add('paymentPlansInfo', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -326,7 +343,7 @@ class CreatorType extends AbstractTypeWithDelete
             ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'   => 'Contact allowed?',
-                'choices' => ContactPermit::getChoices(true),
+                'choices' => ContactPermit::getFormChoices(true),
             ])
             ->add('emailAddress', TextType::class, [
                 'label'      => 'Email address',
@@ -349,13 +366,16 @@ class CreatorType extends AbstractTypeWithDelete
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
-            'speciesDoesnt', 'formerCreatorIds', 'miniatureUrls',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
+            'formerCreatorIds', 'miniatureUrls',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
 
-        $builder->get('worksWithMinors')->addModelTransformer(new BooleanTransformer());
+        foreach (['worksWithMinors', 'offersPaymentPlans', 'hasAllergyWarning'] as $fieldName) {
+            $builder->get($fieldName)->addModelTransformer(new BooleanTransformer());
+        }
+
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
         $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
