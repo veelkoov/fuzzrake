@@ -123,7 +123,7 @@ final class UrlRemovalService
     {
         $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
             ['_fragment' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::IU_FORM_START,
+        $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::USER_IU_FORM_START,
             ['creatorId' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
             [], UrlGeneratorInterface::ABSOLUTE_PATH);

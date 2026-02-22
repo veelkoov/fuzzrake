@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm;
+namespace App\Controller\User;
 
-use App\Controller\IuForm\Utils\IuSubject;
 use App\Controller\Traits\CreatorByCreatorIdTrait;
+use App\Controller\User\IuFormUtils\IuSubject;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-abstract class AbstractIuFormController extends AbstractController
+abstract class IuFormAbstractController extends AbstractController
 {
     use CreatorByCreatorIdTrait;
 

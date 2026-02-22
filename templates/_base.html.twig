@@ -26,13 +26,23 @@
 </head>
 
 <body>
-    {{ include('_menu.html.twig') }}
+    <div id="top-menu-container" hx-get="{{ path('htmx_menu') }}" hx-trigger="load" hx-on:htmx:after-on-load="jQuery(this).trigger('navbar-init');">
+        {{ render(path('htmx_menu', {ignore_session: true})) }}
+    </div>
 
     <div class="container">
-        {% block body %}{% endblock %}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} my-2" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
 
-        {{ include('_footer.html.twig') }}
+        {% block body %}{% endblock %}
     </div>
+
+    {{ include('_footer.html.twig') }}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('general') }}

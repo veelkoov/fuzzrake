@@ -83,7 +83,7 @@ function action_dbpush_beta() {
     run_command scp -p "$DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
 }
 
-function action_dbdump() {
+function action_dbdump() { # TODO: Ignoring
     # shellcheck disable=SC2207 # Yes, split by whitespace
     TABLE_NAMES=($(sqlite3 "$DATABASE_REL_PATH" .tables))
 

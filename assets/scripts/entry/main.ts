@@ -1,5 +1,4 @@
 import "../../styles/main.scss";
-import "htmx.org";
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checklist from "../main/Checklist";
 import ColumnsManager from "../main/ColumnsManager";

@@ -44,6 +44,15 @@ class MainController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/htmx/menu', name: RouteName::HTMX_MENU)]
+    #[Cache(public: false, noStore: true)]
+    public function menu(Request $request): Response
+    {
+        return $this->render('_menu.html.twig', [
+            'ignore_session' => $request->query->get('ignore_session'),
+        ]);
+    }
+
     #[Route(path: '/new', name: RouteName::NEW_CREATORS)]
     #[Cache(maxage: 900, public: true)]
     public function newCreators(): Response

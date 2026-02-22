@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm;
+namespace App\Controller\User;
 
 use App\Captcha\CaptchaService;
-use App\Controller\IuForm\Utils\IuSubject;
+use App\Controller\User\IuFormUtils\IuSubject;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
@@ -27,12 +27,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-class IuFormDataController extends AbstractIuFormController
+#[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
+class IuFormDataController extends IuFormAbstractController
 {
     /**
      * @throws NotFoundHttpException
      */
-    #[Route(path: '/iu_form/data/{creatorId}', name: RouteName::IU_FORM_DATA)]
+    #[Route(path: '/data/{creatorId}', name: RouteName::USER_IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormData(
         Request $request,
@@ -63,7 +64,7 @@ class IuFormDataController extends AbstractIuFormController
             try {
                 $submission = $submissionService->submit($subject->creator);
 
-                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
+                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [
                     'isNew'          => $subject->isNew ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',

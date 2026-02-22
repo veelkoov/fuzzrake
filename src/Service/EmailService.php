@@ -29,13 +29,12 @@ class EmailService
         string $attachedJsonData = '',
     ): void {
         $email = new Email()
-            ->from($this->contactEmail)
             ->subject($subject)
             ->text($contents)
         ;
 
         if (EmailUtils::isValid($recipient)) {
-            $email->to($recipient)->cc($this->contactEmail);
+            $email->to($recipient)->bcc($this->contactEmail);
         } else {
             $email->to($this->contactEmail);
         }
@@ -43,6 +42,16 @@ class EmailService
         if ('' !== $attachedJsonData) {
             $email->attach($attachedJsonData, 'data.json', 'application/json');
         }
+
+        $this->sendRaw($email);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function sendRaw(Email $email): void
+    {
+        $email->from($this->contactEmail);
 
         $this->mailer->send($email);
     }
