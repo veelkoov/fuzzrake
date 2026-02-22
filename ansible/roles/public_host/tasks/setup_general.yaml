@@ -11,7 +11,7 @@
 - name: "Install required packages"
   ansible.builtin.dnf:
     name:
-      - "@nodejs:18/common"
+      - "@nodejs:24/common"
       - "augeas-libs" # Used by Certbot
       - "firewalld"
       - "git"
