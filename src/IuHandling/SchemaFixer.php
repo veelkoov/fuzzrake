@@ -59,7 +59,7 @@ final class SchemaFixer
             case 18:
                 $paymentPlans = implode("\n", Enforce::strList($data['PAYMENT_PLANS']));
                 // Better handle all cases manually
-                $data[Field::PAYMENT_PLANS_INFO->value] = '' === $paymentPlans ? '' : "(FIXME: supports payment plans?) $paymentPlans";
+                $data[Field::PAYMENT_PLANS_INFO->value] = '' === $paymentPlans ? '' : '(set '.Field::OFFERS_PAYMENT_PLANS->value." 'True') $paymentPlans";
                 $data[Field::OFFERS_PAYMENT_PLANS->value] = null; // See above
 
                 $data[Field::HAS_ALLERGY_WARNING->value] = null;
