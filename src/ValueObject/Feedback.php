@@ -16,7 +16,7 @@ final class Feedback
     private const string COMMISSIONS_INFO_INACCURATE = "Maker's commissions info (open/closed) is inaccurate";
     private const string OTHER_INFO_OUTDATED = "Other maker's information is (partially) outdated";
 
-    final public const array OPTIONS = [
+    public const array OPTIONS = [
         self::HELP_ME_GET_A_FURSUIT,
         self::COMMISSIONS_INFO_INACCURATE,
         "Maker's website/social account is no longer working",

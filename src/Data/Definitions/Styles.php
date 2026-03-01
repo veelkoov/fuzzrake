@@ -6,15 +6,15 @@ namespace App\Data\Definitions;
 
 use Override;
 
-class Styles extends Dictionary
+final class Styles extends Dictionary
 {
-    final public const string TOONY = 'Toony';
-    final public const string SEMI_TOONY = 'Semi Toony';
-    final public const string SEMI_REALISTIC = 'Semi Realistic';
-    final public const string REALISTIC = 'Realistic';
-    final public const string KEMONO = 'Kemono';
-    final public const string KIGURUMI = 'Kigurumi';
-    final public const string ANIME = 'Anime';
+    public const string TOONY = 'Toony';
+    public const string SEMI_TOONY = 'Semi Toony';
+    public const string SEMI_REALISTIC = 'Semi Realistic';
+    public const string REALISTIC = 'Realistic';
+    public const string KEMONO = 'Kemono';
+    public const string KIGURUMI = 'Kigurumi';
+    public const string ANIME = 'Anime';
 
     #[Override]
     public static function getValues(): array
