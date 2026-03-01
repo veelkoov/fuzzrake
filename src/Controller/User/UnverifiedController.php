@@ -37,7 +37,7 @@ class UnverifiedController extends AbstractController
         return $this->render('user/main.html.twig');
     }
 
-    #[Route(path: '/resendVerificationEmail', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
+    #[Route(path: '/resend-verification-email', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
     public function resendVerificationEmail(#[CurrentUser] User $user): Response
     {
         if ($user->isVerified()) {

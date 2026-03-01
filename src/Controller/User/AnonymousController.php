@@ -86,7 +86,7 @@ class AnonymousController extends AbstractController
             ?? $this->redirectToRoute(RouteName::USER_LOGIN);
     }
 
-    #[Route('/verifyEmail', name: RouteName::USER_VERIFY_EMAIL)]
+    #[Route('/verify-email', name: RouteName::USER_VERIFY_EMAIL)]
     public function verifyEmail(Request $request, UserRepository $userRepository): Response
     {
         $id = $request->query->get('id');
