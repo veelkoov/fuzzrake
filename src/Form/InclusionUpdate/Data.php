@@ -40,18 +40,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @extends AbstractType<Creator>
  */
-class Data extends AbstractType
+final class Data extends AbstractType
 {
     use RouterDependentTrait;
 
-    final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
-    final public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
-    final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const string FLD_CREATOR_ID = 'creatorId';
-    final public const string FLD_CHANGE_PASSWORD = 'changePassword';
-    final public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
-    final public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
-    final public const string FLD_PASSWORD = 'password';
+    public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
+    public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
+    public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    public const string FLD_CREATOR_ID = 'creatorId';
+    public const string FLD_CHANGE_PASSWORD = 'changePassword';
+    public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
+    public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
+    public const string FLD_PASSWORD = 'password';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -12,10 +12,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SubmissionType extends AbstractType
+final class SubmissionType extends AbstractType
 {
-    final public const string BTN_IMPORT = 'import';
-    final public const string BTN_SAVE = 'save';
+    public const string BTN_IMPORT = 'import';
+    public const string BTN_SAVE = 'save';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
