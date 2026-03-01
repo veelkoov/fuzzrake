@@ -18,12 +18,12 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\Table(name: 'events')]
 class Event
 {
-    final public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
-    final public const string TYPE_CS_UPDATED = 'CS_UPDATED';
-    final public const string TYPE_GENERIC = 'GENERIC';
-    final public const string TYPE_CREATOR_ADDED = 'CREATOR_ADDED';
-    final public const string TYPE_CREATOR_UPDATED = 'CREATOR_UPDATED';
-    final public const array EDITABLE_TYPES = [
+    public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
+    public const string TYPE_CS_UPDATED = 'CS_UPDATED';
+    public const string TYPE_GENERIC = 'GENERIC';
+    public const string TYPE_CREATOR_ADDED = 'CREATOR_ADDED';
+    public const string TYPE_CREATOR_UPDATED = 'CREATOR_UPDATED';
+    public const array EDITABLE_TYPES = [
         self::TYPE_GENERIC,
         self::TYPE_DATA_UPDATED,
         self::TYPE_CREATOR_ADDED,

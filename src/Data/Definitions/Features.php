@@ -6,26 +6,26 @@ namespace App\Data\Definitions;
 
 use Override;
 
-class Features extends Dictionary
+final class Features extends Dictionary
 {
-    final public const string FOLLOW_ME_EYES = 'Follow-me eyes';
-    final public const string OUTDOOR_FEET = 'Outdoor feet';
-    final public const string INDOOR_FEET = 'Indoor feet';
-    final public const string ATTACHED_TAIL = 'Attached tail';
-    final public const string EXCHANGEABLE_TONGUES = 'Exchangeable tongues';
-    final public const string REMOVABLE_EYELIDS = 'Removable eyelids';
-    final public const string MOVABLE_JAW = 'Movable jaw';
-    final public const string ATTACHED_HANDPAWS_AND_FEETPAWS = 'Attached handpaws and feetpaws';
-    final public const string IN_HEAD_FANS = 'In-head fans';
-    final public const string LED_EYES = 'LED eyes';
-    final public const string EXCHANGEABLE_HAIRS = 'Exchangeable hairs';
-    final public const string REMOVABLE_HORNS_ANTLERS = 'Removable horns/antlers';
-    final public const string WASHABLE_HEADS = 'Washable heads';
-    final public const string LED_EL_LIGHTS = 'LED/EL lights';
-    final public const string ADJUSTABLE_WIGGLE_EARS = 'Adjustable/wiggle ears';
-    final public const string ADJUSTABLE_EYEBROWS = 'Adjustable eyebrows';
-    final public const string ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
-    final public const string REMOVABLE_BLUSH = 'Removable blush';
+    public const string FOLLOW_ME_EYES = 'Follow-me eyes';
+    public const string OUTDOOR_FEET = 'Outdoor feet';
+    public const string INDOOR_FEET = 'Indoor feet';
+    public const string ATTACHED_TAIL = 'Attached tail';
+    public const string EXCHANGEABLE_TONGUES = 'Exchangeable tongues';
+    public const string REMOVABLE_EYELIDS = 'Removable eyelids';
+    public const string MOVABLE_JAW = 'Movable jaw';
+    public const string ATTACHED_HANDPAWS_AND_FEETPAWS = 'Attached handpaws and feetpaws';
+    public const string IN_HEAD_FANS = 'In-head fans';
+    public const string LED_EYES = 'LED eyes';
+    public const string EXCHANGEABLE_HAIRS = 'Exchangeable hairs';
+    public const string REMOVABLE_HORNS_ANTLERS = 'Removable horns/antlers';
+    public const string WASHABLE_HEADS = 'Washable heads';
+    public const string LED_EL_LIGHTS = 'LED/EL lights';
+    public const string ADJUSTABLE_WIGGLE_EARS = 'Adjustable/wiggle ears';
+    public const string ADJUSTABLE_EYEBROWS = 'Adjustable eyebrows';
+    public const string ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
+    public const string REMOVABLE_BLUSH = 'Removable blush';
 
     #[Override]
     public static function getValues(): array
