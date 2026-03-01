@@ -34,7 +34,7 @@ class EmailService
         ;
 
         if (EmailUtils::isValid($recipient)) {
-            $email->to($recipient)->bcc($this->contactEmail);
+            $email->to($recipient)->bcc($this->contactEmail); // FIXME: Don't BCC password reset/verify emails
         } else {
             $email->to($this->contactEmail);
         }

@@ -34,10 +34,11 @@ final class RouteName
     public const string HTMX_MAIN_UPDATES_DIALOG = 'htmx_main_updates_dialog';
     public const string HTMX_MENU = 'htmx_menu';
 
+    public const string USER_REGISTER = 'user_register';
     public const string USER_LOGIN = 'user_login';
+    public const string USER_REQUEST_PASSWORD_RESET = 'user_request_password_reset';
     public const string USER_LOGOUT = 'user_logout';
     public const string USER_MAIN = 'user_main';
-    public const string USER_REGISTER = 'user_register';
     public const string USER_RESEND_VERIFICATION_EMAIL = 'user_resend_verification_email';
     public const string USER_VERIFY_EMAIL = 'user_verify_email';
 

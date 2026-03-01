@@ -31,7 +31,7 @@ class EmailVerifier
         $email = new TemplatedEmail()
                 ->to($user->getEmail())
                 ->subject('Please confirm your email')
-                ->textTemplate('user/confirmation_email.html.twig');
+                ->textTemplate('emails/email_verification.html.twig');
 
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             RouteName::USER_VERIFY_EMAIL,
