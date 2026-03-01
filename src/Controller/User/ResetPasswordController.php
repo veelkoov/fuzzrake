@@ -34,7 +34,7 @@ class ResetPasswordController extends AbstractController
     }
 
     #[Route('', name: RouteName::USER_PASSWORD_RESET_REQUEST)]
-    public function request(Request $request, MailerInterface $mailer): Response
+    public function requestPasswordReset(Request $request, MailerInterface $mailer): Response
     {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute(RouteName::USER_MAIN);
@@ -55,11 +55,8 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * Confirmation page after a user has requested a password reset.
-     */
     #[Route('/check-email', name: RouteName::USER_PASSWORD_RESET_EMAIL_SENT)]
-    public function checkEmail(): Response
+    public function emailSentConfirmation(): Response
     {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute(RouteName::USER_MAIN);
