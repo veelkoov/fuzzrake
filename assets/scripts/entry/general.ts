@@ -30,6 +30,6 @@ jQuery(() => {
   });
 });
 
-jQuery('#top-menu-container')
-  .on('navbar-init', () => Navbar.init())
-  .trigger('navbar-init');
+jQuery("#top-menu-container")
+  .on("navbar-init", () => Navbar.init())
+  .trigger("navbar-init");
