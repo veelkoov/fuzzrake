@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Captcha\Form\CaptchaType;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -23,8 +24,8 @@ class ResetPasswordRequestFormType extends AbstractType
                 'attr' => ['autocomplete' => 'email'],
                 'help' => 'Enter your email address, and we will send you a link to reset your password.',
                 'constraints' => [new NotBlank(message: 'Please enter your email')],
-            ],
-            );
+            ])
+            ->add('captcha', CaptchaType::class);
     }
 
     #[Override]

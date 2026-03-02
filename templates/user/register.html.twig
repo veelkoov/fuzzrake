@@ -5,15 +5,14 @@
 {% block body %}
     <h1 class="my-4">Registration</h1>
 
-    {{ form_errors(registrationForm) }}
+    {{ form_errors(registration_form) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_start(registration_form) }}
+    {{ form_row(registration_form.email) }}
+    {{ form_row(registration_form.plainPassword) }}
+    {{ form_row(registration_form.agreeTerms) }}
+    {{ render(controller('App\\Captcha\\Controller::challenge', {form: registration_form.captcha})) }}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Register
-        </button>
-    {{ form_end(registrationForm) }}
+    <button class="btn btn-lg btn-primary" type="submit">Register</button>
+    {{ form_end(registration_form) }}
 {% endblock %}

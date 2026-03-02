@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
+use App\Captcha\CaptchaService;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -49,7 +51,8 @@ class AnonymousController extends AbstractController
     }
 
     #[Route('/register', name: RouteName::USER_REGISTER)]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security,
+        EntityManagerInterface $entityManager, SessionInterface $session, CaptchaService $captchaService): Response
     {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute(RouteName::USER_MAIN);
@@ -58,10 +61,11 @@ class AnonymousController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+        $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        if (!$form->isSubmitted() || !$form->isValid() || !$captcha->isSolved()) {
             return $this->render('user/register.html.twig', [
-                'registrationForm' => $form,
+                'registration_form' => $form,
             ]);
         }
 

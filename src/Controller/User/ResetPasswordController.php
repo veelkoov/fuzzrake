@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
+use App\Captcha\CaptchaService;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
@@ -14,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -34,7 +36,8 @@ class ResetPasswordController extends AbstractController
     }
 
     #[Route('', name: RouteName::USER_PASSWORD_RESET_REQUEST)]
-    public function requestPasswordReset(Request $request, MailerInterface $mailer): Response
+    public function requestPasswordReset(Request $request, SessionInterface $session, MailerInterface $mailer,
+        CaptchaService $captchaService): Response
     {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute(RouteName::USER_MAIN);
@@ -42,8 +45,9 @@ class ResetPasswordController extends AbstractController
 
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
+        $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             /** @var string $email */
             $email = $form->get(ResetPasswordRequestFormType::FLD_EMAIL)->getData();
 

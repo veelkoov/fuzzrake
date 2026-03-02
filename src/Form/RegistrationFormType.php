@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Captcha\Form\CaptchaType;
 use App\Entity\User;
 use Override;
 use Symfony\Component\Form\AbstractType;
@@ -48,6 +49,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('captcha', CaptchaType::class)
         ;
     }
 
