@@ -105,7 +105,7 @@ class ResetPasswordController extends AbstractController
             $this->addFlash('danger', sprintf(
                 '%s - %s',
                 ResetPasswordExceptionInterface::MESSAGE_PROBLEM_VALIDATE,
-                $exception->getReason()
+                $exception->getReason(),
             ));
 
             return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_REQUEST);
@@ -172,9 +172,9 @@ class ResetPasswordController extends AbstractController
             ->from(new Address('changeme@getfursu.it', 'getfursu.it'))
             ->to($user->getEmail())
             ->subject('Your password reset request')
-            ->htmlTemplate('emails/password_reset.html.twig')
+            ->textTemplate('emails/password_reset.html.twig')
             ->context([
-                'resetToken' => $resetToken,
+                'reset_token' => $resetToken,
             ])
         ;
 
