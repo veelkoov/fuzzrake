@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\User;
 
 use App\Entity\User;
+use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
 use App\Security\EmailVerifier;
 use App\ValueObject\Routing\RouteName;
@@ -94,6 +95,42 @@ class UnverifiedController extends AbstractController
 
         return $this->render('user/change_password.html.twig', [
             'password_form' => $form,
+        ]);
+    }
+
+    #[Route(path: '/change-email', name: RouteName::USER_CHANGE_EMAIL)]
+    public function changeEmail(Request $request, #[CurrentUser] User $user, UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ChangeEmailFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            /** @var string $password */
+            $password = $form->get(ChangeEmailFormType::FLD_PASSWORD)->getData();
+            $isPasswordValid = $passwordHasher->isPasswordValid($user, $password);
+
+            if ($form->isValid() && $isPasswordValid) {
+                /** @var string $newEmail */
+                $newEmail = $form->get(ChangeEmailFormType::FLD_NEW_EMAIL)->getData();
+
+                $user->setEmail($newEmail)->setIsVerified(false);
+                $entityManager->flush();
+                $this->emailVerifier->sendEmailConfirmation($user);
+
+                $this->addFlash('warning', 'Your email has been changed. A verification email has been sent.');
+
+                return $this->redirectToRoute(RouteName::USER_MAIN);
+            }
+
+            if (!$isPasswordValid) {
+                $form->get(ChangeEmailFormType::FLD_PASSWORD)
+                    ->addError(new FormError('Invalid password.'));
+            }
+        }
+
+        return $this->render('user/change_email.html.twig', [
+            'email_form' => $form,
         ]);
     }
 }
