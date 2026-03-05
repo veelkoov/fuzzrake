@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\User;
 
 use App\Captcha\CaptchaService;
-use App\Controller\User\IuFormUtils\IuSubject;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
@@ -13,9 +12,7 @@ use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\SubmissionService;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
-use App\ValueObject\Texts;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -47,26 +44,22 @@ class IuFormDataController extends IuFormAbstractController
 
         $form = $this->createForm(Data::class, $subject->creator, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
-            Data::OPT_CURRENT_EMAIL_ADDRESS => $subject->previousEmailAddress,
             'router' => $router,
         ])->handleRequest($request);
         $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
-        $this->validatePassword($form, $subject);
         $this->validatePhotosCopyright($form, $subject->creator);
         $this->validateCreatorId($form, $subject->creator);
 
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
-            $submittedPasswordOk = $this->handlePassword($subject);
-
             $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();
 
             try {
                 $submission = $submissionService->submit($subject->creator);
 
-                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [
+                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [ // FIXME!!!
                     'isNew'          => $subject->isNew ? 'yes' : 'no',
-                    'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
+                    'passwordOk'     => 'yes',
                     'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
                     'creatorId'      => $creatorId,
                     'submissionId'   => $submission->getStrId(),
@@ -111,49 +104,6 @@ class IuFormDataController extends IuFormAbstractController
             }
         } catch (NoResultException) {
             // Unused ID = OK
-        }
-    }
-
-    private function validatePassword(FormInterface $form, IuSubject $subject): void
-    {
-        if (!$form->isSubmitted() || $subject->isNew) {
-            return;
-        }
-
-        $verificationAcknowledgmentField = $form->get(Data::FLD_VERIFICATION_ACKNOWLEDGEMENT);
-
-        $wantsPasswordChange = true === ($form->get(Data::FLD_CHANGE_PASSWORD)->getData() ?? false);
-        $contactAllowed = ContactPermit::NO !== $form->get(Data::FLD_CONTACT_ALLOWED)->getData();
-        $verificationAcknowledgment = true === ($verificationAcknowledgmentField->getData() ?? false);
-
-        if ($wantsPasswordChange && (!$contactAllowed || !$subject->wasContactAllowed) && !$verificationAcknowledgment) {
-            $errorMessage = 'Your action is required; your submission will be rejected otherwise.';
-            $verificationAcknowledgmentField->addError(new FormError($errorMessage));
-        }
-
-        if (!$wantsPasswordChange && !Password::verify($subject->creator, $subject->previousPassword)) {
-            $errorMessage = 'Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.';
-            $form->get(Data::FLD_PASSWORD)->addError(new FormError($errorMessage));
-        }
-    }
-
-    /**
-     * @return bool If the I/U submission requires confirmation (password didn't match previous one)
-     */
-    private function handlePassword(IuSubject $subject): bool
-    {
-        if ($subject->isNew) {
-            Password::encryptOn($subject->creator);
-
-            return true;
-        } elseif (Password::verify($subject->creator, $subject->previousPassword)) {
-            $subject->creator->setPassword($subject->previousPassword); // Was already hashed; use old hash - must not appear changed
-
-            return true;
-        } else {
-            Password::encryptOn($subject->creator); // Will become new password if confirmed with maintainer
-
-            return false;
         }
     }
 }

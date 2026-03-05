@@ -24,11 +24,11 @@ security:
             form_login:
                 login_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
                 check_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
+                default_target_path: !php/const App\ValueObject\Routing\RouteName::USER_MAIN
                 enable_csrf: true
             logout:
                 path: !php/const App\ValueObject\Routing\RouteName::USER_LOGOUT
-                # where to redirect after logout
-                target: !php/const App\ValueObject\Routing\RouteName::USER_MAIN
+                target: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall

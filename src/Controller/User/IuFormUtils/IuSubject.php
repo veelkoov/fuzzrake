@@ -7,7 +7,7 @@ namespace App\Controller\User\IuFormUtils;
 use App\Data\Definitions\ContactPermit;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
-final readonly class IuSubject
+final readonly class IuSubject // TODO: Should not be needed
 {
     public string $previousPassword;
     public string $previousEmailAddress;
