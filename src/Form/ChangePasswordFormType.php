@@ -15,13 +15,21 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
 
-class ChangePasswordFormType extends AbstractType
+final class ChangePasswordFormType extends AbstractType
 {
+    public const string FLD_CURRENT_PASSWORD = 'currentPassword';
+    public const string FLD_NEW_PASSWORD = 'newPassword';
+
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('plainPassword', RepeatedType::class, [
+            ->add(self::FLD_CURRENT_PASSWORD, PasswordType::class, [
+                'mapped' => false,
+                'label' => 'Current password',
+                'required' => true,
+            ])
+            ->add(self::FLD_NEW_PASSWORD, RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
                     'attr' => [
@@ -48,7 +56,8 @@ class ChangePasswordFormType extends AbstractType
                 ],
                 'invalid_message' => 'The password fields must match.',
                 'mapped' => false,
-            ]);
+            ])
+        ;
     }
 
     #[Override]

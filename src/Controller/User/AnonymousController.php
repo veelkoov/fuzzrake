@@ -70,7 +70,7 @@ class AnonymousController extends AbstractController
         }
 
         /** @var string $plainPassword */
-        $plainPassword = $form->get('plainPassword')->getData();
+        $plainPassword = $form->get(RegistrationFormType::FLD_PLAIN_PASSWORD)->getData();
 
         // encode the plain password
         $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));

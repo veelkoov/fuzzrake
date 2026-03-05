@@ -16,8 +16,10 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class RegistrationFormType extends AbstractType
+final class RegistrationFormType extends AbstractType
 {
+    public const string FLD_PLAIN_PASSWORD = 'plainPassword';
+
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -31,7 +33,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add(self::FLD_PLAIN_PASSWORD, PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,

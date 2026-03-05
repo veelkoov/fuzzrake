@@ -11,6 +11,9 @@
     <a href="#" onclick="alert('TODO'); return void(0);" class="btn btn-outline-secondary btn-large">
         <i class="fa-solid fa-at"></i> Update email address {# TODO #}
     </a>
+    <a href="{{ path('user_change_password') }}" class="btn btn-outline-secondary btn-large">
+        <i class="fa-solid fa-key"></i> Change password
+    </a>
 
     {% if not is_granted('ROLE_VERIFIED') %}
         <a href="{{ path('user_resend_verification_email') }}" class="btn btn-outline-secondary btn-large">

@@ -12,9 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ResetPasswordRequestFormType extends AbstractType
+final class ResetPasswordRequestFormType extends AbstractType
 {
-    final public const string FLD_EMAIL = 'email';
+    public const string FLD_EMAIL = 'email';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -25,7 +25,8 @@ class ResetPasswordRequestFormType extends AbstractType
                 'help' => 'Enter your email address, and we will send you a link to reset your password.',
                 'constraints' => [new NotBlank(message: 'Please enter your email')],
             ])
-            ->add('captcha', CaptchaType::class);
+            ->add('captcha', CaptchaType::class)
+        ;
     }
 
     #[Override]

@@ -40,6 +40,7 @@ final class RouteName
     public const string USER_RESEND_VERIFICATION_EMAIL = 'user_resend_verification_email';
     public const string USER_VERIFY_EMAIL = 'user_verify_email';
     public const string USER_MAIN = 'user_main';
+    public const string USER_CHANGE_PASSWORD = 'user_change_password';
 
     public const string USER_PASSWORD_RESET_REQUEST = 'user_password_reset_request';
     public const string USER_PASSWORD_RESET_FORM = 'user_password_reset_form';
