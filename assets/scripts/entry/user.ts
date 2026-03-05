@@ -15,8 +15,10 @@ jQuery(() => {
     const visibleFunc = function (_: number, htmlElement: JQuery): boolean {
       const element = jQuery(htmlElement);
 
-      return element.data("min-level") <= contactAllowedIdx
-        && contactAllowedIdx <= element.data("max-level");
+      return (
+        element.data("min-level") <= contactAllowedIdx &&
+        contactAllowedIdx <= element.data("max-level")
+      );
     };
 
     toggle(contactLevelProsCons, visibleFunc, animationsDuration);

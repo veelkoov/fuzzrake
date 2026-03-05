@@ -24,10 +24,10 @@ class IuFormStartController extends IuFormAbstractController
     #[Cache(maxage: 0, public: false)]
     public function iuFormStart(Request $request, ?string $creatorId = null): Response
     {
-        $subject = $this->getSubject($creatorId);
+        $creator = null === $creatorId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($creatorId);
 
         $form = $this->createForm(Start::class, new StartData(), [
-            Start::OPT_STUDIO_NAME => $this->getCreatorDescription($subject->creator),
+            Start::OPT_STUDIO_NAME => $this->getCreatorDescription($creator),
         ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -35,7 +35,7 @@ class IuFormStartController extends IuFormAbstractController
         }
 
         return $this->render('iu_form/start.html.twig', [
-            'is_new'  => $subject->isNew,
+            'is_new'  => null === $creatorId,
             'noindex' => true,
             'form'    => $form->createView(),
         ]);

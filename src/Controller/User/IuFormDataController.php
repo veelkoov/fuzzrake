@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\User;
 
 use App\Captcha\CaptchaService;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\Data;
 use App\IuHandling\Exception\SubmissionException;
@@ -40,27 +39,26 @@ class IuFormDataController extends IuFormAbstractController
         SubmissionService $submissionService,
         ?string $creatorId = null,
     ): Response {
-        $subject = $this->getSubject($creatorId);
+        $creator = null === $creatorId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($creatorId);
+        $isNew = null === $creatorId;
 
-        $form = $this->createForm(Data::class, $subject->creator, [
-            Data::OPT_PHOTOS_COPYRIGHT_OK => !$subject->isNew && $subject->creator->hasData(Field::URL_PHOTOS),
+        $form = $this->createForm(Data::class, $creator, [
+            Data::OPT_PHOTOS_COPYRIGHT_OK => !$isNew && $creator->hasData(Field::URL_PHOTOS),
             'router' => $router,
         ])->handleRequest($request);
         $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
-        $this->validatePhotosCopyright($form, $subject->creator);
-        $this->validateCreatorId($form, $subject->creator);
+        $this->validatePhotosCopyright($form, $creator);
+        $this->validateCreatorId($form, $creator);
 
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
-            $isContactAllowed = ContactPermit::NO !== $subject->creator->getContactAllowed();
-
             try {
-                $submission = $submissionService->submit($subject->creator);
+                $submission = $submissionService->submit($creator);
 
                 return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [ // FIXME!!!
-                    'isNew'          => $subject->isNew ? 'yes' : 'no',
+                    'isNew'          => $isNew ? 'yes' : 'no',
                     'passwordOk'     => 'yes',
-                    'contactAllowed' => $isContactAllowed ? ($subject->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    'contactAllowed' => 'yes',
                     'creatorId'      => $creatorId,
                     'submissionId'   => $submission->getStrId(),
                 ]);
@@ -76,9 +74,9 @@ class IuFormDataController extends IuFormAbstractController
             'errors'              => $form->getErrors(true),
             'noindex'             => true,
             'submitted'           => $form->isSubmitted(),
-            'is_new'              => $subject->isNew,
+            'is_new'              => $isNew,
             'creator_id'          => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
-            'was_contact_allowed' => $subject->wasContactAllowed,
+            'was_contact_allowed' => true,
         ]);
     }
 
