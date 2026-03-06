@@ -93,6 +93,7 @@ class CreatorSmallTest extends TestCase
 
         if ('.user' === $path) {
             self::assertNull($result, 'User must be nulled.');
+
             return;
         }
 

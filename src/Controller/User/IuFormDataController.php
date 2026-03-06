@@ -6,6 +6,7 @@ namespace App\Controller\User;
 
 use App\Captcha\CaptchaService;
 use App\Data\Definitions\Fields\Field;
+use App\Entity\User;
 use App\Form\InclusionUpdate\Data;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\SubmissionService;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
 class IuFormDataController extends IuFormAbstractController
@@ -32,6 +34,7 @@ class IuFormDataController extends IuFormAbstractController
     #[Route(path: '/data/{creatorId}', name: RouteName::USER_IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormData(
+        #[CurrentUser] User $user,
         Request $request,
         SessionInterface $session,
         CaptchaService $captchaService,
@@ -39,11 +42,11 @@ class IuFormDataController extends IuFormAbstractController
         SubmissionService $submissionService,
         ?string $creatorId = null,
     ): Response {
-        $creator = null === $creatorId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($creatorId);
-        $isNew = null === $creatorId;
+        $creator = null === $user->getCreator() ? new Creator() : Creator::wrap($user->getCreator());
+        $photosCopyrightOk = null !== $creatorId && $creator->hasData(Field::URL_PHOTOS);
 
         $form = $this->createForm(Data::class, $creator, [
-            Data::OPT_PHOTOS_COPYRIGHT_OK => !$isNew && $creator->hasData(Field::URL_PHOTOS),
+            Data::OPT_PHOTOS_COPYRIGHT_OK => $photosCopyrightOk,
             'router' => $router,
         ])->handleRequest($request);
         $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
@@ -53,14 +56,10 @@ class IuFormDataController extends IuFormAbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             try {
-                $submission = $submissionService->submit($creator);
+                $submissionService->submit($creator);
 
-                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [ // FIXME!!!
-                    'isNew'          => $isNew ? 'yes' : 'no',
-                    'passwordOk'     => 'yes',
-                    'contactAllowed' => 'yes',
-                    'creatorId'      => $creatorId,
-                    'submissionId'   => $submission->getStrId(),
+                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [
+                    'creatorId' => $creatorId, // FIXME!!!
                 ]);
             } catch (SubmissionException $exception) {
                 $this->logger->error('Failed to submit I/U form data.', ['exception' => $exception]);
@@ -72,11 +71,8 @@ class IuFormDataController extends IuFormAbstractController
         return $this->render('iu_form/data.html.twig', [
             'form'                => $form,
             'errors'              => $form->getErrors(true),
-            'noindex'             => true,
             'submitted'           => $form->isSubmitted(),
-            'is_new'              => $isNew,
             'creator_id'          => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
-            'was_contact_allowed' => true,
         ]);
     }
 

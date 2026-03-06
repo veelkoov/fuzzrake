@@ -2,7 +2,7 @@
 
 {% import 'iu_form/parts/macros.html.twig' as macros %}
 
-{% block title %}{% if is_new %}inclusion{% else %}update{% endif %} request{% endblock %}
+{% block title %}data submission{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -20,13 +20,7 @@
     <div class="card border-dark mb-3">
         <div class="card-body">
             <p class="card-text p-0 m-0 float-start">
-                {% if is_new %}
-                    You started filling this new maker/studio inclusion request on
-                {% else %}
-                    You began updating the maker/studio data on
-                {% endif %}
-
-                <span id="iu-form-start-time"></span>.
+                You started filling this form on <span id="iu-form-start-time"></span>.
             </p>
 
             <p class="card-text text-end p-0 m-0 float-end">

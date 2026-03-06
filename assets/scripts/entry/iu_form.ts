@@ -38,29 +38,6 @@ function cleanup(creatorId: string): void {
 }
 
 function setup_start_page(): void {
-  const confirmAddingANewOne = new Radio(
-    "iu_form[confirmAddingANewOne]",
-    refresh_page,
-  );
-  const ensureStudioIsNotThereAlready = new DynamicRadio(
-    "iu_form[ensureStudioIsNotThereAlready]",
-    "#ensureStudioIsNotThereAlready",
-    refresh_page,
-    false,
-  );
-  const confirmUpdatingTheRightOne = new Radio(
-    "iu_form[confirmUpdatingTheRightOne]",
-    refresh_page,
-  );
-  const $addNewStudioInstead = jQuery("#addNewStudioInstead");
-  const $findTheStudioToUpdate = jQuery("#findTheStudioToUpdate");
-  const confirmYouAreTheCreator = new DynamicRadio(
-    "iu_form[confirmYouAreTheCreator]",
-    "#confirmYouAreTheCreator",
-    refresh_page,
-    false,
-  );
-  const $doNotFillTheForm = jQuery("#doNotFillTheForm");
   const confirmNoPendingUpdates = new DynamicRadio(
     "iu_form[confirmNoPendingUpdates]",
     "#confirmNoPendingUpdates",
@@ -79,30 +56,7 @@ function setup_start_page(): void {
   const $rulesAndContinueButton = jQuery("#rulesAndContinueButton");
 
   function refresh_page(): void {
-    ensureStudioIsNotThereAlready.toggle(confirmAddingANewOne.isVal("yes"));
-
-    toggle(
-      $addNewStudioInstead,
-      confirmUpdatingTheRightOne.isVal("add-new-instead"),
-    );
-
-    toggle(
-      $findTheStudioToUpdate,
-      confirmAddingANewOne.isVal("no") ||
-        ensureStudioIsNotThereAlready.isVal("found-old-studio") ||
-        confirmUpdatingTheRightOne.isVal("update-other-one"),
-    );
-
-    confirmYouAreTheCreator.toggle(
-      ensureStudioIsNotThereAlready.isVal("is-new-studio") ||
-        confirmUpdatingTheRightOne.isVal("correct"),
-    );
-
-    toggle($doNotFillTheForm, confirmYouAreTheCreator.isVal("not-the-creator"));
-
-    confirmNoPendingUpdates.toggle(
-      confirmYouAreTheCreator.isVal("i-am-the-creator"),
-    );
+    confirmNoPendingUpdates.toggle(true,); // FIXME
 
     decisionOverPreviousUpdates.toggle(
       confirmNoPendingUpdates.isVal("submission-pending"),

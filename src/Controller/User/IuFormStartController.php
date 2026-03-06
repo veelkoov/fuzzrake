@@ -6,7 +6,6 @@ namespace App\Controller\User;
 
 use App\Controller\User\IuFormUtils\StartData;
 use App\Form\InclusionUpdate\Start;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,31 +23,15 @@ class IuFormStartController extends IuFormAbstractController
     #[Cache(maxage: 0, public: false)]
     public function iuFormStart(Request $request, ?string $creatorId = null): Response
     {
-        $creator = null === $creatorId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($creatorId);
-
-        $form = $this->createForm(Start::class, new StartData(), [
-            Start::OPT_STUDIO_NAME => $this->getCreatorDescription($creator),
-        ])->handleRequest($request);
+        $form = $this->createForm(Start::class, new StartData());
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->redirectToRoute(RouteName::USER_IU_FORM_DATA, ['creatorId' => $creatorId]);
         }
 
         return $this->render('iu_form/start.html.twig', [
-            'is_new'  => null === $creatorId,
-            'noindex' => true,
-            'form'    => $form->createView(),
+            'form' => $form->createView(),
         ]);
-    }
-
-    private function getCreatorDescription(Creator $creator): ?string
-    {
-        if (null === $creator->getId()) {
-            return null;
-        }
-
-        $creatorId = '' !== $creator->getCreatorId() ? ' ('.$creator->getCreatorId().')' : '';
-
-        return $creator->getName().$creatorId;
     }
 }

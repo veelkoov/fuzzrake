@@ -14,11 +14,7 @@
 
     {% block add_meta %}{% endblock %}
 
-    {% if noindex|default(false) %}
-        <meta name="robots" content="noindex" />
-    {% else %}
-        <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
-    {% endif %}
+    <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('general') }}

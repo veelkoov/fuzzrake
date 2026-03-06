@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
-use App\Utils\DateTime\UtcClock;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +18,7 @@ class IuFormAllOtherController extends IuFormAbstractController
     public function iuFormConfirmation(Request $request): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
-            'password_ok'            => 'yes' === $request->query->get('passwordOk', 'no'),
-            'contact_allowed'        => 'yes' === $request->query->get('contactAllowed', 'is_no'),
-            'no_selected_previously' => 'was_no' === $request->query->get('contactAllowed', 'is_no'),
-            'submission_id'          => $request->query->get('submissionId', UtcClock::now()->format(DATE_RFC3339)),
-            'creator_id'             => $request->query->get('creatorId', self::NEW_CREATOR_ID_PLACEHOLDER),
-            'is_new'                 => null !== $request->query->get('creatorId'),
+            'creator_id' => $request->query->get('creatorId', self::NEW_CREATOR_ID_PLACEHOLDER),
         ]);
     }
 
