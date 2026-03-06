@@ -157,9 +157,7 @@ class Creator implements Stringable
 
     public function __clone()
     {
-        if (null !== $this->user) {
-            $this->setUser(clone $this->user);
-        }
+        $this->user = null; // Don't do that
 
         if (null !== $this->privateData) {
             $this->setPrivateData(clone $this->privateData);

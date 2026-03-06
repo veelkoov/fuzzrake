@@ -15,6 +15,7 @@ use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
 use App\Entity\Specie;
+use App\Entity\User;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
@@ -58,6 +59,9 @@ class CreatorSmallTest extends TestCase
         $creatorUrl->getState();
         $subject->addUrl($creatorUrl);
 
+        $user = new User();
+        $subject->setUser($user);
+
         $result = clone $subject;
         $this->assureDifferent('', [], $subject, $result);
     }
@@ -84,6 +88,11 @@ class CreatorSmallTest extends TestCase
                 $this->assureDifferent("{$path}[$key]", $subjectParentsAndThis, $subject[$key], $result[$key]);
             }
 
+            return;
+        }
+
+        if ('.user' === $path) {
+            self::assertNull($result, 'User must be nulled.');
             return;
         }
 

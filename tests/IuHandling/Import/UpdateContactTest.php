@@ -18,32 +18,32 @@ class UpdateContactTest extends FuzzrakeTestCase
         // New creator, NO
         $result = $this->getUpdateContactPermit(null, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertSame('Never', $result->description);
+        self::assertSame('Never, except for password resets, and security notifications', $result->description);
 
         // New creator, FEEDBACK
         $result = $this->getUpdateContactPermit(null, ContactPermit::FEEDBACK);
         self::assertTrue($result->isAllowed);
-        self::assertSame('Feedback', $result->description);
+        self::assertSame('Gathering feedback', $result->description);
 
         // Existing creator, NO ---> FEEDBACK
         $result = $this->getUpdateContactPermit(ContactPermit::NO, ContactPermit::FEEDBACK);
         self::assertFalse($result->isAllowed);
-        self::assertSame('Never → Feedback', $result->description);
+        self::assertSame('Never, except for password resets, and security notifications → Gathering feedback', $result->description);
 
         // Existing creator, FEEDBACK ---> NO
         $result = $this->getUpdateContactPermit(ContactPermit::FEEDBACK, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertSame('Feedback → Never', $result->description);
+        self::assertSame('Gathering feedback → Never, except for password resets, and security notifications', $result->description);
 
         // Existing creator, NO ---> NO
         $result = $this->getUpdateContactPermit(ContactPermit::NO, ContactPermit::NO);
         self::assertFalse($result->isAllowed);
-        self::assertSame('Never', $result->description);
+        self::assertSame('Never, except for password resets, and security notifications', $result->description);
 
         // Existing creator, ANNOUNCEMENTS ---> FEEDBACK
         $result = $this->getUpdateContactPermit(ContactPermit::ANNOUNCEMENTS, ContactPermit::FEEDBACK);
         self::assertTrue($result->isAllowed);
-        self::assertSame('Announcements → Feedback', $result->description);
+        self::assertSame('Website announcements → Gathering feedback', $result->description);
     }
 
     public function testAddress(): void
