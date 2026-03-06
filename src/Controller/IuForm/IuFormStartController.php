@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
-use App\Controller\IuForm\IuFormUtils\StartData;
+use App\Controller\IuForm\Utils\StartData;
 use App\Form\InclusionUpdate\Start;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
-class IuFormStartController extends IuFormAbstractController
+class IuFormStartController extends AbstractIuFormController
 {
     /**
      * @throws NotFoundHttpException

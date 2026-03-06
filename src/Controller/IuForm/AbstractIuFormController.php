@@ -9,7 +9,7 @@ use App\Repository\CreatorRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-abstract class IuFormAbstractController extends AbstractController // TODO: Eliminate
+abstract class AbstractIuFormController extends AbstractController // TODO: Eliminate
 {
     use CreatorByCreatorIdTrait;
 

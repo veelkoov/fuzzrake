@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
-class IuFormAllOtherController extends IuFormAbstractController
+class IuFormAllOtherController extends AbstractIuFormController
 {
     #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]

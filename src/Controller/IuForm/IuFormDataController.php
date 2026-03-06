@@ -26,7 +26,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
-class IuFormDataController extends IuFormAbstractController
+class IuFormDataController extends AbstractIuFormController
 {
     /**
      * @throws NotFoundHttpException
