@@ -85,7 +85,6 @@ class AnonymousController extends AbstractController
             $this->addFlash('error', 'Failed to sent the notification. Please contact the site administration.');
         }
 
-        // FIXME: Redirect to user main instead of main
         return $security->login($user, 'form_login', 'main')
             ?? $this->redirectToRoute(RouteName::USER_LOGIN);
     }

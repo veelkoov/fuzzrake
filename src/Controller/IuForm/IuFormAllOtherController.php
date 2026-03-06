@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\User;
+namespace App\Controller\IuForm;
 
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;

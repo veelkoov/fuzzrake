@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\User;
+namespace App\Controller\IuForm;
 
-use App\Controller\User\IuFormUtils\StartData;
+use App\Controller\IuForm\IuFormUtils\StartData;
 use App\Form\InclusionUpdate\Start;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
