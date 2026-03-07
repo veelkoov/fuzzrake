@@ -44,9 +44,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Creator $creator;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -137,16 +134,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
-    }
-
-    public function getCreator(): ?Creator
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(?Creator $creator): void
-    {
-        $this->creator = $creator;
     }
 
     public function isVerified(): bool
