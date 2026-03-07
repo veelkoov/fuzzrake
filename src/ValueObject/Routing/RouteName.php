@@ -34,6 +34,10 @@ final class RouteName
     public const string HTMX_MAIN_UPDATES_DIALOG = 'htmx_main_updates_dialog';
     public const string HTMX_MENU = 'htmx_menu';
 
+    public const string IU_FORM_START = 'iu_form_step_start';
+    public const string IU_FORM_DATA = 'iu_form_step_data';
+    public const string IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
+
     public const string USER_REGISTER = 'user_register';
     public const string USER_LOGIN = 'user_login';
     public const string USER_LOGOUT = 'user_logout';
@@ -46,10 +50,6 @@ final class RouteName
     public const string USER_PASSWORD_RESET_REQUEST = 'user_password_reset_request';
     public const string USER_PASSWORD_RESET_FORM = 'user_password_reset_form';
     public const string USER_PASSWORD_RESET_EMAIL_SENT = 'user_password_reset_email_sent';
-
-    public const string USER_IU_FORM_CONFIRMATION = 'iu_form_step_confirmation';
-    public const string USER_IU_FORM_DATA = 'iu_form_step_data';
-    public const string USER_IU_FORM_START = 'iu_form_step_start';
 
     public const string MX_CREATORS_URLS = 'mx_creators_urls';
     public const string MX_CREATOR_EDIT = 'mx_creator_edit';

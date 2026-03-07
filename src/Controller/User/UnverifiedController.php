@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
-use App\Entity\Creator;
 use App\Entity\User;
 use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
-use App\Form\ContactPermitFormType;
 use App\Security\EmailVerifier;
-use App\Utils\Creator\SmartAccessDecorator;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
@@ -41,21 +38,9 @@ class UnverifiedController extends AbstractController
     }
 
     #[Route(path: '/main', name: RouteName::USER_MAIN)]
-    public function main(Request $request, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
+    public function main(): Response
     {
-        $form = $this->createForm(ContactPermitFormType::class, SmartAccessDecorator::wrap($user->getCreator() ?? new Creator())); // FIXME: Stupid workaround; move the stupid permit data garbage to the stupid user entity
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->addFlash('success', 'Your contact preferences have been saved.');
-            $entityManager->flush();
-
-            return $this->redirectToRoute(RouteName::USER_MAIN);
-        }
-
-        return $this->render('user/main.html.twig', [
-            'contact_form' => $form,
-        ]);
+        return $this->render('user/main.html.twig');
     }
 
     #[Route(path: '/resend-verification-email', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
