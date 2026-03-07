@@ -18,10 +18,10 @@ enum ContactPermit: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::NO            => 'Never, except for password resets, and security notifications',
-            self::CORRECTIONS   => 'My information corrections',
-            self::ANNOUNCEMENTS => 'Website announcements',
-            self::FEEDBACK      => 'Gathering feedback',
+            self::NO            => 'Never',
+            self::CORRECTIONS   => 'Corrections',
+            self::ANNOUNCEMENTS => 'Announcements',
+            self::FEEDBACK      => 'Feedback',
         };
     }
 

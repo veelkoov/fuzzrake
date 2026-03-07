@@ -27,7 +27,6 @@ Encore
     .addEntry('iu_form', './assets/scripts/entry/iu_form.ts')
     .addEntry('main', './assets/scripts/entry/main.ts')
     .addEntry('toc', './assets/scripts/entry/toc.ts')
-    .addEntry('user', './assets/scripts/entry/user.ts')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

@@ -1,7 +1,8 @@
+import Checkbox from "../class/Checkbox";
 import DynamicFields from "../class/fields/DynamicFields";
 import DynamicRadio from "../class/fields/DynamicRadio";
 import Radio from "../class/fields/Radio";
-import { ADULTS, NO } from "../consts";
+import { ADULTS, NO, NO_CONTACT_ALLOWED } from "../consts";
 import { toggle } from "../jQueryUtils";
 
 import "../../styles/iu_form.scss";
@@ -38,6 +39,29 @@ function cleanup(creatorId: string): void {
 }
 
 function setup_start_page(): void {
+  const confirmAddingANewOne = new Radio(
+    "iu_form[confirmAddingANewOne]",
+    refresh_page,
+  );
+  const ensureStudioIsNotThereAlready = new DynamicRadio(
+    "iu_form[ensureStudioIsNotThereAlready]",
+    "#ensureStudioIsNotThereAlready",
+    refresh_page,
+    false,
+  );
+  const confirmUpdatingTheRightOne = new Radio(
+    "iu_form[confirmUpdatingTheRightOne]",
+    refresh_page,
+  );
+  const $addNewStudioInstead = jQuery("#addNewStudioInstead");
+  const $findTheStudioToUpdate = jQuery("#findTheStudioToUpdate");
+  const confirmYouAreTheCreator = new DynamicRadio(
+    "iu_form[confirmYouAreTheCreator]",
+    "#confirmYouAreTheCreator",
+    refresh_page,
+    false,
+  );
+  const $doNotFillTheForm = jQuery("#doNotFillTheForm");
   const confirmNoPendingUpdates = new DynamicRadio(
     "iu_form[confirmNoPendingUpdates]",
     "#confirmNoPendingUpdates",
@@ -56,7 +80,30 @@ function setup_start_page(): void {
   const $rulesAndContinueButton = jQuery("#rulesAndContinueButton");
 
   function refresh_page(): void {
-    confirmNoPendingUpdates.toggle(true,); // FIXME
+    ensureStudioIsNotThereAlready.toggle(confirmAddingANewOne.isVal("yes"));
+
+    toggle(
+      $addNewStudioInstead,
+      confirmUpdatingTheRightOne.isVal("add-new-instead"),
+    );
+
+    toggle(
+      $findTheStudioToUpdate,
+      confirmAddingANewOne.isVal("no") ||
+        ensureStudioIsNotThereAlready.isVal("found-old-studio") ||
+        confirmUpdatingTheRightOne.isVal("update-other-one"),
+    );
+
+    confirmYouAreTheCreator.toggle(
+      ensureStudioIsNotThereAlready.isVal("is-new-studio") ||
+        confirmUpdatingTheRightOne.isVal("correct"),
+    );
+
+    toggle($doNotFillTheForm, confirmYouAreTheCreator.isVal("not-the-creator"));
+
+    confirmNoPendingUpdates.toggle(
+      confirmYouAreTheCreator.isVal("i-am-the-creator"),
+    );
 
     decisionOverPreviousUpdates.toggle(
       confirmNoPendingUpdates.isVal("submission-pending"),
@@ -81,6 +128,7 @@ function setup_start_page(): void {
 function setup_data_page(creatorId: string): void {
   setup_date_field_automation();
   setup_age_section_automation();
+  setup_password_and_contact_automation();
 
   const state = new LocalFormState("iu_form", creatorId);
   jQuery("#iu-form-start-time").html(state.getSaveDateTime());
@@ -90,6 +138,70 @@ function setup_data_page(creatorId: string): void {
       location.reload();
     }
   });
+}
+
+function setup_password_and_contact_automation(): void {
+  const $forgottenPassHint = jQuery("#forgotten_password_instructions");
+  const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
+  const $validationAcknowledgement = jQuery("#verification_acknowledgement");
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const changePasswordCheckbox = new Checkbox("iu_form_changePassword", (_) => {
+    refresh();
+  });
+
+  const $contactLevelProsCons = jQuery(".pros-cons-contact-options");
+  const contactAllowed = new Radio("iu_form[contactAllowed]", refresh);
+  const emailAddressField = new DynamicFields(
+    "#iu_form_emailAddress",
+    "#email-address",
+    "from-html-attr",
+  );
+
+  function refresh(immediate = false): void {
+    const animationsDuration: JQuery.Duration = immediate ? 0 : "fast";
+
+    const contactAllowedIdx = contactAllowed.selectedIdx();
+
+    toggle(
+      $contactLevelProsCons,
+      function (idx, el): boolean {
+        return (
+          jQuery(el).data("min-level") <= contactAllowedIdx &&
+          jQuery(el).data("max-level") >= contactAllowedIdx
+        );
+      },
+      animationsDuration,
+    );
+
+    emailAddressField.toggle(
+      contactAllowed.isAnySelected() &&
+        !contactAllowed.isVal(NO_CONTACT_ALLOWED),
+    );
+
+    if ($forgottenPassHint.hasClass("d-none")) {
+      $forgottenPassHint.removeClass("d-none");
+      $forgottenPassHint.hide(0);
+    }
+
+    if (changePasswordCheckbox.isChecked) {
+      $forgottenPassHint.show(animationsDuration);
+      $forgottenPassLabel.text("Choose a new password");
+    } else {
+      $forgottenPassHint.hide(animationsDuration);
+      $forgottenPassLabel.text("Updates password"); // grep-text-updates-password
+    }
+
+    toggle(
+      $validationAcknowledgement,
+      changePasswordCheckbox.isChecked &&
+        ($validationAcknowledgement.hasClass("contact-was-not-allowed") ||
+          contactAllowed.isVal(NO_CONTACT_ALLOWED)),
+      animationsDuration,
+    );
+  }
+
+  refresh(true);
 }
 
 function setup_date_field_automation(): void {

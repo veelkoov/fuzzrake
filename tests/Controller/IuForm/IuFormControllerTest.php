@@ -131,7 +131,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     }
 
     /**
-     * LEGACY: This case is a result of past bad design decision. FIXME(?).
+     * LEGACY: grep-code-invalid-email-addresses This case is a result of past bad design decision.
      */
     public function testInvalidEmailAddressNotShownForExistingCreator(): void
     {

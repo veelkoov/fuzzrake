@@ -264,12 +264,24 @@ class IuFormTest extends FuzzrakePantherTestCase
         $iuFormStartUri = '/index.php/iu_form/start'.($isUpdate ? "/$creatorId" : '');
         self::$client->request('GET', $iuFormStartUri);
 
-        self::waitUntilShows('#iu_form_confirmNoPendingUpdates_0');
-        self::$client->findElement(WebDriverBy::cssSelector('#iu_form_confirmNoPendingUpdates_0'))->click();
+        $waitThenClick = $isUpdate ? [
+            '#iu_form_confirmUpdatingTheRightOne_0',
+            '#iu_form_confirmYouAreTheCreator_0',
+            '#iu_form_confirmNoPendingUpdates_0',
+        ] : [
+            '#iu_form_confirmAddingANewOne_0',
+            '#iu_form_ensureStudioIsNotThereAlready_0',
+            '#iu_form_confirmYouAreTheCreator_0',
+            '#iu_form_confirmNoPendingUpdates_0',
+        ];
+
+        foreach ($waitThenClick as $cssSelector) {
+            self::waitUntilShows($cssSelector);
+            self::$client->findElement(WebDriverBy::cssSelector($cssSelector))->click();
+        }
 
         self::waitUntilShows('#rulesAndContinueButton');
         self::$client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
-
-        self::$client->waitForVisibility('#iu_form_emailAddress', 5); // FIXME
+        self::$client->waitForVisibility('#iu_form_emailAddress', 5);
     }
 }

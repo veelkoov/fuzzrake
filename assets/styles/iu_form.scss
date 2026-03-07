@@ -7,6 +7,16 @@ p.form-text.help-text,
   }
 }
 
+.pros-cons-contact-options {
+  .fa-square-check {
+    color: #28a745 !important;
+  }
+
+  .fa-circle-xmark {
+    color: #dc3545 !important;
+  }
+}
+
 label:not(.form-check-label),
 legend {
   font-weight: bold;
