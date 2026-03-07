@@ -89,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $roles[] = 'ROLE_VERIFIED';
         }
 
-        return array_unique($roles);
+        return $roles;
     }
 
     /**
@@ -97,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_diff($roles, ['ROLE_USER', 'ROLE_VERIFIED'])); // Remove virtual roles
 
         return $this;
     }

@@ -34,7 +34,7 @@ class UsersService
         $user->setPassword($hashedPassword);
 
         if ($isAdmin) {
-            $user->setRoles(array_values($user->getRoles() + ['ROLE_ADMIN']));
+            $user->setRoles(array_values(array_merge($user->getRoles(), ['ROLE_ADMIN'])));
         }
 
         $this->entityManager->persist($user);
