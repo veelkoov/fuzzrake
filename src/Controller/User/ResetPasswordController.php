@@ -124,11 +124,11 @@ class ResetPasswordController extends AbstractController
             // A password reset token should be used only once, remove it.
             $this->resetPasswordHelper->removeResetRequest($token);
 
-            /** @var string $plainPassword */
-            $plainPassword = $form->get(ResetPasswordFormType::FLD_PLAIN_PASSWORD)->getData();
+            /** @var string $newPassword */
+            $newPassword = $form->get(ResetPasswordFormType::FLD_NEW_PASSWORD)->getData();
 
             // Encode(hash) the plain password, and set it.
-            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+            $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
             $this->entityManager->flush();
 
             // The session is cleaned up after the password has been changed.

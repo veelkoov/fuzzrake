@@ -65,9 +65,9 @@ class AnonymousController extends AbstractController
             ]);
         }
 
-        /** @var string $plainPassword */
-        $plainPassword = $form->get(RegistrationFormType::FLD_PLAIN_PASSWORD)->getData();
-        $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        /** @var string $newPassword */
+        $newPassword = $form->get(RegistrationFormType::FLD_NEW_PASSWORD)->getData();
+        $user->setPassword($userPasswordHasher->hashPassword($user, $newPassword));
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

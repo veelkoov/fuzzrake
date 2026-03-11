@@ -1,5 +1,15 @@
 {% extends '_base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('user_password') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user_password') }}
+{% endblock %}
+
 {% block title %}registration{% endblock %}
 
 {% block body %}
@@ -9,7 +19,10 @@
 
     {{ form_start(registration_form) }}
     {{ form_row(registration_form.email) }}
-    {{ form_row(registration_form.plainPassword) }}
+    {{ form_row(registration_form.newPassword) }}
+    <div class="mb-3">
+        <p><span id="password-feedback"></span> <small id="password-explanation" class="text-body-secondary"></small></p>
+    </div>
     {{ form_row(registration_form.agreeTerms) }}
     {{ render(controller('App\\Captcha\\Controller::challenge', {form: registration_form.captcha})) }}
 

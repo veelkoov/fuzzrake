@@ -4,26 +4,23 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Security\Password;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 final class ResetPasswordFormType extends AbstractType
 {
-    public const string FLD_PLAIN_PASSWORD = 'plainPassword';
+    public const string FLD_NEW_PASSWORD = 'newPassword';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add(self::FLD_PLAIN_PASSWORD, RepeatedType::class, [
+            ->add(self::FLD_NEW_PASSWORD, RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
                     'attr' => [
@@ -31,18 +28,7 @@ final class ResetPasswordFormType extends AbstractType
                     ],
                 ],
                 'first_options' => [
-                    'constraints' => [
-                        new NotBlank(
-                            message: 'Please enter a new password',
-                        ),
-                        new Length(
-                            min: 12,
-                            max: 4096, // max length allowed by Symfony for security reasons
-                            minMessage: 'Your password should be at least {{ limit }} characters.',
-                        ),
-                        new PasswordStrength(),
-                        new NotCompromisedPassword(),
-                    ],
+                    'constraints' => Password::getConstraints(),
                     'label' => 'New password',
                 ],
                 'second_options' => [
