@@ -8,12 +8,11 @@ use App\Captcha\CaptchaService;
 use App\Entity\User;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Service\EmailService;
+use App\Security\SecurityMailer;
 use App\Utils\Email;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,7 +39,7 @@ class ResetPasswordController extends AbstractController
     }
 
     #[Route('', name: RouteName::USER_PASSWORD_RESET_REQUEST)]
-    public function requestPasswordReset(Request $request, SessionInterface $session, EmailService $emailService,
+    public function requestPasswordReset(Request $request, SessionInterface $session, SecurityMailer $mailer,
         CaptchaService $captchaService): Response
     {
         if (null !== $this->getUser()) {
@@ -55,7 +54,7 @@ class ResetPasswordController extends AbstractController
             /** @var string $email */
             $email = $form->get(ResetPasswordRequestFormType::FLD_EMAIL)->getData();
 
-            return $this->processSendingPasswordResetEmail($email, $emailService);
+            return $this->processSendingPasswordResetEmail($email, $mailer);
         }
 
         return $this->render('user/password_reset_request.html.twig', [
@@ -145,7 +144,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $typedEmail, EmailService $emailService): RedirectResponse
+    private function processSendingPasswordResetEmail(string $typedEmail, SecurityMailer $mailer): RedirectResponse
     {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute(RouteName::USER_MAIN);
@@ -179,17 +178,8 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
         }
 
-        $email = new TemplatedEmail()
-            ->to($user->getEmail())
-            ->subject('Your password reset request')
-            ->textTemplate('emails/password_reset.txt.twig')
-            ->context([
-                'reset_token' => $resetToken,
-            ])
-        ;
-
-        $emailService->sendRaw($email);
         $this->setTokenObjectInSession($resetToken);
+        $mailer->sendPasswordResetLink($user, $resetToken);
         $this->logger->info('Password reset email sent.', ['user ID' => $user->getId()]);
 
         return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);

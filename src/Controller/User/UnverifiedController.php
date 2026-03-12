@@ -8,13 +8,12 @@ use App\Entity\User;
 use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
 use App\Security\EmailVerifier;
-use App\Service\EmailService;
+use App\Security\SecurityMailer;
 use App\Utils\Email;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormError;
@@ -57,7 +56,8 @@ class UnverifiedController extends AbstractController
             $this->addFlash('info', 'Your email address is already confirmed.');
         } else {
             $this->emailVerifier->sendEmailConfirmation($user);
-            $this->addFlash('success', 'Confirmation email has been sent. Please check your inbox and SPAM folders in a few minutes.');
+            $this->addFlash('success', 'Confirmation email has been sent.'
+                .' Please check your inbox and SPAM folders in a few minutes.');
         }
 
         return $this->redirectToRoute(RouteName::USER_MAIN);
@@ -89,7 +89,7 @@ class UnverifiedController extends AbstractController
     }
 
     #[Route(path: '/change-email', name: RouteName::USER_CHANGE_EMAIL)]
-    public function changeEmail(Request $request, #[CurrentUser] User $user, EmailService $mailer): Response
+    public function changeEmail(Request $request, #[CurrentUser] User $user, SecurityMailer $mailer): Response
     {
         $form = $this->createForm(ChangeEmailFormType::class);
         $form->handleRequest($request);
@@ -105,19 +105,13 @@ class UnverifiedController extends AbstractController
             $this->logger->info('User email has been changed.', ['user ID' => $user->getId(),
                 'old' => Email::obfuscate($oldEmail), 'new' => Email::obfuscate($newEmail)]);
 
-            $mailer->sendRaw(new TemplatedEmail()
-                ->to($oldEmail)
-                ->subject('Your email has been changed')
-                ->textTemplate('emails/email_changed.txt.twig')
-                ->context([
-                    'new_email' => $newEmail,
-                ])
-            );
-            $this->logger->info('Sent the email changed notification to the old address.', ['user ID' => $user->getId(),
-                'old' => Email::obfuscate($oldEmail)]);
+            $mailer->notifyEmailChange($oldEmail, $newEmail);
+            $this->logger->info('Sent the email changed notification to the old address.',
+                ['user ID' => $user->getId(), 'old' => Email::obfuscate($oldEmail)]);
 
             $this->emailVerifier->sendEmailConfirmation($user);
-            $this->addFlash('warning', 'Your email has been changed. Confirmation email has been sent. Please check your inbox and SPAM folders in a few minutes.');
+            $this->addFlash('warning', 'Your email has been changed. Confirmation email has been sent.'
+                .' Please check your inbox and SPAM folders in a few minutes.');
 
             return $this->redirectToRoute(RouteName::USER_MAIN);
         }
