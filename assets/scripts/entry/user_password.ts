@@ -85,9 +85,3 @@ requireJQ('input[type=password][name$="[newPassword][first]"]').on(
     explanationElement.text(explanation.join(" "));
   },
 );
-
-// TODO:
-// https://www.ncsc.gov.uk/collection/top-tips-for-staying-secure-online/password-managers
-// https://www.cyber.gc.ca/en/guidance/password-managers-security-itsap30025
-// https://www.cyber.gov.au/protect-yourself/securing-your-accounts/password-managers
-// https://www.staysafeonline.org/articles/password-managers
