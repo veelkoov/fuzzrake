@@ -14,14 +14,12 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
     {
         parent::setUp();
 
-        self::$client->setServerParameters([
-            'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'testing',
-        ]);
+        self::haveAnAdminUser();
     }
 
     protected function performImport(bool $acceptAll, int $expectedImports): void
     {
+        self::loginAdminUser();
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
         self::assertResponseIsSuccessful();
 
