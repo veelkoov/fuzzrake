@@ -22,7 +22,7 @@ final class ResetPasswordRequestFormType extends AbstractType
         $builder
             ->add(self::FLD_EMAIL, EmailType::class, [
                 'attr' => ['autocomplete' => 'email'],
-                'help' => 'Enter your email address, and we will send you a link to reset your password.',
+                'help' => 'Enter your email address to receive a message with a link to reset your password.',
                 'constraints' => [new NotBlank(message: 'Please enter your email')],
             ])
             ->add('captcha', CaptchaType::class)
