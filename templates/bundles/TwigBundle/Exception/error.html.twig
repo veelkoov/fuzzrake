@@ -1,49 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>getfursu.it, but broke :(</title>
+{% set noindex = true %}
+{% extends '_base.html.twig' %}
 
-    <meta charset="UTF-8"/>
-    <meta name="robots" content="noindex" />
+{% block title %}error 482{% endblock -%}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+{% block body %}
+    <div class="card border-warning mt-5">
+        <div class="card-header">Booo!... Something went wrong</div>
 
-    <style>
-        iframe {
-            border: none;
-        }
-    </style>
-</head>
-<body>
+        <div class="card-body">
+            <h5 class="card-title">Error 482</h5>
 
-<div class="container p-5">
-    <div class="jumbotron bg-light border-warning border">
-        <div class="container-fluid">
-            <h1 class="display-4">Error 482{% if status_code >= 500 %}<sup>*</sup>{% endif %} 🙀</h1>
-            <p class="lead">Somebody shot the server with a 12-gauge. Please contact your administrator.</p>
-            <hr class="my-4">
-            <p class="text-danger">
-                {% if status_code == 404 %}
-                    No, but seriously, the page/resource you requested does not exist (404). Broken or outdated link? Typo in the address?
-                {% elseif status_code == 410 %}
-                    No, but seriously, the page/resource you requested is no longer served (410). Broken or outdated link? Typo in the address?
-                {% else %}
-                    No, but seriously, something went wrong. My apologies for the inconvenience!
-                {% endif %}
-            </p>
-            <p class="mt-5 overflow-x-auto">
-                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nxXrYOnFLEk?start=375"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
+            <p class="card-text">
+                <a href="https://www.youtube.com/watch?v=nxXrYOnFLEk&t=375s" target="_blank">
+                    Somebody shot the server with a 12-gauge. Please contact your administrator.
+                </a>
             </p>
 
-            {% if status_code != 404 %}
-                <small>* 4xx errors are reserved for client-side errors, but whatever</small>
-            {% endif %}
+            <hr>
+
+            <p class="card-text">
+                No, but seriously, something went wrong. Sorry for the inconvenience! If this repeats,
+                notifying the administration may help.
+            </p>
         </div>
     </div>
-</div>
-
-</body>
+{% endblock %}

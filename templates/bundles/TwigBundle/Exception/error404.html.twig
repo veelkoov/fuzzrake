@@ -1,0 +1,18 @@
+{% set noindex = true %}
+{% extends '_base.html.twig' %}
+
+{% block title %}error {{ status_code }}{% endblock -%}
+
+{% block body %}
+    <div class="card border-warning mt-5">
+        <div class="card-header">Booo!... Something went wrong</div>
+
+        <div class="card-body">
+            <h5 class="card-title">Error {{ status_code }}</h5>
+
+            <p class="card-text">
+                The page/address you requested does not exist (anymore).
+            </p>
+        </div>
+    </div>
+{% endblock %}
