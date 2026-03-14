@@ -23,14 +23,10 @@ class UsersService
 
     public function createUser(string $email, bool $isVerified = false, bool $isAdmin = false): string
     {
-        $password = $this->getRandomPassword();
+        $user = new User()->setEmail($email)->setIsVerified($isVerified);
 
-        $user = new User()
-            ->setEmail($email)
-            ->setIsVerified($isVerified)
-        ;
-
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+        $plainPassword = $this->getRandomPassword();
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
 
         if ($isAdmin) {
@@ -39,7 +35,7 @@ class UsersService
 
         $this->entityManager->persist($user);
 
-        return $password;
+        return $plainPassword;
     }
 
     private function getRandomPassword(): string
