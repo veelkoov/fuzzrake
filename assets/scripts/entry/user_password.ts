@@ -9,7 +9,14 @@ const options = {
   dictionary: {
     ...zxcvbnCommonPackage.dictionary,
     ...zxcvbnEnPackage.dictionary,
-    userInputs: ["fursuit", "getfursu.it", "getfursuit", "maker"],
+    furryStuff: [
+      "getfursu",
+      "getfursu.it",
+      "getfursuit",
+      "fursuit",
+      "furry",
+      "fuzzy",
+    ],
   },
 };
 
