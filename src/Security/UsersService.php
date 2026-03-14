@@ -38,6 +38,7 @@ class UsersService
         return $plainPassword;
     }
 
+    // Based on https://stackoverflow.com/a/31284266/583786
     private function getRandomPassword(): string
     {
         try {
