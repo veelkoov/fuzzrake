@@ -5,7 +5,9 @@
 {% block body %}
     <h1 class="my-4">Change email</h1>
 
+    {{ form_errors(email_form) }}
     {{ form_start(email_form) }}
+
     {{ form_row(email_form.password) }}
     {{ form_row(email_form.newEmail) }}
 
