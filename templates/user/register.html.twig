@@ -23,7 +23,6 @@
     <div class="mb-3">
         <p><span id="password-feedback"></span> <small id="password-explanation" class="text-body-secondary"></small></p>
     </div>
-    {{ form_row(registration_form.agreeTerms) }}
     {{ render(controller('App\\Captcha\\Controller::challenge', {form: registration_form.captcha})) }}
 
     <button class="btn btn-lg btn-primary" type="submit">Register</button>
