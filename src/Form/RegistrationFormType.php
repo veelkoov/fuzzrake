@@ -26,14 +26,6 @@ final class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
             ->add(self::FLD_NEW_PASSWORD, RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
