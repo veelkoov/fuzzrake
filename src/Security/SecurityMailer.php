@@ -19,28 +19,28 @@ class SecurityMailer
 
     public function notifyEmailChange(string $oldEmail, string $newEmail): void
     {
-        $this->emailService->sendRaw(new TemplatedEmail()
-            ->to($oldEmail)
-            ->subject('getfursu.it - Your email has been changed')
-            ->textTemplate('emails/email_changed.txt.twig')
-            ->context([
-                'new_email' => $newEmail,
-            ])
+        $this->emailService->sendRaw(
+            new TemplatedEmail()
+                ->to($oldEmail)
+                ->subject('getfursu.it - Your email has been changed')
+                ->textTemplate('emails/email_changed.txt.twig')
+                ->context([
+                    'new_email' => $newEmail,
+                ]),
         );
     }
 
     public function sendConfirmationEmail(User $user, VerifyEmailSignatureComponents $signatureComponents): void
     {
         $email = new TemplatedEmail()
-                ->to($user->getEmail())
-                ->subject('getfursu.it - Please confirm your email')
-                ->textTemplate('emails/email_verification.txt.twig');
+            ->to($user->getEmail())
+            ->subject('getfursu.it - Please confirm your email')
+            ->textTemplate('emails/email_verification.txt.twig');
 
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
-
         $email->context($context);
 
         $this->emailService->sendRaw($email);
@@ -48,15 +48,14 @@ class SecurityMailer
 
     public function sendPasswordResetLink(User $user, ResetPasswordToken $resetToken): void
     {
-        $email = new TemplatedEmail()
-            ->to($user->getEmail())
-            ->subject('getfursu.it - Your password reset request')
-            ->textTemplate('emails/password_reset.txt.twig')
-            ->context([
-                'reset_token' => $resetToken,
-            ])
-        ;
-
-        $this->emailService->sendRaw($email);
+        $this->emailService->sendRaw(
+            new TemplatedEmail()
+                ->to($user->getEmail())
+                ->subject('getfursu.it - Your password reset request')
+                ->textTemplate('emails/password_reset.txt.twig')
+                ->context([
+                    'reset_token' => $resetToken,
+                ]),
+        );
     }
 }

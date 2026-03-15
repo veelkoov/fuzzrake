@@ -11,8 +11,6 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Mime\Message;
-use Symfony\Component\Serializer\Normalizer\MimeMessageNormalizer;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 use SymfonyCasts\Bundle\VerifyEmail\Model\VerifyEmailSignatureComponents;
 
@@ -38,6 +36,7 @@ class SecurityMailerTest extends KernelTestCase
 
         self::assertQueuedEmailCount(1);
         $email = self::getMailerMessage(0);
+        // @phpstan-ignore argument.type (count checked above)
         self::assertEmailAddressContains($email, 'To', 'old-email@example.com');
     }
 
@@ -48,6 +47,7 @@ class SecurityMailerTest extends KernelTestCase
 
         self::assertQueuedEmailCount(1);
         $email = self::getMailerMessage(0);
+        // @phpstan-ignore argument.type (count checked above)
         self::assertEmailAddressContains($email, 'To', 'email@example.com');
     }
 
@@ -58,6 +58,7 @@ class SecurityMailerTest extends KernelTestCase
 
         self::assertQueuedEmailCount(1);
         $email = self::getMailerMessage(0);
+        // @phpstan-ignore argument.type (count checked above)
         self::assertEmailAddressContains($email, 'To', 'email@example.com');
     }
 }
