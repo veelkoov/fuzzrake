@@ -7,6 +7,7 @@ namespace App\Controller\User;
 use App\Entity\User;
 use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\SecurityMailer;
 use App\Utils\Email;
@@ -20,10 +21,12 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
+#[Cache(public: false, noStore: true)]
 #[Route(path: '/uuser')] // grep-code-route-uuser-prefix
 class UnverifiedController extends AbstractController
 {
@@ -89,17 +92,30 @@ class UnverifiedController extends AbstractController
     }
 
     #[Route(path: '/change-email', name: RouteName::USER_CHANGE_EMAIL)]
-    public function changeEmail(Request $request, #[CurrentUser] User $user, SecurityMailer $mailer): Response
+    public function changeEmail(Request $request, #[CurrentUser] User $user, SecurityMailer $mailer,
+        UserRepository $userRepository): Response
     {
         $form = $this->createForm(ChangeEmailFormType::class);
         $form->handleRequest($request);
         $this->validatePassword($form, ChangeEmailFormType::FLD_PASSWORD, $user);
 
+        /** @var string $newEmail */
+        $newEmail = $form->get(ChangeEmailFormType::FLD_NEW_EMAIL)->getData();
+
+        if ($form->isSubmitted()) {
+            $existingUser = $userRepository->findOneBy(['email' => $newEmail]);
+
+            if (null !== $existingUser && $user !== $existingUser) {
+                $this->logger->info('User tried to use email of another user.',
+                    ['user ID' => $user->getId(), 'email' => Email::obfuscate($newEmail)]);
+                $form->get(ChangeEmailFormType::FLD_NEW_EMAIL)
+                    ->addError(new FormError('There is already an account registered with the given email.'));
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $oldEmail = $user->getEmail();
 
-            /** @var string $newEmail */
-            $newEmail = $form->get(ChangeEmailFormType::FLD_NEW_EMAIL)->getData();
             $user->setEmail($newEmail)->setIsVerified(false);
             $this->entityManager->flush();
             $this->logger->info('User email has been changed.', ['user ID' => $user->getId(),
