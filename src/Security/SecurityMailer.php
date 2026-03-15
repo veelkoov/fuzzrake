@@ -21,7 +21,7 @@ class SecurityMailer
     {
         $this->emailService->sendRaw(new TemplatedEmail()
             ->to($oldEmail)
-            ->subject('Your email has been changed')
+            ->subject('getfursu.it - Your email has been changed')
             ->textTemplate('emails/email_changed.txt.twig')
             ->context([
                 'new_email' => $newEmail,
@@ -33,7 +33,7 @@ class SecurityMailer
     {
         $email = new TemplatedEmail()
                 ->to($user->getEmail())
-                ->subject('Please confirm your email')
+                ->subject('getfursu.it - Please confirm your email')
                 ->textTemplate('emails/email_verification.txt.twig');
 
         $context = $email->getContext();
@@ -50,7 +50,7 @@ class SecurityMailer
     {
         $email = new TemplatedEmail()
             ->to($user->getEmail())
-            ->subject('Your password reset request')
+            ->subject('getfursu.it - Your password reset request')
             ->textTemplate('emails/password_reset.txt.twig')
             ->context([
                 'reset_token' => $resetToken,
