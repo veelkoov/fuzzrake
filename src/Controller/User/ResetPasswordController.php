@@ -31,7 +31,7 @@ class ResetPasswordController extends AbstractController
     use ResetPasswordControllerTrait;
 
     public function __construct(
-        #[Autowire(service: 'monolog.logger.security')]
+        #[Autowire(service: 'monolog.logger.fuzzrake.security')]
         private readonly LoggerInterface $logger,
         private readonly ResetPasswordHelperInterface $resetPasswordHelper,
         private readonly EntityManagerInterface $entityManager,
@@ -178,9 +178,9 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
         }
 
-        $this->setTokenObjectInSession($resetToken);
         $mailer->sendPasswordResetLink($user, $resetToken);
-        $this->logger->info('Password reset email sent.', ['user ID' => $user->getId()]);
+        $this->setTokenObjectInSession($resetToken);
+        $this->logger->info('Password reset email sent.', ['user ID' => $user->getId(), 'email' => $user->getEmail()]);
 
         return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
     }

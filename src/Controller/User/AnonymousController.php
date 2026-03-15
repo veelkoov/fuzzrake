@@ -26,7 +26,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class AnonymousController extends AbstractController
 {
     public function __construct(
-        #[Autowire(service: 'monolog.logger.security')]
+        #[Autowire(service: 'monolog.logger.fuzzrake.security')]
         private readonly LoggerInterface $logger,
         private readonly EmailVerifier $emailVerifier,
         private readonly EntityManagerInterface $entityManager,
