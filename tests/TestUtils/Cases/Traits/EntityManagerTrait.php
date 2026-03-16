@@ -9,9 +9,9 @@ use App\Data\Definitions\ContactPermit;
 use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
 use App\Repository\CreatorRepository;
+use App\Security\Password;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 

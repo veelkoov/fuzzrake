@@ -16,10 +16,8 @@ class QueryControllerTest extends FuzzrakeWebTestCase
     {
         parent::setUp();
 
-        self::$client->setServerParameters([
-            'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'testing',
-        ]);
+        self::haveAnAdminUser();
+        self::loginAdminUser();
     }
 
     public function testNewCreator(): void

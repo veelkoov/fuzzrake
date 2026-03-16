@@ -17,7 +17,7 @@ final class Version20260228131036 extends AbstractMigration
     }
 
     #[Override]
-    public function up(Schema $schema): void
+    public function up(Schema $schema): void // FIXME
     {
         $this->addSql('DELETE FROM creators_private_data WHERE creator_id IN (SELECT id FROM creators WHERE inactive_reason LIKE \'Duplicate; replaced by%\')');
         $this->addSql('UPDATE creators_private_data SET email_address = concat(\'missing-email-\', id) WHERE email_address = \'\'');

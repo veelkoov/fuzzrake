@@ -16,8 +16,12 @@ final class Email
     // @author Bernhard Schussek <bschussek@gmail.com>
     private const string PATTERN_HTML5_ALLOW_NO_TLD = '~^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}\~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$~';
 
-    public static function obfuscate(string $input): string
+    public static function obfuscate(string|HasEmailGetter $input): string
     {
+        if ($input instanceof HasEmailGetter) {
+            $input = $input->getEmail();
+        }
+
         return StringList::split('@', $input)
             ->map(function (string $input): string {
                 $len = mb_strlen($input);

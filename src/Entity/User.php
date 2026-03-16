@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Deprecated;
+use App\Utils\HasEmailGetter;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email. Forgotten password? You can find the reset option on the login form.')] // grep-code-email-already-registered
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -52,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    #[Override]
     public function getEmail(): string
     {
         return $this->email;
@@ -92,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $roles[] = 'ROLE_VERIFIED';
         }
 
-        return array_unique($roles);
+        return $roles;
     }
 
     /**
@@ -100,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_diff($roles, ['ROLE_USER', 'ROLE_VERIFIED'])); // Remove virtual roles
 
         return $this;
     }
@@ -132,23 +133,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
-    #[Deprecated]
-    #[Override]
-    public function eraseCredentials(): void
-    {
-        // @deprecated, to be removed when upgrading to Symfony 8
-    }
-
-    public function getCreator(): ?Creator
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(?Creator $creator): void
-    {
-        $this->creator = $creator;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -159,5 +143,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getCreator(): ?Creator
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?Creator $creator): void
+    {
+        $this->creator = $creator;
     }
 }
