@@ -17,7 +17,6 @@ use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Veelkoov\Debris\Lists\StringList;
@@ -68,9 +67,6 @@ final class UrlRemovalService
         return new CreatorUrlsRemovalData($removedUrls, $remainingUrls, $hide, $sendEmail);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function handleRemoval(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         if ($data->hide) {
@@ -116,9 +112,6 @@ final class UrlRemovalService
         }
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
@@ -155,7 +148,7 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->emailService->send($subject, $contents, $creator->getEmailAddress());
+        $this->emailService->send($subject, $contents, $creator->getEmailAddress(), bccSelf: true);
     }
 
     private function getRemovedUrlsBulletList(CreatorUrlsRemovalData $data): string

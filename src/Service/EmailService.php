@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\Email as EmailUtils;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -16,26 +18,28 @@ class EmailService
         #[Autowire(env: 'CONTACT_EMAIL')]
         private readonly string $contactEmail,
         private readonly MailerInterface $mailer,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function send(
         string $subject,
         string $contents,
         string $recipient = '',
         string $attachedJsonData = '',
+        bool $bccSelf = false,
     ): void {
         $email = new Email()
-            ->from($this->contactEmail)
             ->subject($subject)
             ->text($contents)
         ;
 
         if (EmailUtils::isValid($recipient)) {
-            $email->to($recipient)->cc($this->contactEmail);
+            $email->to($recipient);
+
+            if ($bccSelf) {
+                $email->bcc($this->contactEmail);
+            }
         } else {
             $email->to($this->contactEmail);
         }
@@ -44,6 +48,20 @@ class EmailService
             $email->attach($attachedJsonData, 'data.json', 'application/json');
         }
 
-        $this->mailer->send($email);
+        $this->sendRaw($email);
+    }
+
+    public function sendRaw(Email $email): void
+    {
+        $email->from($this->contactEmail);
+
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $exception) {
+            // We rely on the messenger. If it's not working, everything is broken.
+            // Fail the request, make user aware, don't bother with a helpful message.
+            $this->logger->emergency('Failed to send email.', ['exception' => $exception]);
+            throw new RuntimeException(previous: $exception);
+        }
     }
 }

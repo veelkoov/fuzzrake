@@ -1,0 +1,16 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}change email{% endblock %}
+
+{% block body %}
+    <h1 class="my-4">Change email</h1>
+
+    {{ form_errors(email_form) }}
+    {{ form_start(email_form) }}
+
+    {{ form_row(email_form.password) }}
+    {{ form_row(email_form.newEmail) }}
+
+    <button class="btn btn-primary">Change email</button>
+    {{ form_end(email_form) }}
+{% endblock %}

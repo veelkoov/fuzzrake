@@ -2,6 +2,14 @@ monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
         - tracking
+        - fuzzrake.security
+
+    handlers:
+      security:
+        type: stream
+        path: "%kernel.logs_dir%/%kernel.environment%-security.log"
+        level: debug
+        channels: ["fuzzrake.security"]
 
 when@dev:
     monolog:

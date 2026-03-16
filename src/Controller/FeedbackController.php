@@ -9,13 +9,10 @@ use App\Form\FeedbackType;
 use App\Service\EmailService;
 use App\ValueObject\Feedback;
 use App\ValueObject\Routing\RouteName;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -25,7 +22,6 @@ class FeedbackController extends AbstractController
         private readonly RouterInterface $router,
         private readonly EmailService $emailService,
         private readonly CaptchaService $captcha,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -44,16 +40,9 @@ class FeedbackController extends AbstractController
         $captcha = $this->captcha->getCaptcha($session)->handleRequest($request, $form);
 
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
-            try {
-                $this->sendFeedback($feedback);
+            $this->sendFeedback($feedback);
 
-                return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
-            } catch (TransportExceptionInterface $exception) {
-                $this->logger->error('Exception while sending feedback.', ['exception' => $exception]);
-
-                $errorMessage = 'Could not sent the message due to a server error. Sorry for the inconvenience!';
-                $form->get(FeedbackType::FLD_DETAILS)->addError(new FormError($errorMessage));
-            }
+            return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
         }
 
         return $this->render('feedback/feedback.html.twig', [
@@ -67,9 +56,6 @@ class FeedbackController extends AbstractController
         return $this->render('feedback/feedback_sent.html.twig');
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     private function sendFeedback(Feedback $feedback): void
     {
         $contents = <<<contents

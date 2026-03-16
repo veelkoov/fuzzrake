@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Security\Password;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Password;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 

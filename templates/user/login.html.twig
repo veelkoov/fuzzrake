@@ -1,0 +1,37 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}sign in{% endblock %}
+
+{% block body %}
+    <h1 class="my-4">Sign in</h1>
+
+    <p>
+        <a href="{{ path('user_register') }}">Create an account</a>
+        |
+        <a href="{{ path('user_password_reset_request') }}">Reset forgotten password</a>
+    </p>
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label" for="username">Email</label>
+            <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control"
+                   autocomplete="email" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" name="_password" id="password" class="form-control"
+                   autocomplete="current-password" required>
+        </div>
+
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+               value="{{ csrf_token('authenticate') }}">
+
+        <button class="btn btn-lg btn-primary" type="submit">
+            Sign in
+        </button>
+    </form>
+{% endblock %}

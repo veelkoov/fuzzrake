@@ -13,15 +13,12 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\StrUtils;
 use JsonException;
-use Psr\Log\LoggerInterface;
 use Random\RandomException;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class SubmissionService
 {
     public function __construct(
         private readonly SubmissionRepository $submissionRepository,
-        private readonly LoggerInterface $logger,
         private readonly EmailService $emailService,
     ) {
     }
@@ -67,11 +64,7 @@ class SubmissionService
         $subject = "IU submission: {$submission->getName()}";
         $message = $this->getNotificationContents($submission);
 
-        try {
-            $this->emailService->send($subject, $message, attachedJsonData: $jsonData);
-        } catch (TransportExceptionInterface $exception) {
-            $this->logger->error('Failed sending notification.', ['exception' => $exception]);
-        }
+        $this->emailService->send($subject, $message, attachedJsonData: $jsonData);
     }
 
     private function getNotificationContents(Creator $submission): string
