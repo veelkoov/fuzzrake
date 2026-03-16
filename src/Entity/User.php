@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email. Forgotten password? You can find the reset option on the login form.')] // grep-code-email-already-registered
-class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter, EquatableInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter
 {
     private const string SESSION_PASS_HASH_ALGO = 'crc32c';
 
@@ -143,20 +142,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         $this->isVerified = $isVerified;
 
         return $this;
-    }
-
-    #[Override]
-    public function isEqualTo(UserInterface $user): bool
-    {
-        if (!$user instanceof self) {
-            return false;
-        }
-
-        $password = $user->getPassword();
-        if (null === $password) {
-            return false;
-        }
-
-        return $user->getId() === $this->id && $this->password === hash(self::SESSION_PASS_HASH_ALGO, $password);
     }
 }
