@@ -5,7 +5,7 @@
 {% block body %}
     <h1 class="my-4"><i class="fas fa-user-gear"></i> {{ app.user.userIdentifier }}</h1>
 
-    <a href="{{ path('user_logout') }}" class="btn btn-outline-secondary btn-large">
+    <a href="{{ path('user_logout') }}" class="btn btn-outline-danger btn-large">
         <i class="fa-solid fa-user-large-slash"></i> Log out
     </a>
     <a href="{{ path('user_change_email') }}" class="btn btn-outline-secondary btn-large">
@@ -16,7 +16,7 @@
     </a>
 
     {% if not is_granted('ROLE_VERIFIED') %}
-        <a href="{{ path('user_resend_verification_email') }}" class="btn btn-outline-secondary btn-large">
+        <a href="{{ path('user_resend_verification_email') }}" class="btn btn-warning btn-large">
             <i class="fa-solid fa-envelope-circle-check"></i> Re-send verification email
         </a>
     {% endif %}
