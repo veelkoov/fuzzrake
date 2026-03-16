@@ -6,9 +6,9 @@
     <h1 class="my-4">Sign in</h1>
 
     <p>
-        <a href="{{ path('user_password_reset_request') }}">Reset password</a>
+        <a href="{{ path('user_register') }}">Create an account</a>
         |
-        <a href="{{ path('user_register') }}">Create account</a>
+        <a href="{{ path('user_password_reset_request') }}">Reset forgotten password</a>
     </p>
 
     {% if error %}
