@@ -7,9 +7,11 @@ namespace App\Service;
 use App\Utils\Email as EmailUtils;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\BodyRendererInterface;
 use Symfony\Component\Mime\Email;
 
 class EmailService
@@ -18,6 +20,7 @@ class EmailService
         #[Autowire(env: 'CONTACT_EMAIL')]
         private readonly string $contactEmail,
         private readonly MailerInterface $mailer,
+        private readonly BodyRendererInterface $bodyRenderer,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -54,6 +57,10 @@ class EmailService
     public function sendRaw(Email $email): void
     {
         $email->from($this->contactEmail);
+
+        if ($email instanceof TemplatedEmail) {
+            $this->bodyRenderer->render($email);
+        }
 
         try {
             $this->mailer->send($email);
