@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Utils\HasEmailGetter;
-use Deprecated;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
@@ -134,13 +133,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         return $data;
     }
 
-    #[Deprecated]
-    #[Override]
-    public function eraseCredentials(): void
-    {
-        // @deprecated, to be removed when upgrading to Symfony 8
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -160,6 +152,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
             return false;
         }
 
-        return $user->getId() === $this->id && $this->password === hash(self::SESSION_PASS_HASH_ALGO, $user->getPassword());
+        $password = $user->getPassword();
+        if (null === $password) {
+            return false;
+        }
+
+        return $user->getId() === $this->id && $this->password === hash(self::SESSION_PASS_HASH_ALGO, $password);
     }
 }

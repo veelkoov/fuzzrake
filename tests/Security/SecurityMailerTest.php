@@ -10,10 +10,12 @@ use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use Override;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 use SymfonyCasts\Bundle\VerifyEmail\Model\VerifyEmailSignatureComponents;
 
+#[Medium]
 class SecurityMailerTest extends KernelTestCase
 {
     use MessageBusTrait;
