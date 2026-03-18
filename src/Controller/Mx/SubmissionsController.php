@@ -6,7 +6,9 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
+use App\Data\Submission\Filter;
 use App\Entity\Submission;
+use App\Form\Mx\SubmissionFilterType;
 use App\Form\Mx\SubmissionType;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
@@ -34,6 +36,8 @@ class SubmissionsController extends AbstractController
 {
     use ButtonClickedTrait;
 
+    private const string SESSION_SUBMISSIONS_FILTER = 'submissions_filter_settings';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
@@ -46,11 +50,24 @@ class SubmissionsController extends AbstractController
      * @param positive-int $page
      */
     #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    public function submissions(int $page): Response
+    public function submissions(Request $request, int $page): Response
     {
-        $submissionsPage = $this->submissionRepository->getPage($page);
+        $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
+        if (!$filter instanceof Filter) {
+            $filter = new Filter();
+        }
+
+        $filterForm = $this->createForm(SubmissionFilterType::class, $filter);
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
+        }
+
+        $submissionsPage = $this->submissionRepository->getPage($filter, $page);
 
         return $this->render('mx/submissions/index.html.twig', [
+            'filter_form' => $filterForm,
             'submissions_page' => $submissionsPage,
         ]);
     }

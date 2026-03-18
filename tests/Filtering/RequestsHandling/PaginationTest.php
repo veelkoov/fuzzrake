@@ -31,8 +31,8 @@ class PaginationTest extends FuzzrakeTestCase
         yield [0, 0, []];
 
         // As long as we have no more than 7 pages, we return all of them
-        for ($totalPages = 1; $totalPages <= 7; $totalPages++) {
-            for ($pageNumber = 1; $pageNumber <= $totalPages; $pageNumber++) {
+        for ($totalPages = 1; $totalPages <= 7; ++$totalPages) {
+            for ($pageNumber = 1; $pageNumber <= $totalPages; ++$pageNumber) {
                 yield [$totalPages, $pageNumber, range(1, $totalPages)];
             }
         }

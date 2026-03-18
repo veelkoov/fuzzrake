@@ -7,28 +7,50 @@
     <a class="btn btn-outline-primary float-end" href="{{ path('mx_submissions_social') }}">Post on social</a>
     <h1>{{ block('title') }}</h1>
 
+    {{ form_errors(filter_form) }}
+    {{ form_start(filter_form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(filter_form.statuses) }}
+        </div>
+        <div class="col">
+            {{ form_row(filter_form.update) }}
+
+            <button type="submit" class="btn btn-outline-primary">Apply</button>
+        </div>
+    </div>
+    {{ form_end(filter_form) }}
+
     <table class="table table-sm">
         <thead>
             <tr>
                 <th>Submitted at</th>
-                <th>ID</th>
+                <th>ID / type</th>
                 <th>Maker ID</th>
                 <th>Maker name</th>
+                <th>Status</th>
                 <th>Comments</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for submission in submissions_page.items %}
                 <tr>
-                    <td>{{ submission.submittedAtUtc|fragile_datetime_utc }}</td>
-                    <td>{{ submission.strId }}</td>
+                    <td class="text-nowrap">{{ submission.submittedAtUtc|fragile_datetime_utc }}</td>
+                    <td class="text-nowrap">
+                        <a class="text-decoration-none" href="{{ path('mx_submission', {strId: submission.strId}) }}">
+                            {{ submission.strId }}&nbsp;
+
+                            {%- if submission.isUpdate -%}
+                                <span class="badge {{ submission.status.isActionRequired ? 'text-bg-warning' : 'bg-secondary-subtle text-secondary-emphasis' }}">Update</span>
+                            {%- else -%}
+                                <span class="badge {{ submission.status.isActionRequired ? 'text-bg-success' : 'bg-secondary-subtle text-secondary-emphasis' }}">New</span>
+                            {%- endif -%}
+                        </a>
+                    </td>
                     <td>{{ submission.reader.get('MAKER_ID'|as_field) }}</td>
                     <td>{{ submission.reader.get('NAME'|as_field) }}</td>
+                    <td>{{ submission.status.label }}</td>
                     <td>{{ submission.comment|nl2br }}</td>
-                    <td>
-                        <a href="{{ path('mx_submission', {strId: submission.strId}) }}">Open</a>
-                    </td>
                 </tr>
             {% endfor %}
         </tbody>
