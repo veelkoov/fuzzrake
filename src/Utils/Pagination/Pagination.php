@@ -26,7 +26,7 @@ final class Pagination
 
     public static function clamp(int $pageNumber, int $pagesCount): int
     {
-        return max(0, min($pageNumber, $pagesCount));
+        return max(1, min($pageNumber, $pagesCount));
     }
 
     public static function getPaginationPages(int $pageNumber, int $pagesCount): IntSet
