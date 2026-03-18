@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Data\Definitions\Fields\Field;
 use App\Data\Submission\Status;
 use App\IuHandling\SubmissionDataReader;
 use App\Repository\SubmissionRepository;
@@ -32,6 +31,9 @@ class Submission
     #[ORM\Column(type: Types::ENUM)]
     private Status $status = Status::NEW;
 
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $isUpdate;
+
     #[ORM\Column(type: Types::TEXT)]
     private string $payload = '';
 
@@ -40,9 +42,6 @@ class Submission
 
     #[ORM\Column(type: Types::TEXT)]
     private string $comment = '';
-
-    #[ORM\ManyToOne(targetEntity: Creator::class)]
-    private ?Creator $creator;
 
     private ?SubmissionDataReader $reader = null;
 
@@ -96,6 +95,18 @@ class Submission
         return $this;
     }
 
+    public function getIsUpdate(): ?bool
+    {
+        return $this->isUpdate;
+    }
+
+    public function setIsUpdate(bool $isUpdate): Submission
+    {
+        $this->isUpdate = $isUpdate;
+
+        return $this;
+    }
+
     public function getPayload(): string
     {
         return $this->payload;
@@ -133,28 +144,8 @@ class Submission
         return $this;
     }
 
-    public function getCreator(): ?Creator
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(?Creator $creator): Submission
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
     public function getReader(): SubmissionDataReader
     {
         return $this->reader ??= new SubmissionDataReader($this);
-    }
-
-    public function isUpdate(): bool // TODO: Should depend on the creator field
-    {
-        return null !== $this->creator
-            || null !== $this->getReader()->get(Field::DATE_ADDED)
-            || null !== $this->getReader()->get(Field::DATE_UPDATED)
-            || [] !== $this->getReader()->getStringList(Field::FORMER_MAKER_IDS);
     }
 }

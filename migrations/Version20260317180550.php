@@ -21,11 +21,10 @@ final class Version20260317180550 extends AbstractMigration
     {
         $this->addSql('CREATE TEMPORARY TABLE __temp__submissions AS SELECT id, str_id, submitted_at_utc, payload, directives, comment FROM submissions');
         $this->addSql('DROP TABLE submissions');
-        $this->addSql('CREATE TABLE submissions (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, str_id CLOB NOT NULL, submitted_at_utc DATETIME NOT NULL, payload CLOB NOT NULL, directives CLOB NOT NULL, comment CLOB NOT NULL, status VARCHAR(17) NOT NULL, creator_id INTEGER DEFAULT NULL, CONSTRAINT FK_3F6169F761220EA6 FOREIGN KEY (creator_id) REFERENCES creators (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
-        $this->addSql('INSERT INTO submissions (id, str_id, submitted_at_utc, payload, directives, comment, status) SELECT id, str_id, submitted_at_utc, payload, directives, comment, \'NEW\' FROM __temp__submissions');
+        $this->addSql('CREATE TABLE submissions (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, str_id CLOB NOT NULL, submitted_at_utc DATETIME NOT NULL, payload CLOB NOT NULL, directives CLOB NOT NULL, comment CLOB NOT NULL, status VARCHAR(17) NOT NULL, is_update BOOLEAN NOT NULL)');
+        $this->addSql('INSERT INTO submissions (id, str_id, submitted_at_utc, payload, directives, comment, status, is_update) SELECT id, str_id, submitted_at_utc, payload, directives, comment, \'NEW\', false FROM __temp__submissions');
         $this->addSql('DROP TABLE __temp__submissions');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_3F6169F76810ECF6 ON submissions (str_id)');
-        $this->addSql('CREATE INDEX IDX_3F6169F761220EA6 ON submissions (creator_id)');
 
         $this->addSql('UPDATE submissions SET status = \'IMPORTED\' WHERE comment = \'Imported\'');
         $this->addSql('UPDATE submissions SET comment = \'\' WHERE status = \'IMPORTED\'');

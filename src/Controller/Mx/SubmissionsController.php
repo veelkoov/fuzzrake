@@ -62,6 +62,8 @@ class SubmissionsController extends AbstractController
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
+
+            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS, ['page' => $page]);
         }
 
         $submissionsPage = $this->submissionRepository->getPage($filter, $page);
