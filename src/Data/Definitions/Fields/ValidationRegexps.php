@@ -23,7 +23,7 @@ final class ValidationRegexps
     public const string TWITTER_URL = '~^(https://twitter\.com/[^/]+)?$~n';
     public const string SCRITCH_URL = '~^(https://scritch\.es/(makers/)?[-a-zA-Z0-9]+)?$~n';
     public const string FURTRACK_URL = '~^(https://www\.furtrack\.com/(index/maker:|user/)[a-zA-Z0-9_]+)?$~n';
-    public const string TIKTOK_URL = '~^https://www\.tiktok\.com/@[a-z0-9_.]$~n';
+    public const string TIKTOK_URL = '~^https://www\.tiktok\.com/@[a-z0-9_.]+$~n';
     public const string BLUESKY_URL = '~^https://bsky\.app/profile/[^/?#]+$~n';
     public const string DONATIONS_URL = '~^https://(www\.patreon\.com|ko-fi\.com)/[^/?#]+$~n';
     public const string TELEGRAM_CHANNEL_URL = '~^https://t\.me/[^/?#]+$~n';

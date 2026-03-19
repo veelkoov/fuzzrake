@@ -44,9 +44,8 @@
     <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>
-                <th>Field</th>
+                <th colspan="2">Field</th>
                 <th>Value</th>
-                <th></th>
             </tr>
         </thead>
 
@@ -65,25 +64,42 @@
 
                 {% set new_value_class = update.updatedCreator|is_valid(field) ? '' : 'table-danger' %}
 
+                <tr class="{{ row_class }}">
+                    <th colspan="3">
+                        {{ field.name }}
+                    </th>
+                </tr>
+
                 {% if not update.isNew %}
                     <tr class="{{ field.value }} before {{ row_class }}">
-                        <td>{{ field.name }}&nbsp;[before]</td>
-                        <td>{{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}</td>
+                        <td>
+                            Before
+                        </td>
                         <td></td>
+                        <td>
+                            {{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}
+                        </td>
                     </tr>
                 {% endif %}
 
-                <tr class="{{ field.value }} submitted {{ row_class }}">
-                    <td>{{ field.name }}&nbsp;[submitted]</td>
-                    <td>{{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}</td>
-                    <td></td>
+                <tr class="{{ field.value }} submitted {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.originalInput.get(field)|as_str(true) }}">
+                    <td>Submitted</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                    </td>
+                    <td>
+                        {{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}
+                    </td>
                 </tr>
 
-                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str }}">
-                    <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
-                    <td>{{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}</td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary fix-button">fix</button>
+                <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str(true) }}">
+                    <td class="{{ new_value_class }}">Fixed</td>
+                    <td class="text-end text-nowrap">
+                        <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                    </td>
+                    <td>
+                        {{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}
                     </td>
                 </tr>
             {% endfor %}
