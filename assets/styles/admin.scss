@@ -23,7 +23,7 @@
 
 #mx-submission {
   tr {
-    td:nth-child(2) {
+    td:nth-child(3) {
       overflow-wrap: anywhere;
     }
 
@@ -73,7 +73,10 @@
   }
 }
 
-textarea#submission_directives,
+textarea#submission_directives {
+  height: 20em;
+}
+
 textarea#submission_comment {
-  height: 7em;
+  height: 5em;
 }

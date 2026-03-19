@@ -69,7 +69,7 @@ class SubmissionRepository extends ServiceEntityRepository
             $query = $this->createQueryBuilder('d_s');
 
             if (null !== $filter->update) {
-                $query->andWhere('d_s.creator IS '.($filter->update ? 'NOT' : '').' NULL');
+                $query->andWhere('d_s.isUpdate = :isUpdate')->setParameter('isUpdate', $filter->update);
             }
 
             if ([] !== $filter->statuses) {

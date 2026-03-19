@@ -7,6 +7,7 @@ namespace App\Controller\Mx;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
+use App\Data\Submission\Status;
 use App\Entity\Submission;
 use App\Form\Mx\SubmissionFilterType;
 use App\Form\Mx\SubmissionType;
@@ -97,18 +98,28 @@ class SubmissionsController extends AbstractController
 
         $update = $this->updates->getUpdateFor($submission);
 
-        if ($form->isSubmitted()) {
-            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid() && $update->isAccepted) {
-                $this->updates->import($update);
-
-                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
-            } else {
-                $this->entityManager->flush(); // Save the directives
-            }
+        foreach ($update->errors as $error) {
+            $form->get(SubmissionType::FLD_DIRECTIVES)->addError(new FormError($error));
         }
 
-        foreach ($update->errors as $error) {
-            $form->get('directives')->addError(new FormError($error));
+        if ($form->isSubmitted()) {
+            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid()) {
+                if ($update->isAccepted) {
+                    $submission->setStatus(Status::IMPORTED);
+                    $this->updates->import($update);
+
+                    return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+                } else {
+                    $form->get(SubmissionType::FLD_DIRECTIVES)->addError(
+                        new FormError('Submission has not been accepted yet.'));
+                }
+            }
+
+            $this->entityManager->flush(); // Save the directives
+
+            if ($this->clicked($form, SubmissionType::BTN_SAVE_AND_CLOSE)) {
+                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+            }
         }
 
         $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update)->getValuesArray();

@@ -41,6 +41,29 @@
         </p>
     {% endif %}
 
+    <div class="row">
+        <div class="col-3">
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+
+            {{ form_row(form.directives) }}
+            {{ form_row(form.status) }}
+            {{ form_row(form.comment) }}
+
+            <div class="btn-group pe-3" role="group">
+                {{ form_widget(form.save) }}
+                {{ form_widget(form.save_and_close) }}
+            </div>
+            {{ form_widget(form.import) }}
+
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+
+            <hr class="my-3">
+            <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
+        </div>
+        <div class="col-9">
+
     <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>
@@ -93,12 +116,12 @@
                 </tr>
 
                 <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str(true) }}">
-                    <td class="{{ new_value_class }}">Fixed</td>
+                    <td>Fixed</td>
                     <td class="text-end text-nowrap">
                         <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
                         <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
                     </td>
-                    <td>
+                    <td class="{{ new_value_class }}">
                         {{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}
                     </td>
                 </tr>
@@ -106,11 +129,14 @@
         </tbody>
     </table>
 
+        </div>
+    </div>
+
     {% set color = update.contact.isAllowed ? 'success' : 'danger' %}
 
-        <div id="contact-info-card" class="card border-{{ color }}">
+    <div id="contact-info-card" class="mt-4 card border-{{ color }}">
         <h5 class="card-header">
-            Contact &amp; text description
+            Contact &amp; text description OH MY DOG, I AM SO GLAD THIS PIECE OF GARBAGE FUNCTIONALITY WILL GO AWAY SOON
         </h5>
 
         <div class="card-body text-{{ color }}">
@@ -124,26 +150,5 @@
 
             <p class="cart-text text-body small user-select-all">{{ update.description.text|nl2br }}</p>
         </div>
-    </div>
-
-    <div class="fixed-bottom bg-light p-3">
-        {{ form_start(form) }}
-
-        <div class="row">
-            <div class="col-lg-6">
-                {{ form_row(form.directives) }}
-            </div>
-            <div class="col-lg-6">
-                {{ form_row(form.comment) }}
-            </div>
-        </div>
-        <div class="text-end">
-            <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
-            {{ form_widget(form.save) }}
-            {{ form_widget(form.import) }}
-        </div>
-
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
     </div>
 {% endblock %}
