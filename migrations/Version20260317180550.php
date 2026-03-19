@@ -13,7 +13,7 @@ final class Version20260317180550 extends AbstractMigration
     #[Override]
     public function getDescription(): string
     {
-        return 'Add creator reference and status to submissions.';
+        return 'Add status and "is update" information to submissions.';
     }
 
     #[Override]
