@@ -22,7 +22,6 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Random\RandomException;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -140,7 +139,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws DateTimeException|JsonException|RandomException
+     * @throws DateTimeException|JsonException
      */
     #[AllowMockObjectsWithoutExpectations]
     public function testUpdatedDateIsHandledProperly(): void
@@ -262,7 +261,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new Update(new Submission(), [], $entity, $entity, $entity, [], true, true);
+        $update = new Update(new Submission(false), [], $entity, $entity, $entity, [], true, true);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);
@@ -272,7 +271,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new Update(new Submission(), [], $entity, $entity, $entity, [], true, false);
+        $update = new Update(new Submission(true), [], $entity, $entity, $entity, [], true, false);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);

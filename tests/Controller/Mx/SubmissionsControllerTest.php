@@ -15,7 +15,6 @@ use JsonException;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use Random\RandomException;
 use RuntimeException;
 use Symfony\Component\Uid\Uuid;
 
@@ -556,7 +555,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     {
         try {
             return SubmissionService::getEntityForSubmission($submissionData);
-        } catch (RandomException|JsonException $exception) {
+        } catch (JsonException $exception) {
             throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
         }
     }
