@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Data\Submission\Filter;
 use App\Entity\Submission;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
@@ -60,10 +61,24 @@ class SubmissionRepository extends ServiceEntityRepository
     /**
      * @return ItemsPage<Submission>
      */
-    public function getPage(int $pageNumber): ItemsPage
+    public function getPage(Filter $filter, int $pageNumber): ItemsPage
     {
+        $pagesCount = $pageNumber;
+
         do {
-            $query = $this->createQueryBuilder('d_s')
+            $query = $this->createQueryBuilder('d_s');
+
+            if (null !== $filter->update) {
+                $query->andWhere('d_s.isUpdate = :isUpdate')->setParameter('isUpdate', $filter->update);
+            }
+
+            if ([] !== $filter->statuses) {
+                $query->andWhere('d_s.status in (:statuses)')->setParameter('statuses', $filter->statuses);
+            }
+
+            $pageNumber = Pagination::clamp($pageNumber, $pagesCount);
+
+            $query
                 ->orderBy('d_s.id', 'DESC')
                 ->setFirstResult(Pagination::getFirstIdx(Pagination::PAGE_SIZE, $pageNumber))
                 ->setMaxResults(Pagination::PAGE_SIZE);
@@ -82,7 +97,7 @@ class SubmissionRepository extends ServiceEntityRepository
                 $pagesCount,
             );
         } catch (Exception $exception) {
-            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
+            throw new RuntimeException(previous: $exception);
         }
     }
 }

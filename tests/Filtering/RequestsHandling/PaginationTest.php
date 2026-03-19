@@ -13,6 +13,25 @@ use PHPUnit\Framework\Attributes\Small;
 class PaginationTest extends FuzzrakeTestCase
 {
     /**
+     * @return list<array{int, int, int}>
+     */
+    public static function clampDataProvider(): array
+    {
+        return [ // So many amazing cases! Yay!
+            [1, -1, 0], [1, 0, 0], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0],
+            [1, -1, 1], [1, 0, 1], [1, 1, 1], [1, 2, 1], [1, 3, 1], [1, 4, 1],
+            [1, -1, 2], [1, 0, 2], [1, 1, 2], [2, 2, 2], [2, 3, 2], [2, 4, 2],
+            [1, -1, 3], [1, 0, 3], [1, 1, 3], [2, 2, 3], [3, 3, 3], [3, 4, 3],
+        ];
+    }
+
+    #[DataProvider('clampDataProvider')]
+    public function testClamp(int $expected, int $pageNumber, int $pagesCount): void
+    {
+        self::assertSame($expected, Pagination::clamp($pageNumber, $pagesCount));
+    }
+
+    /**
      * @param list<int> $expected
      */
     #[DataProvider('getPaginationPagesDataProvider')]
@@ -31,8 +50,8 @@ class PaginationTest extends FuzzrakeTestCase
         yield [0, 0, []];
 
         // As long as we have no more than 7 pages, we return all of them
-        for ($totalPages = 1; $totalPages <= 7; $totalPages++) {
-            for ($pageNumber = 1; $pageNumber <= $totalPages; $pageNumber++) {
+        for ($totalPages = 1; $totalPages <= 7; ++$totalPages) {
+            for ($pageNumber = 1; $pageNumber <= $totalPages; ++$pageNumber) {
                 yield [$totalPages, $pageNumber, range(1, $totalPages)];
             }
         }

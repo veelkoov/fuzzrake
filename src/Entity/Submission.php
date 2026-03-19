@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Data\Submission\Status;
 use App\IuHandling\SubmissionDataReader;
 use App\Repository\SubmissionRepository;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonException;
 use Random\RandomException;
 
 #[ORM\Entity(repositoryClass: SubmissionRepository::class)]
@@ -27,6 +30,12 @@ class Submission
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $submittedAtUtc;
 
+    #[ORM\Column(type: Types::ENUM)]
+    private Status $status = Status::NEW;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $isUpdate;
+
     #[ORM\Column(type: Types::TEXT)]
     private string $payload = '';
 
@@ -38,13 +47,11 @@ class Submission
 
     private ?SubmissionDataReader $reader = null;
 
-    /**
-     * @throws RandomException
-     */
-    public function __construct()
+    public function __construct(bool $isUpdate)
     {
+        $this->isUpdate = $isUpdate;
         $this->submittedAtUtc = UtcClock::now();
-        $this->setStrId($this->submittedAtUtc->format('Y-m-d_His_').random_int(1000, 9999));
+        $this->strId = self::createStrId($this->submittedAtUtc);
     }
 
     public function getId(): ?int
@@ -72,6 +79,30 @@ class Submission
     public function setSubmittedAtUtc(DateTimeImmutable $submittedAtUtc): Submission
     {
         $this->submittedAtUtc = $submittedAtUtc;
+
+        return $this;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(Status $status): Submission
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getIsUpdate(): ?bool
+    {
+        return $this->isUpdate;
+    }
+
+    public function setIsUpdate(bool $isUpdate): Submission
+    {
+        $this->isUpdate = $isUpdate;
 
         return $this;
     }
@@ -113,8 +144,20 @@ class Submission
         return $this;
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getReader(): SubmissionDataReader
     {
         return $this->reader ??= new SubmissionDataReader($this);
+    }
+
+    private static function createStrId(DateTimeImmutable $dateTimeImmutable): string
+    {
+        try {
+            return $dateTimeImmutable->format('Y-m-d_His_').random_int(1000, 9999);
+        } catch (RandomException $exception) {
+            throw new UnbelievableRuntimeException($exception); // What is wrong with your OS, bro
+        }
     }
 }

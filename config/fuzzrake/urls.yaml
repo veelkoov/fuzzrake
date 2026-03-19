@@ -43,3 +43,5 @@ parameters:
       '^https://www\.furtrack\.com/user/[^/]+/uploads/(\d+)$': "https://www.furtrack.com/p/$1"
       '^https://www\.furtrack\.com/user/[^/]+/crafting/(\d+)$': "https://www.furtrack.com/p/$1"
       '^https://www\.furtrack\.com/index/character:[^/]+/(\d+)$': "https://www.furtrack.com/p/$1"
+
+      '^(https://www\.tiktok\.com/@[a-z0-9_.]+)\?.*$': "$1"

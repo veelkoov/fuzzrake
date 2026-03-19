@@ -39,7 +39,7 @@ final class StrUtils
     /**
      * @param psPhpFieldValue $value
      */
-    public static function asStr(mixed $value): string
+    public static function asStr(mixed $value, bool $multilineList = false): string
     {
         if (null === $value) {
             return 'unknown';
@@ -54,7 +54,7 @@ final class StrUtils
         } elseif (is_bool($value)) {
             return $value ? 'True' : 'False';
         } elseif (is_array($value)) {
-            return implode(', ', $value);
+            return implode($multilineList ? "\n" : ', ', $value);
         } else {
             return $value;
         }

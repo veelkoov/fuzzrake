@@ -13,7 +13,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\StrUtils;
 use JsonException;
-use Random\RandomException;
 
 class SubmissionService
 {
@@ -35,17 +34,17 @@ class SubmissionService
             $this->sendNotification($submissionData, $submission->getPayload());
 
             return $submission;
-        } catch (JsonException|RandomException $exception) {
+        } catch (JsonException $exception) {
             throw new SubmissionException(previous: $exception);
         }
     }
 
     /**
-     * @throws JsonException|RandomException
+     * @throws JsonException
      */
     public static function getEntityForSubmission(Creator $submissionData): Submission
     {
-        $result = new Submission();
+        $result = new Submission(null !== $submissionData->getId());
         $result->setPayload(self::asJson($submissionData));
 
         return $result;

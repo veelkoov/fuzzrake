@@ -41,12 +41,34 @@
         </p>
     {% endif %}
 
+    <div class="row">
+        <div class="col-3">
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+
+            {{ form_row(form.directives) }}
+            {{ form_row(form.status) }}
+            {{ form_row(form.comment) }}
+
+            <div class="btn-group pe-3" role="group">
+                {{ form_widget(form.save) }}
+                {{ form_widget(form.save_and_close) }}
+            </div>
+            {{ form_widget(form.import) }}
+
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+
+            <hr class="my-3">
+            <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
+        </div>
+        <div class="col-9">
+
     <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>
-                <th>Field</th>
+                <th colspan="2">Field</th>
                 <th>Value</th>
-                <th></th>
             </tr>
         </thead>
 
@@ -65,36 +87,56 @@
 
                 {% set new_value_class = update.updatedCreator|is_valid(field) ? '' : 'table-danger' %}
 
+                <tr class="{{ row_class }}">
+                    <th colspan="3">
+                        {{ field.name }}
+                    </th>
+                </tr>
+
                 {% if not update.isNew %}
                     <tr class="{{ field.value }} before {{ row_class }}">
-                        <td>{{ field.name }}&nbsp;[before]</td>
-                        <td>{{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}</td>
+                        <td>
+                            Before
+                        </td>
                         <td></td>
+                        <td>
+                            {{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}
+                        </td>
                     </tr>
                 {% endif %}
 
-                <tr class="{{ field.value }} submitted {{ row_class }}">
-                    <td>{{ field.name }}&nbsp;[submitted]</td>
-                    <td>{{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}</td>
-                    <td></td>
+                <tr class="{{ field.value }} submitted {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.originalInput.get(field)|as_str(true) }}">
+                    <td>Submitted</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                    </td>
+                    <td>
+                        {{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}
+                    </td>
                 </tr>
 
-                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str }}">
-                    <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
-                    <td>{{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}</td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary fix-button">fix</button>
+                <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str(true) }}">
+                    <td>Fixed</td>
+                    <td class="text-end text-nowrap">
+                        <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+                    </td>
+                    <td class="{{ new_value_class }}">
+                        {{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
+        </div>
+    </div>
+
     {% set color = update.contact.isAllowed ? 'success' : 'danger' %}
 
-        <div id="contact-info-card" class="card border-{{ color }}">
+    <div id="contact-info-card" class="mt-4 card border-{{ color }}">
         <h5 class="card-header">
-            Contact &amp; text description
+            Contact &amp; text description OH MY DOG, I AM SO GLAD THIS PIECE OF GARBAGE FUNCTIONALITY WILL GO AWAY SOON
         </h5>
 
         <div class="card-body text-{{ color }}">
@@ -108,26 +150,5 @@
 
             <p class="cart-text text-body small user-select-all">{{ update.description.text|nl2br }}</p>
         </div>
-    </div>
-
-    <div class="fixed-bottom bg-light p-3">
-        {{ form_start(form) }}
-
-        <div class="row">
-            <div class="col-lg-6">
-                {{ form_row(form.directives) }}
-            </div>
-            <div class="col-lg-6">
-                {{ form_row(form.comment) }}
-            </div>
-        </div>
-        <div class="text-end">
-            <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
-            {{ form_widget(form.save) }}
-            {{ form_widget(form.import) }}
-        </div>
-
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
     </div>
 {% endblock %}

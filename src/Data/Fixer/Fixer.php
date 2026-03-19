@@ -73,7 +73,9 @@ class Fixer
         return match ($field) {
             F::NAME, F::CITY => $this->stringFixer,
 
-            F::URL_DEVIANTART, F::URL_FACEBOOK, F::URL_FAQ, F::URL_FUR_AFFINITY, F::URL_FURSUITREVIEW, F::URL_INSTAGRAM, F::URL_TUMBLR, F::URL_TWITTER, F::URL_YOUTUBE, F::URL_WEBSITE, F::URL_QUEUE, F::URL_ETSY, F::URL_FURTRACK, F::URL_LINKLIST => $this->urlFixer,
+            F::URL_DEVIANTART, F::URL_FACEBOOK, F::URL_FAQ, F::URL_FUR_AFFINITY, F::URL_FURSUITREVIEW, F::URL_INSTAGRAM,
+            F::URL_TUMBLR, F::URL_TWITTER, F::URL_YOUTUBE, F::URL_WEBSITE, F::URL_QUEUE, F::URL_ETSY, F::URL_FURTRACK,
+            F::URL_LINKLIST, F::URL_TIKTOK => $this->urlFixer,
 
             F::SINCE               => $this->sinceFixer,
             F::COUNTRY             => $this->countryFixer,

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
+use App\Utils\UnbelievableRuntimeException;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
-use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UsersService
@@ -51,7 +51,7 @@ class UsersService
 
             return $result;
         } catch (RandomException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UnbelievableRuntimeException($exception); // What is wrong with your OS, bro
         }
     }
 }

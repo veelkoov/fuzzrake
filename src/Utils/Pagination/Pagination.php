@@ -24,13 +24,18 @@ final class Pagination
         return $pageSize * ($pageNumber - 1);
     }
 
+    public static function clamp(int $pageNumber, int $pagesCount): int
+    {
+        return max(1, min($pageNumber, $pagesCount));
+    }
+
     public static function getPaginationPages(int $pageNumber, int $pagesCount): IntSet
     {
-        if ($pagesCount === 0) {
+        if (0 === $pagesCount) {
             return new IntSet(frozen: true);
         }
 
-        $result = new IntSet([1, $pageNumber, $pagesCount,]);
+        $result = new IntSet([1, $pageNumber, $pagesCount]);
 
         $expectedPagesNumber = min(7, $pagesCount);
         $mod = 1;
@@ -38,7 +43,7 @@ final class Pagination
             $result->add(max(1, $pageNumber - $mod));
             $result->add(min($pagesCount, $pageNumber + $mod));
 
-            $mod++;
+            ++$mod;
         }
 
         return $result->sorted()->freeze();
