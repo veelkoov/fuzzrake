@@ -6,7 +6,10 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
+use App\Data\Submission\Filter;
+use App\Data\Submission\Status;
 use App\Entity\Submission;
+use App\Form\Mx\SubmissionFilterType;
 use App\Form\Mx\SubmissionType;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
@@ -34,6 +37,8 @@ class SubmissionsController extends AbstractController
 {
     use ButtonClickedTrait;
 
+    private const string SESSION_SUBMISSIONS_FILTER = 'submissions_filter_settings';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
@@ -46,11 +51,26 @@ class SubmissionsController extends AbstractController
      * @param positive-int $page
      */
     #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    public function submissions(int $page): Response
+    public function submissions(Request $request, int $page): Response
     {
-        $submissionsPage = $this->submissionRepository->getPage($page);
+        $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
+        if (!$filter instanceof Filter) {
+            $filter = new Filter();
+        }
+
+        $filterForm = $this->createForm(SubmissionFilterType::class, $filter);
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
+
+            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS, ['page' => $page]);
+        }
+
+        $submissionsPage = $this->submissionRepository->getPage($filter, $page);
 
         return $this->render('mx/submissions/index.html.twig', [
+            'filter_form' => $filterForm,
             'submissions_page' => $submissionsPage,
         ]);
     }
@@ -78,18 +98,28 @@ class SubmissionsController extends AbstractController
 
         $update = $this->updates->getUpdateFor($submission);
 
-        if ($form->isSubmitted()) {
-            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid() && $update->isAccepted) {
-                $this->updates->import($update);
-
-                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
-            } else {
-                $this->entityManager->flush(); // Save the directives
-            }
+        foreach ($update->errors as $error) {
+            $form->get(SubmissionType::FLD_DIRECTIVES)->addError(new FormError($error));
         }
 
-        foreach ($update->errors as $error) {
-            $form->get('directives')->addError(new FormError($error));
+        if ($form->isSubmitted()) {
+            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid()) {
+                if ($update->isAccepted) {
+                    $submission->setStatus(Status::IMPORTED);
+                    $this->updates->import($update);
+
+                    return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+                } else {
+                    $form->get(SubmissionType::FLD_DIRECTIVES)->addError(
+                        new FormError('Submission has not been accepted yet.'));
+                }
+            }
+
+            $this->entityManager->flush(); // Save the directives
+
+            if ($this->clicked($form, SubmissionType::BTN_SAVE_AND_CLOSE)) {
+                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+            }
         }
 
         $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update)->getValuesArray();

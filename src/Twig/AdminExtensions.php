@@ -29,9 +29,9 @@ class AdminExtensions
      * @param psPhpFieldValue $value
      */
     #[AsTwigFilter('as_str')]
-    public function asStr(mixed $value): string
+    public function asStr(mixed $value, bool $multilineList = false): string
     {
-        return StrUtils::asStr($value);
+        return StrUtils::asStr($value, $multilineList);
     }
 
     #[AsTwigFilter('as_field')]

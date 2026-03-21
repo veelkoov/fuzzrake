@@ -23,7 +23,7 @@
 
 #mx-submission {
   tr {
-    td:nth-child(2) {
+    td:nth-child(3) {
       overflow-wrap: anywhere;
     }
 
@@ -66,10 +66,6 @@
     }
   }
 
-  tr.bottom-separator td {
-    border-bottom: 2px solid #aaa;
-  }
-
   .badge.submission-list-item {
     max-width: 700px;
     text-overflow: ellipsis;
@@ -77,7 +73,10 @@
   }
 }
 
-textarea#submission_directives,
+textarea#submission_directives {
+  height: 20em;
+}
+
 textarea#submission_comment {
-  height: 7em;
+  height: 5em;
 }

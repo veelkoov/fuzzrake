@@ -13,6 +13,25 @@ use PHPUnit\Framework\Attributes\Small;
 class PaginationTest extends FuzzrakeTestCase
 {
     /**
+     * @return list<array{int, int, int}>
+     */
+    public static function clampDataProvider(): array
+    {
+        return [ // So many amazing cases! Yay!
+            [1, -1, 0], [1, 0, 0], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0],
+            [1, -1, 1], [1, 0, 1], [1, 1, 1], [1, 2, 1], [1, 3, 1], [1, 4, 1],
+            [1, -1, 2], [1, 0, 2], [1, 1, 2], [2, 2, 2], [2, 3, 2], [2, 4, 2],
+            [1, -1, 3], [1, 0, 3], [1, 1, 3], [2, 2, 3], [3, 3, 3], [3, 4, 3],
+        ];
+    }
+
+    #[DataProvider('clampDataProvider')]
+    public function testClamp(int $expected, int $pageNumber, int $pagesCount): void
+    {
+        self::assertSame($expected, Pagination::clamp($pageNumber, $pagesCount));
+    }
+
+    /**
      * @param list<int> $expected
      */
     #[DataProvider('getPaginationPagesDataProvider')]
@@ -24,68 +43,47 @@ class PaginationTest extends FuzzrakeTestCase
     }
 
     /**
-     * @return list<array{int, int, list<int>}>
+     * @return iterable<array{int, int, list<int>}> TOTAL PAGES, CURRENT PAGE, EXPECTED PAGINATOR PAGES
      */
-    public static function getPaginationPagesDataProvider(): array
+    public static function getPaginationPagesDataProvider(): iterable
     {
-        // TOTAL PAGES, CURRENT PAGE, EXPECTED PAGINATOR PAGES
-        // Supposed to return: current, +1, -1, +2, -2, first and last
-        return [
-            [0, 0, []],
+        yield [0, 0, []];
 
-            [1, 1, [1]],
+        // As long as we have no more than 7 pages, we return all of them
+        for ($totalPages = 1; $totalPages <= 7; ++$totalPages) {
+            for ($pageNumber = 1; $pageNumber <= $totalPages; ++$pageNumber) {
+                yield [$totalPages, $pageNumber, range(1, $totalPages)];
+            }
+        }
 
-            [2, 1, [1, 2]],
-            [2, 2, [1, 2]],
+        yield [8, 1, [1, 2, 3, 4, 5, 6,    8]];
+        yield [8, 2, [1, 2, 3, 4, 5, 6,    8]];
+        yield [8, 3, [1, 2, 3, 4, 5, 6,    8]];
+        yield [8, 4, [1, 2, 3, 4, 5, 6,    8]];
+        yield [8, 5, [1,    3, 4, 5, 6, 7, 8]];
+        yield [8, 6, [1,    3, 4, 5, 6, 7, 8]];
+        yield [8, 7, [1,    3, 4, 5, 6, 7, 8]];
+        yield [8, 8, [1,    3, 4, 5, 6, 7, 8]];
 
-            [3, 1, [1, 2, 3]],
-            [3, 2, [1, 2, 3]],
-            [3, 3, [1, 2, 3]],
+        yield [9, 1, [1, 2, 3, 4, 5, 6,       9]];
+        yield [9, 2, [1, 2, 3, 4, 5, 6,       9]];
+        yield [9, 3, [1, 2, 3, 4, 5, 6,       9]];
+        yield [9, 4, [1, 2, 3, 4, 5, 6,       9]];
+        yield [9, 5, [1,    3, 4, 5, 6, 7,    9]];
+        yield [9, 6, [1,       4, 5, 6, 7, 8, 9]];
+        yield [9, 7, [1,       4, 5, 6, 7, 8, 9]];
+        yield [9, 8, [1,       4, 5, 6, 7, 8, 9]];
+        yield [9, 9, [1,       4, 5, 6, 7, 8, 9]];
 
-            [4, 1, [1, 2, 3, 4]],
-            [4, 2, [1, 2, 3, 4]],
-            [4, 3, [1, 2, 3, 4]],
-            [4, 4, [1, 2, 3, 4]],
-
-            [5, 1, [1, 2, 3, 5]],
-            [5, 2, [1, 2, 3, 4, 5]],
-            [5, 3, [1, 2, 3, 4, 5]],
-            [5, 4, [1, 2, 3, 4, 5]],
-            [5, 5, [1, 3, 4, 5]],
-
-            [6, 1, [1, 2, 3, 6]],
-            [6, 2, [1, 2, 3, 4, 6]],
-            [6, 3, [1, 2, 3, 4, 5, 6]],
-            [6, 4, [1, 2, 3, 4, 5, 6]],
-            [6, 5, [1, 3, 4, 5, 6]],
-            [6, 6, [1, 4, 5, 6]],
-
-            [7, 1, [1, 2, 3, 7]],
-            [7, 2, [1, 2, 3, 4, 7]],
-            [7, 3, [1, 2, 3, 4, 5, 7]],
-            [7, 4, [1, 2, 3, 4, 5, 6, 7]],
-            [7, 5, [1, 3, 4, 5, 6, 7]],
-            [7, 6, [1, 4, 5, 6, 7]],
-            [7, 7, [1, 5, 6, 7]],
-
-            [8, 1, [1, 2, 3, 8]],
-            [8, 2, [1, 2, 3, 4, 8]],
-            [8, 3, [1, 2, 3, 4, 5, 8]],
-            [8, 4, [1, 2, 3, 4, 5, 6, 8]],
-            [8, 5, [1, 3, 4, 5, 6, 7, 8]],
-            [8, 6, [1, 4, 5, 6, 7, 8]],
-            [8, 7, [1, 5, 6, 7, 8]],
-            [8, 8, [1, 6, 7, 8]],
-
-            [9, 1, [1, 2, 3, 9]],
-            [9, 2, [1, 2, 3, 4, 9]],
-            [9, 3, [1, 2, 3, 4, 5, 9]],
-            [9, 4, [1, 2, 3, 4, 5, 6, 9]],
-            [9, 5, [1, 3, 4, 5, 6, 7, 9]],
-            [9, 6, [1, 4, 5, 6, 7, 8, 9]],
-            [9, 7, [1, 5, 6, 7, 8, 9]],
-            [9, 8, [1, 6, 7, 8, 9]],
-            [9, 9, [1, 7, 8, 9]],
-        ];
+        yield [10,  1, [1, 2, 3, 4, 5, 6,          10]];
+        yield [10,  2, [1, 2, 3, 4, 5, 6,          10]];
+        yield [10,  3, [1, 2, 3, 4, 5, 6,          10]];
+        yield [10,  4, [1, 2, 3, 4, 5, 6,          10]];
+        yield [10,  5, [1,    3, 4, 5, 6, 7,       10]];
+        yield [10,  6, [1,       4, 5, 6, 7, 8,    10]];
+        yield [10,  7, [1,          5, 6, 7, 8, 9, 10]];
+        yield [10,  8, [1,          5, 6, 7, 8, 9, 10]];
+        yield [10,  9, [1,          5, 6, 7, 8, 9, 10]];
+        yield [10, 10, [1,          5, 6, 7, 8, 9, 10]];
     }
 }
