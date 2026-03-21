@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Data\Definitions\ContactPermit;
 use App\Repository\UserRepository;
 use App\Utils\HasEmailGetter;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
@@ -43,6 +45,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[Assert\NotNull(message: 'You need to choose an option.')]
+    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
+    private ?ContactPermit $contactPermit = ContactPermit::CORRECTIONS;
 
     #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Creator $creator;
@@ -141,6 +147,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getContactPermit(): ?ContactPermit
+    {
+        return $this->contactPermit;
+    }
+
+    public function setContactPermit(?ContactPermit $contactPermit): self
+    {
+        $this->contactPermit = $contactPermit;
 
         return $this;
     }

@@ -103,9 +103,6 @@ class Creator implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $inactiveReason = '';
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
-    private ?ContactPermit $contactAllowed = null;
-
     #[ORM\OneToOne(targetEntity: CreatorVolatileData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorVolatileData $volatileData = null;
 
@@ -502,18 +499,6 @@ class Creator implements Stringable
     public function setInactiveReason(string $inactiveReason): self
     {
         $this->inactiveReason = $inactiveReason;
-
-        return $this;
-    }
-
-    public function getContactAllowed(): ?ContactPermit
-    {
-        return $this->contactAllowed;
-    }
-
-    public function setContactAllowed(?ContactPermit $contactAllowed): self
-    {
-        $this->contactAllowed = $contactAllowed;
 
         return $this;
     }
