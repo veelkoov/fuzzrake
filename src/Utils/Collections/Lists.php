@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Collections;
 
 use App\Utils\Traits\UtilityClass;
+use Stringable;
 
 final class Lists
 {
@@ -32,7 +33,7 @@ final class Lists
     }
 
     /**
-     * @template T
+     * @template T of string|Stringable
      *
      * @param T[] $array
      *

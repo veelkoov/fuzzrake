@@ -73,28 +73,28 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
-        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
-        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td+td', 'TEST001');
         self::assertSelectorExists('tr.MAKER_ID.submitted-different.not-fixed.changing');
 
         self::assertSelectorNotExists('tr.COUNTRY.before');
-        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td', 'Finland');
-        self::assertSelectorTextSame('tr.COUNTRY.after td+td', 'FI');
+        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td+td', 'Finland');
+        self::assertSelectorTextSame('tr.COUNTRY.after td+td+td', 'FI');
         self::assertSelectorExists('tr.COUNTRY.submitted-different.fixes-applied.changing');
 
         self::assertSelectorNotExists('tr.URL_TWITTER.before');
-        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td', 'http://www.twitter.com/getfursuit');
-        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td', 'https://twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td+td', 'http://www.twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td+td', 'https://twitter.com/getfursuit');
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
         self::assertSelectorNotExists('tr.FEATURES.before');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
         self::assertSelectorNotExists('tr.OTHER_FEATURES.before');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
     }
 
@@ -151,49 +151,49 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
-        self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'TEST001');
-        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'TEST001');
-        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.before td+td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td+td', 'TEST001');
         self::assertSelectorExists('tr.MAKER_ID.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.NAME.before td+td', 'Some testing creator');
-        self::assertSelectorTextSame('tr.NAME.submitted td+td', 'Changed name');
-        self::assertSelectorTextSame('tr.NAME.after td+td', 'Changed name');
+        self::assertSelectorTextSame('tr.NAME.before td+td+td', 'Some testing creator');
+        self::assertSelectorTextSame('tr.NAME.submitted td+td+td', 'Changed name');
+        self::assertSelectorTextSame('tr.NAME.after td+td+td', 'Changed name');
         self::assertSelectorExists('tr.NAME.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextSame('tr.COUNTRY.before td+td', 'FI');
-        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td', 'Finland');
-        self::assertSelectorTextSame('tr.COUNTRY.after td+td', 'FI');
+        self::assertSelectorTextSame('tr.COUNTRY.before td+td+td', 'FI');
+        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td+td', 'Finland');
+        self::assertSelectorTextSame('tr.COUNTRY.after td+td+td', 'FI');
         self::assertSelectorExists('tr.COUNTRY.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextSame('tr.URL_TWITTER.before td+td', '');
-        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td', 'http://www.twitter.com/getfursuit');
-        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td', 'https://twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.before td+td+td', '');
+        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td+td', 'http://www.twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td+td', 'https://twitter.com/getfursuit');
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.FEATURES.before td+td', 'Follow-me eyes Movable jaw');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.before td+td+td', 'Follow-me eyes Movable jaw');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td', 'Hidden pocket Squeaker in nose');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td+td', 'Hidden pocket Squeaker in nose');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', 'Standard commissions');
         self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td', 'Arm sleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td', 'Armsleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td', 'Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', 'Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', 'Armsleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', 'Arm sleeves');
         self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td', 'EUR');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', 'Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', 'Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', 'EUR');
         self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
@@ -221,7 +221,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         // With multiple creators matched, will be displayed as a new creator
         self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
 
-        self::$client->submitForm('Import', [
+        self::$client->submitForm('Update', [
             'submission[directives]' => 'match-maker-id TEST001',
         ]);
 
@@ -269,7 +269,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_directives', 'Old directives');
 
-        self::$client->submitForm('Save', [
+        self::$client->submitForm('Update', [
             'submission[comment]'    => 'New comment',
             'submission[directives]' => 'New directives',
         ]);
@@ -322,14 +322,14 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
-        self::assertSelectorTextSame('tr.INTRO.submitted td+td', 'Some submitted intro information');
-        self::assertSelectorTextSame('tr.INTRO.after td+td', 'Some changed intro information');
+        self::assertSelectorTextSame('tr.INTRO.submitted td+td+td', 'Some submitted intro information');
+        self::assertSelectorTextSame('tr.INTRO.after td+td+td', 'Some changed intro information');
 
-        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td', 'All species Most experience in k9s');
-        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td', 'Most species');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td+td', 'All species Most experience in k9s');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td+td', 'Most species');
 
-        self::assertSelectorTextSame('tr.SPECIES_COMMENT.submitted td+td', '');
-        self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td', 'Most experience in canines');
+        self::assertSelectorTextSame('tr.SPECIES_COMMENT.submitted td+td+td', '');
+        self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td+td', 'Most experience in canines');
     }
 
     public function testDirectivesUpdateIsImmediate(): void
@@ -494,14 +494,14 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
         self::assertResponseStatusCodeIs(200);
 
-        self::assertSelectorTextSame('tr.MAKER_ID td+td', 'TEST001');
+        self::assertSelectorTextSame('tr.MAKER_ID td+td+td', 'TEST001');
         self::assertSelectorTextNotContains('body', 'password___');
 
         if (!$isNew) {
-            self::assertSelectorTextSame('tr.PASSWORD.before td+td', '[redacted]');
+            self::assertSelectorTextSame('tr.PASSWORD.before td+td+td', '[redacted]');
         }
-        self::assertSelectorTextSame('tr.PASSWORD.submitted td+td', '[redacted]');
-        self::assertSelectorTextSame('tr.PASSWORD.after td+td', '[redacted]');
+        self::assertSelectorTextSame('tr.PASSWORD.submitted td+td+td', '[redacted]');
+        self::assertSelectorTextSame('tr.PASSWORD.after td+td+td', '[redacted]');
     }
 
     /**

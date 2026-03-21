@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tracking\Patterns;
 
 use App\Utils\ConfigurationException;
+use App\Utils\Enforce;
 use Composer\Pcre\Preg;
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
@@ -50,7 +52,11 @@ class RegexesLoader
             $topTokens->add($token);
 
             if (array_is_list($value)) {
-                $alternatives = implode('|', $value);
+                try {
+                    $alternatives = implode('|', Enforce::strList($value));
+                } catch (InvalidArgumentException $exception) {
+                    throw new ConfigurationException("Key '$key' in tokens replacements is not a list of strings.", previous: $exception);
+                }
             } else {
                 $alternatives = $this->loadTokensReplacements($value);
             }
