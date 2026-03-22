@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator;
 use Doctrine\Common\Collections\ArrayCollection;

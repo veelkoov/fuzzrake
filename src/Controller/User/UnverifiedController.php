@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
-use App\Entity\Creator;
 use App\Entity\User;
 use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
@@ -12,7 +11,6 @@ use App\Form\ContactPermitFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\SecurityMailer;
-use App\Utils\Creator\SmartAccessDecorator;
 use App\Utils\Email;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,7 +50,7 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/main', name: RouteName::USER_MAIN)]
     public function main(Request $request, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ContactPermitFormType::class, SmartAccessDecorator::wrap($user->getCreator() ?? new Creator())); // FIXME: Stupid workaround; move the stupid permit data garbage to the stupid user entity
+        $form = $this->createForm(ContactPermitFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

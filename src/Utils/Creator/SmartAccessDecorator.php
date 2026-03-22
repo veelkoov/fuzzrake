@@ -28,7 +28,6 @@ use App\Utils\PackedStringList;
 use App\Utils\Parse;
 use App\Utils\StrUtils;
 use App\Validator\StrListLength;
-use App\Validator\UpdateableEmail;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -42,8 +41,6 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-// FIXME: Valid email should be required also in MX forms https://github.com/veelkoov/fuzzrake/issues/284
-#[UpdateableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
     public function __construct(
@@ -301,7 +298,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function allowsFeedback(): bool
     {
-        return ContactPermit::FEEDBACK === $this->entity->getContactAllowed();
+        return ContactPermit::FEEDBACK === $this->entity->getUser()?->getContactPermit(); // TODO: Make sure it is where it belongs
     }
 
     public function hasSpeciesInfo(): bool
@@ -1430,19 +1427,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setInactiveReason(string $inactiveReason): self
     {
         $this->entity->setInactiveReason($inactiveReason);
-
-        return $this;
-    }
-
-    #[NotNull(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function getContactAllowed(): ?ContactPermit
-    {
-        return $this->entity->getContactAllowed();
-    }
-
-    public function setContactAllowed(?ContactPermit $contactAllowed): self
-    {
-        $this->entity->setContactAllowed($contactAllowed);
 
         return $this;
     }

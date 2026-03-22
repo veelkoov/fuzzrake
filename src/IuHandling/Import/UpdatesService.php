@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
@@ -127,12 +126,6 @@ class UpdatesService
 
     private function handleSpecialFieldsInInput(Creator $submission, Creator $original): void
     {
-        if (ContactPermit::NO === $submission->getContactAllowed()) {
-            $submission->setEmailAddress('');
-        } elseif ('' === $submission->getEmailAddress()) {
-            $submission->setEmailAddress($original->getEmailAddress());
-        }
-
         if (null === $original->getId()) {
             $submission->setDateAdded(UtcClock::now());
         } else {

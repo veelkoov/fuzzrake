@@ -56,7 +56,7 @@ function setup_start_page(): void {
   const $rulesAndContinueButton = jQuery("#rulesAndContinueButton");
 
   function refresh_page(): void {
-    confirmNoPendingUpdates.toggle(true,); // FIXME
+    confirmNoPendingUpdates.toggle(true); // FIXME
 
     decisionOverPreviousUpdates.toggle(
       confirmNoPendingUpdates.isVal("submission-pending"),

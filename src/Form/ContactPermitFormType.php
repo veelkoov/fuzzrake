@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Data\Definitions\ContactPermit;
-use App\Data\Definitions\Fields\Validation;
+use App\Entity\User;
 use App\Form\Transformers\ContactPermitTransformer;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Override;
@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class ContactPermitFormType extends AbstractType
 {
-    public const string FLD_CONTACT_PERMIT = 'contactAllowed';
+    public const string FLD_CONTACT_PERMIT = 'contactPermit';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -46,8 +46,7 @@ final class ContactPermitFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'validation_groups' => [Validation::GRP_CONTACT_PERMIT],
-            'data_class' => Creator::class,
+            'data_class' => User::class,
         ]);
     }
 }
