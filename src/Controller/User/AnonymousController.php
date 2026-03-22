@@ -102,7 +102,6 @@ class AnonymousController extends AbstractController
             return $this->redirectToRoute(RouteName::USER_MAIN);
         }
 
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
             $this->entityManager->flush();
@@ -111,11 +110,7 @@ class AnonymousController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->logger->info('Failed to confirm email.', ['user ID' => $user->getId(), 'exception' => $exception]);
             $this->addFlash('danger', $exception->getReason());
-
-            return $this->redirectToRoute(RouteName::USER_MAIN);
         }
-
-        $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute(RouteName::USER_MAIN);
     }
