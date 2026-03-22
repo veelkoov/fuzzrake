@@ -13,7 +13,7 @@ final class Version20260321151838 extends AbstractMigration
     #[Override]
     public function getDescription(): string
     {
-        return 'Introduce users table; migrate login&contact permit data.';
+        return 'Migrate login&contact permit data from creators&private data tables.';
     }
 
     #[Override]
@@ -23,8 +23,8 @@ final class Version20260321151838 extends AbstractMigration
 
         $this->addSql('DELETE FROM creators_private_data WHERE creator_id IN (SELECT id FROM creators WHERE inactive_reason LIKE \'Duplicate; replaced by%\')');
         $this->addSql('UPDATE creators_private_data SET email_address = concat(\'missing-email-\', id) WHERE email_address = \'\'');
-
         $this->addSql('INSERT INTO users (email, roles, password, is_verified, contact_permit) SELECT cpd.email_address, \'[]\', cpd.password, false, c.contact_allowed FROM creators_private_data AS cpd JOIN creators AS c ON c.id = cpd.creator_id');
+        $this->addSql('DROP TABLE creators_private_data');
 
         $this->addSql('CREATE TEMPORARY TABLE __temp__creators AS SELECT id, creator_id, name, formerly, intro, since, country, state, city, allergy_warning_info, species_does, species_doesnt, notes, inactive_reason, production_models_comment, styles_comment, order_types_comment, features_comment, payment_methods, currencies_accepted, species_comment, ages, has_allergy_warning, offers_payment_plans, payment_plans_info FROM creators');
         $this->addSql('DROP TABLE creators');
