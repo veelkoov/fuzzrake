@@ -13,7 +13,6 @@ use App\Data\Definitions\Fields\Validation;
 use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
-use App\Entity\CreatorPrivateData;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
@@ -38,7 +37,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
@@ -439,35 +437,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setClosedFor(array $closedFor): self
     {
         SmartOfferStatusAccessor::setList($this, false, $closedFor);
-
-        return $this;
-    }
-
-    //
-    // ===== PRIVATE DATA GETTERS AND SETTERS =====
-    //
-
-    #[Length(max: 128)]
-    public function getEmailAddress(): string
-    {
-        return $this->getPrivateData()->getEmailAddress();
-    }
-
-    public function setEmailAddress(string $emailAddress): self
-    {
-        $this->getPrivateData()->setEmailAddress($emailAddress);
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->getPrivateData()->getPassword();
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->getPrivateData()->setPassword($password);
 
         return $this;
     }
@@ -1443,23 +1412,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setVolatileData(?CreatorVolatileData $volatileData): self
     {
         $this->entity->setVolatileData($volatileData);
-
-        return $this;
-    }
-
-    #[Valid]
-    public function getPrivateData(): CreatorPrivateData
-    {
-        if (null === ($res = $this->entity->getPrivateData())) {
-            $this->entity->setPrivateData($res = new CreatorPrivateData());
-        }
-
-        return $res;
-    }
-
-    public function setPrivateData(?CreatorPrivateData $privateData): self
-    {
-        $this->entity->setPrivateData($privateData);
 
         return $this;
     }

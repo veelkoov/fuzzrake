@@ -8,7 +8,6 @@ use App\Data\Definitions\Ages;
 use App\Entity\Creator;
 use App\Entity\CreatorId;
 use App\Entity\CreatorOfferStatus;
-use App\Entity\CreatorPrivateData;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
@@ -45,7 +44,6 @@ class CreatorSmallTest extends TestCase
             ->setOffersPaymentPlans(false)
         ;
         $subject->addCreatorId(new CreatorId());
-        $subject->setPrivateData(new CreatorPrivateData());
         $subject->setVolatileData(new CreatorVolatileData());
         $subject->addOfferStatus(new CreatorOfferStatus());
         $subject->addValue(new CreatorValue());

@@ -11,8 +11,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 final readonly class Update
 {
-    public UpdateContact $contact;
-
     /**
      * @param Creator[] $matchedCreators
      * @param string[]  $errors
@@ -27,7 +25,6 @@ final readonly class Update
         public bool $isAccepted,
         public bool $isNew,
     ) {
-        $this->contact = UpdateContact::from($this->originalCreator, $this->updatedCreator);
     }
 
     public function submittedDifferent(Field $field): bool

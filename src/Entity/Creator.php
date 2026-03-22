@@ -105,9 +105,6 @@ class Creator implements Stringable
     #[ORM\OneToOne(targetEntity: CreatorVolatileData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorVolatileData $volatileData = null;
 
-    #[ORM\OneToOne(targetEntity: CreatorPrivateData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?CreatorPrivateData $privateData = null;
-
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'creator')]
     #[ORM\JoinColumn(name: 'user_id', unique: true, nullable: true)] // For now, we do not support multiple studios for one user
     private ?User $user = null;
@@ -154,10 +151,6 @@ class Creator implements Stringable
     public function __clone()
     {
         $this->user = null; // Don't do that
-
-        if (null !== $this->privateData) {
-            $this->setPrivateData(clone $this->privateData);
-        }
 
         if (null !== $this->volatileData) {
             $this->setVolatileData(clone $this->volatileData);
@@ -512,20 +505,6 @@ class Creator implements Stringable
         $volatileData?->setCreator($this);
 
         $this->volatileData = $volatileData;
-
-        return $this;
-    }
-
-    public function getPrivateData(): ?CreatorPrivateData
-    {
-        return $this->privateData;
-    }
-
-    public function setPrivateData(?CreatorPrivateData $privateData): self
-    {
-        $privateData?->setCreator($this);
-
-        $this->privateData = $privateData;
 
         return $this;
     }

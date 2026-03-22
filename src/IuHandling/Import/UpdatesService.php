@@ -69,10 +69,6 @@ class UpdatesService
         $isNew = null === $originalCreator->getId();
         $isAccepted = $manager->isAccepted();
 
-        if (!$isNew && $originalCreator->getPassword() !== $updatedCreator->getPassword() && !$isAccepted) {
-            $errors[] = 'Password does not match.';
-        }
-
         return new Update(
             $submission,
             $matchedCreators,
