@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IuHandling;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
@@ -47,10 +46,6 @@ readonly class SubmissionDataReader implements FieldReadInterface
 
         if (Field::AGES === $field) {
             $value = Ages::get(Enforce::nString($value));
-        }
-
-        if (Field::CONTACT_ALLOWED === $field) {
-            $value = ContactPermit::get(Enforce::nString($value));
         }
 
         return $value;

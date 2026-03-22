@@ -219,9 +219,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('inactiveReason', inIuForm: false, freeForm: false)]
     case INACTIVE_REASON = 'INACTIVE_REASON';
 
-    #[Props('password', public: false, inStats: false, freeForm: false)]
-    case PASSWORD = 'PASSWORD';
-
     #[Props('csLastCheck', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
 
@@ -233,12 +230,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 
     #[Props('closedFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
     case CLOSED_FOR = 'CLOSED_FOR';
-
-    #[Props('contactAllowed', inStats: false, freeForm: false)]
-    case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
-
-    #[Props('emailAddress', public: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case EMAIL_ADDRESS = 'EMAIL_ADDRESS';
 
     public function getData(): FieldData
     {

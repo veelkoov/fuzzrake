@@ -11,17 +11,10 @@ final class SecureValues
     use UtilityClass;
 
     public const array FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION = [
-        Field::PASSWORD,
-        Field::EMAIL_ADDRESS,
         Field::URL_MINIATURES,
         Field::DATE_ADDED,
         Field::DATE_UPDATED,
     ];
-
-    public static function hideOnAdminScreen(Field $field): bool
-    {
-        return Field::PASSWORD === $field;
-    }
 
     public static function hideInChangesDescription(Field $field): bool
     {

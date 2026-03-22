@@ -30,9 +30,7 @@ class ExtendedTest extends IuSubmissionsTestCase
     use IuFormTrait;
     use ClockSensitiveTrait;
 
-    private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
-        Field::EMAIL_ADDRESS,
-        Field::PASSWORD,
+    private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [// Values which must never appear in the form
     ];
 
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
@@ -164,7 +162,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             $value = $oldData->get($field);
 
             if (arr_contains(self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, $field)) {
-                self::assertValueIsNotPresentInForm(Enforce::string($value), $field, $htmlBody);
+                self::assertValueIsNotPresentInForm(Enforce::string($value), $htmlBody);
             } else {
                 self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
             }
@@ -185,8 +183,6 @@ class ExtendedTest extends IuSubmissionsTestCase
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, false, $htmlBody);
         } elseif (arr_contains(self::BOOLEAN_OPTIONAL, $field)) {
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, true, $htmlBody);
-        } elseif (Field::CONTACT_ALLOWED === $field) {
-            self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
             if ($field->isList()) {
                 $value = PackedStringList::pack(Enforce::strList($value));
@@ -261,13 +257,6 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
-    private static function assertContactValueFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
-    {
-        $choices = ['NO', 'CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'];
-
-        self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
-    }
-
     /**
      * @param string[] $choices
      */
@@ -283,25 +272,10 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
+    private static function assertValueIsNotPresentInForm(string $value, string $htmlBody): void
     {
-        if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = Regex::matchAllStrictGroups('~<input[^>]+name="iu_form\[password]"[^>]*>~', $htmlBody);
-            self::assertSame(1, $match->count);
-
-            self::assertStringNotContainsStringIgnoringCase('value', $match->matches[0][0]); // Needle = attribute name
-
-            if ('' !== $value) {
-                self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
-            }
-
-            foreach (password_algos() as $algorithm) { // grep-password-algorithms
-                self::assertFalse(Preg::isMatch("~\$$algorithm\$~", $htmlBody));
-            }
-        } else {
-            if ('' !== $value) {
-                self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
-            }
+        if ('' !== $value) {
+            self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
         }
     }
 
@@ -397,9 +371,7 @@ class ExtendedTest extends IuSubmissionsTestCase
         $actual = self::findCreatorByCreatorId($expected->getCreatorId());
 
         foreach (Fields::all() as $fieldName => $field) {
-            if (Field::PASSWORD === $field) {
-                self::assertTrue(password_verify($expected->getString($field), $actual->getString($field)), 'Password differs.');
-            } elseif ($field->isList()) {
+            if ($field->isList()) {
                 self::assertEqualsCanonicalizing($expected->getStringList($field), $actual->getStringList($field), "Field $fieldName differs for {$expected->getCreatorId()}.");
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getCreatorId()}.");

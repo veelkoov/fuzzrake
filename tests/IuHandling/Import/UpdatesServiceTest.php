@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
-use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
@@ -31,90 +30,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class UpdatesServiceTest extends FuzzrakeTestCase
 {
     use ClockSensitiveTrait;
-
-    #[AllowMockObjectsWithoutExpectations]
-    public function testUpdateHandlesNewEmailProperly(): void
-    {
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('getfursu.it@localhost.localdomain')
-        );
-
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
-        $result = $subject->getUpdateFor($submission);
-
-        self::assertSame('', $result->originalCreator->getEmailAddress());
-
-        self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
-    }
-
-    #[AllowMockObjectsWithoutExpectations]
-    public function testUpdateHandlesEmailChangeProperly(): void
-    {
-        $existing = $this->getPersistedCreatorMock()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('getfursu.it@localhost.localdomain')
-        ;
-
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('an-update.2@localhost.localdomain')
-        );
-
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor($submission);
-
-        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertSame('an-update.2@localhost.localdomain', $result->updatedCreator->getEmailAddress());
-    }
-
-    #[AllowMockObjectsWithoutExpectations]
-    public function testUpdateHandlesUnchangedEmailProperly(): void
-    {
-        $creator = $this->getPersistedCreatorMock()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('getfursu.it@localhost.localdomain')
-        ;
-
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('')
-        );
-
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
-        $result = $subject->getUpdateFor($submission);
-
-        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertSame('getfursu.it@localhost.localdomain', $result->updatedCreator->getEmailAddress());
-    }
-
-    #[AllowMockObjectsWithoutExpectations]
-    public function testUpdateHandlesRevokedContactPermitProperly(): void
-    {
-        $existing = $this->getPersistedCreatorMock()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('getfursu.it@localhost.localdomain')
-        ;
-
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setName('A creator')
-            ->setCreatorId('TEST001')
-            ->setEmailAddress('an-update.2@localhost.localdomain') // Should be ignored
-            ->setContactAllowed(ContactPermit::NO)
-        );
-
-        $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$existing]]]);
-        $result = $subject->getUpdateFor($submission);
-
-        self::assertSame('getfursu.it@localhost.localdomain', $result->originalCreator->getEmailAddress());
-        self::assertSame('', $result->updatedCreator->getEmailAddress());
-    }
 
     #[AllowMockObjectsWithoutExpectations]
     public function testAddedDateIsHandledProperly(): void

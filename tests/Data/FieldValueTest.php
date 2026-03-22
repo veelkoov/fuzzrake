@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Data;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\FieldValue;
 use DateTimeImmutable;
@@ -69,12 +68,6 @@ class FieldValueTest extends TestCase
             [Field::AGES, Ages::ADULTS,        true],
             [Field::AGES, Ages::ADULTS->value, false],
             [Field::AGES, [Ages::ADULTS],      false],
-
-            [Field::CONTACT_ALLOWED, null,                     true],
-            [Field::CONTACT_ALLOWED, '',                       false],
-            [Field::CONTACT_ALLOWED, ContactPermit::NO,        true],
-            [Field::CONTACT_ALLOWED, ContactPermit::NO->value, false],
-            [Field::CONTACT_ALLOWED, [ContactPermit::NO],      false],
         ];
     }
 
@@ -113,7 +106,6 @@ class FieldValueTest extends TestCase
 
             [Field::DATE_UPDATED, '', $iae], // Not supported yet
             [Field::AGES, '', $iae], // Not supported yet
-            [Field::CONTACT_ALLOWED, '', $iae], // Not supported yet
         ];
     }
 
@@ -165,11 +157,6 @@ class FieldValueTest extends TestCase
             [Field::AGES, Ages::ADULTS,        true],
             [Field::AGES, Ages::ADULTS->value, $iae],
             [Field::AGES, [Ages::ADULTS],      $iae],
-
-            [Field::CONTACT_ALLOWED, null,                     false],
-            [Field::CONTACT_ALLOWED, ContactPermit::NO,        true],
-            [Field::CONTACT_ALLOWED, ContactPermit::NO->value, $iae],
-            [Field::CONTACT_ALLOWED, [ContactPermit::NO],      $iae],
         ];
     }
 }

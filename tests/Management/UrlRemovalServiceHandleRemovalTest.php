@@ -8,6 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
 use App\Service\EmailService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
@@ -19,7 +20,6 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 #[Small]
@@ -48,9 +48,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         self::mockTime();
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[AllowMockObjectsWithoutExpectations]
     public function testEmptyNotesGetSet(): void
     {
@@ -72,9 +69,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
             EXPECTED, $creator->getNotes());
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[AllowMockObjectsWithoutExpectations]
     public function testNonEmptyNotesGetUpdated(): void
     {
@@ -98,9 +92,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
             EXPECTED, $creator->getNotes());
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[AllowMockObjectsWithoutExpectations]
     public function testCreatorGettingHiddenWhenDesired(): void
     {
@@ -113,9 +104,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
             $creator->getInactiveReason());
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[AllowMockObjectsWithoutExpectations]
     public function testCreatorNotGettingHiddenWhenNotDesired(): void
     {
@@ -127,9 +115,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         self::assertSame('', $creator->getInactiveReason());
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[AllowMockObjectsWithoutExpectations]
     public function testUrlsAreUpdatedAsDesired(): void
     {
@@ -162,9 +147,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         self::assertSame('', $creator->getFaqUrl());
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function testMessageNotSentWhenNotDesired(): void
     {
         $this->emailServiceMock->expects(self::never())->method('send');
@@ -175,9 +157,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         $this->subject->handleRemoval($creator, $data);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function testProperHidingMessageSentWhenDesired(): void
     {
         $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
@@ -201,7 +180,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = new Creator()->setName('The Hidden Creator')->setCreatorId('TEST001');
+        $creator = UserCreator::get()->setName('The Hidden Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),
@@ -212,9 +191,6 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         $this->subject->handleRemoval($creator, $data);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function testProperUrlRemovalMessageSentWhenDesired(): void
     {
         $this->emailServiceMock->expects(self::once())->method('send')->willReturnCallback(
@@ -238,7 +214,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = new Creator()->setName('The Updated Creator')->setCreatorId('TEST001');
+        $creator = UserCreator::get()->setName('The Updated Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),

@@ -9,6 +9,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Management\UrlRemovalService;
 use App\Service\EmailService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
@@ -25,7 +26,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 {
     public function testEmailNotSentWhenNoContactPermitted(): void
     {
-        $creator = new Creator()->setContactAllowed(ContactPermit::NO)
+        $creator = UserCreator::get(contactPermit: ContactPermit::NO)
             ->setWebsiteUrl('https://localhost/');
 
         $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
@@ -35,7 +36,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 
     public function testEmailSentWhenContactPermitted(): void
     {
-        $creator = new Creator()->setContactAllowed(ContactPermit::CORRECTIONS)
+        $creator = UserCreator::get(contactPermit: ContactPermit::CORRECTIONS)
             ->setWebsiteUrl('https://localhost/');
 
         $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
@@ -45,7 +46,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 
     public function testRemovalOfAllImportantLinksHides(): void
     {
-        $creator = new Creator()
+        $creator = UserCreator::get()
             ->setWebsiteUrl('https://localhost/')
             ->setCommissionsUrls(['https://localhost/'])
         ;
@@ -57,7 +58,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 
     public function testImportantLinksLeftDoNotHide(): void
     {
-        $creator = new Creator()
+        $creator = UserCreator::get()
             ->setWebsiteUrl('https://localhost/')
             ->setCommissionsUrls(['https://localhost/'])
         ;
@@ -83,7 +84,7 @@ class UrlRemovalServiceGetRemovalDataForTest extends FuzzrakeTestCase
 
     public function testRemovedAndRemainingAreCalculatedProperly(): void
     {
-        $creator = new Creator()
+        $creator = UserCreator::get()
             ->setWebsiteUrl('https://localhost/main')
             ->setCommissionsUrls(['https://com1.example.com/', 'https://com2.example.com/'])
             ->setPricesUrls(['https://prc1.example.com/', 'https://prc2.example.com/'])

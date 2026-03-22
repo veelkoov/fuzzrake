@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Utils\Enforce;
 use App\Utils\PackedStringList;
@@ -34,10 +33,6 @@ final class FieldValue
             if (null !== $value && !$value instanceof Ages) {
                 throw new InvalidArgumentException("$field->value value must be a null or its enum.");
             }
-        } elseif (Field::CONTACT_ALLOWED === $field) {
-            if (null !== $value && !$value instanceof ContactPermit) {
-                throw new InvalidArgumentException("$field->value value must be a null or its enum.");
-            }
         } else {
             if (!is_string($value)) {
                 throw new InvalidArgumentException("$field->value value must be a string.");
@@ -64,8 +59,6 @@ final class FieldValue
             throw new InvalidArgumentException("$field->value (date+time) conversion from string is not supported yet.");
         } elseif (Field::AGES === $field) {
             throw new InvalidArgumentException("$field->value (enum) conversion from string is not supported yet.");
-        } elseif (Field::CONTACT_ALLOWED === $field) {
-            throw new InvalidArgumentException("$field->value (enum) conversion from string is not supported yet.");
         } else {
             return $value;
         }
@@ -80,8 +73,7 @@ final class FieldValue
             $field->isBoolean() => null !== $value,
             $field->isList()    => [] !== $value,
 
-            Field::AGES === $field            => null !== $value,
-            Field::CONTACT_ALLOWED === $field => null !== $value,
+            Field::AGES === $field => null !== $value,
 
             default => '' !== $value,
         };

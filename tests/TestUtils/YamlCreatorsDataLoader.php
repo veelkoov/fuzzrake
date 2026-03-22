@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Collections\StringToCreator;
@@ -192,8 +191,6 @@ class YamlCreatorsDataLoader
 
             if (Field::AGES === $field) {
                 $value = Ages::get(Enforce::nString($value));
-            } elseif (Field::CONTACT_ALLOWED === $field) {
-                $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED], true)) {
                 try {
                     $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));

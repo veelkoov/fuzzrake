@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\Fields\SecureValues;
 use App\Entity\Creator as CreatorE;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
@@ -44,7 +43,7 @@ class AdminExtensions
     public function difference(Field $field, string $classSuffix, Creator $subject, Creator $other): string
     {
         if (!$field->isList()) {
-            $value = $this->getOptionallyRedactedValue($field, $subject);
+            $value = $subject->get($field);
             $class = "text-$classSuffix";
             $text = htmlspecialchars(StrUtils::asStr($value));
 
@@ -66,18 +65,6 @@ class AdminExtensions
         }
 
         return $result;
-    }
-
-    /**
-     * @return psPhpFieldValue
-     */
-    private function getOptionallyRedactedValue(Field $field, Creator $subject): mixed
-    {
-        if (SecureValues::hideOnAdminScreen($field)) {
-            return '[redacted]';
-        } else {
-            return $subject->get($field);
-        }
     }
 
     #[AsTwigFilter('link_urls', isSafe: ['html'])]

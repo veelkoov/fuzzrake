@@ -87,12 +87,6 @@ class CreatorSmallTest extends TestCase
             return;
         }
 
-        if ('.user' === $path) {
-            self::assertNull($result, 'User must be nulled.');
-
-            return;
-        }
-
         self::assertNotNull($subject, "$path is null, cannot test cloning.");
         self::assertIsObject($subject, "$path is not an object.");
         self::assertIsObject($result, "$path is not an object.");
@@ -103,6 +97,10 @@ class CreatorSmallTest extends TestCase
         }
 
         self::assertNotSame($subject, $result, "$path (".get_debug_type($subject).') is identical.');
+
+        if ('.user' === $path) {
+            return; // We do NOT check user; TODO: verify the approach
+        }
 
         foreach ($reflection->getProperties() as $property) {
             $propertyPath = "$path.$property->name";
