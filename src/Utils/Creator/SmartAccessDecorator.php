@@ -296,7 +296,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function allowsFeedback(): bool
     {
-        return ContactPermit::FEEDBACK === $this->entity->getUser()?->getContactPermit(); // TODO: Make sure it is where it belongs
+        return ContactPermit::FEEDBACK === $this->entity->getUser()->getContactPermit(); // TODO: Make sure it is where it belongs
     }
 
     public function hasSpeciesInfo(): bool
