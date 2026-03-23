@@ -1,0 +1,15 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}inclusion/updates{% endblock %}
+
+{% block body %}
+    <h1>
+        Inclusion/updates
+    </h1>
+
+    <p>
+        Submitting requests functionality has been moved. Please
+        <a href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::USER_LOGIN')) }}">log in</a>
+        to submit or update your information.
+    </p>
+{% endblock %}
