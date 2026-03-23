@@ -31,11 +31,10 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
+#[Cache(maxage: 0, public: false)]
 class IuFormController extends AbstractController
 {
     use CreatorByCreatorIdTrait;
-
-    protected const string NEW_CREATOR_ID_PLACEHOLDER = '(new)';
 
     public function __construct(
         protected readonly CreatorRepository $creatorRepository,
@@ -44,23 +43,22 @@ class IuFormController extends AbstractController
     }
 
     #[Route(path: '/start', name: RouteName::USER_IU_FORM_START)]
-    #[Cache(maxage: 0, public: false)]
-    public function iuFormStart(Request $request): Response
+    public function start(Request $request): Response
     {
         $form = $this->createForm(Start::class, new IuFormChecklist());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute(RouteName::USER_IU_FORM_DATA, ['creatorId' => $creatorId]); // FIXME
+            return $this->redirectToRoute(RouteName::USER_IU_FORM_DATA);
         }
 
         return $this->render('iu_form/start.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
     #[Route(path: '/data', name: RouteName::USER_IU_FORM_DATA)]
-    #[Cache(maxage: 0, public: false)]
-    public function iuFormData(
+    public function data(
         #[CurrentUser] User $user,
         Request $request,
         SessionInterface $session,
@@ -68,11 +66,16 @@ class IuFormController extends AbstractController
         RouterInterface $router,
         SubmissionService $submissionService,
     ): Response {
-        $creator = null === $user->getCreator() ? new Creator() : Creator::wrap($user->getCreator());
-        $photosCopyrightOk = null !== $creatorId && $creator->hasData(Field::URL_PHOTOS); // FIXME
+        if (null === $user->getCreator()) {
+            $creator = new Creator();
+            $initialPhotosCopyrightOk = false;
+        } else {
+            $creator = Creator::wrap($user->getCreator());
+            $initialPhotosCopyrightOk = $creator->hasData(Field::URL_PHOTOS);
+        }
 
         $form = $this->createForm(Data::class, $creator, [
-            Data::OPT_PHOTOS_COPYRIGHT_OK => $photosCopyrightOk,
+            Data::OPT_PHOTOS_COPYRIGHT_OK => $initialPhotosCopyrightOk,
             'router' => $router,
         ])->handleRequest($request);
         $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
@@ -84,9 +87,7 @@ class IuFormController extends AbstractController
             try {
                 $submissionService->submit($creator);
 
-                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION, [
-                    'creatorId' => $creatorId, // FIXME!!!
-                ]);
+                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION);
             } catch (SubmissionException $exception) {
                 $this->logger->error('Failed to submit I/U form data.', ['exception' => $exception]);
 
@@ -98,7 +99,15 @@ class IuFormController extends AbstractController
             'form'       => $form,
             'errors'     => $form->getErrors(true),
             'submitted'  => $form->isSubmitted(),
-            'creator_id' => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
+            'creator_id' => $this->getCreatorIdTplValue($user),
+        ]);
+    }
+
+    #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
+    public function confirmation(#[CurrentUser] User $user): Response
+    {
+        return $this->render('iu_form/confirmation.html.twig', [
+            'creator_id' => $this->getCreatorIdTplValue($user),
         ]);
     }
 
@@ -127,12 +136,8 @@ class IuFormController extends AbstractController
         }
     }
 
-    #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
-    #[Cache(maxage: 0, public: false)]
-    public function iuFormConfirmation(Request $request): Response
+    private function getCreatorIdTplValue(User $user): string
     {
-        return $this->render('iu_form/confirmation.html.twig', [
-            'creator_id' => $request->query->get('creatorId', self::NEW_CREATOR_ID_PLACEHOLDER),
-        ]);
+        return $user->getCreator()?->getLastCreatorId() ?? '(new)'; // grep-code-legacy-local-storage-submission-data
     }
 }
