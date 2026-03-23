@@ -2,36 +2,63 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuForm;
+namespace App\Controller;
 
 use App\Captcha\CaptchaService;
+use App\Controller\Utils\CreatorByCreatorIdTrait;
+use App\Controller\Utils\IuFormChecklist;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\User;
 use App\Form\InclusionUpdate\Data;
+use App\Form\InclusionUpdate\Start;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\SubmissionService;
+use App\Repository\CreatorRepository;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\NoResultException;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Attribute\Cache;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
-class IuFormDataController extends AbstractIuFormController
+class IuFormController extends AbstractController
 {
-    /**
-     * @throws NotFoundHttpException
-     */
-    #[Route(path: '/data/{creatorId}', name: RouteName::USER_IU_FORM_DATA)]
+    use CreatorByCreatorIdTrait;
+
+    protected const string NEW_CREATOR_ID_PLACEHOLDER = '(new)';
+
+    public function __construct(
+        protected readonly CreatorRepository $creatorRepository,
+        protected readonly LoggerInterface $logger,
+    ) {
+    }
+
+    #[Route(path: '/start', name: RouteName::USER_IU_FORM_START)]
+    #[Cache(maxage: 0, public: false)]
+    public function iuFormStart(Request $request): Response
+    {
+        $form = $this->createForm(Start::class, new IuFormChecklist());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute(RouteName::USER_IU_FORM_DATA, ['creatorId' => $creatorId]); // FIXME
+        }
+
+        return $this->render('iu_form/start.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route(path: '/data', name: RouteName::USER_IU_FORM_DATA)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormData(
         #[CurrentUser] User $user,
@@ -40,10 +67,9 @@ class IuFormDataController extends AbstractIuFormController
         CaptchaService $captchaService,
         RouterInterface $router,
         SubmissionService $submissionService,
-        ?string $creatorId = null,
     ): Response {
         $creator = null === $user->getCreator() ? new Creator() : Creator::wrap($user->getCreator());
-        $photosCopyrightOk = null !== $creatorId && $creator->hasData(Field::URL_PHOTOS);
+        $photosCopyrightOk = null !== $creatorId && $creator->hasData(Field::URL_PHOTOS); // FIXME
 
         $form = $this->createForm(Data::class, $creator, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => $photosCopyrightOk,
@@ -69,10 +95,10 @@ class IuFormDataController extends AbstractIuFormController
         }
 
         return $this->render('iu_form/data.html.twig', [
-            'form'                => $form,
-            'errors'              => $form->getErrors(true),
-            'submitted'           => $form->isSubmitted(),
-            'creator_id'          => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
+            'form'       => $form,
+            'errors'     => $form->getErrors(true),
+            'submitted'  => $form->isSubmitted(),
+            'creator_id' => $creatorId ?? self::NEW_CREATOR_ID_PLACEHOLDER,
         ]);
     }
 
@@ -99,5 +125,14 @@ class IuFormDataController extends AbstractIuFormController
         } catch (NoResultException) {
             // Unused ID = OK
         }
+    }
+
+    #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
+    #[Cache(maxage: 0, public: false)]
+    public function iuFormConfirmation(Request $request): Response
+    {
+        return $this->render('iu_form/confirmation.html.twig', [
+            'creator_id' => $request->query->get('creatorId', self::NEW_CREATOR_ID_PLACEHOLDER),
+        ]);
     }
 }

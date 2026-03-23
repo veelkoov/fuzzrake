@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Traits;
+namespace App\Controller\Utils;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;

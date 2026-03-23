@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\Controller\IuForm\Utils\StartData;
+use App\Controller\Utils\IuFormChecklist;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<StartData>
+ * @extends AbstractType<IuFormChecklist>
  */
 final class Start extends AbstractType
 {
@@ -51,6 +51,6 @@ final class Start extends AbstractType
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefault('data_class', StartData::class);
+        $resolver->setDefault('data_class', IuFormChecklist::class);
     }
 }

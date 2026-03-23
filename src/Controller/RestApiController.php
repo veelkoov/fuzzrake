@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Controller\Traits\CreatorByCreatorIdTrait;
+use App\Controller\Utils\CreatorByCreatorIdTrait;
 use App\Repository\CreatorRepository;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;

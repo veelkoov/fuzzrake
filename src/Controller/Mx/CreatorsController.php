@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Controller\Traits\ButtonClickedTrait;
+use App\Controller\Utils\ButtonClickedTrait;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\CreatorType;
 use App\Repository\CreatorRepository;

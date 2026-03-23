@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Controller\Traits\ButtonClickedTrait;
+use App\Controller\Utils\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
