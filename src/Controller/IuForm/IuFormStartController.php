@@ -19,7 +19,7 @@ class IuFormStartController extends AbstractIuFormController
     /**
      * @throws NotFoundHttpException
      */
-    #[Route(path: '/start/{creatorId}', name: RouteName::USER_IU_FORM_START)] // TODO: Redirection from legacy
+    #[Route(path: '/start/{creatorId}', name: RouteName::USER_IU_FORM_START)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormStart(Request $request, ?string $creatorId = null): Response
     {
