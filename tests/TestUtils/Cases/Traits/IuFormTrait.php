@@ -6,6 +6,11 @@ namespace App\Tests\TestUtils\Cases\Traits;
 
 trait IuFormTrait
 {
+    private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
+    {
+        return '/iu_form/start'.('' !== $urlCreatorId ? '/'.$urlCreatorId : '');
+    }
+
     private static function skipRules(): void
     {
         self::$client->submit(self::$client->getCrawler()->selectButton('Agree and continue')->form());

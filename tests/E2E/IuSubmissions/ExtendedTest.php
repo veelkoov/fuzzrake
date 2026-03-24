@@ -140,11 +140,6 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::assertIuSubmittedAnyResult();
     }
 
-    private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
-    {
-        return '/iu_form/start'.('' !== $urlCreatorId ? '/'.$urlCreatorId : '');
-    }
-
     private static function verifyGeneratedIuFormFilledWithData(Creator $oldData, string $htmlBody): void
     {
         self::assertStringContainsStringIgnoringCase(self::fieldToFormFieldName(Field::NAME), $htmlBody,
@@ -281,12 +276,9 @@ class ExtendedTest extends IuSubmissionsTestCase
 
     private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
     {
-        foreach (Fields::all() as $field) {
-            if (!$field->isInIuForm()) {
-                continue;
-            }
-
+        foreach (Fields::inIuForm() as $field) {
             $value = $data->get($field);
+
             if (is_bool($value)) {
                 $value = $value ? 'YES' : 'NO';
             } elseif (arr_contains(self::BOOLEAN_OPTIONAL, $field) && null === $value) {
