@@ -36,4 +36,19 @@ trait AssertsTrait
         self::assertSame($expected->getTimezone()->getName(), $actual?->getTimezone()?->getName());
         self::assertSame(StrUtils::asStr($expected), StrUtils::asStr($actual));
     }
+
+    protected static function assertSameEntity(?object $first, ?object $second): void
+    {
+        // This most probably means that the entity manager got cleared?
+        // Or does it happen when one object gets persisted and second gets retrieved by findAll?
+
+        self::assertNotNull($first);
+        self::assertNotNull($second);
+
+        if (!method_exists($first, 'getId') || !method_exists($second, 'getId')) {
+            self::fail('Unable to compare object unless both implement getId().');
+        }
+
+        self::assertSame([$first->getId(), $first::class], [$second->getId(), $second::class]);
+    }
 }

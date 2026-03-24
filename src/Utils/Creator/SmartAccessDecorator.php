@@ -9,7 +9,6 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
-use App\Data\Definitions\Fields\Validation;
 use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;

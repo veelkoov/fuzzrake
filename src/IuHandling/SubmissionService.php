@@ -6,6 +6,7 @@ namespace App\IuHandling;
 
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\Submission;
+use App\Entity\User;
 use App\IuHandling\Exception\SubmissionException;
 use App\Repository\SubmissionRepository;
 use App\Service\EmailService;
@@ -13,49 +14,48 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\StrUtils;
 use JsonException;
+use Psr\Log\LoggerInterface;
 
 class SubmissionService
 {
     public function __construct(
         private readonly SubmissionRepository $submissionRepository,
         private readonly EmailService $emailService,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
      * @throws SubmissionException
      */
-    public function submit(Creator $submissionData): Submission
+    public function submit(User $user, Creator $submissionData): Submission
+    {
+        $submission = $this->getEntityForSubmission($user, $submissionData);
+
+        $this->submissionRepository->add($submission, true);
+        $this->sendNotification($submissionData, $submission->getPayload());
+
+        return $submission;
+    }
+
+    public function getEntityForSubmission(User $user, Creator $submissionData): Submission
+    {
+        return new Submission(null !== $submissionData->getId())
+            ->setPayload($this->asJson($submissionData))
+            ->setCreator($user->getCreator())
+            ->setOwner($user)
+        ;
+    }
+
+    private function asJson(Creator $submission): string
     {
         try {
-            $submission = self::getEntityForSubmission($submissionData);
-
-            $this->submissionRepository->add($submission, true);
-            $this->sendNotification($submissionData, $submission->getPayload());
-
-            return $submission;
+            return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()));
         } catch (JsonException $exception) {
-            throw new SubmissionException(previous: $exception);
+            $this->logger->error('Failed encoding submission as JSON.', ['exception' => $exception]);
+
+            throw new SubmissionException('Failed encoding submission as JSON.', previous: $exception);
         }
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public static function getEntityForSubmission(Creator $submissionData): Submission
-    {
-        $result = new Submission(null !== $submissionData->getId());
-        $result->setPayload(self::asJson($submissionData));
-
-        return $result;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private static function asJson(Creator $submission): string
-    {
-        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()));
     }
 
     private function sendNotification(Creator $submission, string $jsonData): void

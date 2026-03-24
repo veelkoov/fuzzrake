@@ -16,6 +16,7 @@ class LegacyController extends AbstractController
     #[Route(path: '/iu_form/fill/{creatorId}')]
     public function iuForm(?string $creatorId): Response
     {
-        return $this->render('legacy/iu_form.html.twig');
+        return $this->render('legacy/iu_form.html.twig')
+            ->setStatusCode(404);
     }
 }

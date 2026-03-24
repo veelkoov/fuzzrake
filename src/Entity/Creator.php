@@ -141,6 +141,8 @@ class Creator implements Stringable
 
     public function __construct()
     {
+        $this->user = new User();
+
         $this->urls = new ArrayCollection();
         $this->offerStatuses = new ArrayCollection();
         $this->creatorIds = new ArrayCollection();

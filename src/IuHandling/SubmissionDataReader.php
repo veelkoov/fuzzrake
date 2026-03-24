@@ -68,4 +68,9 @@ readonly class SubmissionDataReader implements FieldReadInterface
     {
         return $field->providedIn($this);
     }
+
+    public function getRawValue(string $fieldName): mixed
+    {
+        return $this->parsed[$fieldName] ?? throw new SubmissionException("Submission data is missing $fieldName.");
+    }
 }

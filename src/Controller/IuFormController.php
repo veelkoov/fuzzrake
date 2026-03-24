@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Captcha\CaptchaService;
 use App\Controller\Utils\CreatorByCreatorIdTrait;
 use App\Controller\Utils\IuFormChecklist;
 use App\Data\Definitions\Fields\Field;
@@ -62,7 +61,6 @@ class IuFormController extends AbstractController
         #[CurrentUser] User $user,
         Request $request,
         SessionInterface $session,
-        CaptchaService $captchaService,
         RouterInterface $router,
         SubmissionService $submissionService,
     ): Response {
@@ -78,14 +76,13 @@ class IuFormController extends AbstractController
             Data::OPT_PHOTOS_COPYRIGHT_OK => $initialPhotosCopyrightOk,
             'router' => $router,
         ])->handleRequest($request);
-        $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
         $this->validatePhotosCopyright($form, $creator);
         $this->validateCreatorId($form, $creator);
 
-        if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $submissionService->submit($creator);
+                $submissionService->submit($user, $creator);
 
                 return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION);
             } catch (SubmissionException $exception) {

@@ -26,35 +26,61 @@ trait UsersTrait
 
     protected static function haveAnAdminUser(): void
     {
-        self::$adminUser = new User()->setEmail('administrator@example.com')->setRoles(['ROLE_ADMIN'])
+        $user = new User()
+            ->setEmail('administrator@example.com')
+            ->setRoles(['ROLE_ADMIN'])
             ->setIsVerified(true);
+        self::setPassword($user);
+        self::persistAndFlush($user);
 
-        self::getContainerService(UserPasswordHasherInterface::class)->hashPassword(self::$adminUser, self::TEST_PASSWORD);
-
-        self::persistAndFlush(self::$adminUser);
+        self::$adminUser = $user;
     }
 
     protected static function haveACreatorUser(): void
     {
-        self::$creatorUser = new User()->setEmail('creator@example.com')->setIsVerified(true)
+        $user = new User()
+            ->setEmail('creator@example.com')
+            ->setIsVerified(true)
             ->setContactPermit(null);
+        self::setPassword($user);
+        self::persistAndFlush($user);
 
-        self::$creatorUser->setPassword(self::getContainerService(UserPasswordHasherInterface::class)->hashPassword(self::$creatorUser, self::TEST_PASSWORD));
+        self::$creatorUser = $user;
+    }
 
-        self::persistAndFlush(self::$creatorUser);
+    protected static function getCreatorUser(): User
+    {
+        return self::$creatorUser ?? throw new LogicException('Creator user has not been created yet.');
     }
 
     protected static function loginAdminUser(): void
     {
-        self::$client->loginUser(self::$adminUser ?? throw new LogicException('Admin user has not been created yet.'));
+        self::loginUser(self::$adminUser ?? throw new LogicException('Admin user has not been created yet.'));
     }
 
     protected static function loginCreatorUser(): void
     {
-        self::$client->get('/login');
-        self::$client->submitForm('Sign in', [
-            '_username' => 'creator@example.com',
-            '_password' => self::TEST_PASSWORD,
-        ]);
+        self::loginUser(self::getCreatorUser());
+    }
+
+    protected static function loginUser(User $user): void
+    {
+        // TODO: Possibly find a better method to do this
+        // @phpstan-ignore function.impossibleType,function.alreadyNarrowedType
+        if (method_exists(self::$client, 'loginUser')) {
+            self::$client->loginUser($user);
+        } else {
+            self::$client->get('/logout'); // @phpstan-ignore method.notFound
+            self::$client->get('/login'); // @phpstan-ignore method.notFound
+            self::$client->submitForm('Sign in', [
+                '_username' => $user->getEmail(),
+                '_password' => self::TEST_PASSWORD,
+            ]);
+        }
+    }
+
+    private static function setPassword(User $user): void
+    {
+        $user->setPassword(self::getContainerService(UserPasswordHasherInterface::class)->hashPassword($user, self::TEST_PASSWORD));
     }
 }

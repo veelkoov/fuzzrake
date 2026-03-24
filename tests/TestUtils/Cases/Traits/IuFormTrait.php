@@ -6,9 +6,9 @@ namespace App\Tests\TestUtils\Cases\Traits;
 
 trait IuFormTrait
 {
-    private static function getIuFormUrlForCreatorId(string $urlCreatorId): string
+    private static function getIuFormUrlForCreatorId(string $urlCreatorId): string // TODO: Eliminate
     {
-        return '/iu_form/start'.('' !== $urlCreatorId ? '/'.$urlCreatorId : '');
+        return '/user/iu_form/start';
     }
 
     private static function skipRules(): void

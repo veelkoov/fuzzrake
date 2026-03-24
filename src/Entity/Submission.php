@@ -45,6 +45,12 @@ class Submission
     #[ORM\Column(type: Types::TEXT)]
     private string $comment = '';
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $owner = null;
+
+    #[ORM\ManyToOne(targetEntity: Creator::class)]
+    private ?Creator $creator = null;
+
     private ?SubmissionDataReader $reader = null;
 
     public function __construct(bool $isUpdate)
@@ -140,6 +146,30 @@ class Submission
     public function setComment(string $comment): Submission
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): Submission
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getCreator(): ?Creator
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?Creator $creator): Submission
+    {
+        $this->creator = $creator;
 
         return $this;
     }

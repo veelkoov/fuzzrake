@@ -6,7 +6,6 @@ namespace App\IuHandling\Import;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
-use App\Utils\Creator\Changes\Description;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 final readonly class Update
@@ -42,8 +41,9 @@ final readonly class Update
         return !$this->originalCreator->equals($field, $this->updatedCreator);
     }
 
-    public function getDescription(): Description
-    {
-        return new Description($this->originalCreator, $this->updatedCreator);
-    }
+    // TODO
+    // public function getDescription(): Description
+    // {
+    //     return new Description($this->originalCreator, $this->updatedCreator);
+    // }
 }
