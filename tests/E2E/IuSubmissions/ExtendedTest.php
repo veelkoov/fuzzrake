@@ -84,22 +84,11 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::assertCount($loader->before->count(), self::getCreatorRepository()->findAll(),
             "Expected {$loader->before->count()} creators in the DB before import.");
 
-        $solveCaptcha = true;
-
         foreach ($loader->aliases as $label) {
-            if ($loader->before->hasKey($label)) {
-                $oldData = $loader->before->get($label);
-                $oldCreatorId = $oldData->getLastCreatorId();
-            } else {
-                $oldData = new Creator();
-                $oldCreatorId = '';
-            }
-
+            $oldData = $loader->before->hasKey($label) ? $loader->before->get($label) : new Creator();
             $newData = $loader->update->get($label);
 
-            self::validateIuFormOldDataSubmitNew($oldCreatorId, $oldData, $newData, $solveCaptcha);
-
-            $solveCaptcha = false;
+            self::validateIuFormOldDataSubmitNew($oldData, $newData);
         }
 
         $this->performImport(true, $loader->after->count());
@@ -124,9 +113,9 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private function validateIuFormOldDataSubmitNew(string $urlCreatorId, Creator $oldData, Creator $newData, bool $solveCaptcha = false): void
+    private function validateIuFormOldDataSubmitNew(Creator $oldData, Creator $newData): void
     {
-        self::$client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
+        self::$client->request('GET', '/user/iu_form/start');
         self::assertResponseStatusCodeIs(200);
         self::skipRules();
 
@@ -134,10 +123,10 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::verifyGeneratedIuFormFilledWithData($oldData, self::$client->getResponse()->getContent());
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
-        $this->setValuesInForm($form, $newData, $solveCaptcha);
+        $this->setValuesInForm($form, $newData);
         self::submitValid($form);
 
-        self::assertIuSubmittedAnyResult();
+        self::assertIuSubmissionQueued();
     }
 
     private static function verifyGeneratedIuFormFilledWithData(Creator $oldData, string $htmlBody): void
@@ -274,7 +263,7 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
+    private function setValuesInForm(Form $form, Creator $data): void
     {
         foreach (Fields::inIuForm() as $field) {
             $value = $data->get($field);
@@ -312,10 +301,6 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::selectCheckbox($form['iu_form[changePassword]']);
         self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
         self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
-
-        if ($solveCaptcha) {
-            $form[$this->getCaptchaFieldName('right')] = 'right';
-        }
     }
 
     /**

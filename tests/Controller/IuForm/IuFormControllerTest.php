@@ -21,18 +21,6 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     use IuFormTrait;
     use FormsChoicesValuesAndLabelsTestTrait;
 
-    public function testIuFormLoadsForExistingCreators(): void
-    {
-        self::addSimpleCreator();
-
-        self::$client->request('GET', '/iu_form/start/TEST');
-        self::assertResponseStatusCodeIs(404);
-        self::$client->request('GET', '/iu_form/start/TEST002');
-        self::assertResponseStatusCodeIs(404);
-        self::$client->request('GET', '/iu_form/start/TEST000');
-        self::assertResponseStatusCodeIs(200);
-    }
-
     public function testSubmittingEmptyDoesnt500(): void
     {
         self::$client->request('GET', '/iu_form/start');
@@ -108,8 +96,6 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             'iu_form[nsfwWebsite]'     => 'NO',
             'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
-            'iu_form[contactAllowed]'  => 'NO',
-            'iu_form[password]'        => 'aBcDeFgH1324',
             $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($form);
@@ -123,45 +109,16 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         self::submitValid($form);
     }
 
-    public function testEmailAddressNotShownForNewCreator(): void
-    {
-        self::$client->request('GET', '/iu_form/start');
-        self::skipRules();
-        self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
-    }
-
-    /**
-     * LEGACY: This case is a result of past bad design decision. FIXME(?).
-     */
-    public function testInvalidEmailAddressNotShownForExistingCreator(): void
-    {
-        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'garbage'));
-        self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules();
-        self::assertSelectorTextNotContains('#iu_form_emailAddress_help', 'Your current email address is');
-    }
-
-    public function testPreviousEmailAddressShownForExistingCreator(): void
-    {
-        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', emailAddress: 'valid@example.com'));
-        self::$client->request('GET', '/iu_form/start/TEST001');
-        self::skipRules();
-        self::assertSelectorTextContains('#iu_form_emailAddress_help', 'Your current email address is v***d@e*********m');
-    }
-
     public function testSubmittingOnlyAddsSubmissionWithNoOtherChanges(): void
     {
         $creator = self::getCreator(
             name: 'Unchanged name',
             creatorId: 'TEST001',
-            password: 'testing-password',
-            contactAllowed: ContactPermit::CORRECTIONS,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
             doesNsfw: false,
             worksWithMinors: false,
-            emailAddress: 'old-unchanged@example.com',
         );
         self::persistAndFlush($creator);
         self::clear();
@@ -174,10 +131,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]' => 'A new name',
             'iu_form[creatorId]' => 'TEST002',
-            'iu_form[password]' => 'testing-password',
-            'iu_form[emailAddress]' => 'new-changed@example.com',
             'iu_form[websiteUrl]' => 'new-website.example.com',
-            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitValid($form);
 
@@ -187,7 +141,6 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         self::assertNotNull($creator);
         self::assertSame('Unchanged name', $creator->getName());
         self::assertSame('TEST001', $creator->getCreatorId());
-        self::assertSame('old-unchanged@example.com', $creator->getPrivateData()?->getEmailAddress());
 
         $creatorIds = self::getEM()->getRepository(CreatorId::class)->findAll();
         self::assertCount(1, $creatorIds);

@@ -41,7 +41,7 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
         self::skipRules();
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
         self::submitValid($form);
-        self::assertIuSubmittedAnyResult();
+        self::assertIuSubmissionQueued();
 
         // The admin sees an update request
         self::loginAdminUser();
@@ -80,7 +80,7 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
             'iu_form[worksWithMinors]' => 'NO',
         ]);
         self::submitValid($form);
-        self::assertIuSubmittedAnyResult();
+        self::assertIuSubmissionQueued();
 
         // The admin sees an update request
         self::loginAdminUser();

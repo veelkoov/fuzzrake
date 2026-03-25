@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     private ?ContactPermit $contactPermit = ContactPermit::CORRECTIONS;
 
     #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Creator $creator;
+    private ?Creator $creator = null;
 
     public function getId(): ?int
     {
@@ -168,8 +168,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         return $this->creator;
     }
 
-    public function setCreator(?Creator $creator): void
+    public function setCreator(?Creator $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
     }
 }

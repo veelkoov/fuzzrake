@@ -23,7 +23,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
@@ -60,7 +59,6 @@ class IuFormController extends AbstractController
     public function data(
         #[CurrentUser] User $user,
         Request $request,
-        SessionInterface $session,
         RouterInterface $router,
         SubmissionService $submissionService,
     ): Response {

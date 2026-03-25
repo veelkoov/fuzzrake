@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use PHPUnit\Framework\Attributes\Medium;
 
@@ -19,8 +18,6 @@ class PhotosOrderingTest extends IuSubmissionsTestCase
         $creator = self::getCreator(
             name: 'Test creator',
             creatorId: 'TEST001',
-            password: 'the-password',
-            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -42,7 +39,7 @@ class PhotosOrderingTest extends IuSubmissionsTestCase
         ]);
         self::submitValid($form);
 
-        self::assertIuSubmittedCorrectPassword();
+        self::assertIuSubmissionQueued();
 
         self::performImport(true, 1);
         self::flushAndClear();

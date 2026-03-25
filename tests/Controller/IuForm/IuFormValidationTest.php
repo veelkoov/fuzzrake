@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\IuForm;
 
-use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -17,13 +16,14 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
 
     public function testErrorMessagesForRequiredDataFields(): void
     {
-        self::$client->request('GET', '/iu_form/start');
+        self::haveACreatorUser();
+        self::loginCreatorUser();
+
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
         self::submitInvalid($form);
-
-        self::assertCaptchaSolutionRejected();
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback',
             'This value should not be blank.');
@@ -81,7 +81,10 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
     #[DataProvider('ageStuffFieldsDataProvider')]
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
     {
-        self::$client->request('GET', '/iu_form/start');
+        self::haveACreatorUser();
+        self::loginCreatorUser();
+
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
@@ -91,9 +94,6 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
             'iu_form[ages]' => $ages,
             'iu_form[nsfwWebsite]' => $nsfwWebsite,
             'iu_form[nsfwSocial]' => $nsfwSocial,
-            'iu_form[contactAllowed]' => 'NO',
-            'iu_form[password]' => 'aBcDeFgH1324',
-            $this->getCaptchaFieldName('right') => 'right',
         ]);
 
         if (null !== $doesNsfw) {
@@ -169,191 +169,5 @@ class IuFormValidationTest extends FuzzrakeWebTestCase
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
         ];
-    }
-
-    /**
-     * @return list<array{?ContactPermit, ?string, ?string, ?string, bool, bool, bool, callable(): void}>
-     */
-    public static function iuFormContactAndPasswordValidationDataProvider(): array
-    {
-        return [
-            [
-                null, // No pre-existing creator
-                'new-password', // Setting a new password
-                'FEEDBACK', // Contact allowed
-                null, // ERROR: Not filling email address
-                false, // Inaccessible option (password change request)
-                false, // Inaccessible option (confirmation acknowledgement)
-                false, // Failure expected
-                function () {
-                    self::assertFieldErrorValidEmailAddressRequired();
-                },
-            ],
-            [
-                null, // No pre-existing creator
-                null, // ERROR: Not filling password
-                'NO', // Not allowing contact
-                null, // Email not required
-                false, // Inaccessible option (password change request)
-                false, // Inaccessible option (confirmation acknowledgement)
-                false, // Failure expected
-                function () {
-                    self::assertFieldErrorPasswordIsRequired();
-                },
-            ],
-            [
-                null, // No pre-existing creator
-                'new-password', // Setting a new password
-                'NO', // Not allowing contact
-                null, // Email not required
-                false, // Inaccessible option (password change request)
-                false, // Inaccessible option (confirmation acknowledgement)
-                true, // Success expected
-                function () {
-                    self::assertIuSubmittedCorrectPassword();
-                },
-            ],
-            [
-                ContactPermit::NO, // Contact was not allowed
-                'previous-password', // Providing correct password
-                null, // Not changing contact permit
-                null, // Email not required
-                false, // No need to change password
-                false, // Inaccessible option (confirmation acknowledgement)
-                true, // Success expected
-                function () {
-                    self::assertIuSubmittedCorrectPassword();
-                },
-            ],
-            [
-                ContactPermit::CORRECTIONS, // Contact is allowed
-                'new-password', // Providing a new password
-                null, // Not changing contact permit
-                'address@example.com',
-                false, // ERROR: Not requesting a password change
-                false, // Inaccessible option (confirmation acknowledgement)
-                false, // Failure expected
-                function () {
-                    self::assertSelectorTextContains('div.invalid-feedback',
-                        'Wrong password. To change your password, please select the "I want to change my password / I forgot my password" checkbox.');
-                },
-            ],
-            [
-                ContactPermit::NO, // Contact is allowed
-                'new-password', // Providing a new password
-                null, // Not changing contact permit
-                'address@example.com',
-                true, // Request password change
-                false, // ERROR: Not acknowledging confirmation necessity
-                false, // Failure expected
-                function () {
-                    self::assertSelectorTextContains('#verification_acknowledgement div.invalid-feedback',
-                        'Your action is required; your submission will be rejected otherwise.');
-                },
-            ],
-            [
-                ContactPermit::CORRECTIONS, // Contact is allowed
-                'new-password', // Providing a new password
-                null, // Not changing contact permit
-                'address@example.com',
-                true, // Request password change
-                true, // Acknowledge necessity to confirm
-                true, // Success expected
-                function () {
-                    self::assertIuSubmittedWrongPasswordContactAllowed();
-                },
-            ],
-            [
-                ContactPermit::ANNOUNCEMENTS, // Contact was allowed
-                'new-password', // Providing a new password
-                'NO', // Contact is no longer allowed
-                null, // Email not required
-                true, // Request password change
-                true, // Acknowledge confirmation necessity
-                true, // Success expected
-                function () {
-                    self::assertIuSubmittedWrongPasswordContactNotAllowed();
-                },
-            ],
-            [
-                ContactPermit::NO, // Contact was not allowed
-                'new-password', // Providing a new password
-                'CORRECTIONS', // Contact is allowed now
-                'address@example.com',
-                true, // Request password change
-                true, // Acknowledge confirmation necessity
-                true, // Success expected
-                function () {
-                    self::assertIuSubmittedWrongPasswordContactWasNotAllowed();
-                },
-            ],
-        ];
-    }
-
-    #[DataProvider('iuFormContactAndPasswordValidationDataProvider')]
-    public function testIuFormContactAndPasswordValidation(
-        ?ContactPermit $previousContactPermit,
-        ?string $password,
-        ?string $contactPermit,
-        ?string $email,
-        bool $selectChangePassword,
-        bool $selectVerificationAck,
-        bool $shouldSucceed,
-        callable $assertions,
-    ): void {
-        $itIsAnUpdate = null !== $previousContactPermit;
-        $iuFormStartUri = $itIsAnUpdate ? '/iu_form/start/TEST001' : '/iu_form/start';
-
-        if ($itIsAnUpdate) {
-            self::persistAndFlush(self::getCreator(
-                creatorId: 'TEST001',
-                password: 'previous-password',
-                contactAllowed: $previousContactPermit,
-            ));
-        }
-
-        self::$client->request('GET', $iuFormStartUri);
-        self::skipRules();
-
-        $formData = [
-            'iu_form[creatorId]'       => 'TEST001',
-            'iu_form[name]'            => 'Test name',
-            'iu_form[country]'         => 'Test country',
-            'iu_form[ages]'            => 'MIXED',
-            'iu_form[nsfwWebsite]'     => 'NO',
-            'iu_form[nsfwSocial]'      => 'NO',
-            'iu_form[worksWithMinors]' => 'NO',
-            $this->getCaptchaFieldName('right') => 'right',
-        ];
-
-        if (null !== $password) {
-            $formData['iu_form[password]'] = $password;
-        }
-
-        if (null !== $contactPermit) {
-            $formData['iu_form[contactAllowed]'] = $contactPermit;
-        }
-
-        if (null !== $email) {
-            $formData['iu_form[emailAddress]'] = $email;
-        }
-
-        if ($selectChangePassword) {
-            $formData['iu_form[changePassword]'] = '1';
-        }
-
-        if ($selectVerificationAck) {
-            $formData['iu_form[verificationAcknowledgement]'] = '1';
-        }
-
-        $form = self::$client->getCrawler()->selectButton('Submit')->form($formData);
-
-        if ($shouldSucceed) {
-            self::submitValid($form);
-        } else {
-            self::submitInvalid($form);
-        }
-
-        $assertions();
     }
 }

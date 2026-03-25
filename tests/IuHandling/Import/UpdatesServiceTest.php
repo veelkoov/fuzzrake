@@ -7,17 +7,18 @@ namespace App\Tests\IuHandling\Import;
 use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
+use App\Entity\User;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
 use App\IuHandling\SubmissionService;
 use App\Repository\CreatorRepository;
+use App\Repository\SubmissionRepository;
+use App\Service\EmailService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
-use JsonException;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -31,13 +32,13 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 {
     use ClockSensitiveTrait;
 
-    #[AllowMockObjectsWithoutExpectations]
     public function testAddedDateIsHandledProperly(): void
     {
         self::mockTime();
 
-        $submission = SubmissionService::getEntityForSubmission(new Creator()
-            ->setCreatorId('TEST001')
+        $submission = $this->getSubmissionService()->getEntityForSubmission(
+            new User(),
+            new Creator()->setCreatorId('TEST001'),
         );
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
@@ -54,9 +55,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     }
 
     /**
-     * @throws DateTimeException|JsonException
+     * @throws DateTimeException
      */
-    #[AllowMockObjectsWithoutExpectations]
     public function testUpdatedDateIsHandledProperly(): void
     {
         self::mockTime();
@@ -67,8 +67,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setCreatorId('TEST001')
             ->setDateAdded($dateAdded)
         ;
+        $user = new User()->setCreator($creator->entity);
 
-        $submission = SubmissionService::getEntityForSubmission(new Creator()->setCreatorId('TEST001'));
+        $submission = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()->setCreatorId('TEST001')); // FIXME: Should match by data in User
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor($submission);
@@ -83,7 +84,6 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateUpdated());
     }
 
-    #[AllowMockObjectsWithoutExpectations]
     public function testResolvingMultipleMatchedByCreatorId(): void
     {
         // grep-code: At this point could only be a result of an error or unpredictable condition, but keeping this test
@@ -91,7 +91,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $creator1 = $this->getPersistedCreatorMock()->setCreatorId('TEST0A1')->setName('Creator 1');
         $creator2 = $this->getPersistedCreatorMock()->setCreatorId('TEST0B1')->setName('Creator 2');
 
-        $submission = SubmissionService::getEntityForSubmission(
+        $submission = $this->getSubmissionService()->getEntityForSubmission(new User(), // FIXME: Should match by data in User; test needs redesign/rethink
             new Creator()
                 ->setCreatorId('TEST0A1')
                 ->setFormerCreatorIds(['TEST0B1'])
@@ -111,7 +111,6 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
-    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateHandlesCreatorIdChangeProperly(): void
     {
         $creator = $this->getPersistedCreatorMock()
@@ -119,9 +118,10 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerCreatorIds(['TEST002'])
             ->setName('The old creator name')
         ;
+        $user = new User()->setCreator($creator->entity);
 
         // Changing
-        $submission1 = SubmissionService::getEntityForSubmission(new Creator()
+        $submission1 = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()
             ->setCreatorId('TEST003')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -135,7 +135,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
-        $submission2 = SubmissionService::getEntityForSubmission(new Creator()
+        $submission2 = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()
             ->setCreatorId('TEST001')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -155,15 +155,17 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     private function getUpdatesServiceForGetUpdateFor(array $calls): UpdatesService
     {
         $creatorRepoMock = $this->createMock(CreatorRepository::class);
-        $creatorRepoMock->method('findByCreatorIds')->willReturnCallback(function (array $creatorIds) use ($calls) {
-            foreach ($calls as $call) {
-                if ($call[0] === $creatorIds) {
-                    return arr_map($call[1], static fn (Creator $creator) => $creator->entity);
+        $creatorRepoMock
+            ->expects(self::atLeast(0))->method('findByCreatorIds')
+            ->willReturnCallback(function (array $creatorIds) use ($calls) {
+                foreach ($calls as $call) {
+                    if ($call[0] === $creatorIds) {
+                        return arr_map($call[1], static fn (Creator $creator) => $creator->entity);
+                    }
                 }
-            }
 
-            self::fail('findByCreatorIds was called with unexpected parameters');
-        });
+                self::fail('findByCreatorIds was called with unexpected parameters');
+            });
 
         $entityManagerStub = self::createStub(EntityManagerInterface::class);
         $messageBusStub = self::createStub(MessageBusInterface::class);
@@ -172,7 +174,6 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         return new UpdatesService($creatorRepoMock, $entityManagerStub, $this->getNoopFixerMock(), $messageBusStub, $loggerStub);
     }
 
-    #[AllowMockObjectsWithoutExpectations]
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
@@ -182,7 +183,6 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $subject->import($update);
     }
 
-    #[AllowMockObjectsWithoutExpectations]
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
@@ -228,8 +228,18 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     private function getNoopFixerMock(): Fixer&MockObject
     {
         $fixerMock = $this->createMock(Fixer::class);
-        $fixerMock->method('getFixed')->willReturnCallback(static fn (object $input) => clone $input);
+        $fixerMock->expects(self::atLeast(0))->method('getFixed')
+            ->willReturnCallback(static fn (object $input) => clone $input);
 
         return $fixerMock;
+    }
+
+    private function getSubmissionService(): SubmissionService
+    {
+        return new SubmissionService(
+            self::createStub(SubmissionRepository::class),
+            self::createStub(EmailService::class),
+            self::createStub(LoggerInterface::class),
+        );
     }
 }

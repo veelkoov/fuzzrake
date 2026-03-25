@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
 use App\Repository\CreatorRepository;
-use App\Security\Password;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,44 +64,30 @@ trait EntityManagerTrait
         return $event;
     }
 
-    protected static function getCreator(
+    protected static function getCreator(// TODO: Possibly move into UserCreator class
         string $name = 'Test creator',
         string $creatorId = 'TEST000',
         string $country = 'CZ',
-        string $password = '',
-        ?ContactPermit $contactAllowed = null,
         ?Ages $ages = null,
         ?bool $nsfwWebsite = null,
         ?bool $nsfwSocial = null,
         ?bool $doesNsfw = null,
         ?bool $worksWithMinors = null,
-        ?string $emailAddress = null,
     ): Creator {
         $result = new Creator()
             ->setName($name)
             ->setCreatorId($creatorId)
-            ->setCountry($country);
+            ->setCountry($country)
+            ->setAges($ages)
+            ->setNsfwWebsite($nsfwWebsite)
+            ->setNsfwSocial($nsfwSocial)
+            ->setDoesNsfw($doesNsfw)
+            ->setWorksWithMinors($worksWithMinors)
+        ;
 
         $result
             ->getVolatileData()
-            ->setLastCsUpdate(UtcClock::now())
-        ;
-
-        if ('' !== $password) {
-            $result->setPassword($password);
-            Password::encryptOn($result);
-        }
-
-        if (null !== $emailAddress) {
-            $result->setEmailAddress($emailAddress);
-        }
-
-        $result->setContactAllowed($contactAllowed);
-        $result->setAges($ages);
-        $result->setNsfwWebsite($nsfwWebsite);
-        $result->setNsfwSocial($nsfwSocial);
-        $result->setDoesNsfw($doesNsfw);
-        $result->setWorksWithMinors($worksWithMinors);
+            ->setLastCsUpdate(UtcClock::now());
 
         return $result;
     }
