@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
@@ -27,8 +26,8 @@ class IuFormTest extends FuzzrakePantherTestCase
     {
         // Having two existing creators
         self::persistAndFlush(
-            self::getCreator(name: 'Creator 001', creatorId: 'TEST001', password: 'test-password', contactAllowed: ContactPermit::NO, ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
-            self::getCreator(name: 'Creator 002', creatorId: 'TEST002', password: 'test-password', contactAllowed: ContactPermit::NO, ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
+            self::getCreator(name: 'Creator 001', creatorId: 'TEST001', ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
+            self::getCreator(name: 'Creator 002', creatorId: 'TEST002', ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
         );
 
         // Load 1st creator I/U data page, change some stuff A

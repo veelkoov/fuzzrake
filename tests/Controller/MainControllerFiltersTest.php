@@ -22,13 +22,14 @@ class MainControllerFiltersTest extends FuzzrakeWebTestCase
      * @param list<Creator>                    $creators
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedCreatorIds
-     *
-     * @throws JsonException
      */
     #[DataProvider('filterChoicesDataProvider')]
     public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
+        self::persistAndFlush(
+            ...$creators, ...array_map(static fn (Creator $creator) => $creator->entity->getUser(), $creators),
+            ...FiltersData::entitiesFrom($creators),
+        );
 
         $queryParts = [];
 

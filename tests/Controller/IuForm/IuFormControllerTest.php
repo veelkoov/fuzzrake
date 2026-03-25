@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Entity\CreatorId;
 use App\Entity\CreatorUrl;
 use App\Entity\Submission;
@@ -56,7 +55,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     {
         self::persistAndFlush(
             self::getCreator(creatorId: 'TEST002'),
-            self::getCreator(creatorId: 'TEST001', password: 'aBcDeFgH1324', contactAllowed: ContactPermit::NO,
+            self::getCreator(creatorId: 'TEST001',
                 ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
         );
 
@@ -66,7 +65,6 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST002',
             'iu_form[password]' => 'aBcDeFgH1324',
-            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
@@ -96,7 +94,6 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             'iu_form[nsfwWebsite]'     => 'NO',
             'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
-            $this->getCaptchaFieldName('right') => 'right',
         ]);
         self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',

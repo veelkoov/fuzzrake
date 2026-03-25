@@ -15,6 +15,7 @@ use App\Entity\CreatorId;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
+use App\Entity\User;
 use App\Utils\Collections\Lists;
 use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\DateTimeException;
@@ -40,9 +41,19 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
+    public private(set) CreatorE $entity;
+
     public function __construct(
-        public private(set) CreatorE $entity = new CreatorE(),
+        ?CreatorE $entity = null,
+        ?User $user = null,
     ) {
+        if (null === $entity) {
+            $entity = new CreatorE($user ?? new User());
+        } elseif (null !== $user && $entity->getUser() !== $user) {
+            throw new InvalidArgumentException('Provided user parameter different than the user in provided entity parameter.');
+        }
+
+        $this->entity = $entity;
     }
 
     public function __clone()

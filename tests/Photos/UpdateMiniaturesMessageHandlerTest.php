@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Photos;
 
 use App\Entity\Creator as CreatorE;
+use App\Entity\User;
 use App\Photos\MiniaturesUpdater;
 use App\Photos\UpdateMiniaturesMessageHandler;
 use App\Repository\CreatorRepository;
@@ -21,7 +22,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
 {
     public function testSingleCreatorUpdateMessageHandling(): void
     {
-        $creatorE = new CreatorE();
+        $creatorE = new CreatorE(new User());
         $creatorId = 5;
 
         $creatorRepositoryMock = $this->createMock(CreatorRepository::class);
@@ -42,7 +43,7 @@ class UpdateMiniaturesMessageHandlerTest extends TestCase
 
     public function testAllCreatorsUpdateMessageHandling(): void
     {
-        $creators = new DSet([new CreatorE(), new CreatorE(), new CreatorE()]);
+        $creators = new DSet([new CreatorE(new User()), new CreatorE(new User()), new CreatorE(new User())]);
 
         $creatorRepositoryMock = $this->createMock(CreatorRepository::class);
         $creatorRepositoryMock->expects(self::once())->method('getAllPaged')

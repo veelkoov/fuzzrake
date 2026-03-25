@@ -10,10 +10,7 @@ use App\Entity\Submission;
 use App\Entity\User;
 use App\IuHandling\Import\Update;
 use App\IuHandling\Import\UpdatesService;
-use App\IuHandling\SubmissionService;
 use App\Repository\CreatorRepository;
-use App\Repository\SubmissionRepository;
-use App\Service\EmailService;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -36,7 +33,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     {
         self::mockTime();
 
-        $submission = $this->getSubmissionService()->getEntityForSubmission(
+        $submission = $this->getEntityForSubmission(
             new User(),
             new Creator()->setCreatorId('TEST001'),
         );
@@ -69,7 +66,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         ;
         $user = new User()->setCreator($creator->entity);
 
-        $submission = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()->setCreatorId('TEST001')); // FIXME: Should match by data in User
+        $submission = $this->getEntityForSubmission($user, new Creator()->setCreatorId('TEST001')); // FIXME: Should match by data in User
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
         $result = $subject->getUpdateFor($submission);
@@ -91,7 +88,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $creator1 = $this->getPersistedCreatorMock()->setCreatorId('TEST0A1')->setName('Creator 1');
         $creator2 = $this->getPersistedCreatorMock()->setCreatorId('TEST0B1')->setName('Creator 2');
 
-        $submission = $this->getSubmissionService()->getEntityForSubmission(new User(), // FIXME: Should match by data in User; test needs redesign/rethink
+        $submission = $this->getEntityForSubmission(new User(), // FIXME: Should match by data in User; test needs redesign/rethink
             new Creator()
                 ->setCreatorId('TEST0A1')
                 ->setFormerCreatorIds(['TEST0B1'])
@@ -121,7 +118,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $user = new User()->setCreator($creator->entity);
 
         // Changing
-        $submission1 = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()
+        $submission1 = $this->getEntityForSubmission($user, new Creator()
             ->setCreatorId('TEST003')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -135,7 +132,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
 
         // No change
-        $submission2 = $this->getSubmissionService()->getEntityForSubmission($user, new Creator()
+        $submission2 = $this->getEntityForSubmission($user, new Creator()
             ->setCreatorId('TEST001')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
@@ -232,14 +229,5 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->willReturnCallback(static fn (object $input) => clone $input);
 
         return $fixerMock;
-    }
-
-    private function getSubmissionService(): SubmissionService
-    {
-        return new SubmissionService(
-            self::createStub(SubmissionRepository::class),
-            self::createStub(EmailService::class),
-            self::createStub(LoggerInterface::class),
-        );
     }
 }

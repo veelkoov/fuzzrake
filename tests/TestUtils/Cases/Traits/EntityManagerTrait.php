@@ -7,6 +7,7 @@ namespace App\Tests\TestUtils\Cases\Traits;
 use App\Data\Definitions\Ages;
 use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
+use App\Entity\User;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -96,6 +97,30 @@ trait EntityManagerTrait
     {
         self::persist(...$entities);
         self::flush();
+    }
+
+    protected static function persistAndFlushWithUsers(object ...$entities): void
+    {
+        self::persistAndFlush(...self::unpackAppendUsers($entities));
+    }
+
+    /**
+     * @param object[] $entities
+     * @return iterable<object>
+     */
+    protected static function unpackAppendUsers(array $entities): iterable
+    {
+        yield from $entities;
+
+        foreach ($entities as $entity) {
+            if ($entity instanceof CreatorE) {
+                yield $entity->getUser();
+            }
+
+            if ($entity instanceof Creator) {
+                yield $entity->entity->getUser();
+            }
+        }
     }
 
     protected static function persist(object ...$entities): void

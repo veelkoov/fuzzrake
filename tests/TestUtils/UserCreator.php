@@ -15,9 +15,14 @@ final class UserCreator
     use UtilityClass;
 
     public static function get(
+        ?string $email = null,
         ?ContactPermit $contactPermit = null,
     ): Creator {
         $user = new User();
+
+        if (null !== $email) {
+            $user->setEmail($email);
+        }
 
         if (null !== $contactPermit) {
             $user->setContactPermit($contactPermit);

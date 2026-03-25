@@ -139,9 +139,9 @@ class Creator implements Stringable
     #[ORM\OneToMany(targetEntity: CreatorSpecie::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $species;
 
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->user = new User();
+        $this->setUser($user);
 
         $this->urls = new ArrayCollection();
         $this->offerStatuses = new ArrayCollection();
@@ -152,8 +152,6 @@ class Creator implements Stringable
 
     public function __clone()
     {
-        $this->user = new User(); // FIXME: Don't do that
-
         if (null !== $this->volatileData) {
             $this->setVolatileData(clone $this->volatileData);
         }
@@ -658,7 +656,7 @@ class Creator implements Stringable
         return $this;
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
+    /** @noinspection PhpUnusedParameterInspection, PhpUnused */
     #[ORM\PreFlush]
     public function preFlush(PreFlushEventArgs $event): void
     {

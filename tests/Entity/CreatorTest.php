@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Creator;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use PHPUnit\Framework\Attributes\Small;
 
@@ -13,7 +14,7 @@ class CreatorTest extends FuzzrakeTestCase
 {
     public function testSettingCreatorIdAddsToTheEmptyCollection(): void
     {
-        $creator = new Creator();
+        $creator = new Creator(new User());
         $creator->setCreatorId('TEST001');
 
         $this->validateCreatorIds($creator, 'TEST001', [], ['TEST001']);
@@ -21,7 +22,7 @@ class CreatorTest extends FuzzrakeTestCase
 
     public function testSettingCreatorIdAddsToTheCollection(): void
     {
-        $creator = new Creator();
+        $creator = new Creator(new User());
         $creator->setFormerCreatorIds(['TEST002', 'TEST003']);
         $creator->setCreatorId('TEST001');
 
@@ -30,7 +31,7 @@ class CreatorTest extends FuzzrakeTestCase
 
     public function testSettingFormerCreatorIdsWorksWithNoCreatorIdSet(): void
     {
-        $creator = new Creator();
+        $creator = new Creator(new User());
         $creator->setFormerCreatorIds(['TEST003', 'TEST004']);
 
         $this->validateCreatorIds($creator, '', ['TEST003', 'TEST004'], ['TEST003', 'TEST004']);
@@ -38,7 +39,7 @@ class CreatorTest extends FuzzrakeTestCase
 
     public function testSettingFormerCreatorIdsRemovesObsoleteCreatorIdsLeavingAlreadyPresent(): void
     {
-        $creator = new Creator();
+        $creator = new Creator(new User());
         $creator->setFormerCreatorIds(['TEST005', 'TEST006']);
 
         $creator->setFormerCreatorIds(['TEST006', 'TEST007']);
@@ -48,7 +49,7 @@ class CreatorTest extends FuzzrakeTestCase
 
     public function testSettingFormerCreatorIdsDoesntAffectCreatorId(): void
     {
-        $creator = new Creator();
+        $creator = new Creator(new User());
         $creator->setCreatorId('TEST003');
         $creator->setFormerCreatorIds(['TEST008', 'TEST009', 'TEST003']);
 

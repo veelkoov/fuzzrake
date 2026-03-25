@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Entity\Creator as CreatorE;
+use App\Entity\Submission;
+use App\Entity\User;
+use App\IuHandling\SubmissionService;
+use App\Repository\SubmissionRepository;
+use App\Service\EmailService;
 use App\Tracking\Data\AnalysisInput;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -12,6 +17,7 @@ use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url\FreeUrl;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -54,5 +60,19 @@ trait MocksTrait
         string $creatorId = 'TEST001',
     ): Snapshot {
         return new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
+    }
+
+    protected function getEntityForSubmission(User $user, Creator $submissionData): Submission
+    {
+        static $mockedService = null;
+
+        $mockedService ??= new SubmissionService(
+            self::createStub(SubmissionRepository::class),
+            self::createStub(EmailService::class),
+            self::createStub(LoggerInterface::class),
+        );
+
+        // @phpstan-ignore method.nonObject,return.type (false-positive)
+        return $mockedService->getEntityForSubmission($user, $submissionData);
     }
 }

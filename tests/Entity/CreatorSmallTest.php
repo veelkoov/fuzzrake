@@ -38,7 +38,7 @@ class CreatorSmallTest extends TestCase
      */
     public function testDeepCloningIsComplete(): void
     {
-        $subject = new Creator()
+        $subject = new Creator(new User())
             ->setAges(Ages::ADULTS)
             ->setHasAllergyWarning(true)
             ->setOffersPaymentPlans(false)
@@ -54,9 +54,6 @@ class CreatorSmallTest extends TestCase
         $creatorUrl = new CreatorUrl();
         $creatorUrl->getState();
         $subject->addUrl($creatorUrl);
-
-        $user = new User();
-        $subject->setUser($user);
 
         $result = clone $subject;
         $this->assureDifferent('', [], $subject, $result);
@@ -96,11 +93,13 @@ class CreatorSmallTest extends TestCase
             return;
         }
 
-        self::assertNotSame($subject, $result, "$path (".get_debug_type($subject).') is identical.');
-
         if ('.user' === $path) {
-            return; // We do NOT check user; TODO: verify the approach
+            self::assertSame($subject, $result);
+
+            return;
         }
+
+        self::assertNotSame($subject, $result, "$path (".get_debug_type($subject).') is identical.');
 
         foreach ($reflection->getProperties() as $property) {
             $propertyPath = "$path.$property->name";

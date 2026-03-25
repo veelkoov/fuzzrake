@@ -168,8 +168,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         return $this->creator;
     }
 
-    public function setCreator(?Creator $creator): self
+    public function setCreator(?Creator $creator, bool $force = false): self
     {
+        if (!$force && null !== $this->creator && $creator !== $this->creator) {
+            throw new LogicException('Trying to change already assigned creator.');
+        }
+
         $this->creator = $creator;
 
         return $this;
