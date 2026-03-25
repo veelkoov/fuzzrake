@@ -21,7 +21,7 @@ class SmartAccessDecoratorMediumTest extends FuzzrakeKernelTestCase
         $repo = self::getEM()->getRepository(CreatorValue::class);
 
         $creator = new Creator();
-        self::persistAndFlush($creator);
+        self::persistAndFlushWithUsers($creator);
 
         $all = $repo->findAll();
         self::assertCount(0, $all, 'At this point there should be no value entity.');

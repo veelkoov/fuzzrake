@@ -10,6 +10,7 @@ use App\Entity\CreatorUrl;
 use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
+use App\Tests\TestUtils\UserCreator;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
@@ -101,9 +102,10 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
             ->setUrl('https://example.com/initial')
             ->setType(Field::URL_WEBSITE->value)
         ;
-        $creator = new Creator($user = new User())->addUrl($creatorUrl);
+        $creator = UserCreator::get();
+        $creator->entity->addUrl($creatorUrl);
 
-        self::persistAndFlush($creator, $user = new User());
+        self::persistAndFlushWithUsers($creator);
 
         $creatorUrl->setUrl('https://example.com/updated');
 

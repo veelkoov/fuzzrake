@@ -8,7 +8,6 @@ use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;

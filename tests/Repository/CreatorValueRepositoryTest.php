@@ -7,7 +7,7 @@ namespace App\Tests\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\UserCreator;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
@@ -15,10 +15,10 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {
-        self::persistAndFlush(
-            new Creator()->setFeatures(['AB', 'CD'])->setOtherFeatures(['01', '02']),
-            new Creator()->setFeatures(['EF'])->setOtherFeatures(['03', '04']),
-            new Creator()->setFeatures(['GH'])->setInactiveReason('Inactive'), // Counts
+        self::persistAndFlushWithUsers(
+            UserCreator::get()->setFeatures(['AB', 'CD'])->setOtherFeatures(['01', '02']),
+            UserCreator::get()->setFeatures(['EF'])->setOtherFeatures(['03', '04']),
+            UserCreator::get()->setFeatures(['GH'])->setInactiveReason('Inactive'), // Counts
         );
 
         $subject = self::getEM()->getRepository(CreatorValue::class);
@@ -30,11 +30,11 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 
     public function testCountDistinctInActiveCreatorsHaving(): void
     {
-        self::persistAndFlush(
-            new Creator()->setFeatures(['AB', 'CD']),
-            new Creator()->setFeatures(['AB']),
-            new Creator()->setOtherFeatures(['EF']), // Not features
-            new Creator()->setFeatures(['GH'])->setInactiveReason('Inactive'), // Counts
+        self::persistAndFlushWithUsers(
+            UserCreator::get()->setFeatures(['AB', 'CD']),
+            UserCreator::get()->setFeatures(['AB']),
+            UserCreator::get()->setOtherFeatures(['EF']), // Not features
+            UserCreator::get()->setFeatures(['GH'])->setInactiveReason('Inactive'), // Counts
         );
 
         $subject = self::getEM()->getRepository(CreatorValue::class);
@@ -49,13 +49,13 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 
     public function testCountActiveCreatorsHavingAnyOf(): void
     {
-        self::persistAndFlush(
-            new Creator()->setFeatures(['AB', 'CD']),
-            new Creator()->setFeatures(['EF']),
-            new Creator()->setFeatures(['GH', 'IJ'])->setInactiveReason('Inactive'), // Doesn't count
-            new Creator()->setOtherFeatures(['KL', 'MN']),
-            new Creator()->setStyles(['OP']), // Not (other) features
-            new Creator()->setOrderTypes(['QR']), // Not (other) features
+        self::persistAndFlushWithUsers(
+            UserCreator::get()->setFeatures(['AB', 'CD']),
+            UserCreator::get()->setFeatures(['EF']),
+            UserCreator::get()->setFeatures(['GH', 'IJ'])->setInactiveReason('Inactive'), // Doesn't count
+            UserCreator::get()->setOtherFeatures(['KL', 'MN']),
+            UserCreator::get()->setStyles(['OP']), // Not (other) features
+            UserCreator::get()->setOrderTypes(['QR']), // Not (other) features
         );
 
         $subject = self::getEM()->getRepository(CreatorValue::class);

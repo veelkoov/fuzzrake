@@ -6,7 +6,7 @@ namespace App\Tests\IuHandling\Import;
 
 use App\IuHandling\Exception\ManagerConfigError;
 use App\IuHandling\Import\Manager;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\UserCreator;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 
@@ -25,12 +25,12 @@ class ManagerTest extends TestCase
     public function testDetectingDelimiter(): void
     {
         $manager = new Manager('set NAME |abcdef|');
-        $manager->correctCreator($creator = new Creator());
+        $manager->correctCreator($creator = UserCreator::get());
 
         self::assertSame('abcdef', $creator->getName());
 
         $manager = new Manager('set NAME |fedcba|');
-        $manager->correctCreator($creator = new Creator());
+        $manager->correctCreator($creator = UserCreator::get());
 
         self::assertSame('fedcba', $creator->getName());
     }
@@ -46,7 +46,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('clear NOTES');
 
-        $creator = new Creator()->setNotes('will be removed');
+        $creator = UserCreator::get()->setNotes('will be removed');
 
         self::assertSame('will be removed', $creator->getNotes());
         $manager->correctCreator($creator);
@@ -57,7 +57,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager('set NOTES "will be added"');
 
-        $creator = new Creator();
+        $creator = UserCreator::get();
 
         self::assertSame('', $creator->getNotes());
         $manager->correctCreator($creator);

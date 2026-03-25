@@ -234,9 +234,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testShowingSimilarlyNamedCreators(): void
     {
-        $creator1 = UserCreator::get(email: 'creator1@example.com')
+        $creator1 = UserCreator::get()
             ->setCreatorId('TEST001')->setName('Catbert');
-        $creator2 = UserCreator::get(email: 'creator2@example.com')
+        $creator2 = UserCreator::get()
             ->setCreatorId('TEST002')->setName('Why')->setFormerly(['Dogbert & Catbert']);
 
         self::persistAndFlushWithUsers($creator1, $creator2);

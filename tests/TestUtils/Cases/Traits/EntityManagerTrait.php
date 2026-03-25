@@ -7,7 +7,6 @@ namespace App\Tests\TestUtils\Cases\Traits;
 use App\Data\Definitions\Ages;
 use App\Entity\Creator as CreatorE;
 use App\Entity\Event;
-use App\Entity\User;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -106,6 +105,7 @@ trait EntityManagerTrait
 
     /**
      * @param object[] $entities
+     *
      * @return iterable<object>
      */
     protected static function unpackAppendUsers(array $entities): iterable

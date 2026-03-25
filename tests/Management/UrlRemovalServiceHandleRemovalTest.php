@@ -176,11 +176,11 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
                     CONTENTS, $contents);
-                self::assertSame('', $recipient);
+                self::assertSame('test001@example.com', $recipient);
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = UserCreator::get()->setName('The Hidden Creator')->setCreatorId('TEST001');
+        $creator = UserCreator::get(email: 'test001@example.com')->setName('The Hidden Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),
@@ -210,11 +210,11 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
                     If you have any questions or need help with ShortWebsiteName, please do not hesitate to initiate contact using any means listed on this page:
                     https://website.base.address.example.com/contact
                     CONTENTS, $contents);
-                self::assertSame('', $recipient);
+                self::assertSame('test001@example.com', $recipient);
                 self::assertSame('', $attachedJsonData);
             });
 
-        $creator = UserCreator::get()->setName('The Updated Creator')->setCreatorId('TEST001');
+        $creator = UserCreator::get(email: 'test001@example.com')->setName('The Updated Creator')->setCreatorId('TEST001');
 
         $removedUrls = new GroupedUrls([
             new GroupedUrl(Field::URL_WEBSITE, 0, 'https://getfursu.it/info'),

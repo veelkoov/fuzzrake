@@ -6,8 +6,10 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\UserCreator;
 use App\Tests\TestUtils\YamlCreatorsDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
@@ -80,15 +82,16 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         $loader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
 
-        self::persistAndFlush(...$loader->before);
+        self::persistAndFlush(...$loader->before->getValuesArray(), ...$loader->users->getValuesArray());
         self::assertCount($loader->before->count(), self::getCreatorRepository()->findAll(),
             "Expected {$loader->before->count()} creators in the DB before import.");
 
         foreach ($loader->aliases as $label) {
-            $oldData = $loader->before->hasKey($label) ? $loader->before->get($label) : new Creator();
+            $user = $loader->users->get($label);
+            $oldData = $loader->before->hasKey($label) ? $loader->before->get($label) : UserCreator::get();
             $newData = $loader->update->get($label);
 
-            self::validateIuFormOldDataSubmitNew($oldData, $newData);
+            self::validateIuFormOldDataSubmitNew($user, $oldData, $newData);
         }
 
         $this->performImport(true, $loader->after->count());
@@ -113,8 +116,9 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private function validateIuFormOldDataSubmitNew(Creator $oldData, Creator $newData): void
+    private function validateIuFormOldDataSubmitNew(User $user, Creator $oldData, Creator $newData): void
     {
+        self::loginUser($user);
         self::$client->request('GET', '/user/iu_form/start');
         self::assertResponseStatusCodeIs(200);
         self::skipRules();
@@ -297,9 +301,6 @@ class ExtendedTest extends IuSubmissionsTestCase
             }
         }
 
-        // Select them both always "just in case"
-        self::selectCheckbox($form['iu_form[changePassword]']);
-        self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
         self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
     }
 
