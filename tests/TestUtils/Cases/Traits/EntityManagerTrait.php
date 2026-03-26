@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use App\Data\Definitions\Ages;
 use App\Entity\Creator as CreatorE;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 
@@ -41,34 +39,6 @@ trait EntityManagerTrait
         self::assertNotNull($creator);
 
         return Creator::wrap($creator);
-    }
-
-    protected static function getCreator(// TODO: Possibly move into UserCreator class
-        string $name = 'Test creator',
-        string $creatorId = 'TEST000',
-        string $country = 'CZ',
-        ?Ages $ages = null,
-        ?bool $nsfwWebsite = null,
-        ?bool $nsfwSocial = null,
-        ?bool $doesNsfw = null,
-        ?bool $worksWithMinors = null,
-    ): Creator {
-        $result = new Creator()
-            ->setName($name)
-            ->setCreatorId($creatorId)
-            ->setCountry($country)
-            ->setAges($ages)
-            ->setNsfwWebsite($nsfwWebsite)
-            ->setNsfwSocial($nsfwSocial)
-            ->setDoesNsfw($doesNsfw)
-            ->setWorksWithMinors($worksWithMinors)
-        ;
-
-        $result
-            ->getVolatileData()
-            ->setLastCsUpdate(UtcClock::now());
-
-        return $result;
     }
 
     protected static function persistAndFlush(object ...$entities): void

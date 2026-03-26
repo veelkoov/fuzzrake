@@ -6,7 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Exception;
@@ -29,10 +29,10 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testMainPageUiSmoke(): void
     {
-        self::persistAndFlush(
-            self::getCreator('Test creator 1 CZ', 'TEST001', 'CZ'),
-            self::getCreator('Test creator 2 CA', 'TEST002', 'CA'),
-            self::getCreator('Test creator 3 DE', 'TEST003', 'DE'),
+        self::persistAndFlushWithUsers(
+            UserCreator::get(true)->setCreatorId('TEST001')->setName('Test creator 1 CZ')->setCountry('CZ'),
+            UserCreator::get(true)->setCreatorId('TEST002')->setName('Test creator 2 CA')->setCountry('CA'),
+            UserCreator::get(true)->setCreatorId('TEST003')->setName('Test creator 3 DE')->setCountry('DE'),
         );
 
         $this->clearCache();
@@ -133,10 +133,10 @@ class MainPageTest extends FuzzrakePantherTestCase
     {
         self::mockTime();
 
-        $creator1 = new Creator()->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
-        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
+        $creator1 = UserCreator::get(true)->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
+        $creator2 = UserCreator::get(true)->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
 
-        self::persistAndFlush($creator1, $creator2);
+        self::persistAndFlushWithUsers($creator1, $creator2);
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');
@@ -153,9 +153,8 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testOpeningCreatorCardByCreatorId(): void
     {
-        $creator = self::getCreator(creatorId: 'TEST001');
-        $creator->setInactiveReason('Testing'); // Must show up even if deactivated
-        self::persistAndFlush($creator);
+        self::persistAndFlushWithUsers(UserCreator::get(true)
+            ->setCreatorId('TEST001')->setInactiveReason('Testing')); // Must show up even if deactivated
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/#TEST001');
@@ -171,7 +170,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testFilterChoicesGetSavedAndRestored(): void
     {
-        self::persistAndFlush(self::getCreator(country: 'FI'));
+        self::persistAndFlushWithUsers(UserCreator::get(true)->setCountry('FI'));
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');
@@ -201,7 +200,8 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testColumnVisibilityGetSavedAndRestored(): void
     {
-        self::persistAndFlush(self::getCreator(creatorId: 'TEST001', country: 'FI')->setStyles(['Toony']));
+        self::persistAndFlushWithUsers(UserCreator::get(true)
+            ->setCreatorId('TEST001')->setCountry('FI')->setStyles(['Toony']));
 
         self::$client->request('GET', '/index.php/');
         $this->skipCheckListAdultAllowNsfw(1);

@@ -31,7 +31,7 @@ class FiltersTest extends FuzzrakePantherTestCase
     #[DataProvider('filterChoicesDataProvider')]
     public function testFiltersInBrowser(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
+        self::persistAndFlushWithUsers(...$creators, ...FiltersData::entitiesFrom($creators));
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');

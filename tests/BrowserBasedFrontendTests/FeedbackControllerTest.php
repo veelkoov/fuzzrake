@@ -6,6 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -25,10 +26,10 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
      */
     public static function feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider(): array
     {
-        $official = new Creator()->setCountry('FI')->setName('Modern creator')
+        $official = UserCreator::get()->setCountry('FI')->setName('Modern creator')
             ->setCreatorId('TEST001');
 
-        $placeholder = new Creator()->setCountry('CZ')->setName('Early creator')
+        $placeholder = UserCreator::get()->setCountry('CZ')->setName('Early creator')
             ->setFormerCreatorIds(['M000000']);
 
         return [
@@ -43,7 +44,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
     #[DataProvider('feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider')]
     public function testFeedbackFromCreatorCardCarriesCreatorIdOverToTheForm(string $expectedCreatorId, Creator $creator): void
     {
-        self::persistAndFlush($creator);
+        self::persistAndFlushWithUsers($creator);
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');

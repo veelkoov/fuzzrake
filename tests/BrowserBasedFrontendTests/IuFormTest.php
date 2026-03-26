@@ -6,6 +6,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Data\Definitions\Ages;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Tests\TestUtils\UserCreator;
 use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -25,9 +26,9 @@ class IuFormTest extends FuzzrakePantherTestCase
     public function testFormStateIsProperlyKeptAndReset(): void
     {
         // Having two existing creators
-        self::persistAndFlush(
-            self::getCreator(name: 'Creator 001', creatorId: 'TEST001', ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
-            self::getCreator(name: 'Creator 002', creatorId: 'TEST002', ages: Ages::MIXED, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
+        self::persistAndFlushWithUsers(
+            UserCreator::get()->setName('Creator 001')->setCreatorId('TEST001')->setAges(Ages::MIXED)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(false),
+            UserCreator::get()->setName('Creator 002')->setCreatorId('TEST002')->setAges(Ages::MIXED)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(false),
         );
 
         // Load 1st creator I/U data page, change some stuff A
