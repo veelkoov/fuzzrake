@@ -9,7 +9,6 @@ use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
-use App\Entity\User;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\CreatorRepository;
 use App\Utils\Collections\Arrays;
@@ -21,7 +20,6 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -46,11 +44,13 @@ class ImportService
 
         $fixedInput = $this->fixer->getFixed($inputData);
 
+        // grep-code-legacy-submissions-with-no-creator-reference
         $matchedCreators = $this->getCreators($fixedInput, $manager->getMatchedCreatorId()); // FIXME: Remove or simplify
 
         if (1 === count($matchedCreators)) {
             $subjectCreator = Arrays::single($matchedCreators);
         } else {
+            // grep-code-legacy-submissions-with-no-creator-reference
             $subjectCreator = new Creator(user: $submission->getOwner()); // TODO: Temporary support for legacy submissions
 
             if ([] !== $matchedCreators) {
@@ -61,7 +61,7 @@ class ImportService
         $this->handleSpecialFieldsInInput($inputData, $subjectCreator);
         $this->handleSpecialFieldsInInput($fixedInput, $subjectCreator);
 
-        $fixedData = clone $subjectCreator;
+        $fixedData = $subjectCreator->copy();
         $this->updateWith($fixedData, $fixedInput, Fields::iuFormAffected());
         $manager->correctCreator($fixedData);
 

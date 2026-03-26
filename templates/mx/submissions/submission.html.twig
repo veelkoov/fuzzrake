@@ -41,6 +41,11 @@
         </p>
     {% endif %}
 
+    {% if importData.submission.isUpdate != importData.isUpdate %}
+        {# grep-code-legacy-submissions-with-no-creator-reference #}
+        <p><span class="badge bg-warning text-dark">NOTE</span> This submission was originally an {% if importData.submission.isUpdate %}update{% else %}addition{% endif %}.</p>
+    {% endif %}
+
     <div class="row">
         <div class="col-3">
             {{ form_errors(form) }}
@@ -93,7 +98,7 @@
                     </th>
                 </tr>
 
-                {% if importData.submission.isUpdate %}
+                {% if importData.isUpdate %}
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>
                             Before

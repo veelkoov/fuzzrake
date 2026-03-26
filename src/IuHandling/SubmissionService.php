@@ -28,9 +28,9 @@ class SubmissionService
     /**
      * @throws SubmissionException
      */
-    public function submit(User $user, Creator $submissionData): Submission
+    public function submit(User $user, Creator $submissionData, bool $isUpdate): Submission
     {
-        $submission = $this->getEntityForSubmission($user, $submissionData);
+        $submission = $this->getEntityForSubmission($user, $submissionData, $isUpdate);
 
         $this->submissionRepository->add($submission, true);
         $this->sendNotification($submissionData, $submission->getPayload());
@@ -38,9 +38,9 @@ class SubmissionService
         return $submission;
     }
 
-    public function getEntityForSubmission(User $user, Creator $submissionData): Submission
+    public function getEntityForSubmission(User $user, Creator $submissionData, bool $isUpdate): Submission
     {
-        return new Submission(null !== $submissionData->getId())
+        return new Submission($isUpdate)
             ->setPayload($this->asJson($submissionData))
             ->setCreator($user->getCreator())
             ->setOwner($user)

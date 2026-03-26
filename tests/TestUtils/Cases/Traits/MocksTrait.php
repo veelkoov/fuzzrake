@@ -62,7 +62,7 @@ trait MocksTrait
         return new Snapshot($contents, new SnapshotMetadata($url, $creatorId, UtcClock::now(), 200, [], []));
     }
 
-    protected function getEntityForSubmission(User $user, Creator $submissionData): Submission
+    protected function getEntityForSubmission(User $user, Creator $submissionData, bool $isUpdate): Submission
     {
         static $mockedService = null;
 
@@ -73,6 +73,6 @@ trait MocksTrait
         );
 
         // @phpstan-ignore method.nonObject,return.type (false-positive)
-        return $mockedService->getEntityForSubmission($user, $submissionData);
+        return $mockedService->getEntityForSubmission($user, $submissionData, $isUpdate);
     }
 }

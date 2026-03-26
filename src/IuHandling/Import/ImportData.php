@@ -40,6 +40,11 @@ final readonly class ImportData
         return !$this->subjectCreator->equals($field, $this->fixedData);
     }
 
+    public function isUpdate(): bool
+    {
+        return 1 === count($this->matchedCreators);
+    }
+
     // TODO
     // public function getDescription(): Description
     // {

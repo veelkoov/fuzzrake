@@ -15,7 +15,7 @@ class CreatorChanges
     public function __construct(
         private readonly Creator $subject,
     ) {
-        $this->changed = clone $subject;
+        $this->changed = $subject->copy();
     }
 
     public function getSubject(): Creator

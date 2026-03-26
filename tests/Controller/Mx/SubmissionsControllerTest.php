@@ -32,14 +32,14 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testPaginationWorksInSubmissions(): void
     {
-        $this->generateRandomFakeSubmissions(24);
+        $this->generateRandomFakeInclusionSubmissions(24);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
         self::assertResponseStatusCodeIs(200);
         self::assertCount(24, $crawler->filter('table tbody tr'));
         self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
 
-        $this->generateRandomFakeSubmissions(2);
+        $this->generateRandomFakeInclusionSubmissions(2);
 
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
         self::assertResponseStatusCodeIs(200);
@@ -65,7 +65,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             // Fixed
             ->setOtherFeatures(['Hidden pockets'])
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -144,7 +144,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCurrenciesAccepted(['Euro'])
         ;
 
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -198,6 +198,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testSubmissionMatchingMultipleCreators(): void
     {
+        // grep-code-legacy-submissions-with-no-creator-reference
         // FIXME: At this point could only be a result of an error or unpredictable condition, but keeping this test /// NAUR
 
         $creator1 = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
@@ -207,7 +208,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         $submissionData = new Creator()->setCreatorId('TEST001')->setFormerCreatorIds(['TEST002'])
             ->setName('Testing creator')->setCity('Oulu');
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -240,10 +241,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         self::persistAndFlushWithUsers($creator1, $creator2);
 
-        $submission = $this->getEntityForSubmission(
-            self::getCreatorUser(),
-            new Creator(user: self::getCreatorUser())->setCreatorId('TEST003')->setName('Catbert'),
-        );
+        $submissionData = new Creator(user: self::getCreatorUser())
+            ->setCreatorId('TEST003')
+            ->setName('Catbert')
+        ;
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -260,7 +262,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         $submission->setComment('Old comment')->setDirectives('Old directives');
         self::persistAndFlush($submission);
 
@@ -298,7 +300,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -318,7 +320,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         self::persistAndFlush($submission);
 
@@ -343,7 +345,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -363,7 +365,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -378,14 +380,13 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(404);
     }
 
-    private function generateRandomFakeSubmissions(int $count): void
+    private function generateRandomFakeInclusionSubmissions(int $count): void
     {
         while (--$count >= 0) {
-            $name = Uuid::v4()->toRfc4122();
-            $user = new User()->setEmail("$name@example.com");
-            $creator = new Creator(user: $user)->setName($name);
+            $creator = UserCreator::get();
+            $user = $creator->entity->getUser();
 
-            self::persist($user, $this->getEntityForSubmission($user, $creator));
+            self::persist($user, $this->getEntityForSubmission($user, $creator, false));
         }
 
         self::flush();
@@ -403,7 +404,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");

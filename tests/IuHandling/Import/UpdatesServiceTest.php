@@ -32,10 +32,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     {
         self::mockTime();
 
-        $submission = $this->getEntityForSubmission(
-            new User(),
-            new Creator()->setCreatorId('TEST001'),
-        );
+        $submissionData = new Creator()->setCreatorId('TEST001');
+        $submission = $this->getEntityForSubmission(new User(), $submissionData, false);
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
         $result = $subject->getImportDataFor($submission);
@@ -65,7 +63,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         ;
         $user = new User()->setCreator($creator->entity);
 
-        $submission = $this->getEntityForSubmission($user, new Creator()->setCreatorId('TEST001')); // FIXME: Should match by data in User
+        $submissionData = new Creator()->setCreatorId('TEST001');
+        $submission = $this->getEntityForSubmission($user, $submissionData, true);
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
         $result = $subject->getImportDataFor($submission);
@@ -87,12 +86,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $creator1 = $this->getPersistedCreatorMock()->setCreatorId('TEST0A1')->setName('Creator 1');
         $creator2 = $this->getPersistedCreatorMock()->setCreatorId('TEST0B1')->setName('Creator 2');
 
-        $submission = $this->getEntityForSubmission(new User(), // FIXME: Should match by data in User; test needs redesign/rethink
-            new Creator()
-                ->setCreatorId('TEST0A1')
-                ->setFormerCreatorIds(['TEST0B1'])
-                ->setName('Creator X')
-        );
+        $submissionData = new Creator()
+            ->setCreatorId('TEST0A1')
+            ->setFormerCreatorIds(['TEST0B1'])
+            ->setName('Creator X')
+        ;
+        $submission = $this->getEntityForSubmission(new User(), $submissionData, true,);// FIXME: Should match by data in User; test needs redesign/rethink
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([
             [['TEST0A1', 'TEST0B1'], [$creator1, $creator2]],
@@ -117,11 +116,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $user = new User()->setCreator($creator->entity);
 
         // Changing
-        $submission1 = $this->getEntityForSubmission($user, new Creator()
+        $submissionData1 = new Creator()
             ->setCreatorId('TEST003')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
-        );
+        ;
+        $submission1 = $this->getEntityForSubmission($user, $submissionData1, true,);
 
         $result1 = $this->getUpdatesServiceForGetUpdateFor([[['TEST003'], [$creator]]])->getImportDataFor($submission1);
 
@@ -131,11 +131,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertEquals(['TEST001', 'TEST002'], $result1->fixedData->getFormerCreatorIds());
 
         // No change
-        $submission2 = $this->getEntityForSubmission($user, new Creator()
+        $submissionData2 = new Creator()
             ->setCreatorId('TEST001')
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
-        );
+        ;
+        $submission2 = $this->getEntityForSubmission($user, $submissionData2, true,);
 
         $result2 = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]])->getImportDataFor($submission2);
 
@@ -223,7 +224,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     {
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->expects(self::atLeast(0))->method('getFixed')
-            ->willReturnCallback(static fn (object $input) => clone $input);
+            ->willReturnCallback(static fn (Creator $input) => $input->copy());
 
         return $fixerMock;
     }

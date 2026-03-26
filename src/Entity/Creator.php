@@ -150,50 +150,6 @@ class Creator implements Stringable
         $this->species = new ArrayCollection();
     }
 
-    public function __clone()
-    {
-        $this->setUser(new User());
-
-        if (null !== $this->volatileData) {
-            $this->setVolatileData(clone $this->volatileData);
-        }
-
-        $urlsToClone = $this->urls;
-        $this->urls = new ArrayCollection();
-
-        foreach ($urlsToClone as $url) {
-            $this->addUrl(clone $url);
-        }
-
-        $creatorIdsToClone = $this->creatorIds;
-        $this->creatorIds = new ArrayCollection();
-
-        foreach ($creatorIdsToClone as $creatorId) {
-            $this->addCreatorId(clone $creatorId);
-        }
-
-        $offerStatusesToClone = $this->offerStatuses;
-        $this->offerStatuses = new ArrayCollection();
-
-        foreach ($offerStatusesToClone as $offerStatus) {
-            $this->addOfferStatus(clone $offerStatus);
-        }
-
-        $valuesToClone = $this->values;
-        $this->values = new ArrayCollection();
-
-        foreach ($valuesToClone as $value) {
-            $this->addValue(clone $value);
-        }
-
-        $speciesToClone = $this->species;
-        $this->species = new ArrayCollection();
-
-        foreach ($speciesToClone as $specie) {
-            $this->addSpecie(clone $specie);
-        }
-    }
-
     #[Override]
     public function __toString(): string
     {

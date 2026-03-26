@@ -57,11 +57,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $this->entity = $entity;
     }
 
-    public function __clone()
-    {
-        $this->entity = clone $this->entity;
-    }
-
     #[Override]
     public function __toString(): string
     {
@@ -1504,5 +1499,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         return $this;
+    }
+
+    /**
+     * Creates a copy of the wrapped entity. Only fields data is copied. This creates an object safe to use
+     * during submissions handling without any risk of modifying any managed entity (references included).
+     * This was difficult to achieve using cloning.
+     */
+    public function copy(): self
+    {
+        $result = new self();
+
+        foreach (Fields::persisted() as $field) {
+            $result->set($field, $this->get($field));
+        }
+
+        return $result;
     }
 }

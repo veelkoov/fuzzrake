@@ -16,7 +16,6 @@ use App\Repository\CreatorRepository;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -64,9 +63,11 @@ class IuFormController extends AbstractController
         SubmissionService $submissionService,
     ): Response {
         if (null === $user->getCreator()) {
+            $isUpdate = false;
             $creator = new Creator();
             $initialPhotosCopyrightOk = false;
         } else {
+            $isUpdate = true;
             $creator = Creator::wrap($user->getCreator());
             $initialPhotosCopyrightOk = $creator->hasData(Field::URL_PHOTOS);
         }
@@ -81,7 +82,7 @@ class IuFormController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $submissionService->submit($user, $creator);
+                $submissionService->submit($user, $creator, $isUpdate);
 
                 return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION);
             } catch (SubmissionException $exception) {

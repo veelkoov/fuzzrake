@@ -4,120 +4,67 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\Data\Definitions\Ages;
 use App\Entity\Creator;
-use App\Entity\CreatorId;
-use App\Entity\CreatorOfferStatus;
-use App\Entity\CreatorSpecie;
-use App\Entity\CreatorUrl;
-use App\Entity\CreatorValue;
-use App\Entity\CreatorVolatileData;
-use App\Entity\Specie;
 use App\Entity\User;
-use DateTimeImmutable;
+use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionNamedType;
 
 #[Small]
-class CreatorSmallTest extends TestCase
+class CreatorSmallTest extends FuzzrakeTestCase
 {
-    /**
-     * @var list<string>
-     */
-    private static array $ignoredTypes = [
-        'int', // Handles ?int $id
-        DateTimeImmutable::class,
-        Specie::class,
-    ];
-
-    /**
-     * @throws ReflectionException
-     */
-    public function testDeepCloningIsComplete(): void
+    public function testSettingCreatorIdAddsToTheEmptyCollection(): void
     {
-        $subject = new Creator(new User())
-            ->setAges(Ages::ADULTS)
-            ->setHasAllergyWarning(true)
-            ->setOffersPaymentPlans(false)
-        ;
-        $subject->addCreatorId(new CreatorId());
-        $subject->setVolatileData(new CreatorVolatileData());
-        $subject->addOfferStatus(new CreatorOfferStatus());
-        $subject->addValue(new CreatorValue());
+        $creator = new Creator(new User());
+        $creator->setCreatorId('TEST001');
 
-        $specie = new Specie();
-        $subject->addSpecie(new CreatorSpecie()->setSpecie($specie));
+        $this->validateCreatorIds($creator, 'TEST001', [], ['TEST001']);
+    }
 
-        $creatorUrl = new CreatorUrl();
-        $creatorUrl->getState();
-        $subject->addUrl($creatorUrl);
+    public function testSettingCreatorIdAddsToTheCollection(): void
+    {
+        $creator = new Creator(new User());
+        $creator->setFormerCreatorIds(['TEST002', 'TEST003']);
+        $creator->setCreatorId('TEST001');
 
-        $result = clone $subject;
-        $this->assureDifferent('', [], $subject, $result);
+        $this->validateCreatorIds($creator, 'TEST001', ['TEST002', 'TEST003'], ['TEST001', 'TEST002', 'TEST003']);
+    }
+
+    public function testSettingFormerCreatorIdsWorksWithNoCreatorIdSet(): void
+    {
+        $creator = new Creator(new User());
+        $creator->setFormerCreatorIds(['TEST003', 'TEST004']);
+
+        $this->validateCreatorIds($creator, '', ['TEST003', 'TEST004'], ['TEST003', 'TEST004']);
+    }
+
+    public function testSettingFormerCreatorIdsRemovesObsoleteCreatorIdsLeavingAlreadyPresent(): void
+    {
+        $creator = new Creator(new User());
+        $creator->setFormerCreatorIds(['TEST005', 'TEST006']);
+
+        $creator->setFormerCreatorIds(['TEST006', 'TEST007']);
+
+        $this->validateCreatorIds($creator, '', ['TEST006', 'TEST007'], ['TEST006', 'TEST007']);
+    }
+
+    public function testSettingFormerCreatorIdsDoesntAffectCreatorId(): void
+    {
+        $creator = new Creator(new User());
+        $creator->setCreatorId('TEST003');
+        $creator->setFormerCreatorIds(['TEST008', 'TEST009', 'TEST003']);
+
+        $this->validateCreatorIds($creator, 'TEST003', ['TEST008', 'TEST009'], ['TEST003', 'TEST008', 'TEST009']);
     }
 
     /**
-     * @param list<mixed> $subjectParents
-     *
-     * @throws ReflectionException
+     * @param list<string> $formerCreatorIds
+     * @param list<string> $allCreatorIds
      */
-    private function assureDifferent(string $path, array $subjectParents, mixed $subject, mixed $result): void
+    private function validateCreatorIds(Creator $creator, string $creatorId, array $formerCreatorIds, array $allCreatorIds): void
     {
-        $subjectParentsAndThis = [...$subjectParents, $subject];
-        if (is_scalar($subject)) {
-            return;
-        }
+        self::assertSame($creatorId, $creator->getCreatorId());
 
-        if (is_array($subject)) {
-            self::assertIsArray($result);
-            self::assertEquals(array_keys($subject), array_keys($result));
-
-            self::assertNotEmpty($subject, "$path is an empty array, cannot test cloning.");
-
-            foreach (array_keys($subject) as $key) {
-                $this->assureDifferent("{$path}[$key]", $subjectParentsAndThis, $subject[$key], $result[$key]);
-            }
-
-            return;
-        }
-
-        self::assertNotNull($subject, "$path is null, cannot test cloning.");
-        self::assertIsObject($subject, "$path is not an object.");
-        self::assertIsObject($result, "$path is not an object.");
-
-        $reflection = new ReflectionClass($subject);
-        if ($reflection->isEnum()) {
-            return;
-        }
-
-        if ('.user' === $path) {
-            self::assertSame($subject, $result);
-
-            return;
-        }
-
-        self::assertNotSame($subject, $result, "$path (".get_debug_type($subject).') is identical.');
-
-        foreach ($reflection->getProperties() as $property) {
-            $propertyPath = "$path.$property->name";
-
-            self::assertTrue($property->hasType(), "$propertyPath is missing type.");
-            $type = $property->getType();
-            self::assertInstanceOf(ReflectionNamedType::class, $type, "$propertyPath type ($type) is not a named type.");
-
-            if (arr_contains(self::$ignoredTypes, $type->getName())) {
-                continue;
-            }
-
-            $subjectValue = $property->getValue($subject);
-            if (arr_contains($subjectParents, $subjectValue)) {
-                continue;
-            }
-
-            $this->assureDifferent($propertyPath, $subjectParentsAndThis, $subjectValue, $property->getValue($result));
-        }
+        self::assertSameItems($formerCreatorIds, $creator->getFormerCreatorIds());
+        self::assertSameItems($allCreatorIds, $creator->getAllCreatorIds());
     }
 }
