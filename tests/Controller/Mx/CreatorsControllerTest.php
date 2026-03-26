@@ -31,7 +31,10 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
     #[DataProvider('formsChoicesValuesAndLabelsDataProvider')]
     public function testFormsChoicesValuesAndLabels(array $choices): void
     {
-        $crawler = self::$client->request('GET', '/mx/creators/new');
+        $creator = UserCreator::get()->setCreatorId('TEST001');
+        self::persistAndFlushWithUsers($creator);
+
+        $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);
 
         foreach ($choices as $choice) {
@@ -43,25 +46,6 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         }
     }
 
-    public function testNewCreator(): void
-    {
-        $crawler = self::$client->request('GET', '/mx/creators/new');
-        self::assertResponseStatusCodeIs(200);
-
-        $form = $crawler->selectButton('Save')->form([
-            'creator[creatorId]' => 'TEST001',
-            'creator[name]' => 'New creator',
-        ]);
-
-        self::$client->submit($form);
-        self::$client->followRedirect();
-        self::assertResponseStatusCodeIs(200);
-
-        self::clear();
-
-        self::findCreatorByCreatorId('TEST001');
-    }
-
     public function testEditCreator(): void
     {
         $creator = UserCreator::get()->setCreatorId('TEST001');
@@ -70,12 +54,12 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);
 
-        $form = $crawler->selectButton('Save')->form([
-            'creator[creatorId]' => 'TEST001',
-        ]);
+        self::submitInvalidForm('Save', []); // Miss filling required name
 
-        self::$client->submit($form);
-        self::$client->followRedirect();
+        $form = $crawler->selectButton('Save')->form([
+            'creator[name]' => 'Test creator 001',
+        ]);
+        self::submitValid($form);
         self::assertResponseStatusCodeIs(200);
 
         unset($creator);
@@ -104,14 +88,5 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
 
         self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(404);
-    }
-
-    public function testSubmittingEmptyDoesnt500(): void
-    {
-        self::$client->request('GET', '/mx/creators/new');
-        $form = self::$client->getCrawler()->selectButton('Save')->form();
-        self::$client->submit($form);
-
-        self::assertResponseStatusCodeIs(422);
     }
 }

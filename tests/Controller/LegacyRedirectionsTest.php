@@ -22,7 +22,7 @@ class LegacyRedirectionsTest extends FuzzrakeWebTestCase
     }
 
     /**
-     * @return array<string, array{string, string, string, ?4: int}>
+     * @return array<string, array{string, string, string}>
      */
     public static function legacyRedirectionDataProvider(): array
     {

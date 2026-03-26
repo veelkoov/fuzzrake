@@ -10,7 +10,6 @@ use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\UserCreator;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 

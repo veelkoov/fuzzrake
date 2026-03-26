@@ -9,6 +9,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
+use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
@@ -189,7 +190,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS, DATA-TABLE HELPERS =====
     //
 
-    #[NotNull(message: 'You must answer this question.')]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getAges(): ?Ages
     {
         return $this->entity->getAges();
@@ -202,7 +203,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[NotNull(message: 'You must answer this question.')]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getNsfwWebsite(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_WEBSITE);
@@ -213,7 +214,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::NSFW_WEBSITE, $nsfwWebsite);
     }
 
-    #[NotNull(message: 'You must answer this question.')]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getNsfwSocial(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_SOCIAL);
@@ -908,7 +909,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /** @noinspection PhpUnusedParameterInspection */
-    #[Callback]
+    #[Callback(groups: [ValidationGroups::ENFORCE_USER])]
     public function validateData(ExecutionContextInterface $context, mixed $payload): void
     {
         if (null === $this->getDoesNsfw() && true === $this->isAllowedToDoNsfw()) {
@@ -933,7 +934,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     #[Regex(pattern: '/^[A-Z0-9]*$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).')]
     #[Regex(pattern: '/^(.{7})?$/', message: 'Use exactly 7 characters.')]
-    #[NotBlank]
+    #[NotBlank(groups: [ValidationGroups::ENFORCE_USER])]
     public function getCreatorId(): string
     {
         return $this->entity->getCreatorId();
@@ -1006,7 +1007,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 128)]
-    #[NotBlank]
+    #[NotBlank(groups: [ValidationGroups::ENFORCE_USER])]
     public function getCountry(): string
     {
         return $this->entity->getCountry();

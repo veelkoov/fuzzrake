@@ -53,7 +53,6 @@ final class RouteName
 
     public const string MX_CREATORS_URLS = 'mx_creators_urls';
     public const string MX_CREATOR_EDIT = 'mx_creator_edit';
-    public const string MX_CREATOR_NEW = 'mx_creator_new';
     public const string MX_CREATOR_URLS_REMOVAL = 'mx_creator_urls_removal';
     public const string MX_CREATOR_URLS_SELECTION = 'mx_creator_urls_selection';
     public const string MX_EVENT_EDIT = 'mx_event_edit';

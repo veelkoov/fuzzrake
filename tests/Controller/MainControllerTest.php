@@ -6,7 +6,6 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\UserCreator;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\Attributes\Medium;
@@ -21,7 +20,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
     {
         self::persistAndFlushWithUsers(
             UserCreator::get()
-                ->setName( 'Test creator')
+                ->setName('Test creator')
                 ->setCreatorId('TEST000')
                 ->setCountry('FI')
         );

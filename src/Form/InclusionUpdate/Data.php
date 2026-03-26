@@ -6,6 +6,7 @@ namespace App\Form\InclusionUpdate;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\Features;
+use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
@@ -499,6 +500,7 @@ final class Data extends AbstractType
             ->required();
 
         $resolver->setDefaults([
+            'validation_groups' => ['Default', ValidationGroups::ENFORCE_USER],
             'data_class' => Creator::class,
         ]);
     }
