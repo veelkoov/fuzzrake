@@ -94,7 +94,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             self::validateIuFormOldDataSubmitNew($user, $oldData, $newData);
         }
 
-        $this->performImport(true, $loader->after->count());
+        $this->performImports($loader->after->count());
 
         self::flush();
         self::assertCount($loader->after->count(), self::getCreatorRepository()->findAll(),

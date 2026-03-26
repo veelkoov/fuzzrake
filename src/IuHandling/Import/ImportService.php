@@ -20,6 +20,7 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use RuntimeException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -136,14 +137,20 @@ class ImportService
 
     public function import(ImportData $importData): void
     {
-        $existingEntity = $importData->subjectCreator;
-        $cloneWithUpdates = $importData->fixedData;
-
+        $subjectCreator = $importData->subjectCreator;
         foreach (Fields::persisted() as $field) {
-            $existingEntity->set($field, $cloneWithUpdates->get($field));
+            $subjectCreator->set($field, $importData->fixedData->get($field));
         }
 
-        $this->entityManager->persist($existingEntity);
+        $user = $importData->submission->getOwner();
+        if (null === $user) {
+            throw new LogicException('Support for legacy submissions to be implemented.'); // TODO
+        } else {
+            $subjectCreator->entity->setUser($user);
+        }
+
+        $this->entityManager->persist($user);
+        $this->entityManager->persist($subjectCreator);
         $this->entityManager->persist($this->getEventFor($importData));
         $this->entityManager->flush();
 

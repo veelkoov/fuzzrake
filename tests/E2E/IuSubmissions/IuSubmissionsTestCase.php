@@ -17,7 +17,7 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
         self::haveAnAdminUser();
     }
 
-    protected function performImport(bool $acceptAll, int $expectedImports): void
+    protected function performImports(int $expectedImports): void
     {
         self::loginAdminUser();
         $crawler = self::$client->request('GET', '/mx/submissions/1/');
@@ -35,10 +35,10 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
                 'A single creator must be matched.');
 
             $form = $crawler->selectButton('Import')->form([
-                'submission[directives]' => $acceptAll ? 'accept' : '',
+                'submission[directives]' => 'accept',
             ]);
 
-            self::$client->submit($form);
+            self::submitValid($form);
         }
     }
 }

@@ -44,7 +44,7 @@ class PhotosOrderingTest extends IuSubmissionsTestCase
 
         self::assertIuSubmissionQueued();
 
-        self::performImport(true, 1);
+        self::performImports(1);
         self::flushAndClear();
 
         $creator = self::findCreatorByCreatorId('TEST001');
