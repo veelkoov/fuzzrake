@@ -44,14 +44,12 @@ class ImportService
 
         $fixedInput = $this->fixer->getFixed($inputData);
 
-        // grep-code-legacy-submissions-with-no-creator-reference
-        $matchedCreators = $this->getCreators($fixedInput, $manager->getMatchedCreatorId()); // FIXME: Remove or simplify
+        $matchedCreators = $this->getCreators($submission, $fixedInput, $manager->getMatchedCreatorId());
 
         if (1 === count($matchedCreators)) {
             $subjectCreator = Arrays::single($matchedCreators);
         } else {
-            // grep-code-legacy-submissions-with-no-creator-reference
-            $subjectCreator = new Creator(user: $submission->getOwner()); // TODO: Temporary support for legacy submissions
+            $subjectCreator = new Creator();
 
             if ([] !== $matchedCreators) {
                 $errors[] = 'Single creator must get selected.';
@@ -106,8 +104,13 @@ class ImportService
     /**
      * @return Creator[]
      */
-    private function getCreators(Creator $submissionData, ?string $matchedCreatorId): array
+    private function getCreators(Submission $submission, Creator $submissionData, ?string $matchedCreatorId): array
     {
+        if (null === $matchedCreatorId && null !== $submission->getCreator()) {
+            return [Creator::wrap($submission->getCreator())];
+        }
+
+        // grep-code-legacy-submissions-with-no-creator-reference
         return Creator::wrapAll($this->creatorRepository->findByCreatorIds(
             null !== $matchedCreatorId
                 ? [$matchedCreatorId]

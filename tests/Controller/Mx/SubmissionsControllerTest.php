@@ -197,7 +197,6 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
     public function testSubmissionMatchingMultipleCreators(): void
     {
         // grep-code-legacy-submissions-with-no-creator-reference
-        // FIXME: At this point could only be a result of an error or unpredictable condition, but keeping this test /// NAUR
 
         $creator1 = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
         $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
@@ -207,6 +206,8 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submissionData = new Creator()->setCreatorId('TEST001')->setFormerCreatorIds(['TEST002'])
             ->setName('Testing creator')->setCity('Oulu');
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
+        $submission->setCreator(null); // Simulate legacy submission
+        $submission->setOwner(null); // Simulate legacy submission
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -216,8 +217,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
         self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
 
+        $cityValueBeforeSelector = 'tr.CITY.before span';
+
         // With multiple creators matched, will be displayed as a new creator
-        self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
+        self::assertSelectorTextSame('tr.CITY.submitted span', 'Oulu');
+        self::assertSelectorNotExists($cityValueBeforeSelector);
 
         self::$client->submitForm('Update', [
             'submission[directives]' => 'match-maker-id TEST001',
@@ -227,7 +231,9 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorNotExists('.invalid-feedback');
 
         // With a single creator selected, display actual difference
-        self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
+        self::assertSelectorTextSame($cityValueBeforeSelector, 'Kuopio');
+        self::assertSelectorTextSame('tr.CITY.submitted span', 'Oulu');
+        self::assertSelectorTextSame('tr.CITY.after span', 'Oulu');
     }
 
     public function testShowingSimilarlyNamedCreators(): void
