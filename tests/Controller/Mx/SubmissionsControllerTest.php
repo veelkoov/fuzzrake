@@ -65,7 +65,6 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
             // Fixed
             ->setOtherFeatures(['Hidden pockets'])
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         self::persistAndFlush($submission);
 
@@ -199,7 +198,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testSubmissionMatchingMultipleCreators(): void
     {
-        // grep-code: At this point could only be a result of an error or unpredictable condition, but keeping this test
+        // FIXME: At this point could only be a result of an error or unpredictable condition, but keeping this test /// NAUR
 
         $creator1 = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
         $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
@@ -257,11 +256,10 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testUpdatingExistingSubmissionWithoutImport(): void
     {
-        $submissionData = new Creator(user: self::getCreatorUser())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         $submission->setComment('Old comment')->setDirectives('Old directives');
         self::persistAndFlush($submission);
@@ -271,13 +269,13 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
-        self::assertSelectorTextSame('#submission_comment', 'Old comment');
+        self::assertSelectorTextSame('#submission_status option[selected]', 'New');
         self::assertSelectorTextSame('#submission_directives', 'Old directives');
 
         self::$client->submitForm('Update', [
             'submission[comment]'    => 'New comment',
             'submission[directives]' => 'New directives',
-            'submission[status]'     => 'Other',
+            'submission[status]'     => 'OTHER',
         ]);
 
         self::assertResponseStatusCodeIs(200);
@@ -289,18 +287,17 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('p', 'Adding a new creator.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
         self::assertSelectorTextSame('#submission_directives', 'New directives');
-        self::assertSelectorTextSame('select[name="form_status"]', 'New directives'); // FIXME Check
+        self::assertSelectorTextSame('#submission_status option[selected]', 'Other');
 
         self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
 
     public function testImportDoesntWorkWithoutAccepting(): void
     {
-        $submissionData = new Creator(user: self::getCreatorUser())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         self::persistAndFlush($submission);
 
@@ -315,13 +312,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testDirectivesWork(): void
     {
-        $submissionData = new Creator(user: self::getCreatorUser())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         self::persistAndFlush($submission);
@@ -341,13 +337,12 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testDirectivesUpdateIsImmediate(): void
     {
-        $submissionData = new Creator(user: self::getCreatorUser())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
             ->setIntro('Some submitted intro information')
             ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         self::persistAndFlush($submission);
 
@@ -364,11 +359,10 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
 
     public function testInvalidDirectivesDontBreakPageLoad(): void
     {
-        $submissionData = new Creator(user: self::getCreatorUser())
+        $submissionData = new Creator()
             ->setCreatorId('TEST001')
             ->setName('Testing creator')
         ;
-
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
@@ -397,12 +391,19 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::flush();
     }
 
-    public function testHiddenCreator(): void
+    public function testUpdatingHiddenCreator(): void
     {
-        $entity = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setInactiveReason('Dunno');
-        self::persistAndFlush($entity);
+        $existingCreator = new Creator(user: self::getCreatorUser())
+            ->setCreatorId('TEST001')
+            ->setInactiveReason('Dunno')
+        ;
+        self::persistAndFlush($existingCreator);
 
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $entity);
+        $submissionData = new Creator()
+            ->setCreatorId('TEST001')
+            ->setName('Testing creator')
+        ;
+        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData);
         self::persistAndFlush($submission);
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
@@ -411,7 +412,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('#creator-hidden-warning');
         self::assertSelectorTextSame('#creator-hidden-warning', 'Hidden');
 
-        $entity->setInactiveReason('');
+        $existingCreator->setInactiveReason('');
         self::flush();
 
         self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
