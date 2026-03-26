@@ -13,7 +13,7 @@ trait UsersTrait
 {
     use ContainerTrait;
 
-    private const string TEST_PASSWORD = 'abcdef1234567890';
+    private const string DEFAULT_TEST_PASSWORD = 'abcdef1234567890';
     private static ?User $adminUser;
     private static ?User $creatorUser;
 
@@ -30,7 +30,7 @@ trait UsersTrait
             ->setEmail('administrator@example.com')
             ->setRoles(['ROLE_ADMIN'])
             ->setIsVerified(true);
-        self::setPassword($user);
+        self::setDefaultPassword($user);
         self::persistAndFlush($user);
 
         self::$adminUser = $user;
@@ -42,7 +42,7 @@ trait UsersTrait
             ->setEmail('creator@example.com')
             ->setIsVerified(true)
             ->setContactPermit(null);
-        self::setPassword($user);
+        self::setDefaultPassword($user);
         self::persistAndFlush($user);
 
         self::$creatorUser = $user;
@@ -70,17 +70,19 @@ trait UsersTrait
         if (method_exists(self::$client, 'loginUser')) {
             self::$client->loginUser($user);
         } else {
-            self::$client->get('/logout'); // @phpstan-ignore method.notFound
+            self::$client->get('/uuser/logout'); // @phpstan-ignore method.notFound
+            self::$client->restart(); // FIXME: Why is this necessary?
             self::$client->get('/login'); // @phpstan-ignore method.notFound
             self::$client->submitForm('Sign in', [
                 '_username' => $user->getEmail(),
-                '_password' => self::TEST_PASSWORD,
+                '_password' => self::DEFAULT_TEST_PASSWORD,
             ]);
         }
     }
 
-    private static function setPassword(User $user): void
+    protected static function setDefaultPassword(User $user): void
     {
-        $user->setPassword(self::getContainerService(UserPasswordHasherInterface::class)->hashPassword($user, self::TEST_PASSWORD));
+        $user->setPassword(self::getContainerService(UserPasswordHasherInterface::class)
+            ->hashPassword($user, self::DEFAULT_TEST_PASSWORD));
     }
 }

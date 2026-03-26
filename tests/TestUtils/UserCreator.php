@@ -23,7 +23,7 @@ final class UserCreator
         ?string $email = null,
         ?ContactPermit $contactPermit = null,
     ): Creator {
-        $user = new User();
+        $user = new User()->setIsVerified(true);
 
         if (null !== $email) {
             $user->setEmail($email);
