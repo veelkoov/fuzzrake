@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
 trait FiltersTestTrait
@@ -270,7 +271,7 @@ trait FiltersTestTrait
      */
     private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, ?bool $offersPaymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
     {
-        return new Creator()
+        return UserCreator::get()
             ->setCreatorId($creatorIdAndName)
             ->setName($creatorIdAndName)
             ->setCountry($country)

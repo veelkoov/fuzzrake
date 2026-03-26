@@ -44,26 +44,6 @@ trait EntityManagerTrait
         return Creator::wrap($creator);
     }
 
-    protected static function addSimpleCreator(): Creator
-    {
-        $creator = self::getCreator();
-
-        self::persistAndFlush($creator);
-
-        return $creator;
-    }
-
-    protected static function addSimpleGenericEvent(): Event
-    {
-        $event = new Event()
-            ->setDescription('Test event')
-        ;
-
-        self::persistAndFlush($event);
-
-        return $event;
-    }
-
     protected static function getCreator(// TODO: Possibly move into UserCreator class
         string $name = 'Test creator',
         string $creatorId = 'TEST000',

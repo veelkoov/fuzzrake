@@ -341,15 +341,6 @@ class CreatorType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('contactAllowed', ChoiceType::class, [
-                'label'   => 'Contact allowed?',
-                'choices' => ContactPermit::getFormChoices(true),
-            ])
-            ->add('emailAddress', TextType::class, [
-                'label'      => 'Email address',
-                'required'   => false,
-                'empty_data' => '',
-            ])
             ->add('notes', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
@@ -377,7 +368,6 @@ class CreatorType extends AbstractTypeWithDelete
         }
 
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
-        $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
 
     #[Override]

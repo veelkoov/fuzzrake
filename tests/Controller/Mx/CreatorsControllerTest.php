@@ -6,6 +6,7 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use App\Tests\TestUtils\UserCreator;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
@@ -63,9 +64,8 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
 
     public function testEditCreator(): void
     {
-        /** @noinspection PhpRedundantOptionalArgumentInspection Make sure defaults for ages and worksWithMinors don't change. */
-        $creator = self::getCreator(creatorId: 'TEST001', ages: null, worksWithMinors: null);
-        self::persistAndFlush($creator);
+        $creator = UserCreator::get()->setCreatorId('TEST001');
+        self::persistAndFlushWithUsers($creator);
 
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);
@@ -84,12 +84,13 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
         $creator = self::findCreatorByCreatorId('TEST001');
         self::assertNull($creator->getWorksWithMinors(), 'Works with minors has changed.');
         self::assertNull($creator->getAges(), 'Ages has changed.');
+        self::assertNull($creator->getHasAllergyWarning(), 'Allergy warning has changed.');
     }
 
     public function testDeleteCreatorAnd404Response(): void
     {
-        $creator = self::getCreator(creatorId: 'TEST001');
-        self::persistAndFlush($creator);
+        $creator = UserCreator::get()->setCreatorId('TEST001');
+        self::persistAndFlushWithUsers($creator);
 
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);

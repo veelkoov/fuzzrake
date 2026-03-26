@@ -11,6 +11,9 @@ use App\Entity\Submission;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use App\Tests\TestUtils\UserCreator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 
@@ -20,9 +23,18 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     use IuFormTrait;
     use FormsChoicesValuesAndLabelsTestTrait;
 
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::haveACreatorUser();
+    }
+
     public function testSubmittingEmptyDoesnt500(): void
     {
-        self::$client->request('GET', '/iu_form/start');
+        self::loginCreatorUser();
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
@@ -35,7 +47,8 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
     #[DataProvider('formsChoicesValuesAndLabelsDataProvider')]
     public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
-        self::$client->request('GET', '/iu_form/start');
+        self::loginCreatorUser();
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
         $crawler = self::$client->getCrawler();
 
@@ -53,18 +66,25 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
     public function testOneCreatorCannotUseOtherCreatorsCreatorId(): void
     {
-        self::persistAndFlush(
-            self::getCreator(creatorId: 'TEST002'),
-            self::getCreator(creatorId: 'TEST001',
-                ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: false),
-        );
+        $existingCreator = UserCreator::get()->setCreatorId('TEST001');
+        $creatorToBeUpdated = new Creator(user: self::getCreatorUser())
+            ->setCreatorId('TEST002')
+            ->setName('Test creator 002')
+            ->setCountry('FI')
+            ->setAges(Ages::ADULTS)
+            ->setNsfwWebsite(false)
+            ->setNsfwSocial(false)
+            ->setDoesNsfw(false)
+            ->setWorksWithMinors(false)
+        ;
+        self::persistAndFlushWithUsers($creatorToBeUpdated, $existingCreator);
 
-        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::loginCreatorUser();
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[creatorId]' => 'TEST002',
-            'iu_form[password]' => 'aBcDeFgH1324',
+            'iu_form[creatorId]' => 'TEST001',
         ]);
         self::submitInvalid($form);
         self::assertSelectorTextContains('#iu_form_creatorId_help + .invalid-feedback',
@@ -72,18 +92,18 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST003',
-            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($form);
     }
 
     public function testNewCreatorCannotUseOtherCreatorsCreatorId(): void
     {
-        self::persistAndFlush(
-            self::getCreator(creatorId: 'TEST001'),
+        self::persistAndFlushWithUsers(
+            UserCreator::get()->setCreatorId('TEST001'),
         );
 
-        self::$client->request('GET', '/iu_form/start');
+        self::loginCreatorUser();
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
@@ -101,28 +121,29 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
             'iu_form[creatorId]' => 'TEST002',
-            'iu_form[password]' => 'aBcDeFgH1324',
         ]);
         self::submitValid($form);
     }
 
     public function testSubmittingOnlyAddsSubmissionWithNoOtherChanges(): void
     {
-        $creator = self::getCreator(
-            name: 'Unchanged name',
-            creatorId: 'TEST001',
-            ages: Ages::MIXED,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            doesNsfw: false,
-            worksWithMinors: false,
-        );
+        $creator = new Creator(user: self::getCreatorUser())
+            ->setName('Unchanged name')
+            ->setCountry('FI')
+            ->setCreatorId('TEST001')
+            ->setAges(Ages::MIXED)
+            ->setNsfwWebsite(false)
+            ->setNsfwSocial(false)
+            ->setDoesNsfw(false)
+            ->setWorksWithMinors(false)
+        ;
         self::persistAndFlush($creator);
         self::clear();
         $creatorId = $creator->getId();
         unset($creator);
 
-        self::$client->request('GET', '/iu_form/start/TEST001');
+        self::loginCreatorUser();
+        self::$client->request('GET', '/user/iu_form/start');
         self::skipRules();
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form([
