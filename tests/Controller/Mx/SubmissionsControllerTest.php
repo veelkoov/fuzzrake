@@ -6,14 +6,12 @@ namespace App\Tests\Controller\Mx;
 
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
-use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\MocksTrait;
 use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Override;
 use PHPUnit\Framework\Attributes\Medium;
-use Symfony\Component\Uid\Uuid;
 
 #[Medium]
 class SubmissionsControllerTest extends FuzzrakeWebTestCase

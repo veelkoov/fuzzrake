@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Controller\Utils\CreatorByCreatorIdTrait;
 use App\Controller\Utils\IuFormChecklist;
 use App\Data\Definitions\Fields\Field;
+use App\Entity\Creator as CreatorE;
 use App\Entity\User;
 use App\Form\InclusionUpdate\Data;
 use App\Form\InclusionUpdate\Start;
@@ -64,25 +65,25 @@ class IuFormController extends AbstractController
     ): Response {
         if (null === $user->getCreator()) {
             $isUpdate = false;
-            $creator = new Creator();
+            $submissionData = new Creator();
             $initialPhotosCopyrightOk = false;
         } else {
             $isUpdate = true;
-            $creator = Creator::wrap($user->getCreator());
-            $initialPhotosCopyrightOk = $creator->hasData(Field::URL_PHOTOS);
+            $submissionData = Creator::wrap($user->getCreator())->copy();
+            $initialPhotosCopyrightOk = $submissionData->hasData(Field::URL_PHOTOS);
         }
 
-        $form = $this->createForm(Data::class, $creator, [
+        $form = $this->createForm(Data::class, $submissionData, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => $initialPhotosCopyrightOk,
             'router' => $router,
         ])->handleRequest($request);
 
-        $this->validatePhotosCopyright($form, $creator);
-        $this->validateCreatorId($form, $creator);
+        $this->validatePhotosCopyright($form, $submissionData);
+        $this->validateCreatorId($form, $submissionData, $user->getCreator());
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $submissionService->submit($user, $creator, $isUpdate);
+                $submissionService->submit($user, $submissionData, $isUpdate);
 
                 return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION);
             } catch (SubmissionException $exception) {
@@ -108,23 +109,23 @@ class IuFormController extends AbstractController
         ]);
     }
 
-    private function validatePhotosCopyright(FormInterface $form, Creator $creator): void
+    private function validatePhotosCopyright(FormInterface $form, Creator $submissionData): void
     {
         $field = $form->get(Data::FLD_PHOTOS_COPYRIGHT);
 
         $isOK = 'OK' === ArrayReader::of($field->getData())->getOrDefault('[0]', null);
 
-        if ($creator->hasData(Field::URL_PHOTOS) && !$isOK) {
+        if ($submissionData->hasData(Field::URL_PHOTOS) && !$isOK) {
             $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
         }
     }
 
-    private function validateCreatorId(FormInterface $form, Creator $creator): void
+    private function validateCreatorId(FormInterface $form, Creator $submissionData, ?CreatorE $creator): void
     {
         try {
-            $creatorIdOwner = $this->creatorRepository->findByCreatorId($creator->getCreatorId());
+            $creatorIdOwner = $this->creatorRepository->findByCreatorId($submissionData->getCreatorId());
 
-            if ($creatorIdOwner->getId() !== $creator->getId()) {
+            if ($creatorIdOwner->getId() !== $creator?->getId()) {
                 $form->get(Data::FLD_CREATOR_ID)
                     ->addError(new FormError('This maker ID has been already used by another maker.'));
             }

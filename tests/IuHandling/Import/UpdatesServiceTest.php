@@ -91,7 +91,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerCreatorIds(['TEST0B1'])
             ->setName('Creator X')
         ;
-        $submission = $this->getEntityForSubmission(new User(), $submissionData, true,);// FIXME: Should match by data in User; test needs redesign/rethink
+        $submission = $this->getEntityForSubmission(new User(), $submissionData, true); // FIXME: Should match by data in User; test needs redesign/rethink
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([
             [['TEST0A1', 'TEST0B1'], [$creator1, $creator2]],
@@ -121,7 +121,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
         ;
-        $submission1 = $this->getEntityForSubmission($user, $submissionData1, true,);
+        $submission1 = $this->getEntityForSubmission($user, $submissionData1, true);
 
         $result1 = $this->getUpdatesServiceForGetUpdateFor([[['TEST003'], [$creator]]])->getImportDataFor($submission1);
 
@@ -136,7 +136,7 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setName('The new creator name')
             ->setFormerly(['The old creator name'])
         ;
-        $submission2 = $this->getEntityForSubmission($user, $submissionData2, true,);
+        $submission2 = $this->getEntityForSubmission($user, $submissionData2, true);
 
         $result2 = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]])->getImportDataFor($submission2);
 
