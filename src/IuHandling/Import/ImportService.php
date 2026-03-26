@@ -149,7 +149,6 @@ class ImportService
             $subjectCreator->entity->setUser($user);
         }
 
-        $this->entityManager->persist($user);
         $this->entityManager->persist($subjectCreator);
         $this->entityManager->persist($this->getEventFor($importData));
         $this->entityManager->flush();

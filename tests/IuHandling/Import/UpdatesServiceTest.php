@@ -12,6 +12,7 @@ use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -172,8 +173,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testAdditionCreatesCorrespondingEvent(): void
     {
-        $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new ImportData(new Submission(false), [], $entity, $entity, $entity, [], true);
+        $entity = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission(false)->setOwner($entity->entity->getUser());
+        $update = new ImportData($submission, [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);
@@ -181,8 +183,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
     public function testUpdateCreatesCorrespondingEvent(): void
     {
-        $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new ImportData(new Submission(true), [], $entity, $entity, $entity, [], true);
+        $entity = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission(true)->setOwner($entity->entity->getUser());
+        $update = new ImportData($submission, [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);
