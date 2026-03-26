@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\Submission;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 
-final readonly class Update
+final readonly class ImportData
 {
     /**
      * @param Creator[] $matchedCreators
@@ -17,28 +17,27 @@ final readonly class Update
     public function __construct(
         public Submission $submission,
         public array $matchedCreators,
-        public Creator $originalInput,
-        public Creator $originalCreator,
-        public Creator $updatedCreator,
+        public Creator $subjectCreator,
+        public Creator $inputData,
+        public Creator $fixedData,
         public array $errors,
         public bool $isAccepted,
-        public bool $isNew,
     ) {
     }
 
     public function submittedDifferent(Field $field): bool
     {
-        return !$this->originalInput->equals($field, $this->originalCreator);
+        return !$this->inputData->equals($field, $this->subjectCreator);
     }
 
     public function fixesApplied(Field $field): bool
     {
-        return !$this->originalInput->equals($field, $this->updatedCreator);
+        return !$this->inputData->equals($field, $this->fixedData);
     }
 
     public function isChanging(Field $field): bool
     {
-        return !$this->originalCreator->equals($field, $this->updatedCreator);
+        return !$this->subjectCreator->equals($field, $this->fixedData);
     }
 
     // TODO

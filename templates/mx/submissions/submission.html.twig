@@ -1,25 +1,25 @@
 {% extends 'mx/_base.html.twig' %}
 
-{% block title %}Submission {{ update.submission.strId }}{% endblock %}
+{% block title %}Submission {{ importData.submission.strId }}{% endblock %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {% if update.matchedCreators|length > 1 %}
+    {% if importData.matchedCreators|length > 1 %}
         <p>
             Matched multiple creators: {# grep-code-matched-multiple-creators #}
 
-            {% for creator in update.matchedCreators %}
+            {% for creator in importData.matchedCreators %}
                 <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
 
             <span class="text-danger">Unable to continue.</span>
         </p>
-    {% elseif update.matchedCreators is empty %}
+    {% elseif importData.matchedCreators is empty %}
         <p>Adding a new creator.</p>
     {% else %}
-        {% set creator = update.matchedCreators|first %}
+        {% set creator = importData.matchedCreators|first %}
 
         <p>
             Updating: <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
@@ -74,9 +74,9 @@
 
         <tbody>
             {% for field in fields %}
-                {% set submitted_different = update.submittedDifferent(field) %}
-                {% set fixes_applied = update.fixesApplied(field) %}
-                {% set is_changing = update.isChanging(field) %}
+                {% set submitted_different = importData.submittedDifferent(field) %}
+                {% set fixes_applied = importData.fixesApplied(field) %}
+                {% set is_changing = importData.isChanging(field) %}
 
                 {% set row_class = (submitted_different ? 'submitted-different' : 'submitted-same')
                     ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
@@ -85,7 +85,7 @@
                     ~ ' ' ~ (field.isFreeForm ? 'free-form' : 'structured')
                 %}
 
-                {% set new_value_class = update.updatedCreator|is_valid(field) ? '' : 'table-danger' %}
+                {% set new_value_class = importData.fixedData|is_valid(field) ? '' : 'table-danger' %}
 
                 <tr class="{{ row_class }}">
                     <th colspan="3">
@@ -93,36 +93,36 @@
                     </th>
                 </tr>
 
-                {% if not update.isNew %}
+                {% if importData.submission.isUpdate %}
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>
                             Before
                         </td>
                         <td></td>
                         <td>
-                            {{ field|difference('danger', update.originalCreator, update.updatedCreator)|link_urls }}
+                            {{ field|difference('danger', importData.subjectCreator, importData.fixedData)|link_urls }}
                         </td>
                     </tr>
                 {% endif %}
 
-                <tr class="{{ field.value }} submitted {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.originalInput.get(field)|as_str(true) }}">
+                <tr class="{{ field.value }} submitted {{ row_class }}" data-field="{{ field.name }}" data-value="{{ importData.inputData.get(field)|as_str(true) }}">
                     <td>Submitted</td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
                     </td>
                     <td>
-                        {{ field|difference('primary', update.originalInput, update.updatedCreator)|link_urls }}
+                        {{ field|difference('primary', importData.inputData, importData.fixedData)|link_urls }}
                     </td>
                 </tr>
 
-                <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ update.updatedCreator.get(field)|as_str(true) }}">
+                <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ importData.fixedData.get(field)|as_str(true) }}">
                     <td>Fixed</td>
                     <td class="text-end text-nowrap">
                         <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
                         <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
                     </td>
                     <td class="{{ new_value_class }}">
-                        {{ field|difference('success', update.updatedCreator, update.originalCreator)|link_urls }}
+                        {{ field|difference('success', importData.fixedData, importData.subjectCreator)|link_urls }}
                     </td>
                 </tr>
             {% endfor %}

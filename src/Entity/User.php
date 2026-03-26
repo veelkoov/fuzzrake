@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email. Forgotten password? You can find the reset option on the login form.')] // grep-code-email-already-registered
-class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter
+class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter, Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -59,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     }
 
     #[Override]
-    public function getEmail(): string
+    public function getEmail(): string // FIXME: No validation?
     {
         return $this->email;
     }
@@ -177,5 +178,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         $this->creator = $creator;
 
         return $this;
+    }
+
+    #[Override]
+    public function __toString()
+    {
+        return self::class."[$this->email]";
     }
 }

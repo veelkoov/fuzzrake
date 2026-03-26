@@ -101,7 +101,7 @@ class Submission
         return $this;
     }
 
-    public function getIsUpdate(): ?bool
+    public function getIsUpdate(): bool
     {
         return $this->isUpdate;
     }

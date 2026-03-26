@@ -70,7 +70,7 @@ class Creator implements Stringable
     private string $featuresComment = '';
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
-    private ?bool $hasAllergyWarning = null;
+    private ?bool $hasAllergyWarning = null; // FIXME: Is not NULL by default in the form, why?
 
     #[ORM\Column(type: Types::TEXT)]
     private string $allergyWarningInfo = '';
@@ -152,6 +152,8 @@ class Creator implements Stringable
 
     public function __clone()
     {
+        $this->setUser(new User());
+
         if (null !== $this->volatileData) {
             $this->setVolatileData(clone $this->volatileData);
         }

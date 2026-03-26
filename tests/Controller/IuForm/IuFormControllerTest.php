@@ -127,7 +127,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
     public function testSubmittingOnlyAddsSubmissionWithNoOtherChanges(): void
     {
-        $creator = new Creator(user: self::getCreatorUser())
+        $existingCreator = new Creator(user: self::getCreatorUser())
             ->setName('Unchanged name')
             ->setCountry('FI')
             ->setCreatorId('TEST001')
@@ -137,10 +137,10 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             ->setDoesNsfw(false)
             ->setWorksWithMinors(false)
         ;
-        self::persistAndFlush($creator);
+        self::persistAndFlush($existingCreator);
         self::clear();
-        $creatorId = $creator->getId();
-        unset($creator);
+        $creatorId = $existingCreator->getId();
+        unset($existingCreator);
 
         self::loginCreatorUser();
         self::$client->request('GET', '/user/iu_form/start');

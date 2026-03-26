@@ -17,7 +17,6 @@ class LegacyController extends AbstractController
     #[Route(path: '/data_updates.html')]
     public function iuForm(?string $creatorId): Response
     {
-        return $this->render('legacy/iu_form.html.twig')
-            ->setStatusCode(404); // TODO: change back to 200
+        return $this->render('legacy/iu_form.html.twig');
     }
 }

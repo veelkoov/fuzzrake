@@ -8,8 +8,8 @@ use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
 use App\Entity\User;
-use App\IuHandling\Import\Update;
-use App\IuHandling\Import\UpdatesService;
+use App\IuHandling\Import\ImportData;
+use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -18,7 +18,6 @@ use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -39,16 +38,16 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         );
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], []]]);
-        $result = $subject->getUpdateFor($submission);
+        $result = $subject->getImportDataFor($submission);
 
-        self::assertNull($result->originalCreator->getDateAdded());
-        self::assertNull($result->originalCreator->getDateUpdated());
+        self::assertNull($result->subjectCreator->getDateAdded());
+        self::assertNull($result->subjectCreator->getDateUpdated());
 
-        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->originalInput->getDateAdded());
-        self::assertNull($result->originalInput->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->inputData->getDateAdded());
+        self::assertNull($result->inputData->getDateUpdated());
 
-        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateAdded());
-        self::assertNull($result->updatedCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->fixedData->getDateAdded());
+        self::assertNull($result->fixedData->getDateUpdated());
     }
 
     /**
@@ -69,16 +68,16 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         $submission = $this->getEntityForSubmission($user, new Creator()->setCreatorId('TEST001')); // FIXME: Should match by data in User
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]]);
-        $result = $subject->getUpdateFor($submission);
+        $result = $subject->getImportDataFor($submission);
 
-        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->originalCreator->getDateAdded());
-        self::assertNull($result->originalCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->subjectCreator->getDateAdded());
+        self::assertNull($result->subjectCreator->getDateUpdated());
 
-        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->originalInput->getDateAdded());
-        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->originalInput->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->inputData->getDateAdded());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->inputData->getDateUpdated());
 
-        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->updatedCreator->getDateAdded());
-        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->updatedCreator->getDateUpdated());
+        self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->fixedData->getDateAdded());
+        self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->fixedData->getDateUpdated());
     }
 
     public function testResolvingMultipleMatchedByCreatorId(): void
@@ -100,11 +99,11 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             [['TEST0A1'], [$creator1]],
         ]);
 
-        $result = $subject->getUpdateFor($submission);
+        $result = $subject->getImportDataFor($submission);
         self::assertEquals([$creator1, $creator2], $result->matchedCreators);
 
         $submission->setDirectives('match-maker-id TEST0A1');
-        $result = $subject->getUpdateFor($submission);
+        $result = $subject->getImportDataFor($submission);
         self::assertEquals([$creator1], $result->matchedCreators);
     }
 
@@ -124,12 +123,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerly(['The old creator name'])
         );
 
-        $result1 = $this->getUpdatesServiceForGetUpdateFor([[['TEST003'], [$creator]]])->getUpdateFor($submission1);
+        $result1 = $this->getUpdatesServiceForGetUpdateFor([[['TEST003'], [$creator]]])->getImportDataFor($submission1);
 
-        self::assertSame('The new creator name', $result1->updatedCreator->getName());
-        self::assertEquals(['The old creator name'], $result1->updatedCreator->getFormerly());
-        self::assertSame('TEST003', $result1->updatedCreator->getCreatorId());
-        self::assertEquals(['TEST001', 'TEST002'], $result1->updatedCreator->getFormerCreatorIds());
+        self::assertSame('The new creator name', $result1->fixedData->getName());
+        self::assertEquals(['The old creator name'], $result1->fixedData->getFormerly());
+        self::assertSame('TEST003', $result1->fixedData->getCreatorId());
+        self::assertEquals(['TEST001', 'TEST002'], $result1->fixedData->getFormerCreatorIds());
 
         // No change
         $submission2 = $this->getEntityForSubmission($user, new Creator()
@@ -138,18 +137,18 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->setFormerly(['The old creator name'])
         );
 
-        $result2 = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]])->getUpdateFor($submission2);
+        $result2 = $this->getUpdatesServiceForGetUpdateFor([[['TEST001'], [$creator]]])->getImportDataFor($submission2);
 
-        self::assertSame('The new creator name', $result2->updatedCreator->getName());
-        self::assertEquals(['The old creator name'], $result2->updatedCreator->getFormerly());
-        self::assertSame('TEST001', $result2->updatedCreator->getCreatorId());
-        self::assertEquals(['TEST002'], $result2->updatedCreator->getFormerCreatorIds());
+        self::assertSame('The new creator name', $result2->fixedData->getName());
+        self::assertEquals(['The old creator name'], $result2->fixedData->getFormerly());
+        self::assertSame('TEST001', $result2->fixedData->getCreatorId());
+        self::assertEquals(['TEST002'], $result2->fixedData->getFormerCreatorIds());
     }
 
     /**
      * @param list<array{list<string>, list<Creator>}> $calls
      */
-    private function getUpdatesServiceForGetUpdateFor(array $calls): UpdatesService
+    private function getUpdatesServiceForGetUpdateFor(array $calls): ImportService
     {
         $creatorRepoMock = $this->createMock(CreatorRepository::class);
         $creatorRepoMock
@@ -166,15 +165,14 @@ class UpdatesServiceTest extends FuzzrakeTestCase
 
         $entityManagerStub = self::createStub(EntityManagerInterface::class);
         $messageBusStub = self::createStub(MessageBusInterface::class);
-        $loggerStub = self::createStub(LoggerInterface::class);
 
-        return new UpdatesService($creatorRepoMock, $entityManagerStub, $this->getNoopFixerMock(), $messageBusStub, $loggerStub);
+        return new ImportService($creatorRepoMock, $entityManagerStub, $this->getNoopFixerMock(), $messageBusStub);
     }
 
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new Update(new Submission(false), [], $entity, $entity, $entity, [], true, true);
+        $update = new ImportData(new Submission(false), [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);
@@ -183,13 +181,13 @@ class UpdatesServiceTest extends FuzzrakeTestCase
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = new Creator()->setCreatorId('TEST0001');
-        $update = new Update(new Submission(true), [], $entity, $entity, $entity, [], true, false);
+        $update = new ImportData(new Submission(true), [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
         $subject->import($update);
     }
 
-    private function getUpdatesServiceForImport(Update $update): UpdatesService
+    private function getUpdatesServiceForImport(ImportData $update): ImportService
     {
         $creatorPersisted = false;
         $eventPersisted = false;
@@ -199,12 +197,12 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             function (object $entity) use ($update, &$creatorPersisted, &$eventPersisted): void {
                 if ($entity instanceof Creator) {
                     self::assertFalse($creatorPersisted, 'Expected single creator to be persisted.');
-                    self::assertSame($update->originalCreator, $entity);
+                    self::assertSame($update->subjectCreator, $entity);
                     $creatorPersisted = true;
                 } elseif ($entity instanceof Event) {
                     self::assertFalse($eventPersisted, 'Expected single event to be persisted.');
-                    self::assertSame($update->originalCreator->getCreatorId(), $entity->getCreatorId());
-                    self::assertSame($update->isNew ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED, $entity->getType());
+                    self::assertSame($update->subjectCreator->getCreatorId(), $entity->getCreatorId());
+                    self::assertSame(!$update->submission->getIsUpdate() ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED, $entity->getType());
                     $eventPersisted = true;
                 } else {
                     self::fail('Unexpected entity type is being persisted.');
@@ -217,9 +215,8 @@ class UpdatesServiceTest extends FuzzrakeTestCase
             ->method('dispatch')->willReturn(new Envelope(new stdClass()));
 
         $creatorRepoStub = self::createStub(CreatorRepository::class);
-        $loggerStub = self::createStub(LoggerInterface::class);
 
-        return new UpdatesService($creatorRepoStub, $entityManagerMock, $this->getNoopFixerMock(), $messageBusMock, $loggerStub);
+        return new ImportService($creatorRepoStub, $entityManagerMock, $this->getNoopFixerMock(), $messageBusMock);
     }
 
     private function getNoopFixerMock(): Fixer&MockObject

@@ -11,8 +11,8 @@ use App\Data\Submission\Status;
 use App\Entity\Submission;
 use App\Form\Mx\SubmissionFilterType;
 use App\Form\Mx\SubmissionType;
-use App\IuHandling\Import\Update;
-use App\IuHandling\Import\UpdatesService;
+use App\IuHandling\Import\ImportData;
+use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
 use App\Repository\SubmissionRepository;
 use App\Utils\Creator\CreatorList;
@@ -42,7 +42,7 @@ class SubmissionsController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
-        private readonly UpdatesService $updates,
+        private readonly ImportService $importService,
         private readonly CreatorRepository $creatorRepository,
     ) {
     }
@@ -96,17 +96,17 @@ class SubmissionsController extends AbstractController
     {
         $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
 
-        $update = $this->updates->getUpdateFor($submission);
+        $importData = $this->importService->getImportDataFor($submission);
 
-        foreach ($update->errors as $error) {
+        foreach ($importData->errors as $error) {
             $form->get(SubmissionType::FLD_DIRECTIVES)->addError(new FormError($error));
         }
 
         if ($form->isSubmitted()) {
             if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid()) {
-                if ($update->isAccepted) {
+                if ($importData->isAccepted) {
                     $submission->setStatus(Status::IMPORTED);
-                    $this->updates->import($update);
+                    $this->importService->import($importData);
 
                     return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
                 } else {
@@ -122,22 +122,22 @@ class SubmissionsController extends AbstractController
             }
         }
 
-        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($update)->getValuesArray();
+        $similarlyNamedCreators = $this->getSimilarlyNamedCreators($importData)->getValuesArray();
 
         return $this->render('mx/submissions/submission.html.twig', [
-            'update' => $update,
+            'importData' => $importData,
             'similarlyNamedCreators' => $similarlyNamedCreators,
             'fields' => Fields::iuFormAffected(),
             'form' => $form->createView(),
         ]);
     }
 
-    private function getSimilarlyNamedCreators(Update $update): CreatorList
+    private function getSimilarlyNamedCreators(ImportData $update): CreatorList
     {
         return CreatorList::wrap($this->creatorRepository->findNamedSimilarly(
-            new StringSet($update->originalInput->getAllNames())
-                ->plusAll($update->updatedCreator->getAllNames())
+            new StringSet($update->inputData->getAllNames())
+                ->plusAll($update->fixedData->getAllNames())
                 ->minus('')
-        ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->originalCreator->entity);
+        ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->subjectCreator->entity);
     }
 }
