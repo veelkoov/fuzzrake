@@ -30,7 +30,7 @@ class IuFormTest extends FuzzrakePantherTestCase
         $creator2 = UserCreator::get(true)->setName('Creator 002');
         self::setDefaultPassword($creator1->entity->getUser());
         self::setDefaultPassword($creator2->entity->getUser());
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         // And one new
         self::haveACreatorUser();

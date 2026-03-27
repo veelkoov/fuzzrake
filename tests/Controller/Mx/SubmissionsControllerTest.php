@@ -201,7 +201,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $creator1 = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
         $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         $submissionData = new Creator()->setCreatorId('TEST001')->setFormerCreatorIds(['TEST002'])
             ->setName('Testing creator')->setCity('Oulu');
@@ -243,7 +243,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $creator2 = UserCreator::get()
             ->setCreatorId('TEST002')->setName('Why')->setFormerly(['Dogbert & Catbert']);
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         $submissionData = new Creator(user: self::getCreatorUser())
             ->setCreatorId('TEST003')

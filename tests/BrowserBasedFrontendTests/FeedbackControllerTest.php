@@ -44,7 +44,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
     #[DataProvider('feedbackFromCreatorCardCarriesCreatorIdOverToTheFormDataProvider')]
     public function testFeedbackFromCreatorCardCarriesCreatorIdOverToTheForm(string $expectedCreatorId, Creator $creator): void
     {
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');

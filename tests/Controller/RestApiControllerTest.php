@@ -19,7 +19,7 @@ class RestApiControllerTest extends FuzzrakeWebTestCase
      */
     public function testCreators(): void
     {
-        self::persistAndFlushWithUsers(UserCreator::get()
+        self::persistAndFlush(UserCreator::get()
             ->setName('API testing creator')
             ->setCreatorId('TEST001')
             ->setCountry('FI')

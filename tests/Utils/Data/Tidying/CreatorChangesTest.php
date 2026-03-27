@@ -40,7 +40,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
             ->setNsfwSocial(true)
         ;
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         $id1 = $creator1->getId();
         $id2 = $creator2->getId();

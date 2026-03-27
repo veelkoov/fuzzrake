@@ -18,7 +18,7 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
 {
     public function testStatisticsPageLoads(): void
     {
-        self::persistAndFlushWithUsers(UserCreator::get()
+        self::persistAndFlush(UserCreator::get()
             ->setOtherFeatures(['Smoke detector'])
             ->setSpeciesDoes(['Wolves'])
             ->setSpeciesDoesnt(['Coyotes'])
@@ -54,7 +54,7 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
             ->setCountry('IT')
         ;
 
-        self::persistAndFlushWithUsers($a1, $a2, $a3);
+        self::persistAndFlush($a1, $a2, $a3);
 
         self::$client->request('GET', '/stats');
         $crawler = self::$client->getCrawler();
@@ -78,7 +78,7 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
         $creatorFakeIdAndNew = UserCreator::get();
         $creatorFakeIdAndOldAndNew = UserCreator::get();
 
-        self::persistAndFlushWithUsers($creatorFakeIdAndNew, $creatorOnlyFakeId, $creatorFakeIdAndOldAndNew);
+        self::persistAndFlush($creatorFakeIdAndNew, $creatorOnlyFakeId, $creatorFakeIdAndOldAndNew);
 
         $creatorOnlyFakeId->setCreatorId('')
           ->setFormerCreatorIds([sprintf('M%06d', $creatorOnlyFakeId->getId() ?? 0)]);
@@ -91,7 +91,7 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
         $creator4 = UserCreator::get()->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
         $creator5 = UserCreator::get()->setCreatorId('TEST009')->setFormerCreatorIds([]);
 
-        self::persistAndFlushWithUsers($creator3, $creator4, $creator5);
+        self::persistAndFlush($creator3, $creator4, $creator5);
 
         self::$client->request('GET', '/stats');
         $crawler = self::$client->getCrawler();

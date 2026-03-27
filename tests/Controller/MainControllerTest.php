@@ -18,7 +18,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
 
     public function testMainPageLoads(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()
                 ->setName('Test creator')
                 ->setCreatorId('TEST000')
@@ -43,7 +43,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
         $creator3 = UserCreator::get()->setCreatorId('TEST003')->setName('Newer creator 3')->setDateAdded(UtcClock::at('-40 days'))
             ->setFormerly(['Formerly 3A', 'Formerly 3B']);
 
-        self::persistAndFlushWithUsers($creator1, $creator2, $creator3);
+        self::persistAndFlush($creator1, $creator2, $creator3);
         $this->clearCache();
 
         $crawler = self::$client->request('GET', '/new');

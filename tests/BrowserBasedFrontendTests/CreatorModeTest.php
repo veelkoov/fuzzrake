@@ -24,7 +24,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
     {
         // Having two creators, 1 minor-friendly and one NSFW-ish
 
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()->setName('Creator: adult, NSFW')->setCreatorId('TEST001')->setCountry('FI')->setAges(Ages::ADULTS)->setNsfwWebsite(false)->setNsfwSocial(true)->setDoesNsfw(true)->setWorksWithMinors(false),
             UserCreator::get()->setName('Creator: minor, WWM')->setCreatorId('TEST002')->setCountry('FI')->setAges(Ages::MINORS)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(true),
         );

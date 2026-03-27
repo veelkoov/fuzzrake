@@ -105,7 +105,7 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
         $creator = UserCreator::get();
         $creator->entity->addUrl($creatorUrl);
 
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
 
         $creatorUrl->setUrl('https://example.com/updated');
 

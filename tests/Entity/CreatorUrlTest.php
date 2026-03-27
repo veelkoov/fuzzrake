@@ -68,7 +68,7 @@ class CreatorUrlTest extends FuzzrakeKernelTestCase
         $persistedCreatorUrl = new CreatorUrl();
         $persistedCreator->entity->addUrl($persistedCreatorUrl);
 
-        self::persistAndFlushWithUsers($persistedCreator);
+        self::persistAndFlush($persistedCreator);
 
         /** @var Creator $retrievedCreator */
         $retrievedCreator = self::getEM()->getRepository(Creator::class)->findAll()[0];

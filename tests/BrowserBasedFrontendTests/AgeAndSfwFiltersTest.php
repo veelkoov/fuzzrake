@@ -92,7 +92,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
                 $expected[$creatorId] = $creators[$creatorId];
             }
         }
-        self::persistAndFlushWithUsers(...array_values($creators));
+        self::persistAndFlush(...$creators);
 
         $this->clearCache();
 

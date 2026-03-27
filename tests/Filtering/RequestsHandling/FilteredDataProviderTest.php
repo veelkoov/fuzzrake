@@ -29,7 +29,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
             $a->setNsfwSocial(false)->setNsfwWebsite(false)->setDoesNsfw(false);
         }
 
-        self::persistAndFlushWithUsers($a1, $a2, $a3);
+        self::persistAndFlush($a1, $a2, $a3);
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 
@@ -50,7 +50,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         $a6 = UserCreator::get()->setCreatorId('M000006')->setNsfwSocial(true);
         $a7 = UserCreator::get()->setCreatorId('M000007');
 
-        self::persistAndFlushWithUsers($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+        self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
         $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
 

@@ -32,7 +32,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
     public function testFormsChoicesValuesAndLabels(array $choices): void
     {
         $creator = UserCreator::get()->setCreatorId('TEST001');
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
 
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);
@@ -49,7 +49,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
     public function testEditCreator(): void
     {
         $creator = UserCreator::get()->setCreatorId('TEST001');
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
 
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);
@@ -74,7 +74,7 @@ class CreatorsControllerTest extends FuzzrakeWebTestCase
     public function testDeleteCreatorAnd404Response(): void
     {
         $creator = UserCreator::get()->setCreatorId('TEST001');
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
 
         $crawler = self::$client->request('GET', '/mx/creators/TEST001/edit');
         self::assertResponseStatusCodeIs(200);

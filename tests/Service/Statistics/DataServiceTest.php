@@ -24,7 +24,7 @@ class DataServiceTest extends FuzzrakeKernelTestCase
         $a2 = UserCreator::get()->setCountry('EU'); // European Union generic should not count grep-country-eu
         $a3 = UserCreator::get()->setCountry('FI'); // Normal - should count
 
-        self::persistAndFlushWithUsers($a1, $a2, $a3);
+        self::persistAndFlush($a1, $a2, $a3);
 
         $subject = $this->getDataService();
         $result = $subject->getMainPageStats();
@@ -38,7 +38,7 @@ class DataServiceTest extends FuzzrakeKernelTestCase
         $a2 = UserCreator::get()->setInactiveReason(''); // Active should be counted
         $a3 = UserCreator::get()->setInactiveReason('This is a hidden creator'); // Hidden should not be counted
 
-        self::persistAndFlushWithUsers($a1, $a2, $a3);
+        self::persistAndFlush($a1, $a2, $a3);
 
         $subject = $this->getDataService();
         $result = $subject->getMainPageStats();

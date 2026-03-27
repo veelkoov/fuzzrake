@@ -15,7 +15,7 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 {
     public function testGetDistinctValues(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()->setFeatures(['AB', 'CD'])->setOtherFeatures(['01', '02']),
             UserCreator::get()->setFeatures(['EF'])->setOtherFeatures(['03', '04']),
             UserCreator::get()->setFeatures(['GH'])->setInactiveReason('Inactive'), // Counts
@@ -30,7 +30,7 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 
     public function testCountDistinctInActiveCreatorsHaving(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()->setFeatures(['AB', 'CD']),
             UserCreator::get()->setFeatures(['AB']),
             UserCreator::get()->setOtherFeatures(['EF']), // Not features
@@ -49,7 +49,7 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
 
     public function testCountActiveCreatorsHavingAnyOf(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()->setFeatures(['AB', 'CD']),
             UserCreator::get()->setFeatures(['EF']),
             UserCreator::get()->setFeatures(['GH', 'IJ'])->setInactiveReason('Inactive'), // Doesn't count

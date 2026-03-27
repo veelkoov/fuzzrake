@@ -47,35 +47,16 @@ trait EntityManagerTrait
         self::flush();
     }
 
-    protected static function persistAndFlushWithUsers(object ...$entities): void
-    {
-        self::persistAndFlush(...self::unpackAppendUsers($entities));
-    }
-
-    /**
-     * @param object[] $entities
-     *
-     * @return iterable<object>
-     */
-    protected static function unpackAppendUsers(array $entities): iterable
-    {
-        yield from $entities;
-
-        foreach ($entities as $entity) {
-            if ($entity instanceof CreatorE) {
-                yield $entity->getUser();
-            }
-
-            if ($entity instanceof Creator) {
-                yield $entity->entity->getUser();
-            }
-        }
-    }
-
     protected static function persist(object ...$entities): void
     {
+        $entityManager = self::getEM();
+
         foreach ($entities as $entity) {
-            self::getEM()->persist($entity);
+            $entityManager->persist($entity);
+
+            if ($entity instanceof CreatorE || $entity instanceof Creator) {
+                $entityManager->persist($entity->getUser());
+            }
         }
     }
 

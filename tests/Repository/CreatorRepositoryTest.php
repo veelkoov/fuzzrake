@@ -78,7 +78,7 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
     {
         $creator = UserCreator::get()->setCreatorId('TESTID1')->setFormerCreatorIds(['TESTID2', 'TESTID3']);
 
-        self::persistAndFlushWithUsers($creator);
+        self::persistAndFlush($creator);
         self::clear();
 
         $retrieved1 = self::getCreatorRepository()->findByCreatorId('TESTID1');
@@ -111,7 +111,7 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
             ->setName($creator2name)
             ->setFormerly([$creator2oldName1, $creator2oldName2]);
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         $repo = self::getCreatorRepository();
 
@@ -137,7 +137,7 @@ class CreatorRepositoryTest extends FuzzrakeKernelTestCase
             ->setCreatorId($creator2creatorId)
             ->setFormerCreatorIds([$creator2oldCreatorId1, $creator2oldCreatorId2]);
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
 
         $repo = self::getCreatorRepository();
 

@@ -25,7 +25,7 @@ class MainControllerFiltersTest extends FuzzrakeWebTestCase
     #[DataProvider('filterChoicesDataProvider')]
     public function testFiltersThroughHtmx(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
-        self::persistAndFlushWithUsers(...$creators, ...FiltersData::entitiesFrom($creators));
+        self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
 
         $queryParts = [];
 

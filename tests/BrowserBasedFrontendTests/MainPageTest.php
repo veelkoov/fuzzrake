@@ -29,7 +29,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testMainPageUiSmoke(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get(true)->setCreatorId('TEST001')->setName('Test creator 1 CZ')->setCountry('CZ'),
             UserCreator::get(true)->setCreatorId('TEST002')->setName('Test creator 2 CA')->setCountry('CA'),
             UserCreator::get(true)->setCreatorId('TEST003')->setName('Test creator 3 DE')->setCountry('DE'),
@@ -136,7 +136,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         $creator1 = UserCreator::get(true)->setCreatorId('TEST001')->setName('Older creator')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
         $creator2 = UserCreator::get(true)->setCreatorId('TEST002')->setName('Newer creator 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
 
-        self::persistAndFlushWithUsers($creator1, $creator2);
+        self::persistAndFlush($creator1, $creator2);
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');
@@ -153,7 +153,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testOpeningCreatorCardByCreatorId(): void
     {
-        self::persistAndFlushWithUsers(UserCreator::get(true)
+        self::persistAndFlush(UserCreator::get(true)
             ->setCreatorId('TEST001')->setInactiveReason('Testing')); // Must show up even if deactivated
         $this->clearCache();
 
@@ -170,7 +170,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testFilterChoicesGetSavedAndRestored(): void
     {
-        self::persistAndFlushWithUsers(UserCreator::get(true)->setCountry('FI'));
+        self::persistAndFlush(UserCreator::get(true)->setCountry('FI'));
         $this->clearCache();
 
         self::$client->request('GET', '/index.php/');
@@ -200,7 +200,7 @@ class MainPageTest extends FuzzrakePantherTestCase
      */
     public function testColumnVisibilityGetSavedAndRestored(): void
     {
-        self::persistAndFlushWithUsers(UserCreator::get(true)
+        self::persistAndFlush(UserCreator::get(true)
             ->setCreatorId('TEST001')->setCountry('FI')->setStyles(['Toony']));
 
         self::$client->request('GET', '/index.php/');

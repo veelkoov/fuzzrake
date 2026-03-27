@@ -36,7 +36,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $creator3 = UserCreator::get()->setCreatorId('TEST003')->setWebsiteUrl('creator3_A');
         $creator4 = UserCreator::get()->setCreatorId('TEST004')->setWebsiteUrl('creator4_A')->setCommissionsUrls(['creator4_B']);
 
-        self::persistAndFlushWithUsers($creator1, $creator2, $creator3, $creator4);
+        self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
 
         $expectedIds = [$creator1->getId(), $creator2->getId(), $creator4->getId()];
 
@@ -71,7 +71,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         $creator3 = UserCreator::get()->setCreatorId('TEST003')->setCommissionsUrls(['creator3_A']);
         $creator4 = UserCreator::get()->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
 
-        self::persistAndFlushWithUsers($creator1, $creator2, $creator3, $creator4);
+        self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
         self::clearQueue(); // The listener creates "refresh single creator tracking" messages
 
         $intList = new IntList([

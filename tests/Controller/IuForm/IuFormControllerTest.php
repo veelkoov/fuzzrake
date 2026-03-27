@@ -77,7 +77,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
             ->setDoesNsfw(false)
             ->setWorksWithMinors(false)
         ;
-        self::persistAndFlushWithUsers($creatorToBeUpdated, $existingCreator);
+        self::persistAndFlush($creatorToBeUpdated, $existingCreator);
 
         self::loginCreatorUser();
         self::$client->request('GET', '/user/iu_form/start');
@@ -98,7 +98,7 @@ class IuFormControllerTest extends FuzzrakeWebTestCase
 
     public function testNewCreatorCannotUseOtherCreatorsCreatorId(): void
     {
-        self::persistAndFlushWithUsers(
+        self::persistAndFlush(
             UserCreator::get()->setCreatorId('TEST001'),
         );
 
