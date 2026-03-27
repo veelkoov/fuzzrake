@@ -70,9 +70,10 @@ trait UsersTrait
         if (method_exists(self::$client, 'loginUser')) {
             self::$client->loginUser($user);
         } else {
-            self::$client->get('/uuser/logout'); // @phpstan-ignore method.notFound
-            self::$client->restart(); // FIXME: Why is this necessary?
-            self::$client->get('/login'); // @phpstan-ignore method.notFound
+            self::$client->get('/index.php/login'); // @phpstan-ignore method.notFound
+            if (1 !== self::$client->getCrawler()->filterXPath('//input[@type="email" and @id="username"]')->count()) {
+                self::$client->get('/index.php/uuser/logout'); // @phpstan-ignore method.notFound
+            }
             self::$client->submitForm('Sign in', [
                 '_username' => $user->getEmail(),
                 '_password' => self::DEFAULT_TEST_PASSWORD,

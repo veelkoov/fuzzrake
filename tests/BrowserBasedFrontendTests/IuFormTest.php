@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
-use App\Data\Definitions\Ages;
 use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Tests\TestUtils\UserCreator;
@@ -27,8 +26,8 @@ class IuFormTest extends FuzzrakePantherTestCase
     public function testFormStateIsProperlyKeptAndReset(): void
     {
         // Having two existing creators
-        $creator1 = UserCreator::get()->setName('Creator 001')->setCreatorId('TEST001')->setAges(Ages::MIXED)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(false);
-        $creator2 = UserCreator::get()->setName('Creator 002')->setCreatorId('TEST002')->setAges(Ages::MIXED)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(false);
+        $creator1 = UserCreator::get(true)->setName('Creator 001');
+        $creator2 = UserCreator::get(true)->setName('Creator 002');
         self::setDefaultPassword($creator1->entity->getUser());
         self::setDefaultPassword($creator2->entity->getUser());
         self::persistAndFlushWithUsers($creator1, $creator2);
@@ -54,7 +53,6 @@ class IuFormTest extends FuzzrakePantherTestCase
             'iu_form[ages]' => 'MIXED',
             'iu_form[nsfwWebsite]' => 'NO',
             'iu_form[nsfwSocial]' => 'YES',
-            'iu_form[contactAllowed]' => 'NO',
         ]);
         self::$client->getKeyboard()->pressKey(WebDriverKeys::TAB); // Simulate exiting field's focus
 
@@ -69,10 +67,7 @@ class IuFormTest extends FuzzrakePantherTestCase
         // Go back to 1st creator I/U data page, make sure A matches, submit
         $this->goToTheDataPage($creator1->entity->getUser());
         self::assertInputValueSame('iu_form[name]', 'Creator 001 - MODIFIED');
-        $this->selectRightCaptchaSolution();
-        self::$client->submit(self::$client->getCrawler()->selectButton('Submit')->form(), [
-            'iu_form[password]' => 'test-password',
-        ]);
+        self::$client->submit(self::$client->getCrawler()->selectButton('Submit')->form(), []);
         self::$client->waitFor('#iu-form-data[data-step="confirmation"]');
 
         // Go back to the new creator I/U data page, make sure B matches, reset

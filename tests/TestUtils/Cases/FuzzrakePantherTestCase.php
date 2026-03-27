@@ -44,7 +44,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
     protected static function waitUntilShows(string $locator, int $millisecondsForAnimation = 500): void
     {
         usleep($millisecondsForAnimation * 1000);
-        self::assertSelectorExists($locator);
+        self::assertSelectorExists($locator, "$locator does not exist.");
 
         try {
             self::$client->waitForVisibility($locator, 5);
