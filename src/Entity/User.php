@@ -180,6 +180,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         return $this;
     }
 
+    public function allowsFeedback(): bool
+    {
+        return ContactPermit::FEEDBACK === $this->contactPermit;
+    }
+
     #[Override]
     public function __toString()
     {

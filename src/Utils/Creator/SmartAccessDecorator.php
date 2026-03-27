@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Creator;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
@@ -298,11 +297,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getAllNames(): array
     {
         return Lists::nonEmptyStrings([$this->getName(), ...$this->getFormerly()]);
-    }
-
-    public function allowsFeedback(): bool
-    {
-        return ContactPermit::FEEDBACK === $this->entity->getUser()->getContactPermit(); // TODO: Make sure it is where it belongs
     }
 
     public function hasSpeciesInfo(): bool
@@ -1515,5 +1509,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         return $result;
+    }
+
+    public function getUser(): User
+    {
+        return $this->entity->getUser();
     }
 }
