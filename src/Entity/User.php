@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     }
 
     #[Override]
-    public function getEmail(): string // FIXME: No validation?
+    public function getEmail(): string
     {
         return $this->email;
     }
