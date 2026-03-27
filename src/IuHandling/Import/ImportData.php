@@ -44,10 +44,4 @@ final readonly class ImportData
     {
         return 1 === count($this->matchedCreators);
     }
-
-    // TODO
-    // public function getDescription(): Description
-    // {
-    //     return new Description($this->originalCreator, $this->updatedCreator);
-    // }
 }
