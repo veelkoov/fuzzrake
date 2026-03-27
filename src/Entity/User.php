@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\Email, Assert\NotBlank, Assert\Length(max: 256)] // grep-code-email-constraints
+    #[Assert\NotBlank(message: 'Please enter your email.'), Assert\Length(max: 256), Assert\Email] // grep-code-email-constraints
     #[ORM\Column(type: Types::TEXT)]
     private string $email = ''; // grep-code-username-is-email
 

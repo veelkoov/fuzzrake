@@ -52,8 +52,8 @@ final class Email
     {
         return [
             new Constraints\NotBlank(message: 'Please enter your email.'),
-            new Constraints\Email(),
             new Constraints\Length(max: 256), // If your email address is longer than 256, you already have more important problems
+            new Constraints\Email(),
         ];
     }
 }
