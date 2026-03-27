@@ -48,7 +48,7 @@ class UrlRemovalServiceHandleRemovalTest extends FuzzrakeTestCase
         self::mockTime();
     }
 
-    #[AllowMockObjectsWithoutExpectations] // TODO: This was needed when Creator was a mock instead of an instance manipulated with reflection
+    #[AllowMockObjectsWithoutExpectations]
     public function testEmptyNotesGetSet(): void
     {
         $creator = new Creator();

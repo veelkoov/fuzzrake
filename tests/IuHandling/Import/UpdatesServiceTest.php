@@ -18,7 +18,6 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -152,9 +151,9 @@ class UpdatesServiceTest extends FuzzrakeTestCase
      */
     private function getUpdatesServiceForGetUpdateFor(array $calls): ImportService
     {
-        $creatorRepoMock = $this->createMock(CreatorRepository::class);
+        $creatorRepoMock = self::createStub(CreatorRepository::class);
         $creatorRepoMock
-            ->expects(self::atLeast(0))->method('findByCreatorIds')
+            ->method('findByCreatorIds')
             ->willReturnCallback(function (array $creatorIds) use ($calls) {
                 foreach ($calls as $call) {
                     if ($call[0] === $creatorIds) {
@@ -223,11 +222,10 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         return new ImportService($creatorRepoStub, $entityManagerMock, $this->getNoopFixerMock(), $messageBusMock);
     }
 
-    private function getNoopFixerMock(): Fixer&MockObject
+    private function getNoopFixerMock(): Fixer
     {
-        $fixerMock = $this->createMock(Fixer::class);
-        $fixerMock->expects(self::atLeast(0))->method('getFixed')
-            ->willReturnCallback(static fn (Creator $input) => $input->copy());
+        $fixerMock = self::createStub(Fixer::class);
+        $fixerMock->method('getFixed')->willReturnCallback(static fn (Creator $input) => $input->copy());
 
         return $fixerMock;
     }
