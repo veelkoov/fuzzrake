@@ -43,6 +43,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         // Action: navigate to the data updates page and enable the creator mode, go back to the main page
 
         self::markTestIncomplete(); // FIXME
+
         return; // @phpstan-ignore deadCode.unreachable
 
         self::$client->request('GET', '/index.php/iu_form/start');
