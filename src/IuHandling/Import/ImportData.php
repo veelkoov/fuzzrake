@@ -16,7 +16,7 @@ final readonly class ImportData
      */
     public function __construct(
         public Submission $submission,
-        public array $matchedCreators,
+        public array $matchedCreators, // grep-code-legacy-submissions-with-no-creator-reference
         public Creator $subjectCreator,
         public Creator $inputData,
         public Creator $fixedData,
@@ -40,7 +40,7 @@ final readonly class ImportData
         return !$this->subjectCreator->equals($field, $this->fixedData);
     }
 
-    public function isUpdate(): bool
+    public function isUpdate(): bool // grep-code-legacy-submissions-with-no-creator-reference
     {
         return 1 === count($this->matchedCreators);
     }
