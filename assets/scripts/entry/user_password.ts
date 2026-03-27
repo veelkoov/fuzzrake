@@ -21,7 +21,7 @@ const options = {
 };
 
 zxcvbnOptions.setOptions(options);
-const MIN_PASSWORD_LEN = 8; // grep-password-length
+const MIN_PASSWORD_LEN = 8; // grep-code-min-password-length
 
 const feedbackElement = requireJQ("#password-feedback");
 const explanationElement = requireJQ("#password-explanation");

@@ -21,7 +21,7 @@ final class Password
         return [
             new NotBlank(message: 'Please enter a password'),
             new Length(
-                min: 8, // grep-password-length
+                min: 8, // grep-code-min-password-length
                 max: 512, // 4096 = max length allowed by Symfony for security reasons, 512 = performance/!DoS
                 minMessage: 'Your password must be at least {{ limit }} characters.',
             ),
