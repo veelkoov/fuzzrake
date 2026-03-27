@@ -7,7 +7,6 @@ namespace App\Form;
 use App\Data\Definitions\ContactPermit;
 use App\Entity\User;
 use App\Form\Transformers\ContactPermitTransformer;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<Creator>
+ * @extends AbstractType<User>
  */
 final class ContactPermitFormType extends AbstractType
 {
