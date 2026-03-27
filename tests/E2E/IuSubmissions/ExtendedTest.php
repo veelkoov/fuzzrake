@@ -32,9 +32,6 @@ class ExtendedTest extends IuSubmissionsTestCase
     use IuFormTrait;
     use ClockSensitiveTrait;
 
-    private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [// Values which must never appear in the form
-    ];
-
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
         Field::PRODUCTION_MODELS,
         Field::FEATURES,
@@ -61,7 +58,6 @@ class ExtendedTest extends IuSubmissionsTestCase
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
-     * - all fields, which values should NEVER be displayed in the I/U form, are not,
      * - no newly added field gets overseen in the I/U form,
      * - all data submitted in the form is saved in the submission.
      *
@@ -142,17 +138,8 @@ class ExtendedTest extends IuSubmissionsTestCase
             if (!$field->isInIuForm()) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
-                self::assertFalse($field->isInIuForm());
-                continue;
-            }
-
-            self::assertTrue($field->isInIuForm());
-            $value = $oldData->get($field);
-
-            if (arr_contains(self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, $field)) {
-                self::assertValueIsNotPresentInForm(Enforce::string($value), $htmlBody);
             } else {
-                self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
+                self::assertFieldIsPresentWithValue($oldData->get($field), $field, $htmlBody);
             }
         }
     }
@@ -257,13 +244,6 @@ class ExtendedTest extends IuSubmissionsTestCase
 
             $pattern = "~<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>~";
             self::assertTrue(Preg::isMatch($pattern, $htmlBody), "$field->value radio field was not present or (not) selected.");
-        }
-    }
-
-    private static function assertValueIsNotPresentInForm(string $value, string $htmlBody): void
-    {
-        if ('' !== $value) {
-            self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
         }
     }
 
