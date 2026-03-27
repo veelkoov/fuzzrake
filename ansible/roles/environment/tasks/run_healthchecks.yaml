@@ -9,7 +9,6 @@
     - "/events"
     - "/feedback"
     - "/info"
-    - "/iu_form/start" # FIXME
     - "/stats"
   changed_when: false
   check_mode: false
