@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Captcha\Form\CaptchaType;
+use App\Security\Email;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class ResetPasswordRequestFormType extends AbstractType
 {
@@ -23,7 +23,7 @@ final class ResetPasswordRequestFormType extends AbstractType
             ->add(self::FLD_EMAIL, EmailType::class, [
                 'attr' => ['autocomplete' => 'email'],
                 'help' => 'Enter your email address to receive a message with a link to reset your password.',
-                'constraints' => [new NotBlank(message: 'Please enter your email')],
+                'constraints' => Email::getConstraints(),
             ])
             ->add('captcha', CaptchaType::class)
         ;

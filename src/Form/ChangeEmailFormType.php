@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Security\Email;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -22,13 +23,12 @@ final class ChangeEmailFormType extends AbstractType
         $builder
             ->add(self::FLD_PASSWORD, PasswordType::class, [
                 'label' => 'Your password',
-                'mapped' => false,
                 'required' => true,
             ])
             ->add(self::FLD_NEW_EMAIL, EmailType::class, [
                 'label' => 'New email',
-                'mapped' => false,
                 'required' => true,
+                'constraints' => Email::getConstraints(),
             ])
         ;
     }

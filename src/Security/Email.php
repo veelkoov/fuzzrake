@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Security;
 
+use App\Utils\HasEmailGetter;
 use App\Utils\Traits\UtilityClass;
 use Composer\Pcre\Preg;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints;
 use Veelkoov\Debris\Lists\StringList;
 
 final class Email
@@ -40,5 +43,17 @@ final class Email
     public static function isValid(string $email): bool
     {
         return Preg::isMatch(self::PATTERN_HTML5_ALLOW_NO_TLD, $email);
+    }
+
+    /**
+     * @return list<Constraint>
+     */
+    public static function getConstraints(): array // grep-code-email-constraints
+    {
+        return [
+            new Constraints\NotBlank(message: 'Please enter your email.'),
+            new Constraints\Length(max: 256), // If your email address is longer than 256, you already have more important problems
+            new Constraints\Email(),
+        ];
     }
 }

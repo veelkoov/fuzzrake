@@ -12,8 +12,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UsersService
 {
-    public const string RANDOM_PASSWORD_CHARACTERS = '-_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    public const int RANDOM_PASSWORD_LENGHT = 32;
+    private const string RANDOM_PASSWORD_CHARACTERS = '-_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private const int RANDOM_PASSWORD_LENGTH = 32;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -45,7 +45,7 @@ class UsersService
             $result = '';
 
             $charactersMax = strlen(self::RANDOM_PASSWORD_CHARACTERS) - 1;
-            for ($i = 0; $i < self::RANDOM_PASSWORD_LENGHT; ++$i) {
+            for ($i = 0; $i < self::RANDOM_PASSWORD_LENGTH; ++$i) {
                 $result .= self::RANDOM_PASSWORD_CHARACTERS[random_int(0, $charactersMax)];
             }
 

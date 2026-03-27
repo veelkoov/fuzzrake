@@ -15,6 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<User>
+ */
 final class RegistrationFormType extends AbstractType
 {
     public const string FLD_NEW_PASSWORD = 'newPassword';
@@ -23,7 +26,9 @@ final class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, [
+                'empty_data' => '',
+            ])
             ->add(self::FLD_NEW_PASSWORD, RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [

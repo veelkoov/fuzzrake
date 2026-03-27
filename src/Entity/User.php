@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Utils\HasEmailGetter;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
@@ -27,8 +28,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\Email]
-    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'Please enter your email.'), Assert\Length(max: 256), Assert\Email] // grep-code-email-constraints
+    #[ORM\Column(type: Types::TEXT)]
     private string $email = ''; // grep-code-username-is-email
 
     /**
@@ -40,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(type: Types::TEXT)]
     private string $password = '';
 
     #[ORM\Column]
