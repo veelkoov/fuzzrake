@@ -70,7 +70,7 @@ class Creator implements Stringable
     private string $featuresComment = '';
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
-    private ?bool $hasAllergyWarning = null; // FIXME: Is not NULL by default in the form, why?
+    private ?bool $hasAllergyWarning = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private string $allergyWarningInfo = '';
