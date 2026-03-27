@@ -89,11 +89,10 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         int $expectedFirst, int $expectedLast): void
     {
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
-            $creator = UserCreator::get()
+            self::persist(UserCreator::get()
                 ->setName(sprintf('%03d', $i)) // For sorting
-                ->setCity("$i"); // For easy number access
-
-            self::persist($creator, $creator->entity->getUser());
+                ->setCity("$i") // For easy number access
+            );
         }
 
         self::flush();
