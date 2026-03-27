@@ -10,7 +10,7 @@ import error from "../ErrorMessage";
 
 jQuery(() => {
   const dataHolder = jQuery("#iu-form-data");
-  const creatorId = dataHolder.data("creator-id"); // grep-code-legacy-local-storage-submission-data
+  const creatorId = dataHolder.data("creator-id"); // grep-code-iu-form-data-local-storage
   const step = dataHolder.data("step");
 
   switch (step) {

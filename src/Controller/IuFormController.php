@@ -136,6 +136,8 @@ class IuFormController extends AbstractController
 
     private function getCreatorIdTplValue(User $user): string
     {
-        return $user->getCreator()?->getLastCreatorId() ?? '(new)'; // grep-code-legacy-local-storage-submission-data
+        // grep-code-iu-form-data-local-storage The creator ID (or "(new)" placeholder) is used to allow
+        // using a single browser/machine to manage multiple studios. Low probability, but it's here.
+        return $user->getCreator()?->getLastCreatorId() ?? '(new)';
     }
 }
