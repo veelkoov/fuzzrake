@@ -18,12 +18,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
 
     public function testMainPageLoads(): void
     {
-        self::persistAndFlush(
-            UserCreator::get()
-                ->setName('Test creator')
-                ->setCreatorId('TEST000')
-                ->setCountry('FI')
-        );
+        self::persistAndFlush(UserCreator::get(true));
 
         self::$client->request('GET', '/');
 
