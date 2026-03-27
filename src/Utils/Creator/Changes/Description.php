@@ -6,13 +6,18 @@ namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Veelkoov\Debris\Lists\StringList;
 
 class Description
 {
+    public const array FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION = [
+        Field::URL_MINIATURES,
+        Field::DATE_ADDED,
+        Field::DATE_UPDATED,
+    ];
+
     /**
      * @var ChangeInterface[]
      */
@@ -21,7 +26,7 @@ class Description
     public function __construct(Creator $old, Creator $new)
     {
         foreach (Fields::persisted() as $field) {
-            if (!SecureValues::hideInChangesDescription($field)) {
+            if (!arr_contains(self::FIELDS_HIDDEN_IN_CHANGES_DESCRIPTION, $field)) {
                 $this->addChange(...$this->getField($field, $old, $new));
             }
         }

@@ -117,7 +117,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('nsfwSocial', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case NSFW_SOCIAL = 'NSFW_SOCIAL';
 
-    #[Props('doesNsfw', type: Type::BOOLEAN, inStats: false, freeForm: false)]
+    #[Props('doesNsfw', type: Type::BOOLEAN, public: false, inStats: false, freeForm: false)]
     case DOES_NSFW = 'DOES_NSFW';
 
     #[Props('safeDoesNsfw', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false, persisted: false)]
