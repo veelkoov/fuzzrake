@@ -9,8 +9,6 @@ use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Tests\TestUtils\UserCreator;
 use Exception;
-use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Attributes\Large;
