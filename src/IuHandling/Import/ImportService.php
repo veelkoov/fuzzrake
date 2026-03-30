@@ -144,7 +144,8 @@ class ImportService
 
         $user = $importData->submission->getOwner();
         if (null === $user) {
-            throw new LogicException('Support for legacy submissions to be implemented.'); // TODO
+            // TODO: https://github.com/veelkoov/fuzzrake/issues/327
+            throw new LogicException('Support for legacy submissions to be implemented.');
         } else {
             $subjectCreator->entity->setUser($user);
         }
