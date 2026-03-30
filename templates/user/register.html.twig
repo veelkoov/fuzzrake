@@ -15,6 +15,10 @@
 {% block body %}
     <h1 class="my-4">Registration</h1>
 
+    <div class="alert alert-warning" role="alert">
+        Adding new makers/studios is suspended until further notice.
+    </div>
+
     <div class="accordion" id="registrationAccordion">
         <div class="accordion-item">
             <h2 class="accordion-header">
@@ -56,7 +60,7 @@
                     <ol>
                         <li>If you remember the email and password which you were using to submit your data previously, try simply logging in with them.</li>
                         <li>If you do not remember the password, but know for sure which email address you were using, try using the password reset function.</li>
-                        <li>Still no luck? Please <a href="{{ path(constant('App\\ValueObject\\Routing\\RouteName::CONTACT')) }}">contact the maintainer</a>, "I want to claim my studio, » NAME/FORMER NAMES HERE «".</li>
+                        <li>Still no luck? Please <a href="{{ path(constant('App\\ValueObject\\Routing\\RouteName::CONTACT')) }}">contact the maintainer</a>, "<mark class="user-select-all">I want to claim my studio, » NAME/FORMER NAMES HERE «</mark>".</li>
                     </ol>
                 </div>
             </div>
