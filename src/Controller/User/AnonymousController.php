@@ -64,6 +64,7 @@ class AnonymousController extends AbstractController
         if (!$form->isSubmitted() || !$form->isValid() || !$captcha->isSolved()) {
             return $this->render('user/register.html.twig', [
                 'registration_form' => $form,
+                'was_submitted' => $form->isSubmitted(),
             ]);
         }
 

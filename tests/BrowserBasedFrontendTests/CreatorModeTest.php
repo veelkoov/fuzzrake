@@ -9,6 +9,9 @@ use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
 use App\Tests\TestUtils\UserCreator;
 use Exception;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Attributes\Large;
 
@@ -39,18 +42,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#TEST001');
         self::assertInvisible('#TEST002');
         self::assertInvisible('#btn-reenable-filters');
-
-        // Action: navigate to the data updates page and enable the creator mode, go back to the main page
-
-        self::markTestIncomplete(); // FIXME
-
-        return; // @phpstan-ignore deadCode.unreachable
-
-        self::$client->request('GET', '/index.php/iu_form/start');
-
-        self::$client->clickLink('Temporarily disable all the filters and open the main page');
-        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
-        self::waitForLoadingIndicatorToDisappear();
+        $this->goToRegistrationAndEnableCreatorMode();
 
         // Expect: checklist is hidden and all creators are visible
 
@@ -98,13 +90,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#btn-reenable-filters');
         $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
 
-        // Action: navigate to the data updates page and enable the creator mode, go back to the main page
-
-        self::$client->request('GET', '/index.php/iu_form/start');
-
-        self::$client->clickLink('Temporarily disable all the filters and open the main page');
-        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
-        self::waitForLoadingIndicatorToDisappear();
+        $this->goToRegistrationAndEnableCreatorMode();
 
         // Expect: checklist is hidden and all creators are visible
 
@@ -134,5 +120,22 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
         $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function goToRegistrationAndEnableCreatorMode(): void
+    {
+        self::$client->request('GET', '/index.php/register');
+
+        // Show accordion part with instructions on how to search
+        self::$client->findElement(WebDriverBy::cssSelector('[data-bs-target="#registrationAccordionItem2"]'))
+            ->click();
+        self::waitUntilShows('#registrationAccordionItem2');
+
+        self::$client->clickLink('Temporarily disable all the filters and open the main page');
+        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::waitForLoadingIndicatorToDisappear();
     }
 }
