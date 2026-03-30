@@ -3,13 +3,12 @@
 {% block title %}inclusion/updates{% endblock %}
 
 {% block body %}
-    <h1>
-        Inclusion/updates {# TODO: Improve visuals... slightly #}
+    <h1 class="mt-4">
+        Inclusion/updates
     </h1>
 
-    <p>
-        Submitting requests functionality has been moved. Please
-        <a href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::USER_LOGIN')) }}">log in</a>
-        to submit or update your information.
+    <p class="mt-4">
+        To submit/update your information, please
+        <a href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::USER_LOGIN')) }}">log in</a>.
     </p>
 {% endblock %}
