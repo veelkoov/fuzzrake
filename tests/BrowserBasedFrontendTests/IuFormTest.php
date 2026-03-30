@@ -96,6 +96,8 @@ class IuFormTest extends FuzzrakePantherTestCase
     private function goToTheDataPage(User $user): void
     {
         self::loginUser($user);
+        self::$client->waitFor('body.init-done', 5);
+
         self::$client->request('GET', '/index.php/user/iu_form/start');
 
         self::waitUntilShows('#iu_form_confirmNoPendingUpdates_0');
