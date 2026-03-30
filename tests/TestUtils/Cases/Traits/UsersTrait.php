@@ -65,15 +65,21 @@ trait UsersTrait
 
     protected static function loginUser(User $user): void
     {
-        // TODO: Possibly find a better method to do this
-        // @phpstan-ignore function.impossibleType,function.alreadyNarrowedType
+        // There may be better ways to do this now, or in the future. For now, this just works.
+
+        // @phpstan-ignore function.impossibleType,function.alreadyNarrowedType (Allow both Panther and KernelBrowser)
         if (method_exists(self::$client, 'loginUser')) {
             self::$client->loginUser($user);
         } else {
-            self::$client->get('/index.php/login'); // @phpstan-ignore method.notFound
+            // @phpstan-ignore method.notFound (Panther only - method_exists above)
+            self::$client->get('/index.php/login');
+
+            // If we are already logged in, logout (redirects to the login form)
             if (1 !== self::$client->getCrawler()->filterXPath('//input[@type="email" and @id="username"]')->count()) {
-                self::$client->get('/index.php/uuser/logout'); // @phpstan-ignore method.notFound
+                // @phpstan-ignore method.notFound (Panther only - method_exists above)
+                self::$client->get('/index.php/uuser/logout');
             }
+
             self::$client->submitForm('Sign in', [
                 '_username' => $user->getEmail(),
                 '_password' => self::DEFAULT_TEST_PASSWORD,
