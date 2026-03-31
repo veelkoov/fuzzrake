@@ -79,19 +79,20 @@ class UpdatesServiceTest extends FuzzrakeTestCase
         self::assertDateTimeSameIgnoreSubSeconds(UtcClock::now(), $result->fixedData->getDateUpdated());
     }
 
-    public function testResolvingMultipleMatchedByCreatorId(): void
+    public function testResolvingMultipleMatchedByCreatorIdInLegacySubmissions(): void
     {
-        // grep-code: At this point could only be a result of an error or unpredictable condition, but keeping this test
-
         $creator1 = $this->getPersistedCreatorMock()->setCreatorId('TEST0A1')->setName('Creator 1');
         $creator2 = $this->getPersistedCreatorMock()->setCreatorId('TEST0B1')->setName('Creator 2');
 
+        // That submission would not be possible to make due to creator ID ownership validation, but we can forge it.
+        // This test however doesn't make much sense right now. Rethink/redesign.
+        // grep-code-legacy-submissions-with-no-creator-reference TODO: https://github.com/veelkoov/fuzzrake/issues/327
         $submissionData = new Creator()
             ->setCreatorId('TEST0A1')
             ->setFormerCreatorIds(['TEST0B1'])
             ->setName('Creator X')
         ;
-        $submission = $this->getEntityForSubmission(new User(), $submissionData, true); // FIXME: Should match by data in User; test needs redesign/rethink
+        $submission = $this->getEntityForSubmission(new User(), $submissionData, true);
 
         $subject = $this->getUpdatesServiceForGetUpdateFor([
             [['TEST0A1', 'TEST0B1'], [$creator1, $creator2]],
