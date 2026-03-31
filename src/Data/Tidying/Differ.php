@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Data\Tidying;
 
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\PackedStringList;
 use App\Utils\StrUtils;
@@ -22,7 +21,7 @@ class Differ
         $newVal = StrUtils::asStr($new->get($field) ?? '');
         $oldVal = StrUtils::asStr($old->get($field) ?? '');
 
-        if ($oldVal === $newVal || SecureValues::hideOnAdminScreen($field)) {
+        if ($oldVal === $newVal) {
             return;
         }
 

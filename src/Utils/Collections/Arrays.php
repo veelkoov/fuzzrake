@@ -38,4 +38,16 @@ final class Arrays
     {
         return array_filter($strings, static fn (string $string) => '' !== $string);
     }
+
+    /**
+     * @template T
+     *
+     * @param non-empty-array<T> $array
+     *
+     * @return T
+     */
+    public static function rndValue(array $array): mixed
+    {
+        return $array[array_rand($array)];
+    }
 }

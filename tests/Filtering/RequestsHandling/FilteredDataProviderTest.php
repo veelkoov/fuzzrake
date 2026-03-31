@@ -8,6 +8,7 @@ use App\Filtering\RequestsHandling\Choices;
 use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
@@ -20,9 +21,9 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 {
     public function testWorkingWithMinors(): void
     {
-        $a1 = new Creator()->setCreatorId('M000001')->setWorksWithMinors(false);
-        $a2 = new Creator()->setCreatorId('M000002')->setWorksWithMinors(true);
-        $a3 = new Creator()->setCreatorId('M000003');
+        $a1 = UserCreator::get()->setCreatorId('M000001')->setWorksWithMinors(false);
+        $a2 = UserCreator::get()->setCreatorId('M000002')->setWorksWithMinors(true);
+        $a3 = UserCreator::get()->setCreatorId('M000003');
 
         foreach ([$a1, $a2, $a3] as $a) {
             $a->setNsfwSocial(false)->setNsfwWebsite(false)->setDoesNsfw(false);
@@ -41,13 +42,13 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
     public function testWantsSfw(): void
     {
-        $a1 = new Creator()->setCreatorId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
-        $a2 = new Creator()->setCreatorId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
-        $a3 = new Creator()->setCreatorId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
-        $a4 = new Creator()->setCreatorId('M000004')->setNsfwWebsite(true)->setNsfwSocial(true);
-        $a5 = new Creator()->setCreatorId('M000005')->setNsfwWebsite(true);
-        $a6 = new Creator()->setCreatorId('M000006')->setNsfwSocial(true);
-        $a7 = new Creator()->setCreatorId('M000007');
+        $a1 = UserCreator::get()->setCreatorId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
+        $a2 = UserCreator::get()->setCreatorId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
+        $a3 = UserCreator::get()->setCreatorId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
+        $a4 = UserCreator::get()->setCreatorId('M000004')->setNsfwWebsite(true)->setNsfwSocial(true);
+        $a5 = UserCreator::get()->setCreatorId('M000005')->setNsfwWebsite(true);
+        $a6 = UserCreator::get()->setCreatorId('M000006')->setNsfwSocial(true);
+        $a7 = UserCreator::get()->setCreatorId('M000007');
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
@@ -88,7 +89,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
         int $expectedFirst, int $expectedLast): void
     {
         for ($i = 1; $i <= $numberOfCreators; ++$i) {
-            self::persist(new Creator()
+            self::persist(UserCreator::get()
                 ->setName(sprintf('%03d', $i)) // For sorting
                 ->setCity("$i") // For easy number access
             );

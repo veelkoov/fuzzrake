@@ -6,6 +6,7 @@ namespace App\Tests\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Small;
@@ -15,7 +16,7 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSetSingleAndMultiple(): void
     {
-        $creator = Creator::wrap($entity = new CreatorE());
+        $creator = Creator::wrap($entity = new CreatorE(new User()));
 
         $creator
             ->setLinklistUrl('linklist')

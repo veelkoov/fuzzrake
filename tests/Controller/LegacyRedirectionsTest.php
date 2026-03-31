@@ -38,7 +38,7 @@ class LegacyRedirectionsTest extends FuzzrakeWebTestCase
             '/rules'             => ['/rules', 'h1', 'Guidelines for makers/studios'],
             '/should_know.html'  => ['/should_know.html', 'h1', 'What you should know'],
             '/statistics.html'   => ['/statistics.html', 'h1', 'Statistics'],
-            '/data_updates.html' => ['/data_updates.html', 'h1', 'Inclusion request'],
+            '/data_updates.html' => ['/data_updates.html', 'h1', 'Inclusion/updates'],
         ];
     }
 }

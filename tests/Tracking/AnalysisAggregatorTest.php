@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Tracking;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Tracking\AnalysisAggregator;
 use App\Tracking\Data\AnalysisResult;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -24,7 +25,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     protected function setUp(): void
     {
         $this->subject = new AnalysisAggregator(self::createStub(LoggerInterface::class));
-        $this->creator = new Creator()->setCreatorId('TEST001');
+        $this->creator = UserCreator::get()->setCreatorId('TEST001');
     }
 
     /**

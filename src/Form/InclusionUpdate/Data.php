@@ -4,32 +4,24 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\Captcha\Form\CaptchaType;
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
-use App\Data\Definitions\Fields\Validation;
+use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
-use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
-use App\Security\Email;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
-use App\ValueObject\Texts;
 use Override;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -45,13 +37,8 @@ final class Data extends AbstractType
     use RouterDependentTrait;
 
     public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
-    public const string OPT_CURRENT_EMAIL_ADDRESS = 'currentEmailAddress';
     public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
     public const string FLD_CREATOR_ID = 'creatorId';
-    public const string FLD_CHANGE_PASSWORD = 'changePassword';
-    public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
-    public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
-    public const string FLD_PASSWORD = 'password';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -63,9 +50,6 @@ final class Data extends AbstractType
         $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
         $creatorIdsPagePath = htmlspecialchars($router->generate(RouteName::CREATOR_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
-        $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
-        $emailAddressRequired = $this->shouldRequireEmailAddress($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
-        $currentEmailAddressHtmlHelp = $this->getCurrentEmailAddressHtmlHelp($options[self::OPT_CURRENT_EMAIL_ADDRESS]);
 
         $builder
             ->add('name', TextType::class, [
@@ -478,41 +462,6 @@ final class Data extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
-                'label'      => 'When is contact allowed?',
-                'required'   => true,
-                'choices'    => ContactPermit::getFormChoices(false),
-                'expanded'   => true,
-            ])
-            ->add('emailAddress', TextType::class, [
-                'label'      => 'Email address',
-                'help'       => $currentEmailAddressHtmlHelp.'<span class="badge bg-warning text-dark">PRIVATE</span> Your email address will never be shared with anyone without your permission.',
-                'help_html'  => true,
-                'required'   => $emailAddressRequired,
-                'empty_data' => '',
-            ])
-            ->add(self::FLD_PASSWORD, PasswordType::class, [
-                'label'      => Texts::UPDATES_PASSWORD,
-                'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
-                'help_html'  => true,
-                'required'   => true,
-                'empty_data' => '',
-                'attr'       => [
-                    'autocomplete' => 'section-iuform current-password',
-                ],
-            ])
-            ->add(self::FLD_CHANGE_PASSWORD, CheckboxType::class, [
-                'label'     => Texts::WANT_TO_CHANGE_PASSWORD,
-                'required'  => false,
-                'mapped'    => false,
-            ])
-            ->add(self::FLD_VERIFICATION_ACKNOWLEDGEMENT, CheckboxType::class, [
-                'label'      => 'I acknowledge that I am required to <a href="'.$contactPath.'" target="_blank">contact the maintainer</a> to confirm the submission. I realize that not doing so will result in the submission being rejected.',
-                'required'   => false,
-                'mapped'     => false,
-                'label_html' => true,
-            ])
-            ->add('captcha', CaptchaType::class)
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
@@ -528,7 +477,6 @@ final class Data extends AbstractType
 
         $builder->get('since')->addModelTransformer(new SinceTransformer());
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
-        $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
 
         foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors', 'offersPaymentPlans', 'hasAllergyWarning'] as $field) {
             $builder->get($field)->addModelTransformer(new BooleanTransformer());
@@ -551,16 +499,8 @@ final class Data extends AbstractType
             ->allowedTypes('boolean')
             ->required();
 
-        $resolver
-            ->define(self::OPT_CURRENT_EMAIL_ADDRESS)
-            ->allowedTypes('string')
-            ->required();
-
         $resolver->setDefaults([
-            'validation_groups' => ['Default', Validation::GRP_DATA, Validation::GRP_CONTACT_AND_PASSWORD],
-            'error_mapping' => [
-                'privateData.password' => 'password',
-            ],
+            'validation_groups' => ['Default', ValidationGroups::ENFORCE_USER],
             'data_class' => Creator::class,
         ]);
     }
@@ -578,26 +518,5 @@ final class Data extends AbstractType
         } while (--$year >= 1990);
 
         return $result;
-    }
-
-    private function getCurrentEmailAddressHtmlHelp(mixed $emailFromOptions): string
-    {
-        $currentEmailAddress = Enforce::string($emailFromOptions);
-
-        // LEGACY: grep-code-invalid-email-addresses
-        // Should just check if email address !== '' (displaying form for a new creator),
-        // but the email field was previously "contact method" and it allowed non-emails.
-        if (!Email::isValid($currentEmailAddress)) {
-            return '';
-        }
-
-        return 'Your current email address is '
-            .htmlspecialchars(Email::obfuscate($currentEmailAddress))
-            .'. To change, provide a new one in this field. To keep the old one, leave this field empty. ';
-    }
-
-    private function shouldRequireEmailAddress(mixed $emailFromOptions): bool
-    {
-        return !Email::isValid(Enforce::string($emailFromOptions)); // LEGACY: grep-code-invalid-email-addresses
     }
 }

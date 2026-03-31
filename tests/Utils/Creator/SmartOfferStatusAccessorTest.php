@@ -6,6 +6,7 @@ namespace App\Tests\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorOfferStatus;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
@@ -16,7 +17,7 @@ class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSet(): void
     {
-        $creator = Creator::wrap($entity = new CreatorE());
+        $creator = Creator::wrap($entity = new CreatorE(new User()));
 
         $creator
             ->setOpenFor(['digigrades', 'plantigrades'])

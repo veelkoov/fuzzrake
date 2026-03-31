@@ -122,7 +122,7 @@ class DataQuery
 
     private function creatorMatches(Creator $creator): bool
     {
-        if ($this->optOnlyFeedbackYes && !$creator->allowsFeedback()) {
+        if ($this->optOnlyFeedbackYes && !$creator->getUser()->allowsFeedback()) {
             return false;
         }
 

@@ -6,8 +6,10 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\UserCreator;
 use App\Tests\TestUtils\YamlCreatorsDataLoader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
@@ -29,11 +31,6 @@ class ExtendedTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
     use ClockSensitiveTrait;
-
-    private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
-        Field::EMAIL_ADDRESS,
-        Field::PASSWORD,
-    ];
 
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
         Field::PRODUCTION_MODELS,
@@ -61,7 +58,6 @@ class ExtendedTest extends IuSubmissionsTestCase
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
-     * - all fields, which values should NEVER be displayed in the I/U form, are not,
      * - no newly added field gets overseen in the I/U form,
      * - all data submitted in the form is saved in the submission.
      *
@@ -82,29 +78,19 @@ class ExtendedTest extends IuSubmissionsTestCase
 
         $loader = new YamlCreatorsDataLoader(Paths::getTestDataPath('extended_test.yaml'));
 
-        self::persistAndFlush(...$loader->before);
+        self::persistAndFlush(...$loader->before->getValuesArray(), ...$loader->users->getValuesArray());
         self::assertCount($loader->before->count(), self::getCreatorRepository()->findAll(),
             "Expected {$loader->before->count()} creators in the DB before import.");
 
-        $solveCaptcha = true;
-
         foreach ($loader->aliases as $label) {
-            if ($loader->before->hasKey($label)) {
-                $oldData = $loader->before->get($label);
-                $oldCreatorId = $oldData->getLastCreatorId();
-            } else {
-                $oldData = new Creator();
-                $oldCreatorId = '';
-            }
-
+            $user = $loader->users->get($label);
+            $oldData = $loader->before->hasKey($label) ? $loader->before->get($label) : UserCreator::get();
             $newData = $loader->update->get($label);
 
-            self::validateIuFormOldDataSubmitNew($oldCreatorId, $oldData, $newData, $solveCaptcha);
-
-            $solveCaptcha = false;
+            self::validateIuFormOldDataSubmitNew($user, $oldData, $newData);
         }
 
-        $this->performImport(true, $loader->after->count());
+        $this->performImports($loader->after->count());
 
         self::flush();
         self::assertCount($loader->after->count(), self::getCreatorRepository()->findAll(),
@@ -126,9 +112,10 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private function validateIuFormOldDataSubmitNew(string $urlCreatorId, Creator $oldData, Creator $newData, bool $solveCaptcha = false): void
+    private function validateIuFormOldDataSubmitNew(User $user, Creator $oldData, Creator $newData): void
     {
-        self::$client->request('GET', self::getIuFormUrlForCreatorId($urlCreatorId));
+        self::loginUser($user);
+        self::$client->request('GET', '/user/iu_form/start');
         self::assertResponseStatusCodeIs(200);
         self::skipRules();
 
@@ -136,10 +123,10 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::verifyGeneratedIuFormFilledWithData($oldData, self::$client->getResponse()->getContent());
 
         $form = self::$client->getCrawler()->selectButton('Submit')->form();
-        $this->setValuesInForm($form, $newData, $solveCaptcha);
+        $this->setValuesInForm($form, $newData);
         self::submitValid($form);
 
-        self::assertIuSubmittedAnyResult();
+        self::assertIuSubmissionQueued();
     }
 
     private static function verifyGeneratedIuFormFilledWithData(Creator $oldData, string $htmlBody): void
@@ -151,17 +138,8 @@ class ExtendedTest extends IuSubmissionsTestCase
             if (!$field->isInIuForm()) {
                 self::assertStringNotContainsStringIgnoringCase(self::fieldToFormFieldName($field), $htmlBody,
                     "$field->value should not be present on the page.");
-                self::assertFalse($field->isInIuForm());
-                continue;
-            }
-
-            self::assertTrue($field->isInIuForm());
-            $value = $oldData->get($field);
-
-            if (arr_contains(self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM, $field)) {
-                self::assertValueIsNotPresentInForm(Enforce::string($value), $field, $htmlBody);
             } else {
-                self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
+                self::assertFieldIsPresentWithValue($oldData->get($field), $field, $htmlBody);
             }
         }
     }
@@ -180,8 +158,6 @@ class ExtendedTest extends IuSubmissionsTestCase
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, false, $htmlBody);
         } elseif (arr_contains(self::BOOLEAN_OPTIONAL, $field)) {
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, true, $htmlBody);
-        } elseif (Field::CONTACT_ALLOWED === $field) {
-            self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
             if ($field->isList()) {
                 $value = PackedStringList::pack(Enforce::strList($value));
@@ -256,13 +232,6 @@ class ExtendedTest extends IuSubmissionsTestCase
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
-    private static function assertContactValueFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
-    {
-        $choices = ['NO', 'CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'];
-
-        self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
-    }
-
     /**
      * @param string[] $choices
      */
@@ -278,29 +247,7 @@ class ExtendedTest extends IuSubmissionsTestCase
         }
     }
 
-    private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
-    {
-        if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = Regex::matchAllStrictGroups('~<input[^>]+name="iu_form\[password]"[^>]*>~', $htmlBody);
-            self::assertSame(1, $match->count);
-
-            self::assertStringNotContainsStringIgnoringCase('value', $match->matches[0][0]); // Needle = attribute name
-
-            if ('' !== $value) {
-                self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
-            }
-
-            foreach (password_algos() as $algorithm) { // grep-password-algorithms
-                self::assertFalse(Preg::isMatch("~\$$algorithm\$~", $htmlBody));
-            }
-        } else {
-            if ('' !== $value) {
-                self::assertStringNotContainsStringIgnoringCase($value, $htmlBody);
-            }
-        }
-    }
-
-    private function setValuesInForm(Form $form, Creator $data, bool $solveCaptcha = false): void
+    private function setValuesInForm(Form $form, Creator $data): void
     {
         foreach (Fields::inIuForm() as $field) {
             $value = $data->get($field);
@@ -334,14 +281,7 @@ class ExtendedTest extends IuSubmissionsTestCase
             }
         }
 
-        // Select them both always "just in case"
-        self::selectCheckbox($form['iu_form[changePassword]']);
-        self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
         self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
-
-        if ($solveCaptcha) {
-            $form[$this->getCaptchaFieldName('right')] = 'right';
-        }
     }
 
     /**
@@ -389,9 +329,7 @@ class ExtendedTest extends IuSubmissionsTestCase
         $actual = self::findCreatorByCreatorId($expected->getCreatorId());
 
         foreach (Fields::all() as $fieldName => $field) {
-            if (Field::PASSWORD === $field) {
-                self::assertTrue(password_verify($expected->getString($field), $actual->getString($field)), 'Password differs.');
-            } elseif ($field->isList()) {
+            if ($field->isList()) {
                 self::assertEqualsCanonicalizing($expected->getStringList($field), $actual->getStringList($field), "Field $fieldName differs for {$expected->getCreatorId()}.");
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getCreatorId()}.");

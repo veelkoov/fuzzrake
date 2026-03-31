@@ -39,13 +39,6 @@ class CreatorUrl implements Stringable, Url
     #[ORM\OneToOne(targetEntity: CreatorUrlState::class, mappedBy: 'url', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorUrlState $state = null;
 
-    public function __clone()
-    {
-        if (null !== $this->state) {
-            $this->setState(clone $this->state);
-        }
-    }
-
     public function getId(): ?int
     {
         return $this->id;

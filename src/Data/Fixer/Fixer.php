@@ -44,7 +44,7 @@ class Fixer
 
     public function getFixed(Creator $input): Creator
     {
-        $result = clone $input;
+        $result = $input->copy();
 
         foreach (Fields::persisted() as $field) {
             $this->fix($result, $field);

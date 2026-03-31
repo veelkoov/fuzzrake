@@ -7,7 +7,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\UserCreator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -79,7 +79,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
             $name .= ' '.$this->descBool($doesNsfw, 'nsfw');
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
-            $creators[$creatorId] = new Creator()
+            $creators[$creatorId] = UserCreator::get()
                 ->setCreatorId($creatorId)
                 ->setName($name)
                 ->setAges($ages)

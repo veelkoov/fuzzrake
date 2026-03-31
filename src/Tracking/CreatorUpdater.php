@@ -31,7 +31,7 @@ class CreatorUpdater
     {
         $this->logger->resetContextFor($creator);
 
-        $old = clone $creator;
+        $old = $creator->copy();
 
         $volatileData = $creator->getVolatileData();
         $volatileData->setLastCsUpdate(UtcClock::now());

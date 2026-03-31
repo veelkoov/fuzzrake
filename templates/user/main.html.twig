@@ -2,8 +2,34 @@
 
 {% block title %}{{ app.user.userIdentifier }}{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('user') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user') }}
+{% endblock %}
+
 {% block body %}
     <h1 class="my-4"><i class="fas fa-user-gear"></i> {{ app.user.userIdentifier }}</h1>
+
+    {% if not is_granted('ROLE_VERIFIED') %}
+        <div class="card mb-3 border-warning">
+            <div class="card-body">
+                <h5 class="card-title">Your email address has not been verified yet</h5>
+
+                <p class="card-text">
+                    While it is not verified, only a bare minimum of actions is available in your account. If you haven't received the verification email please check your SPAM folder, or request a new message by clicking the button below.
+                </p>
+
+                <a href="{{ path('user_resend_verification_email') }}" class="btn btn-warning btn-large">
+                    <i class="fa-solid fa-envelope-circle-check"></i> Re-send verification email
+                </a>
+            </div>
+        </div>
+    {% endif %}
 
     <a href="{{ path('user_logout') }}" class="btn btn-outline-danger btn-large">
         <i class="fa-solid fa-user-large-slash"></i> Log out
@@ -15,9 +41,65 @@
         <i class="fa-solid fa-key"></i> Change password
     </a>
 
-    {% if not is_granted('ROLE_VERIFIED') %}
-        <a href="{{ path('user_resend_verification_email') }}" class="btn btn-warning btn-large">
-            <i class="fa-solid fa-envelope-circle-check"></i> Re-send verification email
+    {% if is_granted('ROLE_VERIFIED') %}
+        <a href="{{ path('iu_form_step_start') }}" class="btn btn-outline-primary btn-large">
+            <i class="fa-solid fa-file-signature"></i> Update your studio information
         </a>
     {% endif %}
+
+    <h2 class="mt-5 mb-3">Contact</h2>
+
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_start(contact_form) }}
+            {{ form_row(contact_form.contactPermit) }}
+            <input type="submit" class="btn btn-primary" value="Save">
+            {{ form_end(contact_form) }}
+        </div>
+
+        <div class="col-lg-8 pb-4">
+            <p>Based on your choice:</p>
+
+            <span class="pros-cons-contact-options" data-min-level="-1" data-max-level="-1">
+                <i class="fas fa-question-circle"></i>
+                Please choose your preferred setting<br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="0" data-max-level="0">
+                <i class="fa-regular fa-circle-xmark"></i>
+                <strong>Any serious issue makes your submission rejected without a notice.</strong><br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="1" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Get contacted when there's an issue with your submission making (parts of) it unsuitable for publication.<br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="1" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Get notified about issues detected in your information which had been already published (i.a. broken links).<br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="2" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Get notified about new features available to better advertise your studio.<br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="0" data-max-level="1">
+                <i class="fa-regular fa-circle-xmark"></i>
+                You may miss important changes and new features (e.g. filters, which in turn could push your studio into "Unknown" classification, skipped/rated lower by some users).<br>
+            </span>
+            <span class="pros-cons-contact-options" data-min-level="3" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                You may occasionally receive a survey to best understand your needs as a maker and make this website suit you better. You are <strong>not</strong> obliged in any way to respond, nor provide all and complete answers.<br>
+            </span>
+            <span class="pros-cons-contact-options small" data-min-level="0" data-max-level="2">
+                <i class="fa-regular fa-circle-xmark"></i>
+                Your chances to impact how this website works will be limited.<br>
+            </span>
+            <span class="pros-cons-contact-options small" data-min-level="1" data-max-level="3">
+                <i class="fa-regular fa-square-check"></i>
+                Opt-out (change preferences) anytime.<br>
+                <i class="fa-regular fa-square-check"></i>
+                Your email address will never be shared with anyone.<br>
+                <i class="fa-regular fa-square-check"></i>
+                No 3rd party advertising. The only advertising which <strong>may</strong> appear in the future, would be banners on the website.<br>
+            </span>
+        </div>
+    </div>
 {% endblock %}

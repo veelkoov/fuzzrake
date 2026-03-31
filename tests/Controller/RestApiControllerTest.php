@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Collections\ArrayReader;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -18,7 +19,11 @@ class RestApiControllerTest extends FuzzrakeWebTestCase
      */
     public function testCreators(): void
     {
-        self::persistAndFlush(self::getCreator('API testing creator', 'TEST001', 'FI'));
+        self::persistAndFlush(UserCreator::get()
+            ->setName('API testing creator')
+            ->setCreatorId('TEST001')
+            ->setCountry('FI')
+        );
 
         self::$client->request('GET', '/api/artisans.json');
         self::assertResponseStatusCodeIs(200);
@@ -26,7 +31,7 @@ class RestApiControllerTest extends FuzzrakeWebTestCase
         $text = self::$client->getResponse()->getContent();
         self::assertNotFalse($text);
 
-        $parsedJson = Json::decode($text, Json::FORCE_ARRAY);
+        $parsedJson = Json::decode($text, forceArrays: true);
         $arrayReader = ArrayReader::of($parsedJson);
 
         self::assertSame('API testing creator', $arrayReader->getNonEmptyString('[0][NAME]'));

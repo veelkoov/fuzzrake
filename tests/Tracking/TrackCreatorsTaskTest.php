@@ -8,6 +8,7 @@ use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorUrl;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
+use App\Tests\TestUtils\UserCreator;
 use App\Tracking\CreatorTracker;
 use App\Tracking\TrackCreatorsTask;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -30,10 +31,10 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
      */
     public function testInitiatingTracking(): void
     {
-        $creator1 = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
-        $creator2 = new Creator()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A', 'creator2_B']);
-        $creator3 = new Creator()->setCreatorId('TEST003')->setWebsiteUrl('creator3_A');
-        $creator4 = new Creator()->setCreatorId('TEST004')->setWebsiteUrl('creator4_A')->setCommissionsUrls(['creator4_B']);
+        $creator1 = UserCreator::get()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
+        $creator2 = UserCreator::get()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A', 'creator2_B']);
+        $creator3 = UserCreator::get()->setCreatorId('TEST003')->setWebsiteUrl('creator3_A');
+        $creator4 = UserCreator::get()->setCreatorId('TEST004')->setWebsiteUrl('creator4_A')->setCommissionsUrls(['creator4_B']);
 
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
 
@@ -65,10 +66,10 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
      */
     public function testTrackCreatorsMessageHandler(): void
     {
-        $creator1 = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
-        $creator2 = new Creator()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A']);
-        $creator3 = new Creator()->setCreatorId('TEST003')->setCommissionsUrls(['creator3_A']);
-        $creator4 = new Creator()->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
+        $creator1 = UserCreator::get()->setCreatorId('TEST001')->setCommissionsUrls(['creator1_A']);
+        $creator2 = UserCreator::get()->setCreatorId('TEST002')->setCommissionsUrls(['creator2_A']);
+        $creator3 = UserCreator::get()->setCreatorId('TEST003')->setCommissionsUrls(['creator3_A']);
+        $creator4 = UserCreator::get()->setCreatorId('TEST004')->setCommissionsUrls(['creator4_A']);
 
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
         self::clearQueue(); // The listener creates "refresh single creator tracking" messages

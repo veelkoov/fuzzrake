@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Controller\Traits\ButtonClickedTrait;
+use App\Controller\Utils\ButtonClickedTrait;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\CreatorType;
-use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\FormInterface;
@@ -20,20 +19,13 @@ class CreatorsController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
 
-    public function __construct(
-        CreatorRepository $creatorRepository,
-    ) {
-        parent::__construct($creatorRepository);
-    }
-
     #[Route(path: '/{creatorId}/edit', name: RouteName::MX_CREATOR_EDIT, methods: ['GET', 'POST'])]
-    #[Route(path: '/new', name: RouteName::MX_CREATOR_NEW, methods: ['GET', 'POST'])]
-    public function edit(Request $request, ?string $creatorId): Response
+    public function edit(Request $request, string $creatorId): Response
     {
-        $creator = $this->getCreatorByCreatorIdOrNew($creatorId);
+        $creator = $this->getCreatorOrThrow404($creatorId);
 
         $form = $this->createForm(CreatorType::class, $creator, [
-            AbstractTypeWithDelete::OPT_DELETABLE => null !== $creator->getId(),
+            AbstractTypeWithDelete::OPT_DELETABLE => true,
         ]);
         $form->handleRequest($request);
 
@@ -51,7 +43,7 @@ class CreatorsController extends FuzzrakeAbstractController
 
     private function success(Creator $creator, FormInterface $form): bool
     {
-        if (null !== $creator->getId() && self::clicked($form, CreatorType::BTN_DELETE)) {
+        if (self::clicked($form, AbstractTypeWithDelete::BTN_DELETE)) {
             $this->creatorRepository->remove($creator, true);
 
             return true;
@@ -64,10 +56,5 @@ class CreatorsController extends FuzzrakeAbstractController
         }
 
         return false;
-    }
-
-    private function getCreatorByCreatorIdOrNew(?string $creatorId): Creator
-    {
-        return null === $creatorId ? new Creator() : $this->getCreatorOrThrow404($creatorId);
     }
 }

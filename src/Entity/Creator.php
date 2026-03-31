@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -103,14 +102,12 @@ class Creator implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $inactiveReason = '';
 
-    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
-    private ?ContactPermit $contactAllowed = null;
-
     #[ORM\OneToOne(targetEntity: CreatorVolatileData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorVolatileData $volatileData = null;
 
-    #[ORM\OneToOne(targetEntity: CreatorPrivateData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?CreatorPrivateData $privateData = null;
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'creator')]
+    #[ORM\JoinColumn(name: 'user_id', unique: true, nullable: false)] // For now, we do not support multiple studios for one user
+    private User $user;
 
     /**
      * @var Collection<int, CreatorUrl>
@@ -142,59 +139,15 @@ class Creator implements Stringable
     #[ORM\OneToMany(targetEntity: CreatorSpecie::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $species;
 
-    public function __construct()
+    public function __construct(User $user)
     {
+        $this->setUser($user);
+
         $this->urls = new ArrayCollection();
         $this->offerStatuses = new ArrayCollection();
         $this->creatorIds = new ArrayCollection();
         $this->values = new ArrayCollection();
         $this->species = new ArrayCollection();
-    }
-
-    public function __clone()
-    {
-        if (null !== $this->privateData) {
-            $this->setPrivateData(clone $this->privateData);
-        }
-
-        if (null !== $this->volatileData) {
-            $this->setVolatileData(clone $this->volatileData);
-        }
-
-        $urlsToClone = $this->urls;
-        $this->urls = new ArrayCollection();
-
-        foreach ($urlsToClone as $url) {
-            $this->addUrl(clone $url);
-        }
-
-        $creatorIdsToClone = $this->creatorIds;
-        $this->creatorIds = new ArrayCollection();
-
-        foreach ($creatorIdsToClone as $creatorId) {
-            $this->addCreatorId(clone $creatorId);
-        }
-
-        $offerStatusesToClone = $this->offerStatuses;
-        $this->offerStatuses = new ArrayCollection();
-
-        foreach ($offerStatusesToClone as $offerStatus) {
-            $this->addOfferStatus(clone $offerStatus);
-        }
-
-        $valuesToClone = $this->values;
-        $this->values = new ArrayCollection();
-
-        foreach ($valuesToClone as $value) {
-            $this->addValue(clone $value);
-        }
-
-        $speciesToClone = $this->species;
-        $this->species = new ArrayCollection();
-
-        foreach ($speciesToClone as $specie) {
-            $this->addSpecie(clone $specie);
-        }
     }
 
     #[Override]
@@ -500,18 +453,6 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getContactAllowed(): ?ContactPermit
-    {
-        return $this->contactAllowed;
-    }
-
-    public function setContactAllowed(?ContactPermit $contactAllowed): self
-    {
-        $this->contactAllowed = $contactAllowed;
-
-        return $this;
-    }
-
     public function getVolatileData(): ?CreatorVolatileData
     {
         return $this->volatileData;
@@ -526,16 +467,16 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getPrivateData(): ?CreatorPrivateData
+    public function getUser(): User
     {
-        return $this->privateData;
+        return $this->user;
     }
 
-    public function setPrivateData(?CreatorPrivateData $privateData): self
+    public function setUser(User $user): self
     {
-        $privateData?->setCreator($this);
+        $user->setCreator($this);
 
-        $this->privateData = $privateData;
+        $this->user = $user;
 
         return $this;
     }
@@ -673,7 +614,7 @@ class Creator implements Stringable
         return $this;
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
+    /** @noinspection PhpUnusedParameterInspection, PhpUnused */
     #[ORM\PreFlush]
     public function preFlush(PreFlushEventArgs $event): void
     {

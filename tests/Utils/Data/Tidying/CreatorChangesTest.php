@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Data\Tidying;
 
 use App\Data\Tidying\CreatorChanges;
-use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
@@ -19,7 +19,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
 {
     public function testApply(): void
     {
-        $creator1 = new Creator()
+        $creator1 = UserCreator::get()
             ->setName('Creator 1')
             ->setCity('Varkaus')
             ->setFaqUrl('https://some-faq-address/')
@@ -30,7 +30,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
             ->setNsfwSocial(false)
         ;
 
-        $creator2 = new Creator()
+        $creator2 = UserCreator::get()
             ->setName('Creator 2')
             ->setCity('Joensuu')
             ->setWebsiteUrl('https://some-website-address/')
@@ -69,14 +69,12 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
         $changes1->apply();
         // Deliberately SKIP applying changes to creator 2
 
-        $em = self::getEM();
-        $em->flush();
-        $em->clear();
-
+        self::flushAndClear();
         unset($creator1, $creator2);
 
-        $creator1 = $em->find(CreatorE::class, $id1);
-        $creator2 = $em->find(CreatorE::class, $id2);
+        $creatorRepository = self::getCreatorRepository();
+        $creator1 = $creatorRepository->find($id1);
+        $creator2 = $creatorRepository->find($id2);
 
         self::assertNotNull($creator1);
         self::assertNotNull($creator2);

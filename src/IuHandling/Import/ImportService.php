@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
@@ -21,68 +20,58 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
+use LogicException;
 use RuntimeException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class UpdatesService
+class ImportService
 {
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly Fixer $fixer,
         private readonly MessageBusInterface $messageBus,
-        private readonly LoggerInterface $logger, // @phpstan-ignore property.onlyWritten (Leave for future uses)
     ) {
     }
 
-    public function getUpdateFor(Submission $submission): Update
+    public function getImportDataFor(Submission $submission): ImportData
     {
         [$directivesError, $manager] = $this->getManager($submission);
         $errors = Arrays::nonEmptyStrings([$directivesError]);
 
-        $originalInput = new Creator();
-        $this->updateWith($originalInput, $submission->getReader(), Fields::readFromSubmissionData());
+        $inputData = new Creator();
+        $this->updateWith($inputData, $submission->getReader(), Fields::readFromSubmissionData());
 
-        $fixedInput = $this->fixer->getFixed($originalInput);
+        $fixedInput = $this->fixer->getFixed($inputData);
 
-        $matchedCreators = $this->getCreators($fixedInput, $manager->getMatchedCreatorId());
+        $matchedCreators = $this->getCreators($submission, $fixedInput, $manager->getMatchedCreatorId());
 
         if (1 === count($matchedCreators)) {
-            $originalCreator = Arrays::single($matchedCreators);
+            $subjectCreator = Arrays::single($matchedCreators);
         } else {
-            $originalCreator = new Creator();
+            $subjectCreator = new Creator();
 
             if ([] !== $matchedCreators) {
                 $errors[] = 'Single creator must get selected.';
             }
         }
 
-        $this->handleSpecialFieldsInInput($originalInput, $originalCreator);
-        $this->handleSpecialFieldsInInput($fixedInput, $originalCreator);
+        $this->handleSpecialFieldsInInput($inputData, $subjectCreator);
+        $this->handleSpecialFieldsInInput($fixedInput, $subjectCreator);
 
-        $updatedCreator = clone $originalCreator;
-        $this->updateWith($updatedCreator, $fixedInput, Fields::iuFormAffected());
+        $fixedData = $subjectCreator->copy();
+        $this->updateWith($fixedData, $fixedInput, Fields::iuFormAffected());
+        $manager->correctCreator($fixedData);
 
-        $manager->correctCreator($updatedCreator);
-
-        $isNew = null === $originalCreator->getId();
-        $isAccepted = $manager->isAccepted();
-
-        if (!$isNew && $originalCreator->getPassword() !== $updatedCreator->getPassword() && !$isAccepted) {
-            $errors[] = 'Password does not match.';
-        }
-
-        return new Update(
+        return new ImportData(
             $submission,
             $matchedCreators,
-            $originalInput,
-            $originalCreator,
-            $updatedCreator,
+            $subjectCreator,
+            $inputData,
+            $fixedData,
             $errors,
-            $isAccepted,
-            $isNew,
+            $manager->isAccepted(),
         );
     }
 
@@ -116,8 +105,13 @@ class UpdatesService
     /**
      * @return Creator[]
      */
-    private function getCreators(Creator $submissionData, ?string $matchedCreatorId): array
+    private function getCreators(Submission $submission, Creator $submissionData, ?string $matchedCreatorId): array
     {
+        if (null === $matchedCreatorId && null !== $submission->getCreator()) {
+            return [Creator::wrap($submission->getCreator())];
+        }
+
+        // grep-code-legacy-submissions-with-no-creator-reference
         return Creator::wrapAll($this->creatorRepository->findByCreatorIds(
             null !== $matchedCreatorId
                 ? [$matchedCreatorId]
@@ -125,39 +119,39 @@ class UpdatesService
         ));
     }
 
-    private function handleSpecialFieldsInInput(Creator $submission, Creator $original): void
+    private function handleSpecialFieldsInInput(Creator $input, Creator $original): void
     {
-        if (ContactPermit::NO === $submission->getContactAllowed()) {
-            $submission->setEmailAddress('');
-        } elseif ('' === $submission->getEmailAddress()) {
-            $submission->setEmailAddress($original->getEmailAddress());
-        }
-
         if (null === $original->getId()) {
-            $submission->setDateAdded(UtcClock::now());
+            $input->setDateAdded(UtcClock::now());
         } else {
-            $submission->setDateAdded($original->getDateAdded());
-            $submission->setDateUpdated(UtcClock::now());
+            $input->setDateAdded($original->getDateAdded());
+            $input->setDateUpdated(UtcClock::now());
 
-            if ($submission->getCreatorId() !== $original->getCreatorId()) {
-                $submission->setFormerCreatorIds($original->getAllCreatorIds());
+            if ($input->getCreatorId() !== $original->getCreatorId()) {
+                $input->setFormerCreatorIds($original->getAllCreatorIds());
             } else {
-                $submission->setFormerCreatorIds($original->getFormerCreatorIds());
+                $input->setFormerCreatorIds($original->getFormerCreatorIds());
             }
         }
     }
 
-    public function import(Update $update): void
+    public function import(ImportData $importData): void
     {
-        $existingEntity = $update->originalCreator;
-        $cloneWithUpdates = $update->updatedCreator;
-
+        $subjectCreator = $importData->subjectCreator;
         foreach (Fields::persisted() as $field) {
-            $existingEntity->set($field, $cloneWithUpdates->get($field));
+            $subjectCreator->set($field, $importData->fixedData->get($field));
         }
 
-        $this->entityManager->persist($existingEntity);
-        $this->entityManager->persist($this->getEventFor($update));
+        $user = $importData->submission->getOwner();
+        if (null === $user) {
+            // TODO: https://github.com/veelkoov/fuzzrake/issues/327
+            throw new LogicException('Support for legacy submissions to be implemented.');
+        } else {
+            $subjectCreator->entity->setUser($user);
+        }
+
+        $this->entityManager->persist($subjectCreator);
+        $this->entityManager->persist($this->getEventFor($importData));
         $this->entityManager->flush();
 
         try {
@@ -168,10 +162,10 @@ class UpdatesService
         }
     }
 
-    private function getEventFor(Update $update): Event
+    private function getEventFor(ImportData $importData): Event
     {
         return new Event()
-            ->setType($update->isNew ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED)
-            ->setCreatorId($update->originalCreator->getCreatorId());
+            ->setType($importData->submission->getIsUpdate() ? Event::TYPE_CREATOR_UPDATED : Event::TYPE_CREATOR_ADDED)
+            ->setCreatorId($importData->subjectCreator->getCreatorId());
     }
 }

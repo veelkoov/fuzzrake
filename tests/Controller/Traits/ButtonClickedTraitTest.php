@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Traits;
 
+use App\Entity\Event;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use PHPUnit\Framework\Attributes\Medium;
 
@@ -14,7 +15,9 @@ class ButtonClickedTraitTest extends FuzzrakeWebTestCase
     {
         self::haveAnAdminUser();
         self::loginAdminUser();
-        $event = self::addSimpleGenericEvent();
+
+        $event = new Event()->setDescription('Test event');
+        self::persistAndFlush($event);
 
         $editUrl = '/mx/events/'.$event->getId().'/edit';
 

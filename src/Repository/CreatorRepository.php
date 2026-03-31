@@ -168,7 +168,6 @@ class CreatorRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('d_c')
             ->leftJoin('d_c.volatileData', 'd_cvd')->addSelect('d_cvd')
-            ->leftJoin('d_c.privateData', 'd_cpd')->addSelect('d_cpd')
             ->leftJoin('d_c.urls', 'd_cu')->addSelect('d_cu')
             ->leftJoin('d_cu.state', 'd_cus')->addSelect('d_cus')
             ->leftJoin('d_c.offerStatuses', 'd_cos')->addSelect('d_cos')

@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace App\Utils\Creator;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
-use App\Data\Definitions\Fields\Validation;
+use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\FieldValue;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
-use App\Entity\CreatorPrivateData;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
+use App\Entity\User;
 use App\Utils\Collections\Lists;
 use App\Utils\Collections\StringLists;
 use App\Utils\DateTime\DateTimeException;
@@ -28,7 +27,6 @@ use App\Utils\PackedStringList;
 use App\Utils\Parse;
 use App\Utils\StrUtils;
 use App\Validator\StrListLength;
-use App\Validator\UpdateableEmail;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -39,21 +37,23 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-// FIXME: Valid email should be required also in MX forms https://github.com/veelkoov/fuzzrake/issues/284
-#[UpdateableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
-    public function __construct(
-        public private(set) CreatorE $entity = new CreatorE(),
-    ) {
-    }
+    public private(set) CreatorE $entity;
 
-    public function __clone()
-    {
-        $this->entity = clone $this->entity;
+    public function __construct(
+        ?CreatorE $entity = null,
+        ?User $user = null,
+    ) {
+        if (null === $entity) {
+            $entity = new CreatorE($user ?? new User());
+        } elseif (null !== $user && $entity->getUser() !== $user) {
+            throw new InvalidArgumentException('Provided user parameter different than the user in provided entity parameter.');
+        }
+
+        $this->entity = $entity;
     }
 
     #[Override]
@@ -184,7 +184,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS, DATA-TABLE HELPERS =====
     //
 
-    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getAges(): ?Ages
     {
         return $this->entity->getAges();
@@ -197,7 +197,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getNsfwWebsite(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_WEBSITE);
@@ -208,7 +208,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::NSFW_WEBSITE, $nsfwWebsite);
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
+    #[NotNull(message: 'You must answer this question.', groups: [ValidationGroups::ENFORCE_USER])]
     public function getNsfwSocial(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_SOCIAL);
@@ -297,11 +297,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getAllNames(): array
     {
         return Lists::nonEmptyStrings([$this->getName(), ...$this->getFormerly()]);
-    }
-
-    public function allowsFeedback(): bool
-    {
-        return ContactPermit::FEEDBACK === $this->entity->getContactAllowed();
     }
 
     public function hasSpeciesInfo(): bool
@@ -442,35 +437,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setClosedFor(array $closedFor): self
     {
         SmartOfferStatusAccessor::setList($this, false, $closedFor);
-
-        return $this;
-    }
-
-    //
-    // ===== PRIVATE DATA GETTERS AND SETTERS =====
-    //
-
-    #[Length(max: 128)]
-    public function getEmailAddress(): string
-    {
-        return $this->getPrivateData()->getEmailAddress();
-    }
-
-    public function setEmailAddress(string $emailAddress): self
-    {
-        $this->getPrivateData()->setEmailAddress($emailAddress);
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->getPrivateData()->getPassword();
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->getPrivateData()->setPassword($password);
 
         return $this;
     }
@@ -932,7 +898,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /** @noinspection PhpUnusedParameterInspection */
-    #[Callback(groups: [Validation::GRP_DATA])]
+    #[Callback(groups: [ValidationGroups::ENFORCE_USER])]
     public function validateData(ExecutionContextInterface $context, mixed $payload): void
     {
         if (null === $this->getDoesNsfw() && true === $this->isAllowedToDoNsfw()) {
@@ -957,7 +923,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     #[Regex(pattern: '/^[A-Z0-9]*$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).')]
     #[Regex(pattern: '/^(.{7})?$/', message: 'Use exactly 7 characters.')]
-    #[NotBlank(groups: [Validation::GRP_DATA])]
+    #[NotBlank(groups: [ValidationGroups::ENFORCE_USER])]
     public function getCreatorId(): string
     {
         return $this->entity->getCreatorId();
@@ -1030,7 +996,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 128)]
-    #[NotBlank(groups: [Validation::GRP_DATA])]
+    #[NotBlank(groups: [ValidationGroups::ENFORCE_USER])]
     public function getCountry(): string
     {
         return $this->entity->getCountry();
@@ -1434,19 +1400,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[NotNull(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function getContactAllowed(): ?ContactPermit
-    {
-        return $this->entity->getContactAllowed();
-    }
-
-    public function setContactAllowed(?ContactPermit $contactAllowed): self
-    {
-        $this->entity->setContactAllowed($contactAllowed);
-
-        return $this;
-    }
-
     public function getVolatileData(): CreatorVolatileData
     {
         if (null === ($res = $this->entity->getVolatileData())) {
@@ -1459,23 +1412,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setVolatileData(?CreatorVolatileData $volatileData): self
     {
         $this->entity->setVolatileData($volatileData);
-
-        return $this;
-    }
-
-    #[Valid]
-    public function getPrivateData(): CreatorPrivateData
-    {
-        if (null === ($res = $this->entity->getPrivateData())) {
-            $this->entity->setPrivateData($res = new CreatorPrivateData());
-        }
-
-        return $res;
-    }
-
-    public function setPrivateData(?CreatorPrivateData $privateData): self
-    {
-        $this->entity->setPrivateData($privateData);
 
         return $this;
     }
@@ -1557,5 +1493,26 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         return $this;
+    }
+
+    /**
+     * Creates a copy of the wrapped entity. Only fields data is copied. This creates an object safe to use
+     * during submissions handling without any risk of modifying any managed entity (references included).
+     * This was difficult to achieve using cloning.
+     */
+    public function copy(): self
+    {
+        $result = new self();
+
+        foreach (Fields::persisted() as $field) {
+            $result->set($field, $this->get($field));
+        }
+
+        return $result;
+    }
+
+    public function getUser(): User
+    {
+        return $this->entity->getUser();
     }
 }

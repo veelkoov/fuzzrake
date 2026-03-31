@@ -7,7 +7,9 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Tests\TestUtils\UserCreator;
 use Exception;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\Attributes\Large;
 
@@ -24,10 +26,8 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         // Having two creators, 1 minor-friendly and one NSFW-ish
 
         self::persistAndFlush(
-            self::getCreator('Creator: adult, NSFW', 'TEST001', 'FI', ages: Ages::ADULTS,
-                nsfwWebsite: false, nsfwSocial: true, doesNsfw: true, worksWithMinors: false),
-            self::getCreator('Creator: minor, WWM', 'TEST002', 'FI', ages: Ages::MINORS,
-                nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: true),
+            UserCreator::get()->setName('Creator: adult, NSFW')->setCreatorId('TEST001')->setCountry('FI')->setAges(Ages::ADULTS)->setNsfwWebsite(false)->setNsfwSocial(true)->setDoesNsfw(true)->setWorksWithMinors(false),
+            UserCreator::get()->setName('Creator: minor, WWM')->setCreatorId('TEST002')->setCountry('FI')->setAges(Ages::MINORS)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(true),
         );
 
         $this->clearCache();
@@ -40,14 +40,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#TEST001');
         self::assertInvisible('#TEST002');
         self::assertInvisible('#btn-reenable-filters');
-
-        // Action: navigate to the data updates page and enable the creator mode, go back to the main page
-
-        self::$client->request('GET', '/index.php/iu_form/start');
-
-        self::$client->clickLink('Temporarily disable all the filters and open the main page');
-        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
-        self::waitForLoadingIndicatorToDisappear();
+        $this->goToRegistrationAndEnableCreatorMode();
 
         // Expect: checklist is hidden and all creators are visible
 
@@ -95,13 +88,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#btn-reenable-filters');
         $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
 
-        // Action: navigate to the data updates page and enable the creator mode, go back to the main page
-
-        self::$client->request('GET', '/index.php/iu_form/start');
-
-        self::$client->clickLink('Temporarily disable all the filters and open the main page');
-        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
-        self::waitForLoadingIndicatorToDisappear();
+        $this->goToRegistrationAndEnableCreatorMode();
 
         // Expect: checklist is hidden and all creators are visible
 
@@ -131,5 +118,22 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::assertInvisible('#checklist-ill-be-careful');
         self::assertInvisible('#btn-reenable-filters');
         $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function goToRegistrationAndEnableCreatorMode(): void
+    {
+        self::$client->request('GET', '/index.php/register');
+
+        // Show accordion part with instructions on how to search
+        self::$client->findElement(WebDriverBy::cssSelector('[data-bs-target="#registrationAccordionItem2"]'))
+            ->click();
+        self::waitUntilShows('#registrationAccordionItem2');
+
+        self::$client->clickLink('Temporarily disable all the filters and open the main page');
+        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::waitForLoadingIndicatorToDisappear();
     }
 }

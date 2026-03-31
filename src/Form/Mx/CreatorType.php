@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Form\Mx;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
-use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -341,15 +339,6 @@ class CreatorType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('contactAllowed', ChoiceType::class, [
-                'label'   => 'Contact allowed?',
-                'choices' => ContactPermit::getFormChoices(true),
-            ])
-            ->add('emailAddress', TextType::class, [
-                'label'      => 'Email address',
-                'required'   => false,
-                'empty_data' => '',
-            ])
             ->add('notes', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
@@ -377,7 +366,6 @@ class CreatorType extends AbstractTypeWithDelete
         }
 
         $builder->get('ages')->addModelTransformer(new AgesTransformer());
-        $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
 
     #[Override]

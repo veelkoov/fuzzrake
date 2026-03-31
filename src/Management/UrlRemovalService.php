@@ -62,7 +62,7 @@ final class UrlRemovalService
         // If there are no remaining valid URLs, hide the creator.
         $hide = $remainingUrls->all(static fn (GroupedUrl $url) => arr_contains(self::IGNORED_URL_TYPES, $url->type));
 
-        $sendEmail = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
+        $sendEmail = ContactPermit::isAtLeastCorrections($creator->entity->getUser()->getContactPermit());
 
         return new CreatorUrlsRemovalData($removedUrls, $remainingUrls, $hide, $sendEmail);
     }
@@ -116,7 +116,7 @@ final class UrlRemovalService
     {
         $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
             ['_fragment' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::IU_FORM_START,
+        $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::USER_IU_FORM_START,
             ['creatorId' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
             [], UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -148,7 +148,7 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->emailService->send($subject, $contents, $creator->getEmailAddress(), bccSelf: true);
+        $this->emailService->send($subject, $contents, $creator->entity->getUser()->getEmail(), bccSelf: true);
     }
 
     private function getRemovedUrlsBulletList(CreatorUrlsRemovalData $data): string

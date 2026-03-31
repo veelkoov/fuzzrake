@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
+use App\Entity\User;
 use App\Utils\Collections\StringToCreator;
+use App\Utils\Collections\StringToUser;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -42,6 +43,7 @@ class YamlCreatorsDataLoader
     /** @var array<string, array<string, array<string, FieldValue>>> */
     private array $data = ['before' => [], 'update' => [], 'after' => []];
 
+    public readonly StringToUser $users;
     public readonly StringToCreator $before;
     public readonly StringToCreator $update;
     public readonly StringToCreator $after;
@@ -49,6 +51,11 @@ class YamlCreatorsDataLoader
     public function __construct(
         private readonly string $dataFilePath,
     ) {
+        $this->users = StringToUser::fromKeys(
+            $this->aliases,
+            static fn (string $alias) => new User()->setEmail("$alias@example.com")->setIsVerified(true),
+        );
+
         /**
          * @var TestDataContainer $data
          */
@@ -67,11 +74,11 @@ class YamlCreatorsDataLoader
         $fieldsNotInIuForm = Fields::all()->getValues()->minusAll(Fields::inIuForm()->getValues())->getValuesArray();
 
         $this->before = StringToCreator::mapFrom($this->data['before'],
-            fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
+            fn (array $data, string $key) => [$key, self::toCreator($this->users->get($key), $data, self::FIELDS_NOT_IN_TEST_DATA)]);
         $this->update = StringToCreator::mapFrom($this->data['update'],
-            fn (array $data, string $key) => [$key, self::toObject($data, $fieldsNotInIuForm)]);
+            fn (array $data, string $key) => [$key, self::toCreator(null, $data, $fieldsNotInIuForm)]);
         $this->after = StringToCreator::mapFrom($this->data['after'],
-            fn (array $data, string $key) => [$key, self::toObject($data, self::FIELDS_NOT_IN_TEST_DATA)]);
+            fn (array $data, string $key) => [$key, self::toCreator(null, $data, self::FIELDS_NOT_IN_TEST_DATA)]);
     }
 
     /**
@@ -175,9 +182,9 @@ class YamlCreatorsDataLoader
      * @param array<string, FieldValue> $data
      * @param list<Field>               $skippedFields
      */
-    private static function toObject(array $data, array $skippedFields): Creator
+    private static function toCreator(?User $user, array $data, array $skippedFields): Creator
     {
-        $result = new Creator();
+        $result = null === $user ? UserCreator::get() : new Creator(user: $user);
 
         foreach (Fields::all() as $fieldName => $field) {
             if (arr_contains($skippedFields, $field)) {
@@ -192,8 +199,6 @@ class YamlCreatorsDataLoader
 
             if (Field::AGES === $field) {
                 $value = Ages::get(Enforce::nString($value));
-            } elseif (Field::CONTACT_ALLOWED === $field) {
-                $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED], true)) {
                 try {
                     $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));

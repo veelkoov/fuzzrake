@@ -7,8 +7,10 @@ namespace App\Tests\Event;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator;
 use App\Entity\CreatorUrl;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
+use App\Tests\TestUtils\UserCreator;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
@@ -26,9 +28,9 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
             ->setUrl('https://example.com/')
             ->setType(Field::URL_PHOTOS->value)
         ;
-        $creator = new Creator()->addUrl($creatorUrl);
+        $creator = new Creator($user = new User())->addUrl($creatorUrl);
 
-        self::persistAndFlush($creator);
+        self::persistAndFlush($creator, $user);
         $creatorId = $creator->getId();
         self::assertNotNull($creatorId);
 
@@ -37,8 +39,8 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 
     public function testUpdateMessageGetsSentAfterUpdatingPhotoUrl(): void
     {
-        $creator = new Creator();
-        self::persistAndFlush($creator);
+        $creator = new Creator($user = new User());
+        self::persistAndFlush($creator, $user);
         $creatorId = $creator->getId();
         self::assertNotNull($creatorId);
 
@@ -58,8 +60,8 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 
     public function testUpdateMessageGetsSentAfterRemovingPhotoUrl(): void
     {
-        $creator = new Creator();
-        self::persistAndFlush($creator);
+        $creator = new Creator($user = new User());
+        self::persistAndFlush($creator, $user);
         $creatorId = $creator->getId();
         self::assertNotNull($creatorId);
 
@@ -83,9 +85,9 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
             ->setUrl('https://example.com/')
             ->setType(Field::URL_COMMISSIONS->value)
         ;
-        $creator = new Creator()->addUrl($creatorUrl);
+        $creator = new Creator($user = new User())->addUrl($creatorUrl);
 
-        self::persistAndFlush($creator);
+        self::persistAndFlush($creator, $user);
         $creatorId = $creator->getId();
         self::assertNotNull($creatorId);
 
@@ -100,7 +102,8 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
             ->setUrl('https://example.com/initial')
             ->setType(Field::URL_WEBSITE->value)
         ;
-        $creator = new Creator()->addUrl($creatorUrl);
+        $creator = UserCreator::get();
+        $creator->entity->addUrl($creatorUrl);
 
         self::persistAndFlush($creator);
 
@@ -121,12 +124,12 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
             ->setUrl('https://example.com/url2')
             ->setType(Field::URL_PHOTOS->value)
         ;
-        $creator = new Creator()
+        $creator = new Creator($user = new User())
             ->addUrl($creatorUrl1)
             ->addUrl($creatorUrl2)
         ;
 
-        self::persistAndFlush($creator);
+        self::persistAndFlush($creator, $user);
         $creatorId = $creator->getId();
         self::assertNotNull($creatorId);
 

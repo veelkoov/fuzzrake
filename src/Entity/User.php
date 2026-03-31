@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Data\Definitions\ContactPermit;
 use App\Repository\UserRepository;
 use App\Utils\HasEmailGetter;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
 use Override;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,10 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email. Forgotten password? You can find the reset option on the login form.')] // grep-code-email-already-registered
-class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter
+class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailGetter, Stringable
 {
-    private const string SESSION_PASS_HASH_ALGO = 'crc32c';
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -46,6 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[Assert\NotNull(message: 'You need to choose an option.')]
+    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
+    private ?ContactPermit $contactPermit = ContactPermit::CORRECTIONS;
+
+    #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?Creator $creator = null;
 
     public function getId(): ?int
     {
@@ -128,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash(self::SESSION_PASS_HASH_ALGO, $this->password);
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -143,5 +150,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getContactPermit(): ?ContactPermit
+    {
+        return $this->contactPermit;
+    }
+
+    public function setContactPermit(?ContactPermit $contactPermit): self
+    {
+        $this->contactPermit = $contactPermit;
+
+        return $this;
+    }
+
+    public function getCreator(): ?Creator
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?Creator $creator, bool $force = false): self
+    {
+        if (!$force && null !== $this->creator && $creator !== $this->creator) {
+            throw new LogicException('Trying to change already assigned creator.');
+        }
+
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function allowsFeedback(): bool
+    {
+        return ContactPermit::FEEDBACK === $this->contactPermit;
+    }
+
+    #[Override]
+    public function __toString()
+    {
+        return self::class."[$this->email]";
     }
 }

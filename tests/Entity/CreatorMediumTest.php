@@ -6,6 +6,7 @@ namespace App\Tests\Entity;
 
 use App\Data\Definitions\Ages;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator;
 use Exception;
 use PHPUnit\Framework\Attributes\Medium;
@@ -19,7 +20,7 @@ class CreatorMediumTest extends FuzzrakeKernelTestCase
     public function testPersistingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
-            new SmartAccessDecorator()
+            UserCreator::get()
                 ->setCreatorId('TEST001')
                 ->setDoesNsfw(true)
                 ->setNsfwWebsite(true)
@@ -40,7 +41,7 @@ class CreatorMediumTest extends FuzzrakeKernelTestCase
     public function testUpdatingCreatorEnforcesSafeValues(): void
     {
         self::persistAndFlush(
-            new SmartAccessDecorator()
+            UserCreator::get()
                 ->setCreatorId('TEST001')
                 ->setDoesNsfw(false)
                 ->setNsfwWebsite(false)

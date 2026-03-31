@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases;
 
-use App\Entity\User;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\CaptchaTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
+use App\Tests\TestUtils\Cases\Traits\UsersTrait;
 use DOMElement;
 use LogicException;
 use Override;
@@ -23,6 +23,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
     use CacheTrait;
     use CaptchaTrait;
     use EntityManagerTrait;
+    use UsersTrait;
 
     protected static KernelBrowser $client;
 
@@ -32,23 +33,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
         parent::setUp();
 
         self::$client = static::createClient();
-        self::$user = null;
         self::resetDB();
-    }
-
-    private static ?User $user;
-
-    protected static function haveAnAdminUser(): void
-    {
-        self::$user = new User()->setEmail('administrator@example.com')
-            ->setRoles(['ROLE_ADMIN'])->setIsVerified(true);
-
-        self::persistAndFlush(self::$user);
-    }
-
-    protected static function loginAdminUser(): void
-    {
-        self::$client->loginUser(self::$user ?? throw new LogicException('Admin user has not been created yet.'));
     }
 
     /**

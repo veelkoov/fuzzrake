@@ -1,0 +1,14 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}inclusion/updates{% endblock %}
+
+{% block body %}
+    <h1 class="mt-4">
+        Inclusion/updates
+    </h1>
+
+    <p class="mt-4">
+        To submit/update your information, please
+        <a href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::USER_LOGIN')) }}">log in</a>.
+    </p>
+{% endblock %}

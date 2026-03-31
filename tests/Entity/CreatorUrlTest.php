@@ -6,7 +6,9 @@ namespace App\Tests\Entity;
 
 use App\Entity\Creator;
 use App\Entity\CreatorUrl;
+use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
+use App\Tests\TestUtils\UserCreator;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -25,7 +27,7 @@ class CreatorUrlTest extends FuzzrakeKernelTestCase
         $lastFailureCode = 404;
         $lastFailureReason = 'test reason';
 
-        $persistedCreator = new Creator();
+        $persistedCreator = new Creator($user = new User());
         $persistedCreatorUrl = new CreatorUrl();
         $persistedCreatorUrl->getState()
             ->setLastFailureUtc($lastFailureUtc)
@@ -34,7 +36,7 @@ class CreatorUrlTest extends FuzzrakeKernelTestCase
             ->setLastFailureReason($lastFailureReason);
         $persistedCreator->addUrl($persistedCreatorUrl);
 
-        self::persistAndFlush($persistedCreator);
+        self::persistAndFlush($persistedCreator, $user);
 
         /** @var Creator $retrievedCreator */
         $retrievedCreator = self::getEM()->getRepository(Creator::class)->findAll()[0];
@@ -62,9 +64,9 @@ class CreatorUrlTest extends FuzzrakeKernelTestCase
      */
     public function testChangingUrlDoesNotCreateStateIfWasMissing(): void
     {
-        $persistedCreator = new Creator();
+        $persistedCreator = UserCreator::get();
         $persistedCreatorUrl = new CreatorUrl();
-        $persistedCreator->addUrl($persistedCreatorUrl);
+        $persistedCreator->entity->addUrl($persistedCreatorUrl);
 
         self::persistAndFlush($persistedCreator);
 

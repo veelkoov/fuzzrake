@@ -1,6 +1,6 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}successful {% if is_new %}inclusion{% else %}update{% endif %} submission!{% endblock %}
+{% block title %}successful submission!{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -13,98 +13,23 @@
 {% endblock %}
 
 {% block body %}
-    <div id="iu-form-data" data-step="confirmation" data-creator-id="{{ creator_id }}"></div>
+    <div id="iu-form-data" data-step="confirmation" data-creator-id="{{ creator_id }}" {# grep-code-iu-form-data-local-storage #}></div>
 
-    {% if password_ok %}
-
-        <div class="card border-success my-5" role="alert">
-            <div class="card-header">
-                Your submission has been queued
-            </div>
-
-            <div class="card-body">
-                <p class="card-text">
-                    Submissions are typically processed once a week, during the weekend. <i class="fas fa-hand-point-right"></i> If you don't see your changes on-line after 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('contact') }}">contact page</a>.
-                </p>
-
-                <hr>
-
-                <p class="card-text">
-                    <i class="fas fa-hand-point-right"></i> If for any reason you need your submission processed as soon as possible, do not hesitate to <a href="{{ path('contact') }}">contact the maintainer</a> immediately, we'll see, what can be done about this.
-                </p>
-            </div>
+    <div class="card border-success my-5" role="alert">
+        <div class="card-header">
+            Your submission has been queued
         </div>
 
-    {% elseif contact_allowed %}
+        <div class="card-body">
+            <p class="card-text">
+                Submissions are typically processed once a week, during the weekend. <i class="fas fa-hand-point-right"></i> If you don't see your changes on-line after 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('contact') }}">contact page</a>.
+            </p>
 
-        <div class="card border-warning my-5" role="alert">
-            <div class="card-header">
-                Your submission has been queued
-            </div>
+            <hr>
 
-            <div class="card-body">
-                <p class="card-text">
-                    You requested a password change, so expect to be contacted by the maintainer to confirm your changes. <i class="fas fa-exclamation-triangle text-danger"></i> Please warn other makers in the studio about this if you are not working alone!
-                </p>
-
-                <p class="card-text">
-                    Submissions are typically processed once a week, during the weekend. <i class="fas fa-hand-point-right"></i> If nothing happens within 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('contact') }}">contact page</a>.
-                </p>
-
-                <hr>
-
-                <p class="card-text">
-                    <i class="fas fa-hand-point-right"></i> If for any reason you need your submission processed as soon as possible, do not hesitate to <a href="{{ path('contact') }}">contact the maintainer</a> immediately, we'll see, what can be done about this.
-                </p>
-            </div>
+            <p class="card-text">
+                <i class="fas fa-hand-point-right"></i> If for any reason you need your submission processed as soon as possible, do not hesitate to <a href="{{ path('contact') }}">contact the maintainer</a> immediately, we'll see, what can be done about this.
+            </p>
         </div>
-
-    {% else %}
-
-        <div class="card border-danger my-5" role="alert">
-            <div class="card-header">
-                Submission recorded, but <u>on hold</u>
-            </div>
-
-            <div class="card-body">
-                <h5 class="card-title text-danger">
-                    Your additional action is required
-                </h5>
-
-                <p class="card-text">
-                    <strong>Why?</strong>
-
-                    You requested a password change, but you didn't agree {% if no_selected_previously %}before{% endif %} to be contacted, so <u>you</u> need to initiate contact. <i class="fas fa-exclamation-triangle text-danger"></i> If you won't, your submission will get rejected.
-                </p>
-
-                <p class="card-text">
-                    Please contact the maintainer using any of the means listed on the <a href="{{ path('contact') }}">contact page</a>. Send this text in your message (click to select all): <em class="user-select-all">I want to confirm submission: {{ submission_id }}</em>.
-                </p>
-            </div>
-        </div>
-
-        <h5>
-            What is the point of all of this?
-        </h5>
-
-        <p>
-            Protection of your information on getfursu.it against unauthorized changes performed by displeased clients or quote requesters, pranksters, and folks under the influence of particular substances.
-        </p>
-
-        <h5>
-            How will you confirm it was me, now?
-        </h5>
-
-        <p>
-            Most often I achieve this by finding connection between old website/accounts, which were previously/already linked on getfursu.it, to the e-mail/account you are able to send me a message from, today.
-        </p>
-
-        <h5>
-            Why is "no contact allowed" even an option?
-        </h5>
-
-        <p>
-            Because I personally hate SPAM, and even though I don't plan to send any, I understand some people don't want to provide their e-mail address everywhere right away. So I want to give a real choice if you want to give me the address or not.
-        </p>
-    {% endif %}
+    </div>
 {% endblock %}

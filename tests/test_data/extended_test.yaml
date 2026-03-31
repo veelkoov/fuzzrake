@@ -69,50 +69,6 @@ test_data:
         before: []
         update+after: ["Creator 5 NAME before update"]
 
-  - PASSWORD:
-      max_to_max:
-        before: "Creator 1 PASSWORD before update"
-        update+after: "Creator 1 PASSWORD after update"
-      new_max:
-        update+after: "Creator 2 PASSWORD"
-      min_to_max:
-        before: ""
-        update+after: "Creator 3 PASSWORD after update"
-      new_min:
-        update+after: "Creator 4 PASSWORD"
-      just_id:
-        before: ""
-        update+after: "Creator 5 PASSWORD after update"
-
-  - EMAIL_ADDRESS:
-      max_to_max:
-        before: "creator_1@before.update"
-        update+after: "creator_1@after.update"
-      new_max:
-        update+after: "creator_2_email@address"
-      min_to_max:
-        before: ""
-        update+after: "creator_3@after.update"
-      new_min:
-        update+after: ""
-      just_id:
-        before+update+after: ""
-
-  - CONTACT_ALLOWED:
-      max_to_max:
-        before: "CORRECTIONS"
-        update+after: "ANNOUNCEMENTS"
-      new_max:
-        update+after: "FEEDBACK"
-      min_to_max:
-        before: null
-        update+after: "CORRECTIONS"
-      new_min:
-        update+after: "NO"
-      just_id:
-        before: null
-        update+after: "NO"
-
   - INTRO:
       max_to_max:
         before: "Creator 1 INTRO before update"

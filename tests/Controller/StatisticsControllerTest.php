@@ -9,7 +9,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Tests\TestUtils\UserCreator;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -18,7 +18,7 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
 {
     public function testStatisticsPageLoads(): void
     {
-        self::persistAndFlush(self::getCreator()
+        self::persistAndFlush(UserCreator::get()
             ->setOtherFeatures(['Smoke detector'])
             ->setSpeciesDoes(['Wolves'])
             ->setSpeciesDoesnt(['Coyotes'])
@@ -32,17 +32,23 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
 
     public function testInactiveCreatorsDontCount(): void
     {
-        $a1 = self::getCreator('A1', 'TEST0041')
+        $a1 = UserCreator::get()
+            ->setName('A1')
+            ->setCreatorId('TEST0041')
             ->setFeatures([Features::FOLLOW_ME_EYES])
             ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setCountry('CZ')
         ;
-        $a2 = self::getCreator('A2', 'TEST0042')
+        $a2 = UserCreator::get()
+            ->setName('A2')
+            ->setCreatorId('TEST0042')
             ->setFeatures([Features::FOLLOW_ME_EYES])
             ->setOrderTypes([OrderTypes::FULL_DIGITIGRADE])
             ->setCountry('SK')
         ;
-        $a3 = self::getCreator('A3', 'TEST0043')
+        $a3 = UserCreator::get()
+            ->setName('A3')
+            ->setCreatorId('TEST0043')
             ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setInactiveReason('Hidden')
             ->setCountry('IT')
@@ -68,9 +74,9 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
 
     public function testFakeFormerCreatorIdsDontCount(): void
     {
-        $creatorOnlyFakeId = new Creator();
-        $creatorFakeIdAndNew = new Creator();
-        $creatorFakeIdAndOldAndNew = new Creator();
+        $creatorOnlyFakeId = UserCreator::get();
+        $creatorFakeIdAndNew = UserCreator::get();
+        $creatorFakeIdAndOldAndNew = UserCreator::get();
 
         self::persistAndFlush($creatorFakeIdAndNew, $creatorOnlyFakeId, $creatorFakeIdAndOldAndNew);
 
@@ -81,9 +87,9 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
         $creatorFakeIdAndOldAndNew->setCreatorId('TEST002')
             ->setFormerCreatorIds([sprintf("TEST003\nM%06d", $creatorFakeIdAndOldAndNew->getId() ?? 0)]);
 
-        $creator3 = new Creator()->setCreatorId('TEST004')->setFormerCreatorIds(['TEST005', 'TEST006']);
-        $creator4 = new Creator()->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
-        $creator5 = new Creator()->setCreatorId('TEST009')->setFormerCreatorIds([]);
+        $creator3 = UserCreator::get()->setCreatorId('TEST004')->setFormerCreatorIds(['TEST005', 'TEST006']);
+        $creator4 = UserCreator::get()->setCreatorId('TEST007')->setFormerCreatorIds(['TEST008']);
+        $creator5 = UserCreator::get()->setCreatorId('TEST009')->setFormerCreatorIds([]);
 
         self::persistAndFlush($creator3, $creator4, $creator5);
 
