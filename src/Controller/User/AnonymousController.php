@@ -57,13 +57,15 @@ class AnonymousController extends AbstractController
             return $this->redirectToRoute(RouteName::USER_MAIN);
         }
 
+        $reviewer = $request->query->getBoolean('reviewer', false);
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
         $captcha = $captchaService->getCaptcha($session)->handleRequest($request, $form);
 
         if (!$form->isSubmitted() || !$form->isValid() || !$captcha->isSolved()) {
-            return $this->render('user/register.html.twig', [
+            return $this->render($reviewer ? 'user/register_reviewer.html.twig' : 'user/register.html.twig', [
                 'registration_form' => $form,
                 'was_submitted' => $form->isSubmitted(),
             ]);
@@ -73,7 +75,7 @@ class AnonymousController extends AbstractController
         $newPassword = $form->get(RegistrationFormType::FLD_NEW_PASSWORD)->getData();
         $user->setPassword($userPasswordHasher->hashPassword($user, $newPassword));
 
-        $user->addRole(Role::CREATOR);
+        $user->addRole($reviewer ? Role::REVIEWER : Role::CREATOR);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

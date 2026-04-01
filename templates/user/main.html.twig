@@ -47,6 +47,8 @@
         </a>
     {% endif %}
 
+    {% if is_granted('ROLE_CREATOR') %}
+
     <h2 class="mt-5 mb-3">Contact</h2>
 
     <div class="row">
@@ -102,4 +104,6 @@
             </span>
         </div>
     </div>
+
+    {% endif %}
 {% endblock %}
