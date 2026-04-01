@@ -66,7 +66,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
@@ -145,7 +145,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td+td', 'TEST001');
@@ -210,7 +210,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setOwner(null); // Simulate legacy submission
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         // grep-code-matched-multiple-creators
@@ -252,7 +252,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertAnySelectorTextContains('p', 'Creators named similarly:');
@@ -270,7 +270,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setComment('Old comment')->setDirectives('Old directives');
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
@@ -287,7 +287,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
@@ -307,7 +307,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', []);
@@ -328,7 +328,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td+td', 'Some submitted intro information');
@@ -352,7 +352,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', [
@@ -372,7 +372,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
@@ -411,7 +411,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
@@ -420,7 +420,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $existingCreator->setInactiveReason('');
         self::flush();
 
-        self::$client->request('GET', "/mx/submission/{$submission->getStrId()}");
+        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');

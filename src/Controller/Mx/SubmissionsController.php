@@ -91,8 +91,8 @@ class SubmissionsController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/submission/{strId}', name: RouteName::MX_SUBMISSION)]
-    public function submission(#[MapEntity(mapping: ['strId' => 'strId'])] Submission $submission, Request $request): Response
+    #[Route(path: '/submission/{id}', name: RouteName::MX_SUBMISSION)]
+    public function submission(#[MapEntity(mapping: ['id' => 'id'])] Submission $submission, Request $request): Response
     {
         $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
 

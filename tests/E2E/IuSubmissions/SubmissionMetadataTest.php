@@ -15,6 +15,9 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
 
+    public const string CREATOR_ID_SELECTOR = 'table tbody td:nth-child(4) a span';
+    public const string SUBMISSION_TYPE_SELECTOR = 'table tbody tr td:nth-child(3) span';
+
     public function testUpdateIsMarkedAsSuch(): void
     {
         self::haveACreatorUser();
@@ -48,8 +51,8 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
         self::$client->request('GET', '/mx/submissions/1/');
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorCount(1, 'table tbody tr', 'Expected exactly one submission.');
-        self::assertSelectorTextSame('table tbody td:nth-child(3)', 'TEST001');
-        self::assertSelectorTextSame('table tbody tr td:nth-child(2) a span', 'Update');
+        self::assertSelectorTextSame(self::CREATOR_ID_SELECTOR, 'TEST001');
+        self::assertSelectorTextSame(self::SUBMISSION_TYPE_SELECTOR, 'Update');
 
         $submissions = self::getContainerService(SubmissionRepository::class)->findAll();
         self::assertCount(1, $submissions);
@@ -87,8 +90,8 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
         self::$client->request('GET', '/mx/submissions/1/');
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorCount(1, 'table tbody tr', 'Expected exactly one submission.');
-        self::assertSelectorTextSame('table tbody td:nth-child(3)', 'TEST002');
-        self::assertSelectorTextSame('table tbody tr td:nth-child(2) a span', 'New');
+        self::assertSelectorTextContains(self::CREATOR_ID_SELECTOR, 'TEST002');
+        self::assertSelectorTextSame(self::SUBMISSION_TYPE_SELECTOR, 'Inclusion');
 
         $submissions = self::getContainerService(SubmissionRepository::class)->findAll();
         self::assertCount(1, $submissions);

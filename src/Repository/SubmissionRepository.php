@@ -9,8 +9,6 @@ use App\Entity\Submission;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -38,24 +36,6 @@ class SubmissionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function findByStrId(string $strId): ?Submission
-    {
-        try {
-            $result = $this->createQueryBuilder('d_s')
-                ->where('d_s.strId = :strId')
-                ->setParameter('strId', $strId)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException) {
-            return null;
-        }
-
-        return $result; // @phpstan-ignore return.type (Lack of skill to fix this)
     }
 
     /**
