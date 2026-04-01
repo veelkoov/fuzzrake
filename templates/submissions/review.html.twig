@@ -1,0 +1,41 @@
+{% extends 'submissions/_base.html.twig' %}
+
+{% block title %}Submission #{{ importData.submission.id }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <table class="table table-sm" id="submission-review">
+        <thead>
+            <tr>
+                <th>Field</th>
+                {% if importData.isUpdate %}
+                    <th>Old data</th>
+                {% endif %}
+                <th>New data</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for field in fields %}
+                {% set row_class = importData.isChanging(field) ? 'changing' : 'not-changing' %}
+
+                <tr class="{{ row_class }}">
+                    <td>
+                        {{ field.name }}
+                    </td>
+
+                    {% if importData.isUpdate %}
+                        <td class="before">
+                            {{ field|difference('danger', importData.subjectCreator, importData.fixedData)|link_urls }}
+                        </td>
+                    {% endif %}
+
+                    <td class="after">
+                        {{ field|difference('success', importData.fixedData, importData.subjectCreator)|link_urls }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -21,23 +21,19 @@
   border: 1px solid $danger;
 }
 
-#mx-submission {
-  tr {
-    td:nth-child(3) {
-      overflow-wrap: anywhere;
-    }
+#submission-manage tr.not-fixed.not-changing,
+#submission-review tr.not-changing {
+  color: #bbb;
+  display: none;
+}
 
-    &.not-fixed.not-changing {
-      color: #bbb;
-      display: none;
-    }
-  }
-
+#submission-manage,
+#submission-review {
   tr.structured {
     opacity: 0.5;
   }
 
-  tr.before {
+  .before {
     a {
       color: $danger;
       text-decoration: none;
@@ -59,7 +55,7 @@
     }
   }
 
-  tr.after {
+  .after {
     a {
       color: $success;
       text-decoration: none;

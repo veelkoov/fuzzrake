@@ -58,7 +58,10 @@ final class RouteName
     public const string MX_EVENT_EDIT = 'mx_event_edit';
     public const string MX_EVENT_NEW = 'mx_event_new';
     public const string MX_QUERY = 'mx_query';
-    public const string MX_SUBMISSION = 'mx_submission';
-    public const string MX_SUBMISSIONS = 'mx_submissions';
-    public const string MX_SUBMISSIONS_SOCIAL = 'mx_submissions_social';
+
+    public const string SUBMISSIONS_LIST = 'submissions_list';
+    public const string SUBMISSIONS_SOCIAL = 'submissions_social';
+
+    public const string SUBMISSION_REVIEW = 'submission_review';
+    public const string SUBMISSION_MANAGE = 'submission_manage';
 }

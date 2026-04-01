@@ -42,6 +42,9 @@ security:
         - { path: ^/user, roles: ROLE_VERIFIED } # grep-code-route-user-prefix
         - { path: ^/mx, roles: ROLE_ADMIN } # Administration
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_REVIEWER
+
 when@test:
     security:
         password_hashers:

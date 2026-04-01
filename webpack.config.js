@@ -20,12 +20,12 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('admin', './assets/scripts/entry/admin.ts')
     .addEntry('events', './assets/scripts/entry/events.ts')
     .addEntry('feedback', './assets/scripts/entry/feedback.ts')
     .addEntry('general', './assets/scripts/entry/general.ts')
     .addEntry('iu_form', './assets/scripts/entry/iu_form.ts')
     .addEntry('main', './assets/scripts/entry/main.ts')
+    .addEntry('submissions', './assets/scripts/entry/submissions.ts')
     .addEntry('toc', './assets/scripts/entry/toc.ts')
     .addEntry('user', './assets/scripts/entry/user.ts')
     .addEntry('user_password', './assets/scripts/entry/user_password.ts')
