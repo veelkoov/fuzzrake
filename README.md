@@ -20,6 +20,7 @@ See [getfursu.it/info](https://getfursu.it/info)
 - `./toolbox console doctrine:schema:create`
 - `openssl genrsa -out var/dkim_testing_private_key.pem -aes256 -passout pass:dkim-testing-private-key-passphrase 2048`
 - http://localhost:8080/ should now respond
+- `./toolbox docker-up` (NOTE: this will leave Fuzzrake running in the background, use `docker-down` later to stop)
 - Tests should now pass: `./toolbox pu` (or `pus` - short, `pum` - medium, `pul` - large)
 - `./toolbox console app:user:create your-email-address@example.com --verified --admin`
     - NOTE: the email in the command arguments, and the password in the command output are now your DEV admin credentials.
