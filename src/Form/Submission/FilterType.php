@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Mx;
+namespace App\Form\Submission;
 
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @extends AbstractType<Filter>
  */
-class SubmissionFilterType extends AbstractType
+class FilterType extends AbstractType
 {
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void

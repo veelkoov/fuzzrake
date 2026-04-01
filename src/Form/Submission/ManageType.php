@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Mx;
+namespace App\Form\Submission;
 
 use App\Data\Submission\Status;
 use App\Entity\Submission;
@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class SubmissionType extends AbstractType
+final class ManageType extends AbstractType
 {
     public const string BTN_IMPORT = 'import';
     public const string BTN_SAVE = 'save';

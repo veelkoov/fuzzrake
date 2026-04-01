@@ -9,8 +9,8 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
 use App\Entity\Submission;
-use App\Form\Mx\SubmissionFilterType;
-use App\Form\Mx\SubmissionType;
+use App\Form\Submission\FilterType;
+use App\Form\Submission\ManageType;
 use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
@@ -61,7 +61,7 @@ class SubmissionsController extends AbstractController
                 $filter = new Filter();
             }
 
-            $filterForm = $this->createForm(SubmissionFilterType::class, $filter);
+            $filterForm = $this->createForm(FilterType::class, $filter);
             $filterForm->handleRequest($request);
 
             if ($filterForm->isSubmitted() && $filterForm->isValid()) {
@@ -104,30 +104,30 @@ class SubmissionsController extends AbstractController
     #[Route(path: '/submission/{id}/manage', name: RouteName::SUBMISSION_MANAGE)]
     public function submissionManage(#[MapEntity(mapping: ['id' => 'id'])] Submission $submission, Request $request): Response
     {
-        $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
+        $form = $this->createForm(ManageType::class, $submission)->handleRequest($request);
 
         $importData = $this->importService->getImportDataFor($submission);
 
         foreach ($importData->errors as $error) {
-            $form->get(SubmissionType::FLD_DIRECTIVES)->addError(new FormError($error));
+            $form->get(ManageType::FLD_DIRECTIVES)->addError(new FormError($error));
         }
 
         if ($form->isSubmitted()) {
-            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid()) {
+            if ($this->clicked($form, ManageType::BTN_IMPORT) && $form->isValid()) {
                 if ($importData->isAccepted) {
                     $submission->setStatus(Status::IMPORTED);
                     $this->importService->import($importData);
 
                     return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
                 } else {
-                    $form->get(SubmissionType::FLD_DIRECTIVES)->addError(
+                    $form->get(ManageType::FLD_DIRECTIVES)->addError(
                         new FormError('Submission has not been accepted yet.'));
                 }
             }
 
             $this->entityManager->flush(); // Save the directives
 
-            if ($this->clicked($form, SubmissionType::BTN_SAVE_AND_CLOSE)) {
+            if ($this->clicked($form, ManageType::BTN_SAVE_AND_CLOSE)) {
                 return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
             }
         }
