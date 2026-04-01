@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Entity\User;
+use App\Security\Role;
 use LogicException;
 use PHPUnit\Framework\Attributes\Before;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -28,8 +29,8 @@ trait UsersTrait
     {
         $user = new User()
             ->setEmail('administrator@example.com')
-            ->setRoles(['ROLE_ADMIN'])
-            ->setIsVerified(true);
+            ->addRole(Role::ADMIN)
+            ->addRole(Role::VERIFIED);
         self::setDefaultPassword($user);
         self::persistAndFlush($user);
 
@@ -40,7 +41,7 @@ trait UsersTrait
     {
         $user = new User()
             ->setEmail('creator@example.com')
-            ->setIsVerified(true)
+            ->addRole(Role::VERIFIED)
             ->setContactPermit(null);
         self::setDefaultPassword($user);
         self::persistAndFlush($user);

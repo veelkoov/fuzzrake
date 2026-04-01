@@ -23,15 +23,18 @@ class UsersService
 
     public function createUser(string $email, bool $isVerified = false, bool $isAdmin = false): string
     {
-        $user = new User()->setEmail($email)->setIsVerified($isVerified);
+        $user = new User()->setEmail($email);
+
+        if ($isVerified) {
+            $user->addRole(Role::VERIFIED);
+        }
+        if ($isAdmin) {
+            $user->addRole(Role::ADMIN);
+        }
 
         $plainPassword = $this->getRandomPassword();
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
-
-        if ($isAdmin) {
-            $user->setRoles(array_values(array_merge($user->getRoles(), ['ROLE_ADMIN'])));
-        }
 
         $this->entityManager->persist($user);
 

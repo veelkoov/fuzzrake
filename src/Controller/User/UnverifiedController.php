@@ -11,6 +11,7 @@ use App\Form\ContactPermitFormType;
 use App\Repository\UserRepository;
 use App\Security\Email;
 use App\Security\EmailVerifier;
+use App\Security\Role;
 use App\Security\SecurityMailer;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,7 +69,7 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/resend-verification-email', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
     public function resendVerificationEmail(#[CurrentUser] User $user): Response
     {
-        if ($user->isVerified()) {
+        if ($user->hasRole(Role::VERIFIED)) {
             $this->addFlash('info', 'Your email address is already confirmed.');
         } else {
             $this->emailVerifier->sendEmailConfirmation($user);
@@ -129,7 +130,7 @@ class UnverifiedController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $oldEmail = $user->getEmail();
 
-            $user->setEmail($newEmail)->setIsVerified(false);
+            $user->setEmail($newEmail)->removeRole(Role::VERIFIED);
             $this->entityManager->flush();
             $this->logger->info('User email has been changed.', ['user ID' => $user->getId(),
                 'old' => Email::obfuscate($oldEmail), 'new' => Email::obfuscate($newEmail)]);

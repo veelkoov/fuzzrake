@@ -8,6 +8,7 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\User;
+use App\Security\Role;
 use App\Utils\Collections\StringToCreator;
 use App\Utils\Collections\StringToUser;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -53,7 +54,7 @@ class YamlCreatorsDataLoader
     ) {
         $this->users = StringToUser::fromKeys(
             $this->aliases,
-            static fn (string $alias) => new User()->setEmail("$alias@example.com")->setIsVerified(true),
+            static fn (string $alias) => new User()->setEmail("$alias@example.com")->addRole(Role::VERIFIED),
         );
 
         /**
