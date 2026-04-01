@@ -22,7 +22,7 @@ class UserRole
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-    #[ORM\Column(type: Types::ENUM, length: 512, nullable: false)]
+    #[ORM\Column(type: Types::ENUM, length: 512, nullable: false, index: true)]
     private Role $role;
 
     public function __construct(User $user, Role $role)

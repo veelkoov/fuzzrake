@@ -26,6 +26,7 @@ final class Version20260401120758 extends AbstractMigration
         $this->addSql('INSERT INTO user_roles (user_id, role) SELECT id, \'ROLE_CREATOR\' FROM users WHERE roles NOT LIKE \'%"ROLE_ADMIN"%\'');
 
         $this->addSql('CREATE INDEX IDX_54FCD59FA76ED395 ON user_roles (user_id)');
+        $this->addSql('CREATE INDEX IDX_54FCD59F57698A6A ON user_roles (role)');
         $this->addSql('CREATE TEMPORARY TABLE __temp__users AS SELECT id, email, password, contact_permit FROM users');
         $this->addSql('DROP TABLE users');
         $this->addSql('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email CLOB NOT NULL, password CLOB NOT NULL, contact_permit CLOB DEFAULT NULL)');
