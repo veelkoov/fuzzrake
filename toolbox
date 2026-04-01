@@ -66,6 +66,7 @@ function action_dbcommit() {
 function action_dbpull() {
     run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$DATABASE_REL_PATH"
     run_command chmod a+w "$DATABASE_REL_PATH"
+    run_command cp "$DATABASE_REL_PATH"{,.bak}
 }
 
 function action_dbpush_main() {

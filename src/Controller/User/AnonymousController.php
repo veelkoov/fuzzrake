@@ -10,6 +10,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\Email;
 use App\Security\EmailVerifier;
+use App\Security\Role;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -71,6 +72,8 @@ class AnonymousController extends AbstractController
         /** @var string $newPassword */
         $newPassword = $form->get(RegistrationFormType::FLD_NEW_PASSWORD)->getData();
         $user->setPassword($userPasswordHasher->hashPassword($user, $newPassword));
+
+        $user->addRole(Role::CREATOR);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

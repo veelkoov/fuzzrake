@@ -18,11 +18,11 @@ class UserRole
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'roles')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userRoles')]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-    #[ORM\Column(type: Types::ENUM, nullable: false)]
+    #[ORM\Column(type: Types::ENUM, length: 512, nullable: false)]
     private Role $role;
 
     public function __construct(User $user, Role $role)
