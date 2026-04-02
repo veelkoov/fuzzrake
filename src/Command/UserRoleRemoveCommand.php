@@ -14,9 +14,7 @@ class UserRoleRemoveCommand extends UserCommand
 {
     public function __invoke(#[Argument] string $email, #[Argument] Role $role): int
     {
-        $user = $this->findUserByEmail($email);
-
-        $user->removeRole($role);
+        $this->findUserByEmail($email)->removeRole($role);
         $this->entityManager->flush();
 
         return Command::SUCCESS;
