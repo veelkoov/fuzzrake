@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * @extends AbstractType<mixed>
+ */
 final class QueryType extends AbstractType
 {
     public const string ITEM_QUERY = 'ITEM_QUERY';

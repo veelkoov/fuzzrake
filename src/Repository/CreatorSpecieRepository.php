@@ -10,11 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Veelkoov\Debris\Maps\StringToInt;
 
 /**
- * @method CreatorSpecie|null find($id, $lockMode = null, $lockVersion = null)
- * @method CreatorSpecie|null findOneBy(array $criteria, array $orderBy = null)
- * @method CreatorSpecie[]    findAll()
- * @method CreatorSpecie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<CreatorSpecie>
  */
 class CreatorSpecieRepository extends ServiceEntityRepository

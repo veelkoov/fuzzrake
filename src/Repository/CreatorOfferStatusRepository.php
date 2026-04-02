@@ -15,11 +15,6 @@ use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Sets\StringSet;
 
 /**
- * @method CreatorOfferStatus|null find($id, $lockMode = null, $lockVersion = null)
- * @method CreatorOfferStatus|null findOneBy(array $criteria, array $orderBy = null)
- * @method CreatorOfferStatus[]    findAll()
- * @method CreatorOfferStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<CreatorOfferStatus>
  */
 class CreatorOfferStatusRepository extends ServiceEntityRepository

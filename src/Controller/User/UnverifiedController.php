@@ -151,6 +151,9 @@ class UnverifiedController extends AbstractController
         ]);
     }
 
+    /**
+     * @param FormInterface<mixed> $form
+     */
     private function validatePassword(FormInterface $form, string $passwordFieldName, User $user): void
     {
         if (!$form->isSubmitted()) {

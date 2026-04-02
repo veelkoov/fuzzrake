@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<mixed>
+ */
 final class ResetPasswordRequestFormType extends AbstractType
 {
     public const string FLD_EMAIL = 'email';
