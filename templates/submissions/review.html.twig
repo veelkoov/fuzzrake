@@ -1,6 +1,6 @@
 {% extends 'submissions/_base.html.twig' %}
 
-{% block title %}Submission #{{ importData.submission.id }}{% endblock %}
+{% block title %}Submission #{{ import_data.submission.id }}{% endblock %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th>Field</th>
-                {% if importData.isUpdate %}
+                {% if import_data.isUpdate %}
                     <th>Old data</th>
                 {% endif %}
                 <th>New data</th>
@@ -18,36 +18,69 @@
 
         <tbody>
             {% for field in fields %}
-                {% set row_class = importData.isChanging(field) ? 'changing' : 'not-changing' %}
+                {% set row_class = import_data.isChanging(field) ? 'changing' : 'not-changing' %}
 
                 <tr class="{{ row_class }}">
                     <td>
                         {{ field.name }}
                     </td>
 
-                    {% if importData.isUpdate %}
+                    {% if import_data.isUpdate %}
                         <td class="before">
-                            {{ field|difference('danger', importData.subjectCreator, importData.fixedData)|link_urls }}
+                            {{ field|difference('danger', import_data.subjectCreator, import_data.fixedData)|link_urls }}
                         </td>
                     {% endif %}
 
                     <td class="after">
-                        {{ field|difference('success', importData.fixedData, importData.subjectCreator)|link_urls }}
+                        {{ field|difference('success', import_data.fixedData, import_data.subjectCreator)|link_urls }}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    {% for topic in topics %}
-        <p>
-            <strong>{{ topic.user.email }}</strong> wrote on {{ topic.postedUtc|fragile_datetime_utc }}:<br>
-            {{ topic.message|nl2br }}
-        </p>
+    {% for topic_items in topics %}
+        {% set topic = topic_items.entity %}
+        {% set new_comment_form = topic_items.new_comment_form %}
+
+        <div class="card mb-2">
+            <div class="card-header">
+                <strong>{{ topic.user.email }}</strong> wrote on {{ topic.postedUtc|fragile_datetime_utc }}
+            </div>
+
+            <div class="card-body">{{ topic.message|nl2br }}</div>
+
+            {% if topic.comments is not empty %}
+                <div class="card-body ps-5 pb-0">
+                    {% for comment in topic.comments %}
+                        <strong>{{ comment.user.email }}</strong> responded on {{ comment.postedUtc|fragile_datetime_utc }}:<br>
+
+                        <p>{{ comment.message|nl2br }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="card-body ps-5">
+                {{ form_start(new_comment_form) }}
+                {{ form_widget(new_comment_form.message) }}
+                {{ form_errors(new_comment_form.message) }}
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Respond</button>
+                {{ form_end(new_comment_form) }}
+            </div>
+        </div>
     {% endfor %}
 
-    {{ form_start(newTopicForm) }}
-    {{ form_rest(newTopicForm) }}
-    <button type="submit" class="btn btn-primary">Post new topic</button>
-    {{ form_end(newTopicForm) }}
+    <div class="card">
+        <div class="card-header">
+            Start new topic
+        </div>
+
+        <div class="card-body">
+            {{ form_start(new_topic_form) }}
+            {{ form_widget(new_topic_form.message) }}
+            {{ form_errors(new_topic_form.message) }}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Post</button>
+            {{ form_end(new_topic_form) }}
+        </div>
+    </div>
 {% endblock %}

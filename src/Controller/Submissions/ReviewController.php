@@ -8,9 +8,11 @@ use App\Controller\Utils\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
+use App\Entity\DiscussionComment;
 use App\Entity\DiscussionTopic;
 use App\Entity\Submission;
 use App\Entity\User;
+use App\Form\Submission\CommentType;
 use App\Form\Submission\FilterType;
 use App\Form\Submission\TopicType;
 use App\IuHandling\Import\ImportService;
@@ -21,6 +23,7 @@ use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
@@ -92,15 +95,41 @@ class ReviewController extends AbstractController
             $this->entityManager->persist($newTopic);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute(RouteName::SUBMISSION_REVIEW, ['id' => $submission->getId()]);
+            return $this->redirectToReview($submission);
+        }
+
+        $topics = [];
+
+        foreach ($this->topicRepository->getSubmissionDiscussions($submission) as $topic) {
+            $form = $this->createForm(CommentType::class, new DiscussionComment($topic, $user), [
+                CommentType::OPT_PREFIX => "topic_{$topic->getId()}",
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->entityManager->persist($form->getData());
+                $this->entityManager->flush();
+
+                return $this->redirectToReview($submission);
+            }
+
+            $topics[] = [
+                'entity' => $topic,
+                'new_comment_form' => $form->createView(),
+            ];
         }
 
         return $this->render('submissions/review.html.twig', [
-            'importData' => $importData,
+            'import_data' => $importData,
             'submission' => $submission,
             'fields' => Fields::inIuForm(),
-            'newTopicForm' => $newTopicForm,
-            'topics' => $this->topicRepository->getSubmissionDiscussions($submission),
+            'new_topic_form' => $newTopicForm,
+            'topics' => $topics,
         ]);
+    }
+
+    private function redirectToReview(Submission $submission): RedirectResponse
+    {
+        return $this->redirectToRoute(RouteName::SUBMISSION_REVIEW, ['id' => $submission->getId()]);
     }
 }

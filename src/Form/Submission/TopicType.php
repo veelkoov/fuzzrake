@@ -19,8 +19,7 @@ class TopicType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('message', TextareaType::class, [
-            ])
+            ->add('message', TextareaType::class)
         ;
     }
 }
