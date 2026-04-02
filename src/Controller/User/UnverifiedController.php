@@ -28,6 +28,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
+use function Symfony\Component\String\u;
+
 #[Cache(public: false, noStore: true)]
 #[Route(path: '/uuser')] // grep-code-route-uuser-prefix
 class UnverifiedController extends AbstractController
@@ -51,6 +53,8 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/main', name: RouteName::USER_MAIN)]
     public function main(Request $request, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
     {
+        $this->assignRandomNicknameIfMissing($user);
+
         $form = $this->createForm(ContactPermitFormType::class, $user);
         $form->handleRequest($request);
 
@@ -166,5 +170,27 @@ class UnverifiedController extends AbstractController
         if (!$this->passwordHasher->isPasswordValid($user, $password)) {
             $form->get($passwordFieldName)->addError(new FormError('Invalid password.'));
         }
+    }
+
+    private function assignRandomNicknameIfMissing(User $user): void
+    {
+        if ('' !== $user->getNickname()) {
+            return;
+        }
+
+        $sets = [
+            u('🔴🟡🟢🔵🟣⚫🟥🟨🟩🟦🟪⬛'),
+            u('🍍🍎🥝🍅🍉🫑🍄‍🟫🍓🫐🍒🥕🥦'),
+            u('🐶🐺🦊🦝🐱🦁🐯🐭🐻🐼🐮🐰'),
+        ];
+
+        usort($sets, static fn () => -1 + 2 * mt_rand(0, 1));
+
+        $newNickname = $sets[0]->slice(mt_rand(0, 9), 1)
+            .$sets[1]->slice(mt_rand(0, 9), 1)
+            .$sets[2]->slice(mt_rand(0, 9), 1);
+
+        $user->setNickname($newNickname);
+        $this->entityManager->flush();
     }
 }

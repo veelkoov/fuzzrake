@@ -4,7 +4,7 @@
 
     <div class="card mb-2">
         <div class="card-header">
-            <strong>{{ topic.user.email }}</strong>
+            <strong>{{ topic.user.nickname }}</strong>
             wrote on {{ topic.postedUtc|fragile_datetime_utc }}
             <span class="text-body-tertiary">(#{{ topic.id }})</span>
         </div>
@@ -15,7 +15,7 @@
             <div class="card-body ps-5 pb-0">
                 {% for comment in topic.comments %}
                     <p class="mb-1">
-                        <strong>{{ comment.user.email }}</strong>
+                        <strong>{{ comment.user.nickname }}</strong>
                         responded on {{ comment.postedUtc|fragile_datetime_utc }}
                         <span class="text-body-tertiary">(#{{ comment.id }})</span>:
                     </p>

@@ -9,6 +9,7 @@ use App\Entity\Submission;
 use App\Security\Role;
 use Override;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,6 +20,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class ReviewVoter extends Voter
 {
     public const string SUBMISSION_REVIEW = 'submission_review';
+
+    public function __construct(
+        private readonly AccessDecisionManagerInterface $accessDecisionManager,
+    ) {
+    }
 
     #[Override]
     protected function supports(string $attribute, mixed $subject): bool
@@ -36,7 +42,7 @@ final class ReviewVoter extends Voter
             return false;
         }
 
-        if (arr_contains($user->getRoles(), Role::ADMIN->value)) {
+        if ($this->accessDecisionManager->decide($token, [Role::ADMIN->value])) {
             return true;
         }
 

@@ -10,4 +10,10 @@ enum Role: string
     case CREATOR = 'ROLE_CREATOR';
     case REVIEWER = 'ROLE_REVIEWER';
     case VERIFIED = 'ROLE_VERIFIED';
+    case REGISTERED = 'ROLE_REGISTERED';
+
+    public function id(): string
+    {
+        return $this->value;
+    }
 }
