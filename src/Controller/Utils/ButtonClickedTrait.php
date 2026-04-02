@@ -10,6 +10,11 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 
 trait ButtonClickedTrait
 {
+    /**
+     * @template T
+     *
+     * @param FormInterface<T> $form
+     */
     protected function clicked(FormInterface $form, string $buttonId): bool
     {
         if (!$form instanceof Form) {

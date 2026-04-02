@@ -11,11 +11,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method CreatorUrl|null find($id, $lockMode = null, $lockVersion = null)
- * @method CreatorUrl|null findOneBy(array $criteria, array $orderBy = null)
- * @method CreatorUrl[]    findAll()
- * @method CreatorUrl[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<CreatorUrl>
  */
 class CreatorUrlRepository extends ServiceEntityRepository

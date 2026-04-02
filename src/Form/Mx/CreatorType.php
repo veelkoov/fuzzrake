@@ -22,6 +22,9 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractTypeWithDelete<Creator>
+ */
 class CreatorType extends AbstractTypeWithDelete
 {
     #[Override]

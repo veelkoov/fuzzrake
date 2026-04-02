@@ -13,11 +13,6 @@ use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method CreatorVolatileData|null find($id, $lockMode = null, $lockVersion = null)
- * @method CreatorVolatileData|null findOneBy(array $criteria, array $orderBy = null)
- * @method CreatorVolatileData[]    findAll()
- * @method CreatorVolatileData[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<CreatorVolatileData>
  */
 class CreatorVolatileDataRepository extends ServiceEntityRepository
