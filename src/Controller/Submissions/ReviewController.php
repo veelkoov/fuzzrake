@@ -82,7 +82,7 @@ class ReviewController extends AbstractController
         ]);
     }
 
-    // TODO: Allow non-admin only to submission in review
+    #[IsGranted('submission_review', 'submission')]
     #[Route(path: '/submission/{id}/review', name: RouteName::SUBMISSION_REVIEW)]
     public function submissionReview(#[MapEntity] Submission $submission, #[CurrentUser] User $user, Request $request): Response
     {
