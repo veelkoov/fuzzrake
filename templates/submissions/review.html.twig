@@ -38,4 +38,16 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% for topic in topics %}
+        <p>
+            <strong>{{ topic.user.email }}</strong> wrote on {{ topic.postedUtc|fragile_datetime_utc }}:<br>
+            {{ topic.message|nl2br }}
+        </p>
+    {% endfor %}
+
+    {{ form_start(newTopicForm) }}
+    {{ form_rest(newTopicForm) }}
+    <button type="submit" class="btn btn-primary">Post new topic</button>
+    {{ form_end(newTopicForm) }}
 {% endblock %}

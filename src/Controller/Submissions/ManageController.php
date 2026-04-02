@@ -2,19 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Submissions;
 
 use App\Controller\Utils\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
-use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
 use App\Entity\Submission;
-use App\Form\Submission\FilterType;
 use App\Form\Submission\ManageType;
 use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
-use App\Repository\SubmissionRepository;
 use App\Security\Role;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -29,64 +26,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Veelkoov\Debris\Sets\StringSet;
 
-#[IsGranted(Role::REVIEWER->value)]
+#[IsGranted(Role::ADMIN->value)]
 #[Cache(maxage: 0, public: false, noStore: true)]
-class SubmissionsController extends AbstractController
+class ManageController extends AbstractController
 {
     use ButtonClickedTrait;
 
-    private const string SESSION_SUBMISSIONS_FILTER = 'submissions_filter_settings';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SubmissionRepository $submissionRepository,
         private readonly ImportService $importService,
         private readonly CreatorRepository $creatorRepository,
     ) {
     }
 
     /**
-     * @param positive-int $page
-     */
-    #[Route(path: '/submissions/{page}/', name: RouteName::SUBMISSIONS_LIST, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    public function list(Request $request, int $page): Response
-    {
-        if ($this->isGranted(Role::ADMIN->value)) {
-            $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
-            if (!$filter instanceof Filter) {
-                $filter = new Filter();
-            }
-
-            $filterForm = $this->createForm(FilterType::class, $filter);
-            $filterForm->handleRequest($request);
-
-            if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-                $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
-
-                $this->redirectToRoute(RouteName::SUBMISSIONS_LIST, ['page' => $page]);
-            }
-        } else {
-            $filter = new Filter();
-            $filter->statuses = [Status::IN_REVIEW];
-            $filterForm = null;
-        }
-
-        $submissionsPage = $this->submissionRepository->getPage($filter, $page);
-
-        return $this->render('submissions/list.html.twig', [
-            'filter_form' => $filterForm,
-            'submissions_page' => $submissionsPage,
-        ]);
-    }
-
-    /**
      * @throws DateTimeException
      */
-    #[IsGranted(Role::ADMIN->value)]
     #[Route(path: '/submissions/social', name: RouteName::SUBMISSIONS_SOCIAL)]
     public function social(): Response
     {
@@ -100,9 +58,8 @@ class SubmissionsController extends AbstractController
         ]);
     }
 
-    #[IsGranted(Role::ADMIN->value)]
     #[Route(path: '/submission/{id}/manage', name: RouteName::SUBMISSION_MANAGE)]
-    public function submissionManage(#[MapEntity(mapping: ['id' => 'id'])] Submission $submission, Request $request): Response
+    public function submissionManage(#[MapEntity] Submission $submission, Request $request): Response
     {
         $form = $this->createForm(ManageType::class, $submission)->handleRequest($request);
 
@@ -139,18 +96,6 @@ class SubmissionsController extends AbstractController
             'similarlyNamedCreators' => $similarlyNamedCreators,
             'fields' => Fields::iuFormAffected(),
             'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route(path: '/submission/{id}/review', name: RouteName::SUBMISSION_REVIEW)]
-    public function submissionReview(#[MapEntity(mapping: ['id' => 'id'])] Submission $submission, Request $request): Response
-    {
-        $importData = $this->importService->getImportDataFor($submission);
-
-        return $this->render('submissions/review.html.twig', [
-            'importData' => $importData,
-            'submission' => $submission,
-            'fields' => Fields::inIuForm(),
         ]);
     }
 
