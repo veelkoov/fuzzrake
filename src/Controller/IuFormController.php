@@ -109,6 +109,9 @@ class IuFormController extends AbstractController
         ]);
     }
 
+    /**
+     * @param FormInterface<Creator> $form
+     */
     private function validatePhotosCopyright(FormInterface $form, Creator $submissionData): void
     {
         $field = $form->get(Data::FLD_PHOTOS_COPYRIGHT);
@@ -120,6 +123,9 @@ class IuFormController extends AbstractController
         }
     }
 
+    /**
+     * @param FormInterface<Creator> $form
+     */
     private function validateCreatorId(FormInterface $form, Creator $submissionData, ?CreatorE $creator): void
     {
         try {

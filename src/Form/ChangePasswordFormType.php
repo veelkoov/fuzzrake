@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<mixed>
+ */
 final class ChangePasswordFormType extends AbstractType
 {
     public const string FLD_CURRENT_PASSWORD = 'currentPassword';

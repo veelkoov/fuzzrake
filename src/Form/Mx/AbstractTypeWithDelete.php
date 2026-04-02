@@ -10,7 +10,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AbstractTypeWithDelete extends AbstractType
+/**
+ * @template T
+ *
+ * @extends AbstractType<T>
+ */
+abstract class AbstractTypeWithDelete extends AbstractType
 {
     public const string BTN_SAVE = 'save';
     public const string BTN_DELETE = 'delete';

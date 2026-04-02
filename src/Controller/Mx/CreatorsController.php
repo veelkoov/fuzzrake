@@ -41,6 +41,9 @@ class CreatorsController extends FuzzrakeAbstractController
         ]);
     }
 
+    /**
+     * @param FormInterface<Creator> $form
+     */
     private function success(Creator $creator, FormInterface $form): bool
     {
         if (self::clicked($form, AbstractTypeWithDelete::BTN_DELETE)) {

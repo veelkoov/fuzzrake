@@ -55,6 +55,9 @@ class EventsController extends FuzzrakeAbstractController
         ]);
     }
 
+    /**
+     * @param FormInterface<Event> $form
+     */
     private function success(Event $event, FormInterface $form): bool
     {
         if (null !== $event->getId() && self::clicked($form, EventType::BTN_DELETE)) {
