@@ -50,7 +50,7 @@ class AdminExtensions
             return "<span class=\"$class\">$text</span>";
         }
 
-        $bsClass = "badge-outline-$classSuffix";
+        $bsClass = "text-$classSuffix";
 
         $result = '';
 
@@ -58,10 +58,10 @@ class AdminExtensions
         $otherItems = $other->getStringList($field);
 
         foreach ($subjectItems as $item) {
-            $itemClass = arr_contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
+            $itemClass = arr_contains($otherItems, $item) ? 'text-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
-            $result .= " <span class=\"submission-list-item badge $itemClass\" title=\"$text\">$text</span> ";
+            $result .= " &rArr;&nbsp;<span class=\"$itemClass\">$text</span> ";
         }
 
         return $result;

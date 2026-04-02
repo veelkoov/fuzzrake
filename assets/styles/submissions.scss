@@ -1,26 +1,6 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 
-.badge-outline-primary {
-  color: $primary;
-  border: 1px solid $primary;
-}
-
-.badge-outline-secondary {
-  color: $secondary;
-  border: 1px solid $secondary;
-}
-
-.badge-outline-success {
-  color: $success;
-  border: 1px solid $success;
-}
-
-.badge-outline-danger {
-  color: $danger;
-  border: 1px solid $danger;
-}
-
 #submission-manage tr.not-fixed.not-changing,
 #submission-review tr.not-changing {
   color: #bbb;
@@ -60,12 +40,6 @@
       color: $success;
       text-decoration: none;
     }
-  }
-
-  .badge.submission-list-item {
-    max-width: 700px;
-    text-overflow: ellipsis;
-    overflow: hidden;
   }
 }
 
