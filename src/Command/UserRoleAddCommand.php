@@ -14,9 +14,7 @@ class UserRoleAddCommand extends UserCommand
 {
     public function __invoke(#[Argument] string $email, #[Argument] Role $role): int
     {
-        $user = $this->findUserByEmail($email);
-
-        $user->addRole($role);
+        $this->findUserByEmail($email)->addRole($role);
         $this->entityManager->flush();
 
         return Command::SUCCESS;
