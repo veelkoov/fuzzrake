@@ -42,6 +42,6 @@ class EmailVerifier
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), $user->getEmail());
 
-        $user->setIsVerified(true);
+        $user->addRole(Role::VERIFIED);
     }
 }

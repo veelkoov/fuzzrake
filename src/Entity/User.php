@@ -6,7 +6,10 @@ namespace App\Entity;
 
 use App\Data\Definitions\ContactPermit;
 use App\Repository\UserRepository;
+use App\Security\Role;
 use App\Utils\HasEmailGetter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use LogicException;
@@ -33,19 +36,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     private string $email = ''; // grep-code-username-is-email
 
     /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
-    /**
      * @var string The hashed password
      */
     #[ORM\Column(type: Types::TEXT)]
     private string $password = '';
-
-    #[ORM\Column]
-    private bool $isVerified = false;
 
     #[Assert\NotNull(message: 'You need to choose an option.')]
     #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
@@ -53,6 +47,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
 
     #[ORM\OneToOne(targetEntity: Creator::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Creator $creator = null;
+
+    /**
+     * @var Collection<int, UserRole>
+     */
+    #[ORM\OneToMany(targetEntity: UserRole::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $userRoles; // Named "userRoles" instead of simply "roles" because getRoles(): array is part of an interface
+
+    public function __construct()
+    {
+        $this->userRoles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,22 +98,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     #[Override]
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        $roles = $this->userRoles
+            ->map(static fn (UserRole $role) => $role->getRole()->value)
+            ->toArray();
         $roles[] = 'ROLE_USER'; // Guarantee every user at least has ROLE_USER
-
-        if ($this->isVerified) {
-            $roles[] = 'ROLE_VERIFIED';
-        }
 
         return $roles;
     }
 
     /**
-     * @param list<string> $roles
+     * @return Collection<int, UserRole>
      */
-    public function setRoles(array $roles): static
+    public function getUserRoles(): Collection
     {
-        $this->roles = array_values(array_diff($roles, ['ROLE_USER', 'ROLE_VERIFIED'])); // Remove virtual roles
+        return $this->userRoles;
+    }
+
+    public function addRole(Role $role): self
+    {
+        if (!$this->hasRole($role)) {
+            $this->userRoles->add(new UserRole($this, $role));
+        }
+
+        return $this;
+    }
+
+    public function hasRole(Role $role): bool
+    {
+        return $this->userRoles->exists(static fn (int $idx, UserRole $userRole) => $userRole->getRole() === $role);
+    }
+
+    public function removeRole(Role $role): self
+    {
+        $this->userRoles
+            ->filter(static fn (UserRole $userRole) => $userRole->getRole() === $role)
+            ->forAll(fn (int $idx, UserRole $userRole) => $this->userRoles->removeElement($userRole))
+        ;
 
         return $this;
     }
@@ -122,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -138,18 +163,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
 
         return $data;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
     }
 
     public function getContactPermit(): ?ContactPermit

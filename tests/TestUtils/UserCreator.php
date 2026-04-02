@@ -7,6 +7,7 @@ namespace App\Tests\TestUtils;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Entity\User;
+use App\Security\Role;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
@@ -23,7 +24,7 @@ final class UserCreator
         ?string $email = null,
         ?ContactPermit $contactPermit = null,
     ): Creator {
-        $user = new User()->setIsVerified(true);
+        $user = new User()->addRole(Role::VERIFIED)->addRole(Role::CREATOR);
 
         if (null !== $email) {
             $user->setEmail($email);
