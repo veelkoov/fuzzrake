@@ -1,0 +1,50 @@
+{% for topic_items in topics %}
+    {% set topic = topic_items.entity %}
+    {% set new_comment_form = topic_items.new_comment_form %}
+
+    <div class="card mb-2">
+        <div class="card-header">
+            <strong>{{ topic.user.email }}</strong>
+            wrote on {{ topic.postedUtc|fragile_datetime_utc }}
+            <span class="text-body-tertiary">(#{{ topic.id }})</span>
+        </div>
+
+        <div class="card-body">{{ topic.message|nl2br }}</div>
+
+        {% if topic.comments is not empty %}
+            <div class="card-body ps-5 pb-0">
+                {% for comment in topic.comments %}
+                    <p class="mb-1">
+                        <strong>{{ comment.user.email }}</strong>
+                        responded on {{ comment.postedUtc|fragile_datetime_utc }}
+                        <span class="text-body-tertiary">(#{{ comment.id }})</span>:
+                    </p>
+
+                    <p>{{ comment.message|nl2br }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card-body ps-5">
+            {{ form_start(new_comment_form) }}
+            {{ form_widget(new_comment_form.message) }}
+            {{ form_errors(new_comment_form.message) }}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Respond</button>
+            {{ form_end(new_comment_form) }}
+        </div>
+    </div>
+{% endfor %}
+
+<div class="card">
+    <div class="card-header">
+        Start new topic
+    </div>
+
+    <div class="card-body">
+        {{ form_start(new_topic_form) }}
+        {{ form_widget(new_topic_form.message) }}
+        {{ form_errors(new_topic_form.message) }}
+        <button type="submit" class="btn btn-primary btn-sm mt-2">Post</button>
+        {{ form_end(new_topic_form) }}
+    </div>
+</div>

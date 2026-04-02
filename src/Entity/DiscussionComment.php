@@ -42,6 +42,11 @@ class DiscussionComment
         $this->postedUtc = UtcClock::now();
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getPostedUtc(): DateTimeImmutable
     {
         return $this->postedUtc;
