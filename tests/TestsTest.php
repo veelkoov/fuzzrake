@@ -24,25 +24,27 @@ class TestsTest extends TestCase
         self::$filesystem = new Filesystem();
     }
 
-    public static function byNamespaceDataProvider(): iterable
-    {
-        foreach (new Finder()->in(Paths::getTestsDirPath().'/ByNamespace/')->files() as $file) {
-            yield [str_strip_prefix($file->getPathname(), Paths::getRepoTopDirPath().'/')];
-        }
-    }
-
-    public static function allTestsDataProvider(): iterable
+    public static function allTestsRepoTopDirRelativeDataProvider(): iterable
     {
         foreach (new Finder()->in(Paths::getTestsDirPath())->files() as $file) {
             $filePath = str_strip_prefix($file->getPathname(), Paths::getRepoTopDirPath().'/');
 
-            if (!Preg::isMatch('#^tests/(console-application\.php$|object-manager\.php$|bootstrap\.php$|test_data/|TestUtils/)#', $filePath)) {
+            if (!Preg::isMatch('#^tests/(test_data/|TestUtils/|(bootstrap|console-application|object-manager)\.php$)#', $filePath)) {
                 yield [$filePath];
             }
         }
     }
 
-    #[DataProvider('byNamespaceDataProvider')]
+    public static function byNamespaceTestsRepoTopDirRelativeDataProvider(): iterable
+    {
+        foreach (self::allTestsRepoTopDirRelativeDataProvider() as $filePathArray) {
+            if (str_starts_with($filePathArray[0], 'tests/ByNamespace')) {
+                yield $filePathArray;
+            }
+        }
+    }
+
+    #[DataProvider('byNamespaceTestsRepoTopDirRelativeDataProvider')]
     public function testByNamespacePlacement(string $testPath): void
     {
         $srcClassPath = str_strip_prefix($testPath, 'tests/ByNamespace');
@@ -52,7 +54,7 @@ class TestsTest extends TestCase
         self::assertFileExists($srcClassPath);
     }
 
-    #[DataProvider('allTestsDataProvider')]
+    #[DataProvider('allTestsRepoTopDirRelativeDataProvider')]
     public function testHaveSizeAnnotation(string $testPath): void
     {
         $contents = self::$filesystem->readFile(Paths::getRepoTopDirPath().'/'.$testPath);
