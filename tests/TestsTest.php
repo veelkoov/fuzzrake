@@ -14,32 +14,20 @@ use Symfony\Component\Finder\Finder;
 #[Small]
 class TestsTest extends TestCase
 {
-    private const array TEST_SUFFIXES = [
-        'SmallTest.php' => '.php',
-        'MediumTest.php' => '.php',
-        'Test.php' => '.php',
-    ];
-
     public static function byNamespaceDataProvider(): iterable
     {
-        $dir = self::getByNamespaceTestsDirPath().'/';
-
-        foreach (new Finder()->in($dir)->files() as $file) {
-            yield [str_strip_prefix($file->getPathname(), $dir)];
+        foreach (new Finder()->in(Paths::getTestsDirPath().'/ByNamespace/')->files() as $file) {
+            yield [str_strip_prefix($file->getPathname(), Paths::getRepoTopDirPath().'/')];
         }
     }
 
     #[DataProvider('byNamespaceDataProvider')]
     public function testByNamespace(string $testPath): void
     {
-        //        $fullTestPath = self::getByNamespaceTestsDirPath().'/'.$testPath."\n";
-        $srcClassPath = Preg::replace('#(Small|Medium|_[a-zA-Z]+)?Test\.php$#', '.php', Paths::getSrcDirPath().'/'.$testPath);
+        $srcClassPath = str_strip_prefix($testPath, 'tests/ByNamespace');
+        $srcClassPath = Paths::getSrcDirPath().'/'.$srcClassPath;
+        $srcClassPath = Preg::replace('#(Small|Medium|_[a-zA-Z]+)?Test\.php$#', '.php', $srcClassPath);
 
         self::assertFileExists($srcClassPath);
-    }
-
-    private static function getByNamespaceTestsDirPath(): string
-    {
-        return Paths::getTestsDirPath().'/ByNamespace';
     }
 }
