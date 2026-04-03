@@ -53,7 +53,7 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/main', name: RouteName::USER_MAIN)]
     public function main(Request $request, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
     {
-        $this->assignRandomNicknameIfMissing($user);
+        $this->assignRandomNicknameIfMissingAndFlush($user);
 
         $form = $this->createForm(ContactPermitFormType::class, $user);
         $form->handleRequest($request);
@@ -172,7 +172,10 @@ class UnverifiedController extends AbstractController
         }
     }
 
-    private function assignRandomNicknameIfMissing(User $user): void
+    /**
+     * While reviews are an experimental feature, simply assign something random.
+     */
+    private function assignRandomNicknameIfMissingAndFlush(User $user): void
     {
         if ('' !== $user->getNickname()) {
             return;
