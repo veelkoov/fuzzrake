@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\BrowserBased\Traits;
+namespace App\Tests\TestUtils\Cases\Traits;
 
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;

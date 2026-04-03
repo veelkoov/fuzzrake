@@ -6,6 +6,7 @@ namespace App\Tests\IuSubmissions;
 
 use App\Data\Definitions\Ages;
 use App\Repository\SubmissionRepository;
+use App\Tests\TestUtils\Cases\IuSubmissionsTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;

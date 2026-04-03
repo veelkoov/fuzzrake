@@ -7,6 +7,7 @@ namespace App\Tests\IuSubmissions;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\User;
+use App\Tests\TestUtils\Cases\IuSubmissionsTestCase;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Paths;
 use App\Tests\TestUtils\UserCreator;

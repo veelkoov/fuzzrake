@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\IuSubmissions;
+namespace App\Tests\TestUtils\Cases;
 
-use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use Override;
 
 abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase

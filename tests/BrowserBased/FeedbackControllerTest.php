@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBased;
 
-use App\Tests\BrowserBased\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Tests\TestUtils\Cases\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
