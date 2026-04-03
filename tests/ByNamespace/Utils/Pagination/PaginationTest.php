@@ -6,12 +6,10 @@ namespace App\Tests\ByNamespace\Utils\Pagination;
 
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
 use App\Utils\Pagination\Pagination;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 
 #[Small]
-#[CoversClass(Pagination::class)]
 class PaginationTest extends FuzzrakeTestCase
 {
     /**

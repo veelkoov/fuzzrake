@@ -17,7 +17,6 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use stdClass;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
@@ -25,7 +24,6 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Small]
-#[CoversClass(ImportService::class)]
 class ImportServiceTest extends FuzzrakeTestCase
 {
     use ClockSensitiveTrait;

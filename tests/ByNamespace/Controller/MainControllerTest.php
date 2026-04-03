@@ -7,13 +7,9 @@ namespace App\Tests\ByNamespace\Controller;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\FiltersData;
-use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\DomCrawler\Crawler;
 
 #[Medium]

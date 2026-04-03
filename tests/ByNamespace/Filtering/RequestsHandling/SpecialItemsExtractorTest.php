@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\Filtering\RequestsHandling;
 
 use App\Filtering\RequestsHandling\SpecialItemsExtractor;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Sets\StringSet;
 
 #[Small]
-#[CoversClass(SpecialItemsExtractor::class)]
 class SpecialItemsExtractorTest extends TestCase
 {
     public function testExtracting(): void

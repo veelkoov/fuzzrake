@@ -9,14 +9,12 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\FieldValue;
 use DateTimeImmutable;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
 #[Small]
-#[CoversClass(FieldValue::class)]
 class FieldValueTest extends TestCase
 {
     #[DataProvider('validateTypeDataProvider')]

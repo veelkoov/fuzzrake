@@ -12,11 +12,9 @@ use App\Tests\TestUtils\UserCreator;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-#[CoversClass(CreatorUrl::class)]
 class CreatorUrlTest extends FuzzrakeKernelTestCase
 {
     /**

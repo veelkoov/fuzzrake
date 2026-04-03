@@ -7,11 +7,9 @@ namespace App\Tests\ByNamespace\Entity;
 use App\Entity\Creator;
 use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 
 #[Small]
-#[CoversClass(Creator::class)]
 class CreatorSmallTest extends FuzzrakeTestCase
 {
     public function testSettingCreatorIdAddsToTheEmptyCollection(): void

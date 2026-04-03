@@ -8,19 +8,16 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator;
 use App\Entity\CreatorUrl;
 use App\Entity\User;
-use App\Event\CreatorUrlListener;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
 use App\Tests\TestUtils\UserCreator;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Medium;
 use RuntimeException;
 
 #[Medium]
-#[CoversClass(CreatorUrlListener::class)]
 class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
 {
     use MessageBusTrait;

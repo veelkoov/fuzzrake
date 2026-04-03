@@ -9,13 +9,11 @@ use App\Data\Fixer\Fixer;
 use App\Tests\TestUtils\Cases\Traits\ContainerTrait;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Override;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 #[Medium]
-#[CoversClass(Fixer::class)]
 class FixerTest extends KernelTestCase // Using real kernel to test autowiring set up as well
 {
     use ContainerTrait;

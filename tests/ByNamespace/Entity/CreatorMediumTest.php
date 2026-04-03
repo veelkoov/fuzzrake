@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\Entity;
 
 use App\Data\Definitions\Ages;
-use App\Entity\Creator;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator;
 use Exception;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-#[CoversClass(Creator::class)]
 class CreatorMediumTest extends FuzzrakeKernelTestCase
 {
     /**
