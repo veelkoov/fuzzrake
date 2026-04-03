@@ -24,6 +24,9 @@ class TestsTest extends TestCase
         self::$filesystem = new Filesystem();
     }
 
+    /**
+     * @return iterable<array{string}>
+     */
     public static function allTestsRepoTopDirRelativeDataProvider(): iterable
     {
         foreach (new Finder()->in(Paths::getTestsDirPath())->files() as $file) {
@@ -35,6 +38,9 @@ class TestsTest extends TestCase
         }
     }
 
+    /**
+     * @return iterable<array{string}>
+     */
     public static function byNamespaceTestsRepoTopDirRelativeDataProvider(): iterable
     {
         foreach (self::allTestsRepoTopDirRelativeDataProvider() as $filePathArray) {
@@ -47,11 +53,11 @@ class TestsTest extends TestCase
     #[DataProvider('byNamespaceTestsRepoTopDirRelativeDataProvider')]
     public function testByNamespacePlacement(string $testPath): void
     {
-        $srcClassPath = str_strip_prefix($testPath, 'tests/ByNamespace');
+        $srcClassPath = str_strip_prefix($testPath, 'tests/ByNamespace/');
         $srcClassPath = Paths::getSrcDirPath().'/'.$srcClassPath;
         $srcClassPath = Preg::replace('#(Small|Medium|_[a-zA-Z]+)?Test\.php$#', '.php', $srcClassPath);
 
-        self::assertFileExists($srcClassPath);
+        self::assertFileExists($srcClassPath, "$testPath namespace/name does not match its class namespace/name.");
     }
 
     #[DataProvider('allTestsRepoTopDirRelativeDataProvider')]
@@ -59,6 +65,9 @@ class TestsTest extends TestCase
     {
         $contents = self::$filesystem->readFile(Paths::getRepoTopDirPath().'/'.$testPath);
 
-        self::assertMatchesRegularExpression('/\n#\[Small|Medium|Large]\n/', $contents);
+        self::assertTrue(
+            Preg::isMatch('=\n#\[(Small|Medium|Large)]( +//[^\n]+)?\n=', $contents, $matches),
+            "$testPath seems to be missing test size attribute.",
+        );
     }
 }
