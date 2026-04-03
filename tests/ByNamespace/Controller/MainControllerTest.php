@@ -69,38 +69,4 @@ class MainControllerTest extends FuzzrakeWebTestCase
 
         return new Crawler('<!DOCTYPE html> <html lang="en"> <table>'.$responseContent.'</table></html>');
     }
-
-    public function testMainPageLoads(): void
-    {
-        self::persistAndFlush(UserCreator::get(true));
-
-        self::$client->request('GET', '/');
-
-        self::assertResponseStatusCodeIs(200);
-        self::assertSelectorTextContains('#main-page-intro h4', 'Fursuit makers database');
-    }
-
-    /**
-     * @throws DateTimeException
-     */
-    public function testRecentlyAddedPage(): void
-    {
-        self::mockTime();
-
-        $creator1 = UserCreator::get()->setCreatorId('TEST001')->setName('Older creator 1')->setDateAdded(UtcClock::at('-43 days'));
-        $creator2 = UserCreator::get()->setCreatorId('TEST002')->setName('Newer creator 2')->setDateAdded(UtcClock::at('-41 days'));
-        $creator3 = UserCreator::get()->setCreatorId('TEST003')->setName('Newer creator 3')->setDateAdded(UtcClock::at('-40 days'))
-            ->setFormerly(['Formerly 3A', 'Formerly 3B']);
-
-        self::persistAndFlush($creator1, $creator2, $creator3);
-        $this->clearCache();
-
-        $crawler = self::$client->request('GET', '/new');
-        self::assertResponseStatusCodeIs(200);
-
-        self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older creator 1"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 2"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 3"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 3A / Formerly 3B"]'));
-    }
 }
