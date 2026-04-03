@@ -19,7 +19,6 @@ use Symfony\Component\DomCrawler\Crawler;
 #[Medium]
 class MainControllerTest extends FuzzrakeWebTestCase
 {
-    use ClockSensitiveTrait;
     use FiltersTestTrait;
 
     /**
