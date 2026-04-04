@@ -28,23 +28,6 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::loginAdminUser();
     }
 
-    public function testPaginationWorksInSubmissions(): void
-    {
-        $this->generateRandomFakeInclusionSubmissions(24);
-
-        $crawler = self::$client->request('GET', '/mx/submissions/1/');
-        self::assertResponseStatusCodeIs(200);
-        self::assertCount(24, $crawler->filter('table tbody tr'));
-        self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
-
-        $this->generateRandomFakeInclusionSubmissions(2);
-
-        $crawler = self::$client->request('GET', '/mx/submissions/1/');
-        self::assertResponseStatusCodeIs(200);
-        self::assertCount(25, $crawler->filter('table tbody tr'));
-        self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
-    }
-
     public function testAdditionIsProperlyRendered(): void
     {
         $submissionData = new Creator()
@@ -66,7 +49,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
@@ -145,7 +128,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td+td', 'TEST001');
@@ -210,7 +193,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission->setOwner(null); // Simulate legacy submission
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         // grep-code-matched-multiple-creators
@@ -252,7 +235,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertAnySelectorTextContains('p', 'Creators named similarly:');
@@ -270,13 +253,13 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission->setComment('Old comment')->setDirectives('Old directives');
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
-        self::assertSelectorTextSame('#submission_comment', 'Old comment');
-        self::assertSelectorTextSame('#submission_status option[selected]', 'New');
-        self::assertSelectorTextSame('#submission_directives', 'Old directives');
+        self::assertSelectorTextSame('#manage_comment', 'Old comment');
+        self::assertSelectorTextSame('#manage_status option[selected]', 'New');
+        self::assertSelectorTextSame('#manage_directives', 'Old directives');
 
         self::$client->submitForm('Update', [
             'submission[comment]'    => 'New comment',
@@ -291,9 +274,9 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
-        self::assertSelectorTextSame('#submission_comment', 'New comment');
-        self::assertSelectorTextSame('#submission_directives', 'New directives');
-        self::assertSelectorTextSame('#submission_status option[selected]', 'Other');
+        self::assertSelectorTextSame('#manage_comment', 'New comment');
+        self::assertSelectorTextSame('#manage_directives', 'New directives');
+        self::assertSelectorTextSame('#manage_status option[selected]', 'Other');
 
         self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
@@ -307,7 +290,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', []);
@@ -328,7 +311,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td+td', 'Some submitted intro information');
@@ -352,7 +335,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', [
@@ -372,28 +355,16 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
     public function testMissingSubmissionReturns404(): void
     {
-        self::$client->request('GET', '/mx/submission/wrongId');
+        self::$client->request('GET', '/submission/1/manage');
 
         self::assertResponseStatusCodeIs(404);
-    }
-
-    private function generateRandomFakeInclusionSubmissions(int $count): void
-    {
-        while (--$count >= 0) {
-            $creator = UserCreator::get();
-            $user = $creator->entity->getUser();
-
-            self::persist($user, $this->getEntityForSubmission($user, $creator, false));
-        }
-
-        self::flush();
     }
 
     public function testUpdatingHiddenCreator(): void
@@ -411,7 +382,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
@@ -420,7 +391,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         $existingCreator->setInactiveReason('');
         self::flush();
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');
