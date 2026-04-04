@@ -27,11 +27,13 @@ use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 use function Symfony\Component\String\u;
 
 #[Cache(public: false, noStore: true)]
-#[Route(path: '/uuser')] // grep-code-route-uuser-prefix
+#[IsGranted('IS_AUTHENTICATED')]
+#[Route(path: '/user')]
 class UnverifiedController extends AbstractController
 {
     public function __construct(
@@ -73,7 +75,7 @@ class UnverifiedController extends AbstractController
     #[Route(path: '/resend-verification-email', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
     public function resendVerificationEmail(#[CurrentUser] User $user): Response
     {
-        if ($user->hasRole(Role::VERIFIED)) {
+        if ($this->isGranted('ROLE_VERIFIED')) {
             $this->addFlash('info', 'Your email address is already confirmed.');
         } else {
             $this->emailVerifier->sendEmailConfirmation($user);

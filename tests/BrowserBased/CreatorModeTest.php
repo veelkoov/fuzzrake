@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\BrowserBased;
+
+use App\Data\Definitions\Ages;
+use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
+use App\Tests\TestUtils\Cases\Traits\MainPageTestsTrait;
+use App\Tests\TestUtils\UserCreator;
+use Exception;
+use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Attributes\Large;
+
+#[Large]
+class CreatorModeTest extends FuzzrakePantherTestCase
+{
+    use MainPageTestsTrait;
+
+    /**
+     * @throws Exception
+     */
+    public function testTurningCreatorModeOnAndOff(): void
+    {
+        // Having two creators, 1 minor-friendly and one NSFW-ish
+
+        self::persistAndFlush(
+            UserCreator::get()->setName('Creator: adult, NSFW')->setCreatorId('TEST001')->setCountry('FI')->setAges(Ages::ADULTS)->setNsfwWebsite(false)->setNsfwSocial(true)->setDoesNsfw(true)->setWorksWithMinors(false),
+            UserCreator::get()->setName('Creator: minor, WWM')->setCreatorId('TEST002')->setCountry('FI')->setAges(Ages::MINORS)->setNsfwWebsite(false)->setNsfwSocial(false)->setDoesNsfw(false)->setWorksWithMinors(true),
+        );
+
+        $this->clearCache();
+
+        // Expect: main page initially shows the checklist and no creators
+
+        self::$client->request('GET', '/index.php/');
+
+        self::assertVisible('#checklist-ill-be-careful');
+        self::assertInvisible('#TEST001');
+        self::assertInvisible('#TEST002');
+        self::assertInvisible('#btn-reenable-filters');
+        $this->goToRegistrationAndEnableCreatorMode();
+
+        // Expect: checklist is hidden and all creators are visible
+
+        self::assertInvisible('#checklist-ill-be-careful');
+        self::assertVisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
+
+        // Expect: text search works properly even in creator mode
+
+        $this->clearTypeInTextSearch('NSFW');
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
+        $this->assertCreatorsVisibility(['TEST001'], ['TEST002']);
+
+        $this->clearTypeInTextSearch('WWM');
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
+
+        $this->clearTypeInTextSearch('Creator');
+        self::waitForLoadingIndicatorToDisappear(1500); // grep-code-dumb-workarounds-in-tests
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
+
+        // Action: click re-enable filters button
+
+        self::$client->clickLink('Re-enable filters');
+
+        // Expect: main page shows the checklist and no creators, no checklist items are selected
+
+        self::assertVisible('#checklist-ill-be-careful');
+        self::assertInvisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility([], ['TEST001', 'TEST002']);
+
+        self::assertSelectorAttributeContains('#checklist-dismiss-btn', 'value', "I can't click this button yet");
+
+        // Action: fill the checklist, aim for minors-friendly experience
+
+        self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        self::waitUntilShows('#aasImNotAdult');
+        self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::waitUntilShows('#creators-table');
+
+        // Expect: checklist is dismissed, but only minors-friendly creator shows up
+
+        self::assertInvisible('#checklist-ill-be-careful');
+        self::assertInvisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
+
+        $this->goToRegistrationAndEnableCreatorMode();
+
+        // Expect: checklist is hidden and all creators are visible
+
+        self::assertInvisible('#checklist-ill-be-careful');
+        self::assertVisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility(['TEST001', 'TEST002'], []);
+
+        // Action: click re-enable filters button
+
+        self::$client->clickLink('Re-enable filters');
+
+        // Expect: main page shows the checklist - filled
+
+        self::assertVisible('#checklist-ill-be-careful');
+        self::assertInvisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility([], ['TEST001', 'TEST002']);
+
+        self::assertSelectorAttributeContains('#checklist-dismiss-btn', 'value', 'I will now click this button');
+
+        // Action: submit the checklist with previous settings kept
+
+        self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        self::waitUntilShows('#creators-table');
+
+        // Expect: checklist is dismissed, once again only minors-friendly creator shows up
+
+        self::assertInvisible('#checklist-ill-be-careful');
+        self::assertInvisible('#btn-reenable-filters');
+        $this->assertCreatorsVisibility(['TEST002'], ['TEST001']);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function goToRegistrationAndEnableCreatorMode(): void
+    {
+        self::$client->request('GET', '/index.php/register');
+
+        // Show accordion part with instructions on how to search
+        self::$client->findElement(WebDriverBy::cssSelector('[data-bs-target="#registrationAccordionItem2"]'))
+            ->click();
+        self::waitUntilShows('#registrationAccordionItem2');
+
+        self::$client->clickLink('Temporarily disable all the filters and open the main page');
+        self::$client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::waitForLoadingIndicatorToDisappear();
+    }
+}

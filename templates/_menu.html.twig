@@ -28,7 +28,7 @@
 
         <div class="nav-separator"></div>
 
-        {% if not ignore_session and is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if not ignore_session and is_granted('IS_AUTHENTICATED') %}
             {{ include('_menu_item.html.twig', {name: 'user_main', fa_icon: 'user-gear', label: app.user.userIdentifier, priority: 'medium'}) }}
         {% else %}
             {{ include('_menu_item.html.twig', {name: 'user_login', fa_icon: 'user-gear', label: 'Fursuit Makers', priority: 'medium'}) }}

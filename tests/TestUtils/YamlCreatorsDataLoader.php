@@ -54,7 +54,7 @@ class YamlCreatorsDataLoader
     ) {
         $this->users = StringToUser::fromKeys(
             $this->aliases,
-            static fn (string $alias) => new User()->setEmail("$alias@example.com")->addRole(Role::VERIFIED),
+            static fn (string $alias) => new User()->setEmail("$alias@example.com")->addRole(Role::VERIFIED)->addRole(Role::CREATOR),
         );
 
         /**

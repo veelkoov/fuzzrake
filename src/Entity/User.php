@@ -117,11 +117,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
             ->map(static fn (UserRole $role) => $role->getRole()->value)
             ->toArray();
 
-        if (!arr_contains($roles, Role::VERIFIED->id())) {
-            $roles = []; // If we are not verified, you will only get ROLE_REGISTERED
+        if (!arr_contains($roles, 'ROLE_VERIFIED')) {
+            $roles = []; // If we are not verified, you can't do anything
         }
-
-        $roles[] = Role::REGISTERED->id(); // Guarantee every user at least has ROLE_REGISTERED
 
         return $roles;
     }
