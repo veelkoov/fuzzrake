@@ -37,10 +37,16 @@ trait UsersTrait
         self::$adminUser = $user;
     }
 
+    protected static function getAdminUser(): User
+    {
+        return self::$adminUser ?? throw new LogicException('Admin user has not been created yet.');
+    }
+
     protected static function haveACreatorUser(): void
     {
         $user = new User()
             ->setEmail('creator@example.com')
+            ->addRole(Role::CREATOR)
             ->addRole(Role::VERIFIED)
             ->setContactPermit(null);
         self::setDefaultPassword($user);
@@ -78,7 +84,7 @@ trait UsersTrait
             // If we are already logged in, logout (redirects to the login form)
             if (1 !== self::$client->getCrawler()->filterXPath('//input[@type="email" and @id="username"]')->count()) {
                 // @phpstan-ignore method.notFound (Panther only - method_exists above)
-                self::$client->get('/index.php/uuser/logout');
+                self::$client->get('/index.php/user/logout');
             }
 
             self::$client->submitForm('Sign in', [

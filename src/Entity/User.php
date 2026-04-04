@@ -101,7 +101,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
         $roles = $this->userRoles
             ->map(static fn (UserRole $role) => $role->getRole()->value)
             ->toArray();
-        $roles[] = 'ROLE_USER'; // Guarantee every user at least has ROLE_USER
+
+        if (!arr_contains($roles, 'ROLE_VERIFIED')) {
+            $roles = []; // If we are not verified, you can't do anything
+        }
 
         return $roles;
     }

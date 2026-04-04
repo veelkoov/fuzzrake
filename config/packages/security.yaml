@@ -38,9 +38,7 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/uuser, roles: ROLE_USER } # grep-code-route-uuser-prefix
-        - { path: ^/user, roles: ROLE_VERIFIED } # grep-code-route-user-prefix
-        - { path: ^/mx, roles: ROLE_ADMIN } # Administration
+        - { path: ^/mx, roles: ROLE_ADMIN }
 
 when@test:
     security:

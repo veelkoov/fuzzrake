@@ -28,8 +28,10 @@ use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route(path: '/user/iu_form')] // grep-code-route-user-prefix
+#[IsGranted('ROLE_CREATOR')]
+#[Route(path: '/user/iu_form')]
 #[Cache(maxage: 0, public: false)]
 class IuFormController extends AbstractController
 {
