@@ -42,7 +42,7 @@ final class ReviewVoter extends Voter
             return false;
         }
 
-        if ($this->accessDecisionManager->decide($token, [Role::ADMIN->value])) {
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
             return true;
         }
 
