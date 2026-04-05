@@ -18,7 +18,6 @@ use App\Form\Submission\TopicType;
 use App\IuHandling\Import\ImportService;
 use App\Repository\DiscussionTopicRepository;
 use App\Repository\SubmissionRepository;
-use App\Security\Role;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -32,7 +31,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(Role::REVIEWER->value)]
+#[IsGranted('ROLE_REVIEWER')]
 #[Cache(maxage: 0, public: false, noStore: true)]
 class ReviewController extends AbstractController
 {
@@ -54,7 +53,7 @@ class ReviewController extends AbstractController
     #[Route(path: '/submissions/{page}/', name: RouteName::SUBMISSIONS_LIST, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
     public function list(Request $request, int $page): Response
     {
-        if ($this->isGranted(Role::ADMIN->value)) {
+        if ($this->isGranted('ROLE_ADMIN')) {
             $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
             if (!$filter instanceof Filter) {
                 $filter = new Filter();

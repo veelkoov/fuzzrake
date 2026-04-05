@@ -12,7 +12,6 @@ use App\Form\Submission\ManageType;
 use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
-use App\Security\Role;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -29,7 +28,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Veelkoov\Debris\Sets\StringSet;
 
-#[IsGranted(Role::ADMIN->value)]
+#[IsGranted('ROLE_ADMIN')]
 #[Cache(maxage: 0, public: false, noStore: true)]
 class ManageController extends AbstractController
 {
