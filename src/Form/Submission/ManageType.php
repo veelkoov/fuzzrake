@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<mixed>
+ * @extends AbstractType<Submission>
  */
 final class ManageType extends AbstractType
 {

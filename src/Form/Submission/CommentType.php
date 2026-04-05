@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Submission;
 
+use App\Data\Submission\Filter;
 use App\Entity\DiscussionComment;
 use App\Utils\Enforce;
 use Override;
@@ -34,7 +35,11 @@ class CommentType extends AbstractType
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->define(self::OPT_PREFIX)
+        $resolver
+            ->setDefaults([
+                'data_class' => Filter::class,
+            ])
+            ->define(self::OPT_PREFIX)
             ->allowedTypes('string');
     }
 
