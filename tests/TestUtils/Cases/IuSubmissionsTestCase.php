@@ -31,7 +31,7 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorTextNotContains('p',
                 'Matched multiple creators', // grep-code-matched-multiple-creators
-                'A single creator must be matched.'); // FIXME: This message does not occur
+                'A single creator must be matched.');
 
             $form = $crawler->selectButton('Import')->form([
                 'manage[directives]' => 'accept',
