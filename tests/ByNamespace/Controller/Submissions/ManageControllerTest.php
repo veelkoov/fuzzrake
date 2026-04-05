@@ -68,13 +68,13 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
         self::assertSelectorNotExists('tr.FEATURES.before');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', '⇒ Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', '⇒ Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
         self::assertSelectorNotExists('tr.OTHER_FEATURES.before');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', '⇒ Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', '⇒ Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
     }
 
@@ -151,29 +151,29 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.URL_TWITTER.after td+td+td', 'https://twitter.com/getfursuit');
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.FEATURES.before td+td+td', 'Follow-me eyes Movable jaw');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.before td+td+td', '⇒ Follow-me eyes ⇒ Movable jaw');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', '⇒ Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', '⇒ Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td+td', 'Hidden pocket Squeaker in nose');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td+td', '⇒ Hidden pocket ⇒ Squeaker in nose');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', '⇒ Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', '⇒ Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', '⇒ Standard commissions');
         self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', 'Arm sleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', 'Armsleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', 'Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', '⇒ Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', '⇒ Armsleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', '⇒ Arm sleeves');
         self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', 'EUR');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', '⇒ EUR');
         self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
@@ -207,7 +207,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorNotExists($cityValueBeforeSelector);
 
         self::$client->submitForm('Update', [
-            'submission[directives]' => 'match-maker-id TEST001',
+            'manage[directives]' => 'match-maker-id TEST001',
         ]);
 
         self::assertResponseStatusCodeIs(200);
@@ -262,15 +262,15 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('#manage_directives', 'Old directives');
 
         self::$client->submitForm('Update', [
-            'submission[comment]'    => 'New comment',
-            'submission[directives]' => 'New directives',
-            'submission[status]'     => 'OTHER',
+            'manage[comment]'    => 'New comment',
+            'manage[directives]' => 'New directives',
+            'manage[status]'     => 'OTHER',
         ]);
 
         self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
@@ -317,8 +317,8 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.INTRO.submitted td+td+td', 'Some submitted intro information');
         self::assertSelectorTextSame('tr.INTRO.after td+td+td', 'Some changed intro information');
 
-        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td+td', 'All species Most experience in k9s');
-        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td+td', 'Most species');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td+td', '⇒ All species ⇒ Most experience in k9s');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td+td', '⇒ Most species');
 
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.submitted td+td+td', '');
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td+td', 'Most experience in canines');
@@ -339,7 +339,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', [
-            'submission[directives]' => 'invalid-directive',
+            'manage[directives]' => 'invalid-directive',
         ]);
 
         self::assertResponseStatusCodeIs(200);

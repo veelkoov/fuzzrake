@@ -16,7 +16,7 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
 {
     use IuFormTrait;
 
-    public const string CREATOR_ID_SELECTOR = 'table tbody td:nth-child(4) a span';
+    public const string CREATOR_ID_SELECTOR = 'table tbody td:nth-child(4) span';
     public const string SUBMISSION_TYPE_SELECTOR = 'table tbody tr td:nth-child(3) span';
 
     public function testUpdateIsMarkedAsSuch(): void
@@ -49,7 +49,7 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
 
         // The admin sees an update request
         self::loginAdminUser();
-        self::$client->request('GET', '/mx/submissions/1/');
+        self::$client->request('GET', '/submissions/1/');
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorCount(1, 'table tbody tr', 'Expected exactly one submission.');
         self::assertSelectorTextSame(self::CREATOR_ID_SELECTOR, 'TEST001');
@@ -88,7 +88,7 @@ class SubmissionMetadataTest extends IuSubmissionsTestCase
 
         // The admin sees an update request
         self::loginAdminUser();
-        self::$client->request('GET', '/mx/submissions/1/');
+        self::$client->request('GET', '/submissions/1/');
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorCount(1, 'table tbody tr', 'Expected exactly one submission.');
         self::assertSelectorTextContains(self::CREATOR_ID_SELECTOR, 'TEST002');
