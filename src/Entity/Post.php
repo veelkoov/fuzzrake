@@ -48,6 +48,12 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private string $message = '';
 
+    /**
+     * @var Collection<int, PostVote>
+     */
+    #[ORM\OneToMany(targetEntity: PostVote::class, mappedBy: 'post', cascade: ['persist', 'remove'])]
+    private Collection $votes;
+
     public function __construct(User $user, Submission $submission, ?Post $parent = null)
     {
         $this->user = $user;
@@ -55,6 +61,7 @@ class Post
         $this->parent = $parent;
         $this->postedUtc = UtcClock::now();
         $this->responses = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,5 +107,35 @@ class Post
         $this->message = $message;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, PostVote>
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function isUpvotedBy(User $user): bool
+    {
+        foreach ($this->votes as $vote) {
+            if ($vote->getUser() === $user) {
+                return $vote->isPositive();
+            }
+        }
+
+        return false;
+    }
+
+    public function isDownvotedBy(User $user): bool
+    {
+        foreach ($this->votes as $vote) {
+            if ($vote->getUser() === $user) {
+                return !$vote->isPositive();
+            }
+        }
+
+        return false;
     }
 }

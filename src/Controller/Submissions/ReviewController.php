@@ -9,6 +9,7 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
 use App\Entity\Post;
+use App\Entity\PostVote;
 use App\Entity\Submission;
 use App\Entity\User;
 use App\Form\Submission\FilterType;
@@ -126,6 +127,18 @@ class ReviewController extends AbstractController
             'new_topic_form' => $newTopicForm,
             'topics' => $topics,
         ]);
+    }
+
+    #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'route_vote_post')]
+    public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
+        Request $request, bool $positive): Response
+    {
+        $this->entityManager->persist(new PostVote($user, $post, $positive));
+        $this->entityManager->flush();
+
+        // FIXME
+
+        return $this->redirectToReview($submission);
     }
 
     private function redirectToReview(Submission $submission): RedirectResponse

@@ -7,20 +7,32 @@
             <strong>{{ topic.user.nickname }}</strong>
             wrote on {{ topic.postedUtc|fragile_datetime_utc }}
             <span class="text-body-tertiary">(#{{ topic.id }})</span>
+
+            <a href="{{ path('route_vote_post', {id: submission.id, postId: topic.id, positive: 1}) }}">
+                {#--#}<i class="{% if topic.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>{#--#}
+            </a>
+            {# TODO: Summary #}
+            <a href="{{ path('route_vote_post', {id: submission.id, postId: topic.id, positive: 0}) }}">
+                {#--#}<i class="{% if topic.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>{#--#}
+            </a>
         </div>
 
         <div class="card-body">{{ topic.message|nl2br }}</div>
 
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 pb-0">
-                {% for comment in topic.responses %}
+                {% for response in topic.responses %}
                     <p class="mb-1">
-                        <strong>{{ comment.user.nickname }}</strong>
-                        responded on {{ comment.postedUtc|fragile_datetime_utc }}
-                        <span class="text-body-tertiary">(#{{ comment.id }})</span>:
+                        <strong>{{ response.user.nickname }}</strong>
+                        responded on {{ response.postedUtc|fragile_datetime_utc }}
+                        <span class="text-body-tertiary">(#{{ response.id }})</span>
+
+                        <i class="{% if response.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>
+                        {# TODO: Links & summary #}
+                        <i class="{% if response.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>
                     </p>
 
-                    <p>{{ comment.message|nl2br }}</p>
+                    <p>{{ response.message|nl2br }}</p>
                 {% endfor %}
             </div>
         {% endif %}
