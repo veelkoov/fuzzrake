@@ -1,6 +1,6 @@
 {% for topic_items in topics %}
     {% set topic = topic_items.entity %}
-    {% set new_comment_form = topic_items.new_comment_form %}
+    {% set response_form = topic_items.response_form %}
 
     <div class="card mb-2">
         <div class="card-header">
@@ -11,9 +11,9 @@
 
         <div class="card-body">{{ topic.message|nl2br }}</div>
 
-        {% if topic.comments is not empty %}
+        {% if topic.responses is not empty %}
             <div class="card-body ps-5 pb-0">
-                {% for comment in topic.comments %}
+                {% for comment in topic.responses %}
                     <p class="mb-1">
                         <strong>{{ comment.user.nickname }}</strong>
                         responded on {{ comment.postedUtc|fragile_datetime_utc }}
@@ -26,11 +26,11 @@
         {% endif %}
 
         <div class="card-body ps-5">
-            {{ form_start(new_comment_form) }}
-            {{ form_widget(new_comment_form.message) }}
-            {{ form_errors(new_comment_form.message) }}
+            {{ form_start(response_form) }}
+            {{ form_widget(response_form.message) }}
+            {{ form_errors(response_form.message) }}
             <button type="submit" class="btn btn-primary btn-sm mt-2">Respond</button>
-            {{ form_end(new_comment_form) }}
+            {{ form_end(response_form) }}
         </div>
     </div>
 {% endfor %}

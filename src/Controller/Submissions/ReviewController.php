@@ -8,15 +8,13 @@ use App\Controller\Utils\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
-use App\Entity\DiscussionComment;
-use App\Entity\DiscussionTopic;
+use App\Entity\Post;
 use App\Entity\Submission;
 use App\Entity\User;
-use App\Form\Submission\CommentType;
 use App\Form\Submission\FilterType;
-use App\Form\Submission\TopicType;
+use App\Form\Submission\PostType;
 use App\IuHandling\Import\ImportService;
-use App\Repository\DiscussionTopicRepository;
+use App\Repository\PostRepository;
 use App\Repository\SubmissionRepository;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +41,7 @@ class ReviewController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly SubmissionRepository $submissionRepository,
         private readonly ImportService $importService,
-        private readonly DiscussionTopicRepository $topicRepository,
+        private readonly PostRepository $postRepository,
     ) {
     }
 
@@ -87,8 +85,11 @@ class ReviewController extends AbstractController
     {
         $importData = $this->importService->getImportDataFor($submission);
 
-        $newTopic = new DiscussionTopic($submission, $user);
-        $newTopicForm = $this->createForm(TopicType::class, $newTopic)->handleRequest($request);
+        $newTopic = new Post($user, $submission);
+        $newTopicForm = $this->createForm(PostType::class, $newTopic, [
+            PostType::OPT_PREFIX => 'new_topic',
+        ]);
+        $newTopicForm->handleRequest($request);
 
         if ($newTopicForm->isSubmitted() && $newTopicForm->isValid()) {
             $this->entityManager->persist($newTopic);
@@ -99,14 +100,14 @@ class ReviewController extends AbstractController
 
         $topics = [];
 
-        foreach ($this->topicRepository->getSubmissionDiscussions($submission) as $topic) {
-            $form = $this->createForm(CommentType::class, new DiscussionComment($topic, $user), [
-                CommentType::OPT_PREFIX => "topic_{$topic->getId()}",
+        foreach ($this->postRepository->getSubmissionTopics($submission) as $topic) {
+            $responseForm = $this->createForm(PostType::class, new Post($user, $submission, $topic), [
+                PostType::OPT_PREFIX => "topic_{$topic->getId()}",
             ]);
-            $form->handleRequest($request);
+            $responseForm->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->entityManager->persist($form->getData());
+            if ($responseForm->isSubmitted() && $responseForm->isValid()) {
+                $this->entityManager->persist($responseForm->getData());
                 $this->entityManager->flush();
 
                 return $this->redirectToReview($submission);
@@ -114,7 +115,7 @@ class ReviewController extends AbstractController
 
             $topics[] = [
                 'entity' => $topic,
-                'new_comment_form' => $form->createView(),
+                'response_form' => $responseForm->createView(),
             ];
         }
 

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Submission;
 
-use App\Data\Submission\Filter;
-use App\Entity\DiscussionComment;
+use App\Entity\Post;
 use App\Utils\Enforce;
 use Override;
 use Symfony\Component\Form\AbstractType;
@@ -14,9 +13,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<DiscussionComment>
+ * @extends AbstractType<Post>
  */
-class CommentType extends AbstractType
+class PostType extends AbstractType
 {
     public const string OPT_PREFIX = 'OPT_PREFIX';
 
@@ -37,7 +36,7 @@ class CommentType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => Filter::class,
+                'data_class' => Post::class,
             ])
             ->define(self::OPT_PREFIX)
             ->allowedTypes('string');
