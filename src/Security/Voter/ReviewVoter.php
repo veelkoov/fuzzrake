@@ -6,7 +6,6 @@ namespace App\Security\Voter;
 
 use App\Data\Submission\Status;
 use App\Entity\Submission;
-use App\Security\Role;
 use Override;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
