@@ -117,8 +117,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
             ->map(static fn (UserRole $role) => $role->getRole()->value)
             ->toArray();
 
-        if (!arr_contains($roles, 'ROLE_VERIFIED')) {
-            $roles = []; // If we are not verified, you can't do anything
+        if (!arr_contains($roles, 'ROLE_VERIFIED') || arr_contains($roles, 'ROLE_LOCKED')) {
+            $roles = []; // If we are not verified, or locked, you can't do anything
         }
 
         return $roles;

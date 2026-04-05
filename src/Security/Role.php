@@ -11,4 +11,5 @@ enum Role: string
     case REVIEWER = 'ROLE_REVIEWER';
     case VERIFIED = 'ROLE_VERIFIED';
     // IS_AUTHENTICATED - see https://symfony.com/doc/current/security.html#checking-to-see-if-a-user-is-logged-in
+    case LOCKED = 'ROLE_LOCKED'; // "banned"
 }
