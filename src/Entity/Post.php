@@ -138,4 +138,14 @@ class Post
 
         return false;
     }
+
+    public function getUpvotesCount(): int
+    {
+        return $this->votes->filter(static fn (PostVote $vote) => $vote->isPositive())->count();
+    }
+
+    public function getDownvotesCount(): int
+    {
+        return $this->votes->filter(static fn (PostVote $vote) => !$vote->isPositive())->count();
+    }
 }
