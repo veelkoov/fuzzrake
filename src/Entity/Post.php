@@ -51,7 +51,7 @@ class Post
     /**
      * @var Collection<int, PostVote>
      */
-    #[ORM\OneToMany(targetEntity: PostVote::class, mappedBy: 'post', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: PostVote::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $votes;
 
     public function __construct(User $user, Submission $submission, ?Post $parent = null)

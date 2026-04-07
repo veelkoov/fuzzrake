@@ -27,9 +27,13 @@
                         responded on {{ response.postedUtc|fragile_datetime_utc }}
                         <span class="text-body-tertiary">(#{{ response.id }})</span>
 
-                        <i class="{% if response.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>
-                        {# TODO: Links & summary #}
-                        <i class="{% if response.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>
+                        <a href="{{ path('route_vote_post', {id: submission.id, postId: response.id, positive: 1}) }}">
+                            {#--#}<i class="{% if response.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>{#--#}
+                        </a>
+                        {# TODO: Summary #}
+                        <a href="{{ path('route_vote_post', {id: submission.id, postId: response.id, positive: 0}) }}">
+                            {#--#}<i class="{% if response.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>{#--#}
+                        </a>
                     </p>
 
                     <p>{{ response.message|nl2br }}</p>

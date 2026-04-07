@@ -18,7 +18,7 @@ class PostVote
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'votes')]
+    #[ORM\ManyToOne(inversedBy: 'votes')]
     #[ORM\JoinColumn(nullable: false)]
     private Post $post;
 

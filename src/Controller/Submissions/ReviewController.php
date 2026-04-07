@@ -16,6 +16,7 @@ use App\Form\Submission\FilterType;
 use App\Form\Submission\PostType;
 use App\IuHandling\Import\ImportService;
 use App\Repository\PostRepository;
+use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +44,7 @@ class ReviewController extends AbstractController
         private readonly SubmissionRepository $submissionRepository,
         private readonly ImportService $importService,
         private readonly PostRepository $postRepository,
+        private readonly PostVoteRepository $postVoteRepository,
     ) {
     }
 
@@ -133,10 +135,17 @@ class ReviewController extends AbstractController
     public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
         Request $request, bool $positive): Response
     {
-        $this->entityManager->persist(new PostVote($user, $post, $positive));
-        $this->entityManager->flush();
+        $votes = $this->postVoteRepository->findFor($user, $post);
+        $shouldRecreateVote = 0 === count($votes) || array_first($votes)->isPositive() !== $positive;
 
-        // FIXME
+        foreach ($votes as $vote) {
+            $this->entityManager->remove($vote);
+        }
+        if ($shouldRecreateVote) {
+            $this->entityManager->flush();
+            $this->entityManager->persist(new PostVote($user, $post, $positive));
+        }
+        $this->entityManager->flush();
 
         return $this->redirectToReview($submission);
     }
