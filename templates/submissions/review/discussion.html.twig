@@ -1,32 +1,32 @@
-{% macro vote_link(submission, post, positive) %}
+{% macro votes(submission, post, positive) %}
     {% set has_voted = positive ? post.upvotedBy(app.user) : post.downvotedBy(app.user) %}
-    {% set color_class = positive ? 'text-success' : 'text-danger' %}
+    {% set votes_count = positive ? post.upvotesCount(app.user) : post.downvotesCount(app.user) %}
+    {% set color_class = positive ? 'success' : 'danger' %}
     {% set symbol_class = positive ? 'fa-circle-up' : 'fa-circle-down' %}
 
     {% if app.user !== post.user %}
         <a href="{{ path('route_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
-            {#- -#}
-            <i class="{% if has_voted %}{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ symbol_class }}"></i>
-            {#- -#}
+            {#--#}
+            <i class="{% if has_voted %}text-{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ symbol_class }}"></i>
+            {#--#}
         </a>
     {% endif %}
+
+    <span class="text-{{ color_class }}-emphasis">{% if votes_count > 0 %}+{{ votes_count }}{% endif %}</span>
 {% endmacro %}
 
 {% for topic_items in topics %}
     {% set topic = topic_items.entity %}
     {% set response_form = topic_items.response_form %}
 
-    <div class="card mb-2">
+    <div class="card mb-2" id="topic-{{ topic.id }}">
         <div class="card-header">
             <strong>{{ topic.user.nickname }}</strong>
             wrote on {{ topic.postedUtc|fragile_datetime_utc }}
             <span class="text-body-tertiary">(#{{ topic.id }})</span>
 
-            {{ _self.vote_link(submission, topic, 1) }}
-            {% if topic.upvotesCount > 0 %}+{{ topic.upvotesCount }}{% endif %}
-
-            {{ _self.vote_link(submission, topic, 0) }}
-            {% if topic.downvotesCount > 0 %}-{{ topic.downvotesCount }}{% endif %}
+            {{ _self.votes(submission, topic, 1) }}
+            {{ _self.votes(submission, topic, 0) }}
         </div>
 
         <div class="card-body">{{ topic.message|nl2br }}</div>
@@ -34,19 +34,18 @@
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 pb-0">
                 {% for response in topic.responses %}
-                    <p class="mb-1">
-                        <strong>{{ response.user.nickname }}</strong>
-                        responded on {{ response.postedUtc|fragile_datetime_utc }}
-                        <span class="text-body-tertiary">(#{{ response.id }})</span>
+                    <div id="response-{{ response.id }}">
+                        <p class="mb-1">
+                            <strong>{{ response.user.nickname }}</strong>
+                            responded on {{ response.postedUtc|fragile_datetime_utc }}
+                            <span class="text-body-tertiary">(#{{ response.id }})</span>
 
-                        {{ _self.vote_link(submission, response, 1) }}
-                        {% if response.upvotesCount > 0 %}+{{ response.upvotesCount }}{% endif %}
+                            {{ _self.votes(submission, response, 1) }}
+                            {{ _self.votes(submission, response, 0) }}
+                        </p>
 
-                        {{ _self.vote_link(submission, response, 0) }}
-                        {% if response.downvotesCount > 0 %}-{{ response.downvotesCount }}{% endif %}
-                    </p>
-
-                    <p>{{ response.message|nl2br }}</p>
+                        <p>{{ response.message|nl2br }}</p>
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}
