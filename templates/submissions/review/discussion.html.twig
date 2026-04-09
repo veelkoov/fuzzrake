@@ -1,3 +1,17 @@
+{% macro vote_link(submission, post, positive) %}
+    {% set has_voted = positive ? post.upvotedBy(app.user) : post.downvotedBy(app.user) %}
+    {% set color_class = positive ? 'text-success' : 'text-danger' %}
+    {% set symbol_class = positive ? 'fa-circle-up' : 'fa-circle-down' %}
+
+    {% if app.user !== post.user %}
+        <a href="{{ path('route_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
+            {#- -#}
+            <i class="{% if has_voted %}{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ symbol_class }}"></i>
+            {#- -#}
+        </a>
+    {% endif %}
+{% endmacro %}
+
 {% for topic_items in topics %}
     {% set topic = topic_items.entity %}
     {% set response_form = topic_items.response_form %}
@@ -8,14 +22,10 @@
             wrote on {{ topic.postedUtc|fragile_datetime_utc }}
             <span class="text-body-tertiary">(#{{ topic.id }})</span>
 
-            <a href="{{ path('route_vote_post', {id: submission.id, postId: topic.id, positive: 1}) }}">
-                {#--#}<i class="{% if topic.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>{#--#}
-            </a>
+            {{ _self.vote_link(submission, topic, 1) }}
             {% if topic.upvotesCount > 0 %}+{{ topic.upvotesCount }}{% endif %}
 
-            <a href="{{ path('route_vote_post', {id: submission.id, postId: topic.id, positive: 0}) }}">
-                {#--#}<i class="{% if topic.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>{#--#}
-            </a>
+            {{ _self.vote_link(submission, topic, 0) }}
             {% if topic.downvotesCount > 0 %}-{{ topic.downvotesCount }}{% endif %}
         </div>
 
@@ -29,14 +39,10 @@
                         responded on {{ response.postedUtc|fragile_datetime_utc }}
                         <span class="text-body-tertiary">(#{{ response.id }})</span>
 
-                        <a href="{{ path('route_vote_post', {id: submission.id, postId: response.id, positive: 1}) }}">
-                            {#--#}<i class="{% if response.upvotedBy(app.user) %}text-success fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-up"></i>{#--#}
-                        </a>
+                        {{ _self.vote_link(submission, response, 1) }}
                         {% if response.upvotesCount > 0 %}+{{ response.upvotesCount }}{% endif %}
 
-                        <a href="{{ path('route_vote_post', {id: submission.id, postId: response.id, positive: 0}) }}">
-                            {#--#}<i class="{% if response.downvotedBy(app.user) %}text-danger fa-solid{% else %}text-secondary fa-regular{% endif %} fa-circle-down"></i>{#--#}
-                        </a>
+                        {{ _self.vote_link(submission, response, 0) }}
                         {% if response.downvotesCount > 0 %}-{{ response.downvotesCount }}{% endif %}
                     </p>
 

@@ -82,7 +82,7 @@ class ReviewController extends AbstractController
         ]);
     }
 
-    #[IsGranted('submission_review', 'submission')]
+    #[IsGranted('review', 'submission')]
     #[Route(path: '/submission/{id}/review', name: RouteName::SUBMISSION_REVIEW)]
     public function submissionReview(#[MapEntity] Submission $submission, #[CurrentUser] User $user, Request $request): Response
     {
@@ -131,6 +131,7 @@ class ReviewController extends AbstractController
         ]);
     }
 
+    #[IsGranted('vote', 'post')]
     #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'route_vote_post')]
     public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
         Request $request, bool $positive): Response

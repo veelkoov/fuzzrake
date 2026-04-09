@@ -16,9 +16,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @extends Voter<string, Submission>
  */
-final class ReviewVoter extends Voter
+final class SubmissionVoter extends Voter
 {
-    public const string SUBMISSION_REVIEW = 'submission_review';
+    public const string REVIEW = 'review';
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -28,8 +28,7 @@ final class ReviewVoter extends Voter
     #[Override]
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return arr_contains([self::SUBMISSION_REVIEW], $attribute)
-            && $subject instanceof Submission;
+        return arr_contains([self::REVIEW], $attribute) && $subject instanceof Submission;
     }
 
     #[Override]
