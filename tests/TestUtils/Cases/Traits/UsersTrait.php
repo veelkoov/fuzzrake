@@ -17,14 +17,15 @@ trait UsersTrait
     private const string DEFAULT_TEST_PASSWORD = 'abcdef1234567890';
     private static ?User $adminUser;
     private static ?User $creatorUser;
-    private static ?User $reviewerUser;
+    /** @var list<User> */
+    private static array $reviewerUsers;
 
     #[Before]
     protected function resetUsers(): void
     {
         self::$adminUser = null;
         self::$creatorUser = null;
-        self::$reviewerUser = null;
+        self::$reviewerUsers = [];
     }
 
     protected static function haveAnAdminUser(): void
@@ -62,22 +63,27 @@ trait UsersTrait
         return self::$creatorUser ?? throw new LogicException('Creator user has not been created yet.');
     }
 
-    protected static function haveAReviewerUser(): void
+    protected static function haveReviewerUsers(int $count = 1): void
     {
-        $user = new User()
-            ->setEmail('reviewer@example.com')
-            ->addRole(Role::REVIEWER)
-            ->addRole(Role::VERIFIED)
-            ->setContactPermit(null);
-        self::setDefaultPassword($user);
-        self::persistAndFlush($user);
+        $users = [];
 
-        self::$reviewerUser = $user;
+        for ($i = 0; $i < $count; ++$i) {
+            $user = new User()
+                ->setEmail("reviewer$i@example.com")
+                ->addRole(Role::REVIEWER)
+                ->addRole(Role::VERIFIED)
+                ->setContactPermit(null);
+            self::setDefaultPassword($user);
+            $users[] = $user;
+        }
+        self::persistAndFlush(...$users);
+
+        self::$reviewerUsers = $users;
     }
 
-    protected static function getReviewerUser(): User
+    protected static function getReviewerUser(int $index = 0): User
     {
-        return self::$reviewerUser ?? throw new LogicException('Reviewer user has not been created yet.');
+        return self::$reviewerUsers[$index] ?? throw new LogicException("Reviewer user $index has not been created.");
     }
 
     protected static function loginAdminUser(): void

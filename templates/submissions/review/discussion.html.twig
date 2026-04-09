@@ -19,7 +19,7 @@
     {% set topic = topic_items.entity %}
     {% set response_form = topic_items.response_form %}
 
-    <div class="card mb-2" id="topic-{{ topic.id }}">
+    <div class="card mb-2 topic" id="topic-{{ topic.id }}">
         <div class="card-header">
             <strong>{{ topic.user.nickname }}</strong>
             wrote on {{ topic.postedUtc|fragile_datetime_utc }}
@@ -34,7 +34,7 @@
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 pb-0">
                 {% for response in topic.responses %}
-                    <div id="response-{{ response.id }}">
+                    <div class="response" id="response-{{ response.id }}">
                         <p class="mb-1">
                             <strong>{{ response.user.nickname }}</strong>
                             responded on {{ response.postedUtc|fragile_datetime_utc }}
@@ -60,7 +60,7 @@
     </div>
 {% endfor %}
 
-<div class="card">
+<div class="card" id="new-topic-form">
     <div class="card-header">
         Start new topic
     </div>

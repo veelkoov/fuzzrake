@@ -27,7 +27,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
         parent::setUp();
 
         self::haveACreatorUser();
-        self::haveAReviewerUser();
+        self::haveReviewerUsers();
         self::haveAnAdminUser();
 
         $submission = self::getEntityForSubmission(self::getCreatorUser(), new Creator(), false)

@@ -22,6 +22,8 @@ use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +47,7 @@ class ReviewController extends AbstractController
         private readonly ImportService $importService,
         private readonly PostRepository $postRepository,
         private readonly PostVoteRepository $postVoteRepository,
+        private readonly FormFactoryInterface $formFactory,
     ) {
     }
 
@@ -84,14 +87,15 @@ class ReviewController extends AbstractController
 
     #[IsGranted('review', 'submission')]
     #[Route(path: '/submission/{id}/review', name: RouteName::SUBMISSION_REVIEW)]
-    public function submissionReview(#[MapEntity] Submission $submission, #[CurrentUser] User $user, Request $request): Response
-    {
+    public function submissionReview(
+        #[MapEntity] Submission $submission,
+        #[CurrentUser] User $user,
+        Request $request,
+    ): Response {
         $importData = $this->importService->getImportDataFor($submission);
 
         $newTopic = new Post($user, $submission);
-        $newTopicForm = $this->createForm(PostType::class, $newTopic, [
-            PostType::OPT_PREFIX => 'new_topic',
-        ]);
+        $newTopicForm = $this->getPostForm($newTopic);
         $newTopicForm->handleRequest($request);
 
         if ($newTopicForm->isSubmitted() && $newTopicForm->isValid()) {
@@ -104,13 +108,12 @@ class ReviewController extends AbstractController
         $topics = [];
 
         foreach ($this->postRepository->getSubmissionTopics($submission) as $topic) {
-            $responseForm = $this->createForm(PostType::class, new Post($user, $submission, $topic), [
-                PostType::OPT_PREFIX => "topic_{$topic->getId()}",
-            ]);
+            $response = new Post($user, $submission, $topic);
+            $responseForm = $this->getPostForm($response);
             $responseForm->handleRequest($request);
 
             if ($responseForm->isSubmitted() && $responseForm->isValid()) {
-                $this->entityManager->persist($responseForm->getData());
+                $this->entityManager->persist($response);
                 $this->entityManager->flush();
 
                 return $this->redirectToReview($submission);
@@ -154,5 +157,19 @@ class ReviewController extends AbstractController
     private function redirectToReview(Submission $submission): RedirectResponse
     {
         return $this->redirectToRoute(RouteName::SUBMISSION_REVIEW, ['id' => $submission->getId()]);
+    }
+
+    /**
+     * @return FormInterface<Post>
+     */
+    private function getPostForm(Post $post): FormInterface
+    {
+        if (null === $post->getParent()) {
+            $formName = 'new_topic';
+        } else {
+            $formName = "topic_{$post->getParent()->getId()}";
+        }
+
+        return $this->formFactory->createNamed($formName, PostType::class, $post);
     }
 }
