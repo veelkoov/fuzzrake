@@ -29,7 +29,7 @@
             {{ _self.votes(submission, topic, 0) }}
         </div>
 
-        <div class="card-body">{{ topic.message|nl2br }}</div>
+        <div class="card-body topic-text">{{ topic.message|nl2br }}</div>
 
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 pb-0">
@@ -44,7 +44,7 @@
                             {{ _self.votes(submission, response, 0) }}
                         </p>
 
-                        <p>{{ response.message|nl2br }}</p>
+                        <p class="response-text">{{ response.message|nl2br }}</p>
                     </div>
                 {% endfor %}
             </div>

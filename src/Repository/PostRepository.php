@@ -35,7 +35,9 @@ class PostRepository extends ServiceEntityRepository
             ->andWhere('d_p_topic.parent IS NULL')
             ->setParameter('submission', $submission)
             ->orderBy('d_p_topic.postedUtc')
+            ->addOrderBy('d_p_topic.id')
             ->addOrderBy('d_p_response.postedUtc')
+            ->addOrderBy('d_p_response.id')
             ->getQuery()
             ->getResult();
     }

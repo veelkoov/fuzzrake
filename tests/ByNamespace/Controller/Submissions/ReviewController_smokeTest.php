@@ -8,7 +8,7 @@ use App\Data\Submission\Status;
 use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\MocksTrait;
-use App\Utils\Creator\SmartAccessDecorator;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -17,13 +17,23 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
 {
     use MocksTrait;
 
+    public const string NEW_TOPIC_FORM_SELECTOR = 'div.discussion #new-topic-form';
+    public const string TOPIC_CARDS_SELECTOR = 'div.discussion div.card.topic';
+
+    /**
+     * Tests:
+     * - Reviewer cannot access non-IN_REVIEW submissions
+     * - Everyone can post and reply
+     * - You can't vote unless IN_REVIEW and not your post
+     * - Posting, reading
+     */
     public function testReviewControllerSmokeTest(): void
     {
         self::haveACreatorUser();
         self::haveReviewerUsers(2);
         self::haveAnAdminUser();
 
-        $submission = self::getEntityForSubmission(self::getCreatorUser(), new SmartAccessDecorator(), false);
+        $submission = self::getEntityForSubmission(self::getCreatorUser(), new Creator(), false);
         self::persistAndFlush($submission);
         $submissionId = $submission->getId();
         unset($submission);
@@ -44,28 +54,13 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         // Let the admin start 2 topics
-        $newTopicFormCardSelector = '#new-topic-form';
-        $form = self::$client->getCrawler()->filter($newTopicFormCardSelector)->selectButton('Post')->form([
-            'new_topic[message]' => 'Topic 1 by admin text; topic 1 by admin text.',
+        $this->startNewTopic('Topic 1 by admin text; topic 1 by admin text.');
+        $this->startNewTopic('Topic 2 by admin text; topic 2 by admin text.');
+
+        $this->validateContents([
+            ['Topic 1 by admin text; topic 1 by admin text.', []],
+            ['Topic 2 by admin text; topic 2 by admin text.', []],
         ]);
-        self::submitValid($form);
-
-        $form = self::$client->getCrawler()->filter($newTopicFormCardSelector)->selectButton('Post')->form([
-            'new_topic[message]' => 'Topic 2 by admin text; topic 2 by admin text.',
-        ]);
-        self::submitValid($form);
-
-        // Check number of topics, get their IDs
-        $topicCards = self::$client->getCrawler()->filter('div.card.topic');
-        self::assertCount(2, $topicCards);
-
-        [$topic1CardSelector, $topic1PostId] = $this->selectorAndPostIdFrom($topicCards->eq(0), 'topic');
-        [$topic2CardSelector, $topic2PostId] = $this->selectorAndPostIdFrom($topicCards->eq(1), 'topic');
-
-        // Make sure dynamic forms are not mixed up
-        self::assertSelectorExists("$newTopicFormCardSelector #new_topic_message");
-        self::assertSelectorExists("$topic1CardSelector #topic_{$topic1PostId}_message");
-        self::assertSelectorExists("$topic2CardSelector #topic_{$topic2PostId}_message");
 
         // Change submission status to IN_REVIEW
         self::getEM()->getRepository(Submission::class)->find($submissionId)?->setStatus(Status::IN_REVIEW);
@@ -77,27 +72,29 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         // Reviewers should be able to create new topics too
-        $form = self::$client->getCrawler()->filter($newTopicFormCardSelector)->selectButton('Post')->form([
-            'new_topic[message]' => 'Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.',
-        ]);
-        self::submitValid($form);
+        $this->startNewTopic('Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.');
 
-        // Check ID of the new topic
-        $topicCards = self::$client->getCrawler()->filter("div.card.topic:not($topic1CardSelector):not($topic2CardSelector)");
-        self::assertCount(1, $topicCards);
-        [$topic3CardSelector, $topic3PostId] = $this->selectorAndPostIdFrom($topicCards->eq(0), 'topic');
+        $this->validateContents([
+            ['Topic 1 by admin text; topic 1 by admin text.', []],
+            ['Topic 2 by admin text; topic 2 by admin text.', []],
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', []],
+        ]);
 
         // Respond to admins' 1
-        $form = self::$client->getCrawler()->filter($topic1CardSelector)->selectButton('Respond')->form([
-            "topic_{$topic1PostId}[message]" => 'Response 1 by reviewer 1 to topic 1.',
-        ]);
-        self::submitValid($form);
+        $this->respondToTopic(1, 'Response 1 by reviewer 1 to topic 1.');
 
         // Respond to self
-        $form = self::$client->getCrawler()->filter($topic3CardSelector)->selectButton('Respond')->form([
-            "topic_{$topic3PostId}[message]" => 'Response 1 by reviewer 1 to topic 3.',
+        $this->respondToTopic(3, 'Response 1 by reviewer 1 to topic 3.');
+
+        $this->validateContents([
+            ['Topic 1 by admin text; topic 1 by admin text.', [
+                'Response 1 by reviewer 1 to topic 1.',
+            ]],
+            ['Topic 2 by admin text; topic 2 by admin text.', []],
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', [
+                'Response 1 by reviewer 1 to topic 3.',
+            ]],
         ]);
-        self::submitValid($form);
 
         // Post responses by reviewer 2
         self::loginUser($reviewer2);
@@ -105,47 +102,83 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         // Respond to admins' 1
-        $form = self::$client->getCrawler()->filter($topic1CardSelector)->selectButton('Respond')->form([
-            "topic_{$topic1PostId}[message]" => 'Response 2 by reviewer 2 to topic 1.',
-        ]);
-        self::submitValid($form);
+        $this->respondToTopic(1, 'Response 2 by reviewer 2 to topic 1.');
 
         // Respond to admins' 2
-        $form = self::$client->getCrawler()->filter($topic2CardSelector)->selectButton('Respond')->form([
-            "topic_{$topic2PostId}[message]" => 'Response 1 by reviewer 2 to topic 2.',
-        ]);
-        self::submitValid($form);
+        $this->respondToTopic(2, 'Response 1 by reviewer 2 to topic 2.');
 
         // Respond to reviewer 1 topic 3
-        $form = self::$client->getCrawler()->filter($topic3CardSelector)->selectButton('Respond')->form([
-            "topic_{$topic3PostId}[message]" => 'Response 2 by reviewer 2 to topic 3.',
+        $this->respondToTopic(3, 'Response 2 by reviewer 2 to topic 3.');
+
+        $this->validateContents([
+            ['Topic 1 by admin text; topic 1 by admin text.', [
+                'Response 1 by reviewer 1 to topic 1.',
+                'Response 2 by reviewer 2 to topic 1.',
+            ]],
+            ['Topic 2 by admin text; topic 2 by admin text.', [
+                'Response 1 by reviewer 2 to topic 2.',
+            ]],
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', [
+                'Response 1 by reviewer 1 to topic 3.',
+                'Response 2 by reviewer 2 to topic 3.',
+            ]],
         ]);
-        self::submitValid($form);
-
-        // Verify generated contents
-
-        $topics = self::$client->getCrawler()->filter('div.topic');
-        self::assertCount(3, $topics);
-
-        $responses = self::$client->getCrawler()->filter("$topic1CardSelector div.response");
-        self::assertCount(2, $responses);
-        [$topic1Response1Selector, $topic1Response1PostId] = $this->selectorAndPostIdFrom($responses->eq(0), 'response');
-        [$topic1Response2Selector, $topic1Response2PostId] = $this->selectorAndPostIdFrom($responses->eq(1), 'response');
-
-        $responses = self::$client->getCrawler()->filter("$topic2CardSelector div.response");
-        self::assertCount(1, $responses);
-        [$topic2Response1Selector, $topic1Response1PostId] = $this->selectorAndPostIdFrom($responses->eq(0), 'response');
-
-        $responses = self::$client->getCrawler()->filter("$topic3CardSelector div.response");
-        self::assertCount(2, $responses);
-        [$topic3Response1Selector, $topic1Response1PostId] = $this->selectorAndPostIdFrom($responses->eq(0), 'response');
-        [$topic3Response2Selector, $topic1Response2PostId] = $this->selectorAndPostIdFrom($responses->eq(1), 'response');
     }
 
     /**
-     * @return array{string, int}
+     * @param list<array{string, list<string>}> $contentsData
      */
-    private function selectorAndPostIdFrom(Crawler $crawler, string $kind): array
+    private function validateContents(array $contentsData): void
+    {
+        $expectedTopicCount = count($contentsData);
+        $topicCards = self::$client->getCrawler()->filter(self::TOPIC_CARDS_SELECTOR);
+        self::assertCount($expectedTopicCount, $topicCards);
+
+        foreach ($contentsData as $topicIndex => $topicData) {
+            $topicCard = $topicCards->eq($topicIndex);
+
+            $expectedTopicText = $topicData[0];
+            $topicText = $topicCard->filter('.topic-text')->text();
+            self::assertSame($expectedTopicText, $topicText);
+
+            $expectedResponseCount = count($topicData[1]);
+            $responseDivs = $topicCard->filter('div.response');
+            self::assertCount($expectedResponseCount, $responseDivs);
+
+            foreach ($topicData[1] as $responseIndex => $expectedResponseText) {
+                $responseText = $responseDivs->eq($responseIndex)->filter('.response-text')->text();
+                self::assertSame($expectedResponseText, $responseText);
+            }
+
+            // Make sure the response form for this topic is on this card and the message field ID is right
+            $topicPostId = $this->postIdFrom($topicCard, 'topic');
+            self::assertCount(1, $topicCard->filter("#topic_{$topicPostId}_message"));
+        }
+
+        // Make sure the new topic form exists and the field ID is right
+        self::assertSelectorExists(self::NEW_TOPIC_FORM_SELECTOR.' #new_topic_message');
+    }
+
+    private function startNewTopic(string $topicText): void
+    {
+        $form = self::$client->getCrawler()->filter(self::NEW_TOPIC_FORM_SELECTOR)->selectButton('Post')->form([
+            'new_topic[message]' => $topicText,
+        ]);
+        self::submitValid($form);
+    }
+
+    private function respondToTopic(int $topicNumber, string $responseText): void
+    {
+        $topicCard = self::$client->getCrawler()->filter(self::TOPIC_CARDS_SELECTOR)->eq($topicNumber - 1);
+        $topicPostId = $this->postIdFrom($topicCard, 'topic');
+
+        $form = $topicCard->selectButton('Respond')->form([
+            "topic_{$topicPostId}[message]" => $responseText,
+        ]);
+        self::submitValid($form);
+    }
+
+    private function postIdFrom(Crawler $crawler, string $kind): int
     {
         self::assertCount(1, $crawler);
 
@@ -156,6 +189,6 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         $postId = (int) str_strip_prefix($idAttr, $idPrefix);
         self::assertSame($idAttr, "$idPrefix$postId");
 
-        return ["#$idAttr", $postId];
+        return $postId;
     }
 }
