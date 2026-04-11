@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostVoteRepository::class)]
 #[ORM\UniqueConstraint(fields: ['post', 'user'])]
+#[ORM\Table(name: 'posts_votes')]
 class PostVote
 {
     #[ORM\Id]
