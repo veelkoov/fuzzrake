@@ -40,17 +40,18 @@ final class SubmissionVoter extends Voter
             return false;
         }
 
-        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
-            return true;
+        if (self::REVIEW !== $attribute) {
+            return false;
         }
 
         /** @var Submission $subject */
         $submission = $subject;
 
-        if (Status::IN_REVIEW === $submission->getStatus()) {
-            return true;
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
+            return true; // Admin can always access reviews
         }
 
-        return false;
+        // Reviewers cannot access review if submission is not in the right status
+        return Status::IN_REVIEW === $submission->getStatus();
     }
 }

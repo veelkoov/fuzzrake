@@ -39,15 +39,15 @@ final class PostVoter extends Voter
             return false;
         }
 
+        if (self::VOTE !== $attribute) {
+            return false;
+        }
+
         /** @var Post $post */
         $post = $subject;
 
         if (!$this->accessDecisionManager->decide($token, ['review'], $post->getSubmission())) {
-            return false;
-        }
-
-        if (self::VOTE !== $attribute) {
-            return false;
+            return false; // You can't vote on posts if review is not accessible
         }
 
         // Allow voting on posts by other users only
