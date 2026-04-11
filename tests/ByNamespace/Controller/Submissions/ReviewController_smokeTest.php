@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\Controller\Submissions;
 
 use App\Data\Submission\Status;
-use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\MocksTrait;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\Enforce;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -22,84 +22,64 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
 
     /**
      * Tests:
-     * - Reviewer cannot access non-IN_REVIEW submissions
      * - Everyone can post and reply
      * - You can't vote unless IN_REVIEW and not your post
      * - Posting, reading
      */
     public function testReviewControllerSmokeTest(): void
     {
+        self::haveAnAdminUser();
         self::haveACreatorUser();
         self::haveReviewerUsers(2);
-        self::haveAnAdminUser();
 
-        $submission = self::getEntityForSubmission(self::getCreatorUser(), new Creator(), false);
-        self::persistAndFlush($submission);
-        $submissionId = $submission->getId();
-        unset($submission);
-        $reviewPath = "/submission/{$submissionId}/review";
-
-        $admin = self::getAdminUser();
         $reviewer1 = self::getReviewerUser(0);
         $reviewer2 = self::getReviewerUser(1);
-
-        // Make sure reviewers cannot access the review which is not in the IN_REVIEW status
-        self::loginUser($reviewer1);
-        self::$client->request('GET', $reviewPath);
-        self::assertResponseStatusCodeIs(403);
-
-        // But an administrator can do that anytime
-        self::loginUser($admin);
-        self::$client->request('GET', $reviewPath);
-        self::assertResponseStatusCodeIs(200);
+        $submissionId = $this->setupSubmissionGetId();
 
         // Let the admin start 2 topics
+        self::loginUser(self::getAdminUser());
+        $this->requestReviewPage($submissionId);
         $this->startNewTopic('Topic 1 by admin text; topic 1 by admin text.');
         $this->startNewTopic('Topic 2 by admin text; topic 2 by admin text.');
 
-        $this->validateContents([
-            ['Topic 1 by admin text; topic 1 by admin text.', []],
-            ['Topic 2 by admin text; topic 2 by admin text.', []],
+        $this->validateContents($submissionId, [
+            ['Topic 1 by admin text; topic 1 by admin text.', 0, 0, []],
+            ['Topic 2 by admin text; topic 2 by admin text.', 0, 0, []],
         ]);
 
-        // Change submission status to IN_REVIEW
-        self::getEM()->getRepository(Submission::class)->find($submissionId)?->setStatus(Status::IN_REVIEW);
-        self::flush();
+        // Allow reviewers
+        $this->changeSubmissionStatus($submissionId, Status::IN_REVIEW);
 
         // Reviewers should now see the submission
         self::loginUser($reviewer1);
-        self::$client->request('GET', $reviewPath);
-        self::assertResponseStatusCodeIs(200);
+        $this->requestReviewPage($submissionId);
 
-        // Reviewers should be able to create new topics too
-        $this->startNewTopic('Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.');
-
-        $this->validateContents([
-            ['Topic 1 by admin text; topic 1 by admin text.', []],
-            ['Topic 2 by admin text; topic 2 by admin text.', []],
-            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', []],
-        ]);
+        // Do some voting
+        $this->voteTopic(1, true);
+        $this->voteTopic(2, false);
 
         // Respond to admins' 1
         $this->respondToTopic(1, 'Response 1 by reviewer 1 to topic 1.');
 
+        // Reviewers should be able to create new topics too
+        $this->startNewTopic('Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.');
+
         // Respond to self
         $this->respondToTopic(3, 'Response 1 by reviewer 1 to topic 3.');
 
-        $this->validateContents([
-            ['Topic 1 by admin text; topic 1 by admin text.', [
-                'Response 1 by reviewer 1 to topic 1.',
+        $this->validateContents($submissionId, [
+            ['Topic 1 by admin text; topic 1 by admin text.', 1, 0, [
+                ['Response 1 by reviewer 1 to topic 1.', 0, 0],
             ]],
-            ['Topic 2 by admin text; topic 2 by admin text.', []],
-            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', [
-                'Response 1 by reviewer 1 to topic 3.',
+            ['Topic 2 by admin text; topic 2 by admin text.', 0, -1, []],
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, 0, [
+                ['Response 1 by reviewer 1 to topic 3.', 0, 0],
             ]],
         ]);
 
         // Post responses by reviewer 2
         self::loginUser($reviewer2);
-        self::$client->request('GET', $reviewPath);
-        self::assertResponseStatusCodeIs(200);
+        $this->requestReviewPage($submissionId);
 
         // Respond to admins' 1
         $this->respondToTopic(1, 'Response 2 by reviewer 2 to topic 1.');
@@ -110,48 +90,104 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         // Respond to reviewer 1 topic 3
         $this->respondToTopic(3, 'Response 2 by reviewer 2 to topic 3.');
 
-        $this->validateContents([
-            ['Topic 1 by admin text; topic 1 by admin text.', [
-                'Response 1 by reviewer 1 to topic 1.',
-                'Response 2 by reviewer 2 to topic 1.',
+        // Do some voting
+        $this->voteTopic(1, true);
+        $this->voteTopic(2, true);
+        $this->voteTopic(3, false);
+        $this->voteResponse(1, 1, false);
+        $this->voteResponse(3, 1, false);
+
+        $this->validateContents($submissionId, [
+            ['Topic 1 by admin text; topic 1 by admin text.', 2, 0, [
+                ['Response 1 by reviewer 1 to topic 1.', 0, -1],
+                ['Response 2 by reviewer 2 to topic 1.', 0, 0],
             ]],
-            ['Topic 2 by admin text; topic 2 by admin text.', [
-                'Response 1 by reviewer 2 to topic 2.',
+            ['Topic 2 by admin text; topic 2 by admin text.', 1, -1, [
+                ['Response 1 by reviewer 2 to topic 2.', 0, 0],
             ]],
-            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', [
-                'Response 1 by reviewer 1 to topic 3.',
-                'Response 2 by reviewer 2 to topic 3.',
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, -1, [
+                ['Response 1 by reviewer 1 to topic 3.', 0, -1],
+                ['Response 2 by reviewer 2 to topic 3.', 0, 0],
+            ]],
+        ]);
+
+        // Block reviewers
+        $this->changeSubmissionStatus($submissionId, Status::OTHER);
+
+        // But an administrator obviously can
+        self::loginUser(self::getAdminUser());
+        $this->requestReviewPage($submissionId);
+
+        // Admin votes here as well
+        $this->voteTopic(3, false);
+        $this->voteResponse(1, 1, false);
+        $this->voteResponse(1, 2, true);
+        $this->voteResponse(3, 2, true);
+
+        $this->validateContents($submissionId, [
+            ['Topic 1 by admin text; topic 1 by admin text.', 2, 0, [
+                ['Response 1 by reviewer 1 to topic 1.', 0, -2],
+                ['Response 2 by reviewer 2 to topic 1.', 1, 0],
+            ]],
+            ['Topic 2 by admin text; topic 2 by admin text.', 1, -1, [
+                ['Response 1 by reviewer 2 to topic 2.', 0, 0],
+            ]],
+            ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, -2, [
+                ['Response 1 by reviewer 1 to topic 3.', 0, -1],
+                ['Response 2 by reviewer 2 to topic 3.', 1, 0],
             ]],
         ]);
     }
 
     /**
-     * @param list<array{string, list<string>}> $contentsData
+     * @param list<array{string, int, int, list<array{string, int, int}>}> $contentsData
      */
-    private function validateContents(array $contentsData): void
+    private function validateContents(int $submissionId, array $contentsData): void
     {
+        // Verify number of topics
         $expectedTopicCount = count($contentsData);
         $topicCards = self::$client->getCrawler()->filter(self::TOPIC_CARDS_SELECTOR);
         self::assertCount($expectedTopicCount, $topicCards);
 
         foreach ($contentsData as $topicIndex => $topicData) {
-            $topicCard = $topicCards->eq($topicIndex);
-
             $expectedTopicText = $topicData[0];
+            $expectedUpvotes = $topicData[1];
+            $expectedDownvotes = -$topicData[2];
+
+            $topicCard = $topicCards->eq($topicIndex);
+            $topicPostId = $this->postIdFrom($topicCard, 'topic'); // For form and links validation
+
+            // Verify topic text
             $topicText = $topicCard->filter('.topic-text')->text();
             self::assertSame($expectedTopicText, $topicText);
 
-            $expectedResponseCount = count($topicData[1]);
+            // Verify topic votes
+            $this->verifyVotes($topicCard->filter('.topic-header'), $submissionId, $topicPostId,
+                $expectedUpvotes, $expectedDownvotes);
+
+            // Verify number of responses
+            $expectedResponseCount = count($topicData[3]);
             $responseDivs = $topicCard->filter('div.response');
             self::assertCount($expectedResponseCount, $responseDivs);
 
-            foreach ($topicData[1] as $responseIndex => $expectedResponseText) {
-                $responseText = $responseDivs->eq($responseIndex)->filter('.response-text')->text();
+            foreach ($topicData[3] as $responseIndex => $responseData) {
+                $expectedResponseText = $responseData[0];
+                $expectedUpvotes = $responseData[1];
+                $expectedDownvotes = -$responseData[2];
+
+                $responseDiv = $responseDivs->eq($responseIndex);
+                $responsePostId = $this->postIdFrom($responseDiv, 'response'); // For links validation
+
+                // Verify response text
+                $responseText = $responseDiv->filter('.response-text')->text();
                 self::assertSame($expectedResponseText, $responseText);
+
+                // Verify response votes
+                $this->verifyVotes($responseDiv->filter('.response-header'), $submissionId, $responsePostId,
+                    $expectedUpvotes, $expectedDownvotes);
             }
 
             // Make sure the response form for this topic is on this card and the message field ID is right
-            $topicPostId = $this->postIdFrom($topicCard, 'topic');
             self::assertCount(1, $topicCard->filter("#topic_{$topicPostId}_message"));
         }
 
@@ -167,9 +203,30 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::submitValid($form);
     }
 
+    private function voteTopic(int $topicNumber, bool $positive): void
+    {
+        $header = $this->getTopicCard($topicNumber)->filter('.topic-header');
+
+        $this->vote($header, $positive);
+    }
+
+    private function voteResponse(int $topicNumber, int $responseNumber, bool $positive): void
+    {
+        $header = $this->getTopicCard($topicNumber)->filter('div.response')
+            ->eq($responseNumber - 1)->filter('.response-header');
+
+        $this->vote($header, $positive);
+    }
+
+    private function vote(Crawler $crawler, bool $positive): void
+    {
+        self::$client->click($crawler->filter($positive ? '.upvotes a' : '.downvotes a')->link());
+        self::$client->followRedirect();
+    }
+
     private function respondToTopic(int $topicNumber, string $responseText): void
     {
-        $topicCard = self::$client->getCrawler()->filter(self::TOPIC_CARDS_SELECTOR)->eq($topicNumber - 1);
+        $topicCard = $this->getTopicCard($topicNumber);
         $topicPostId = $this->postIdFrom($topicCard, 'topic');
 
         $form = $topicCard->selectButton('Respond')->form([
@@ -190,5 +247,40 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::assertSame($idAttr, "$idPrefix$postId");
 
         return $postId;
+    }
+
+    private function requestReviewPage(int $submissionId): void
+    {
+        self::$client->request('GET', $this->getReviewPath($submissionId));
+        self::assertResponseStatusCodeIs(200);
+    }
+
+    private function setupSubmissionGetId(): int
+    {
+        $submission = self::getEntityForSubmission(self::getCreatorUser(), new Creator(), false);
+        self::persistAndFlush($submission);
+
+        return Enforce::int($submission->getId());
+    }
+
+    private function getTopicCard(int $topicNumber): Crawler
+    {
+        return self::$client->getCrawler()->filter(self::TOPIC_CARDS_SELECTOR)->eq($topicNumber - 1);
+    }
+
+    private function verifyVotes(Crawler $header, int $submissionId, int $postId, int $expectedUpvotes, int $expectedDownvotes): void
+    {
+        $expectedUpvotes = 0 === $expectedUpvotes ? '' : "+$expectedUpvotes";
+        $expectedDownvotes = 0 === $expectedDownvotes ? '' : "-$expectedDownvotes";
+        self::assertSame($expectedUpvotes, $header->filter('.upvotes')->text());
+        self::assertSame($expectedDownvotes, $header->filter('.downvotes')->text());
+
+        $votingHrefs = $header->filter('.upvotes a, .downvotes a')->extract(['href']);
+        $expectedOptionalVotingHrefs = [[], [
+            $this->getVotePath($submissionId, $postId, true),
+            $this->getVotePath($submissionId, $postId, false),
+        ]];
+
+        self::assertContains($votingHrefs, $expectedOptionalVotingHrefs);
     }
 }
