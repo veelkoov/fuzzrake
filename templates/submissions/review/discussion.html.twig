@@ -1,20 +1,20 @@
 {% macro votes(submission, post, positive) %}
     {% set has_voted = positive ? post.upvotedBy(app.user) : post.downvotedBy(app.user) %}
-    {% set votes_count = positive ? post.upvotesCount(app.user) : post.downvotesCount(app.user) %}
     {% set color_class = positive ? 'success' : 'danger' %}
-    {% set symbol_class = positive ? 'fa-circle-up' : 'fa-circle-down' %}
-    {% set symbol = positive ? '+' : '-' %}
 
     <span class="{{ positive ? 'upvotes' : 'downvotes' }}">
         {% if app.user !== post.user %}
             <a href="{{ path('route_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
                 {#--#}
-                <i class="{% if has_voted %}text-{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ symbol_class }}"></i>
+                <i class="{% if has_voted %}text-{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ positive ? 'fa-circle-up' : 'fa-circle-down' }}"></i>
                 {#--#}
             </a>
         {% endif %}
 
-        <span class="text-{{ color_class }}-emphasis">{% if votes_count > 0 %}{{ symbol }}{{ votes_count }}{% endif %}</span>
+        <span class="text-{{ color_class }}-emphasis">
+            {%- set votes_count = positive ? post.upvotesCount(app.user) : post.downvotesCount(app.user) -%}
+            {%- if votes_count > 0 %}{{ positive ? '+' : '-' }}{{ votes_count }}{% endif -%}
+        </span>
     </span>
 {% endmacro %}
 
