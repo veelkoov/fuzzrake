@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Utils\Exceptions\UnbelievableRuntimeException;
 use App\Utils\Traits\UtilityClass;
-use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;

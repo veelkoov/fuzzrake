@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\Utils\UnbelievableRuntimeException;
+use App\Utils\Exceptions\UnbelievableRuntimeException;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

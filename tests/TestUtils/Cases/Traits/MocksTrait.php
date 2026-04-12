@@ -13,7 +13,7 @@ use App\Service\EmailService;
 use App\Tracking\Data\AnalysisInput;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\UnbelievableRuntimeException;
+use App\Utils\Exceptions\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Snapshots\SnapshotMetadata;
 use App\Utils\Web\Url\FreeUrl;

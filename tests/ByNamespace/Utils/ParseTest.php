@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\ByNamespace\Utils;
 
+use App\Utils\Exceptions\ParseException;
 use App\Utils\Parse;
-use App\Utils\ParseException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;

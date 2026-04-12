@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Security\Email as EmailUtils;
+use App\Utils\Exceptions\UncheckedException;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -68,7 +68,7 @@ class EmailService
             // We rely on the messenger. If it's not working, everything is broken.
             // Fail the request, make user aware, don't bother with a helpful message.
             $this->logger->emergency('Failed to send email.', ['exception' => $exception]);
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 }

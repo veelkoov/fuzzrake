@@ -6,13 +6,13 @@ namespace App\Repository;
 
 use App\Data\Submission\Filter;
 use App\Entity\Submission;
+use App\Utils\Exceptions\UncheckedException;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
-use RuntimeException;
 
 /**
  * @extends ServiceEntityRepository<Submission>
@@ -72,7 +72,7 @@ class SubmissionRepository extends ServiceEntityRepository
                 $pagesCount,
             );
         } catch (Exception $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 }

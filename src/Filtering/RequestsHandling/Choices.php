@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering\RequestsHandling;
 
+use App\Utils\Exceptions\UncheckedException;
 use App\Utils\Json;
 use App\Utils\Pagination\Pagination;
 use JsonException;
-use RuntimeException;
 use Veelkoov\Debris\Sets\StringSet;
 
 readonly class Choices
@@ -63,7 +63,7 @@ readonly class Choices
         try {
             return hash('sha256', Json::encode($this));
         } catch (JsonException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 }

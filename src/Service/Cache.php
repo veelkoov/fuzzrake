@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
+use App\Utils\Exceptions\UncheckedException;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
@@ -43,7 +44,7 @@ class Cache
                 return $callback();
             });
         } catch (InvalidArgumentException|CacheException $exception) {
-            throw new RuntimeException(message: $exception->getMessage(), code: $exception->getCode(), previous: $exception);
+            throw new UncheckedException($exception);
         }
 
         return $getCached;
@@ -55,7 +56,7 @@ class Cache
         try {
             $this->cache->invalidateTags($message->tags->getValuesArray());
         } catch (InvalidArgumentException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tracking\Patterns;
 
-use App\Utils\ConfigurationException;
 use App\Utils\Enforce;
+use App\Utils\Exceptions\ConfigurationException;
 use Composer\Pcre\Preg;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

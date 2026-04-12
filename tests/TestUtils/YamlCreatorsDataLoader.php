@@ -15,8 +15,8 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
+use App\Utils\Exceptions\UncheckedException;
 use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use UnexpectedValueException;
 
@@ -204,7 +204,7 @@ class YamlCreatorsDataLoader
                 try {
                     $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::string($value));
                 } catch (DateTimeException $exception) {
-                    throw new RuntimeException(previous: $exception);
+                    throw new UncheckedException($exception);
                 }
             }
 
