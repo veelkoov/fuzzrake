@@ -31,6 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private string $nickname = '';
+
     #[Assert\NotBlank(message: 'Please enter your email.'), Assert\Length(max: 256), Assert\Email] // grep-code-email-constraints
     #[ORM\Column(type: Types::TEXT)]
     private string $email = ''; // grep-code-username-is-email
@@ -62,6 +65,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getNickname(): string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): self
+    {
+        $this->nickname = $nickname;
+
+        return $this;
     }
 
     #[Override]
@@ -102,8 +117,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
             ->map(static fn (UserRole $role) => $role->getRole()->value)
             ->toArray();
 
-        if (!arr_contains($roles, 'ROLE_VERIFIED')) {
-            $roles = []; // If we are not verified, you can't do anything
+        if (!arr_contains($roles, 'ROLE_VERIFIED') || arr_contains($roles, 'ROLE_LOCKED')) {
+            $roles = []; // If we are not verified, or locked, you can't do anything
         }
 
         return $roles;

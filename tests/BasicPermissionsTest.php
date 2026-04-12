@@ -4,14 +4,38 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Data\Submission\Status;
 use App\Security\Role;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
+use App\Tests\TestUtils\Cases\Traits\MocksTrait;
+use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Utils\Enforce;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
 class BasicPermissionsTest extends FuzzrakeWebTestCase
 {
+    use MocksTrait;
+
+    private int $submissionId;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::haveACreatorUser();
+        self::haveReviewerUsers();
+        self::haveAnAdminUser();
+
+        $submission = self::getEntityForSubmission(self::getCreatorUser(), new Creator(), false)
+            ->setStatus(Status::IN_REVIEW);
+        self::persistAndFlush($submission);
+        $this->submissionId = Enforce::int($submission->getId());
+    }
+
     /**
      * @return list<array{string, bool|int}>
      */
@@ -35,7 +59,9 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/iu_form/start', false],
 
             ['/mx/query/', false],
-            ['/mx/submissions/1/', false],
+            ['/submissions/1/', false],
+            ['/submission/SID/manage', false],
+            ['/submission/SID/review', false],
         ];
     }
 
@@ -58,7 +84,9 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/iu_form/start', true],
 
             ['/mx/query/', false],
-            ['/mx/submissions/1/', false],
+            ['/submissions/1/', false],
+            ['/submission/SID/manage', false],
+            ['/submission/SID/review', false],
         ];
     }
 
@@ -67,6 +95,9 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
      */
     public static function unverifiedCreatorAccessDataProvider(): array
     {
+        // ROLE_VERIFIED is processed in a single place in the User class, affecting all other roles.
+        // Single test here (user can't perform their role's actions role unless verified) is enough.
+
         return [
             ['/user/main', true],
             ['/user/iu_form/start', false],
@@ -83,71 +114,99 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/iu_form/start', false],
 
             ['/mx/query/', true],
-            ['/mx/submissions/1/', true],
+            ['/submissions/1/', true],
+            ['/submission/SID/manage', true],
+            ['/submission/SID/review', true],
         ];
     }
 
     /**
      * @return list<array{string, bool|int}>
      */
-    public static function unverifiedAdminAccessDataProvider(): array
+    public static function lockedAdminAccessDataProvider(): array
     {
+        // ROLE_LOCKED is processed in a single place in the User class, affecting all other roles.
+        // Single test here (user can't perform their role's actions role if locked) is enough.
+
         return [
             ['/user/main', true],
 
             ['/mx/query/', false],
-            ['/mx/submissions/1/', false],
+            ['/submissions/1/', false],
+            ['/submission/SID/manage', false],
+            ['/submission/SID/review', false],
+        ];
+    }
+
+    /**
+     * @return list<array{string, bool|int}>
+     */
+    public static function verifiedReviewerAccessDataProvider(): array
+    {
+        return [
+            ['/user/main', true],
+            ['/user/iu_form/start', false],
+
+            ['/mx/query/', false],
+            ['/submissions/1/', true],
+            ['/submission/SID/manage', false],
+            ['/submission/SID/review', true],
         ];
     }
 
     #[DataProvider('anonymousAccessDataProvider')]
     public function testAnonymousAccess(string $path, bool|int $allowedOrCode): void
     {
-        self::$client->request('GET', $path);
+        self::$client->request('GET', $this->getResolvedPath($path));
         $this->verifyResponse($allowedOrCode, false);
     }
 
     #[DataProvider('verifiedCreatorAccessDataProvider')]
     public function testVerifiedCreatorAccess(string $path, bool|int $allowedOrCode): void
     {
-        self::haveACreatorUser();
         self::loginCreatorUser();
 
-        self::$client->request('GET', $path);
+        self::$client->request('GET', $this->getResolvedPath($path));
         $this->verifyResponse($allowedOrCode, true);
     }
 
     #[DataProvider('unverifiedCreatorAccessDataProvider')]
     public function testUnverifiedCreatorAccess(string $path, bool|int $allowedOrCode): void
     {
-        self::haveACreatorUser();
         self::getCreatorUser()->removeRole(Role::VERIFIED);
         self::flush();
         self::loginCreatorUser();
 
-        self::$client->request('GET', $path);
+        self::$client->request('GET', $this->getResolvedPath($path));
         $this->verifyResponse($allowedOrCode, true);
     }
 
     #[DataProvider('verifiedAdminAccessDataProvider')]
     public function testVerifiedAdminAccess(string $path, bool|int $allowedOrCode): void
     {
-        self::haveAnAdminUser();
         self::loginAdminUser();
 
-        self::$client->request('GET', $path);
+        self::$client->request('GET', $this->getResolvedPath($path));
         $this->verifyResponse($allowedOrCode, true);
     }
 
-    #[DataProvider('unverifiedAdminAccessDataProvider')]
-    public function testUnverifiedAdminAccess(string $path, bool|int $allowedOrCode): void
+    #[DataProvider('lockedAdminAccessDataProvider')]
+    public function testLockedAdminAccess(string $path, bool|int $allowedOrCode): void
     {
-        self::haveAnAdminUser();
-        self::getAdminUser()->removeRole(Role::VERIFIED);
+        self::getAdminUser()->addRole(Role::LOCKED);
         self::flush();
         self::loginAdminUser();
 
-        self::$client->request('GET', $path);
+        self::$client->request('GET', $this->getResolvedPath($path));
+        $this->verifyResponse($allowedOrCode, true);
+    }
+
+    #[DataProvider('verifiedReviewerAccessDataProvider')]
+    public function testVerifiedReviewerAccess(string $path, bool|int $allowedOrCode): void
+    {
+        self::loginReviewerUser();
+
+        self::$client->request('GET', $this->getResolvedPath($path));
         $this->verifyResponse($allowedOrCode, true);
     }
 
@@ -162,5 +221,10 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
         } else {
             self::assertResponseRedirects('/login');
         }
+    }
+
+    private function getResolvedPath(string $path): string
+    {
+        return str_replace('/SID/', "/$this->submissionId/", $path);
     }
 }

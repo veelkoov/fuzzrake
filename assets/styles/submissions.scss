@@ -1,0 +1,52 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+#submission-manage tr.not-fixed.not-changing,
+#submission-review tr.not-changing {
+  color: #bbb;
+  display: none;
+}
+
+#submission-manage,
+#submission-review {
+  tr.structured {
+    opacity: 0.5;
+  }
+
+  .before {
+    a {
+      color: $danger;
+      text-decoration: none;
+    }
+  }
+
+  tr.submitted {
+    &.not-fixed {
+      display: none;
+    }
+
+    &.fixes-applied td:last-child {
+      color: #0a53be;
+    }
+
+    a {
+      color: #0a53be;
+      text-decoration: none;
+    }
+  }
+
+  .after {
+    a {
+      color: $success;
+      text-decoration: none;
+    }
+  }
+}
+
+textarea#submission_directives {
+  height: 20em;
+}
+
+textarea#submission_comment {
+  height: 5em;
+}

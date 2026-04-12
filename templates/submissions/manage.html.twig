@@ -1,4 +1,4 @@
-{% extends 'mx/_base.html.twig' %}
+{% extends 'submissions/_base.html.twig' %}
 
 {% block title %}Submission #{{ importData.submission.id }}{% endblock %}
 
@@ -69,7 +69,7 @@
         </div>
         <div class="col-9">
 
-    <table class="table table-sm" id="mx-submission">
+    <table class="table table-sm" id="submission-manage">
         <thead>
             <tr>
                 <th colspan="2">Field</th>
@@ -101,7 +101,7 @@
                 {% if importData.isUpdate %}
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>
-                            Before
+                            Old&nbsp;data
                         </td>
                         <td></td>
                         <td>
@@ -121,7 +121,7 @@
                 </tr>
 
                 <tr class="{{ field.value }} after {{ row_class }}" data-field="{{ field.name }}" data-value="{{ importData.fixedData.get(field)|as_str(true) }}">
-                    <td>Fixed</td>
+                    <td>New&nbsp;data</td>
                     <td class="text-end text-nowrap">
                         <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
                         <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>

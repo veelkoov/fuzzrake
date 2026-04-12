@@ -17,7 +17,13 @@
             {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_creators_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_query', fa_icon: 'filter', label: 'Query', priority: 'low'}) }}
-            {{ include('_menu_item.html.twig', {name: 'mx_submissions', fa_icon: 'file-lines', label: 'Submissions', priority: 'low'}) }}
+        {% endif %}
+
+        {% if not ignore_session and is_granted('ROLE_REVIEWER') %}
+            {{ include('_menu_item.html.twig', {
+                name: constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSIONS_LIST'),
+                fa_icon: 'file-lines', label: 'Submissions', priority: 'low',
+            }) }}
         {% endif %}
 
         <div class="nav-separator"></div>

@@ -2,19 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Mx;
+namespace App\Controller\Submissions;
 
 use App\Controller\Utils\ButtonClickedTrait;
 use App\Data\Definitions\Fields\Fields;
-use App\Data\Submission\Filter;
 use App\Data\Submission\Status;
 use App\Entity\Submission;
-use App\Form\Mx\SubmissionFilterType;
-use App\Form\Mx\SubmissionType;
+use App\Form\Submission\ManageType;
 use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
-use App\Repository\SubmissionRepository;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -28,57 +25,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Veelkoov\Debris\Sets\StringSet;
 
-#[Cache(noStore: true)]
-#[Route(path: '/mx')]
-class SubmissionsController extends AbstractController
+#[IsGranted('ROLE_ADMIN')]
+#[Cache(maxage: 0, public: false, noStore: true)]
+class ManageController extends AbstractController
 {
     use ButtonClickedTrait;
 
-    private const string SESSION_SUBMISSIONS_FILTER = 'submissions_filter_settings';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SubmissionRepository $submissionRepository,
         private readonly ImportService $importService,
         private readonly CreatorRepository $creatorRepository,
     ) {
     }
 
     /**
-     * @param positive-int $page
-     */
-    #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    public function submissions(Request $request, int $page): Response
-    {
-        $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
-        if (!$filter instanceof Filter) {
-            $filter = new Filter();
-        }
-
-        $filterForm = $this->createForm(SubmissionFilterType::class, $filter);
-        $filterForm->handleRequest($request);
-
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
-
-            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS, ['page' => $page]);
-        }
-
-        $submissionsPage = $this->submissionRepository->getPage($filter, $page);
-
-        return $this->render('mx/submissions/index.html.twig', [
-            'filter_form' => $filterForm,
-            'submissions_page' => $submissionsPage,
-        ]);
-    }
-
-    /**
      * @throws DateTimeException
      */
-    #[Route(path: '/submissions/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
+    #[Route(path: '/submissions/social', name: RouteName::SUBMISSIONS_SOCIAL)]
     public function social(): Response
     {
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
@@ -91,40 +57,40 @@ class SubmissionsController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/submission/{id}', name: RouteName::MX_SUBMISSION)]
-    public function submission(#[MapEntity(mapping: ['id' => 'id'])] Submission $submission, Request $request): Response
+    #[Route(path: '/submission/{id}/manage', name: RouteName::SUBMISSION_MANAGE)]
+    public function submissionManage(#[MapEntity] Submission $submission, Request $request): Response
     {
-        $form = $this->createForm(SubmissionType::class, $submission)->handleRequest($request);
+        $form = $this->createForm(ManageType::class, $submission)->handleRequest($request);
 
         $importData = $this->importService->getImportDataFor($submission);
 
         foreach ($importData->errors as $error) {
-            $form->get(SubmissionType::FLD_DIRECTIVES)->addError(new FormError($error));
+            $form->get(ManageType::FLD_DIRECTIVES)->addError(new FormError($error));
         }
 
         if ($form->isSubmitted()) {
-            if ($this->clicked($form, SubmissionType::BTN_IMPORT) && $form->isValid()) {
+            if ($this->clicked($form, ManageType::BTN_IMPORT) && $form->isValid()) {
                 if ($importData->isAccepted) {
                     $submission->setStatus(Status::IMPORTED);
                     $this->importService->import($importData);
 
-                    return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+                    return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
                 } else {
-                    $form->get(SubmissionType::FLD_DIRECTIVES)->addError(
+                    $form->get(ManageType::FLD_DIRECTIVES)->addError(
                         new FormError('Submission has not been accepted yet.'));
                 }
             }
 
             $this->entityManager->flush(); // Save the directives
 
-            if ($this->clicked($form, SubmissionType::BTN_SAVE_AND_CLOSE)) {
-                return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
+            if ($this->clicked($form, ManageType::BTN_SAVE_AND_CLOSE)) {
+                return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
             }
         }
 
         $similarlyNamedCreators = $this->getSimilarlyNamedCreators($importData)->getValuesArray();
 
-        return $this->render('mx/submissions/submission.html.twig', [
+        return $this->render('submissions/manage.html.twig', [
             'importData' => $importData,
             'similarlyNamedCreators' => $similarlyNamedCreators,
             'fields' => Fields::iuFormAffected(),

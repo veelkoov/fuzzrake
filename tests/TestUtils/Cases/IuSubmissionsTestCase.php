@@ -19,12 +19,12 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
     protected function performImports(int $expectedImports): void
     {
         self::loginAdminUser();
-        $crawler = self::$client->request('GET', '/mx/submissions/1/');
+        $crawler = self::$client->request('GET', '/submissions/1/');
         self::assertResponseIsSuccessful();
 
-        $links = $crawler->filter('table a')->links();
+        $links = $crawler->filter('table a:nth-child(1)')->links();
 
-        self::assertCount($expectedImports, $links);
+        self::assertCount($expectedImports, $links, 'Expected submissions not matched.');
 
         foreach ($links as $link) {
             $crawler = self::$client->request('GET', $link->getUri());
@@ -34,7 +34,7 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
                 'A single creator must be matched.');
 
             $form = $crawler->selectButton('Import')->form([
-                'submission[directives]' => 'accept',
+                'manage[directives]' => 'accept',
             ]);
 
             self::submitValid($form);

@@ -1,0 +1,78 @@
+{% macro votes(submission, post, positive) %}
+    {% set has_voted = positive ? post.upvotedBy(app.user) : post.downvotedBy(app.user) %}
+    {% set color_class = positive ? 'success' : 'danger' %}
+
+    <span class="{{ positive ? 'upvotes' : 'downvotes' }}">
+        {% if app.user !== post.user %}
+            <a href="{{ path('route_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
+                {#--#}
+                <i class="{% if has_voted %}text-{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ positive ? 'fa-circle-up' : 'fa-circle-down' }}"></i>
+                {#--#}
+            </a>
+        {% endif %}
+
+        <span class="text-{{ color_class }}-emphasis">
+            {%- set votes_count = positive ? post.upvotesCount(app.user) : post.downvotesCount(app.user) -%}
+            {%- if votes_count > 0 %}{{ positive ? '+' : '-' }}{{ votes_count }}{% endif -%}
+        </span>
+    </span>
+{% endmacro %}
+
+{% for topic_items in topics %}
+    {% set topic = topic_items.entity %}
+    {% set response_form = topic_items.response_form %}
+
+    <div class="card mb-2 topic" id="topic-{{ topic.id }}">
+        <div class="card-header topic-header">
+            <strong>{{ topic.user.nickname }}</strong>
+            wrote on {{ topic.postedUtc|fragile_datetime_utc }}
+            <span class="text-body-tertiary">(#{{ topic.id }})</span>
+
+            {{ _self.votes(submission, topic, 1) }}
+            {{ _self.votes(submission, topic, 0) }}
+        </div>
+
+        <div class="card-body topic-text">{{ topic.message|nl2br }}</div>
+
+        {% if topic.responses is not empty %}
+            <div class="card-body ps-5 pb-0">
+                {% for response in topic.responses %}
+                    <div class="response" id="response-{{ response.id }}">
+                        <p class="mb-1 response-header">
+                            <strong>{{ response.user.nickname }}</strong>
+                            responded on {{ response.postedUtc|fragile_datetime_utc }}
+                            <span class="text-body-tertiary">(#{{ response.id }})</span>
+
+                            {{ _self.votes(submission, response, 1) }}
+                            {{ _self.votes(submission, response, 0) }}
+                        </p>
+
+                        <p class="response-text">{{ response.message|nl2br }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card-body ps-5">
+            {{ form_start(response_form) }}
+            {{ form_widget(response_form.message) }}
+            {{ form_errors(response_form.message) }}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Respond</button>
+            {{ form_end(response_form) }}
+        </div>
+    </div>
+{% endfor %}
+
+<div class="card" id="new-topic-form">
+    <div class="card-header">
+        Start new topic
+    </div>
+
+    <div class="card-body">
+        {{ form_start(new_topic_form) }}
+        {{ form_widget(new_topic_form.message) }}
+        {{ form_errors(new_topic_form.message) }}
+        <button type="submit" class="btn btn-primary btn-sm mt-2">Post</button>
+        {{ form_end(new_topic_form) }}
+    </div>
+</div>

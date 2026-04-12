@@ -1,4 +1,4 @@
-import "../../styles/admin.scss";
+import "../../styles/submissions.scss";
 
 jQuery(() => {
   setupDirectiveButtons(
@@ -14,7 +14,7 @@ function setupDirectiveButtons(
   directiveToAdd: (field: string, value: string) => string,
 ) {
   jQuery(buttonsSelector).on("click", function (event) {
-    const $valueRow = jQuery(event.target).parents("#mx-submission tr");
+    const $valueRow = jQuery(event.target).parents("#submission-manage tr");
     const addedDirectives = directiveToAdd(
       $valueRow.data("field"),
       $valueRow.data("value"),

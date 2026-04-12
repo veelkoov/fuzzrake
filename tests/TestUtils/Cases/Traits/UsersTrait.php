@@ -17,12 +17,15 @@ trait UsersTrait
     private const string DEFAULT_TEST_PASSWORD = 'abcdef1234567890';
     private static ?User $adminUser;
     private static ?User $creatorUser;
+    /** @var list<User> */
+    private static array $reviewerUsers;
 
     #[Before]
     protected function resetUsers(): void
     {
         self::$adminUser = null;
         self::$creatorUser = null;
+        self::$reviewerUsers = [];
     }
 
     protected static function haveAnAdminUser(): void
@@ -60,6 +63,29 @@ trait UsersTrait
         return self::$creatorUser ?? throw new LogicException('Creator user has not been created yet.');
     }
 
+    protected static function haveReviewerUsers(int $count = 1): void
+    {
+        $users = [];
+
+        for ($i = 0; $i < $count; ++$i) {
+            $user = new User()
+                ->setEmail("reviewer$i@example.com")
+                ->addRole(Role::REVIEWER)
+                ->addRole(Role::VERIFIED)
+                ->setContactPermit(null);
+            self::setDefaultPassword($user);
+            $users[] = $user;
+        }
+        self::persistAndFlush(...$users);
+
+        self::$reviewerUsers = $users;
+    }
+
+    protected static function getReviewerUser(int $index = 0): User
+    {
+        return self::$reviewerUsers[$index] ?? throw new LogicException("Reviewer user $index has not been created.");
+    }
+
     protected static function loginAdminUser(): void
     {
         self::loginUser(self::$adminUser ?? throw new LogicException('Admin user has not been created yet.'));
@@ -68,6 +94,11 @@ trait UsersTrait
     protected static function loginCreatorUser(): void
     {
         self::loginUser(self::getCreatorUser());
+    }
+
+    protected static function loginReviewerUser(): void
+    {
+        self::loginUser(self::getReviewerUser());
     }
 
     protected static function loginUser(User $user): void

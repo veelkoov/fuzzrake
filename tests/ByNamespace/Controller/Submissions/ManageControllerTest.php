@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\ByNamespace\Controller\Mx;
+namespace App\Tests\ByNamespace\Controller\Submissions;
 
 use App\Data\Definitions\Features;
 use App\Data\Definitions\ProductionModels;
@@ -14,7 +14,7 @@ use Override;
 use PHPUnit\Framework\Attributes\Medium;
 
 #[Medium]
-class SubmissionsControllerTest extends FuzzrakeWebTestCase
+class ManageControllerTest extends FuzzrakeWebTestCase
 {
     use MocksTrait;
 
@@ -26,23 +26,6 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::haveACreatorUser();
         self::haveAnAdminUser();
         self::loginAdminUser();
-    }
-
-    public function testPaginationWorksInSubmissions(): void
-    {
-        $this->generateRandomFakeInclusionSubmissions(24);
-
-        $crawler = self::$client->request('GET', '/mx/submissions/1/');
-        self::assertResponseStatusCodeIs(200);
-        self::assertCount(24, $crawler->filter('table tbody tr'));
-        self::assertCount(3, $crawler->filter('ul.pagination li.page-item'));
-
-        $this->generateRandomFakeInclusionSubmissions(2);
-
-        $crawler = self::$client->request('GET', '/mx/submissions/1/');
-        self::assertResponseStatusCodeIs(200);
-        self::assertCount(25, $crawler->filter('table tbody tr'));
-        self::assertCount(4, $crawler->filter('ul.pagination li.page-item'));
     }
 
     public function testAdditionIsProperlyRendered(): void
@@ -66,7 +49,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('tr.MAKER_ID.before');
@@ -85,13 +68,13 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
         self::assertSelectorNotExists('tr.FEATURES.before');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', '⇒ Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', '⇒ Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
         self::assertSelectorNotExists('tr.OTHER_FEATURES.before');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', '⇒ Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', '⇒ Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
     }
 
@@ -145,7 +128,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.MAKER_ID.before td+td+td', 'TEST001');
@@ -168,29 +151,29 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.URL_TWITTER.after td+td+td', 'https://twitter.com/getfursuit');
         self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.FEATURES.before td+td+td', 'Follow-me eyes Movable jaw');
-        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', 'Follow-me eyes');
-        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.before td+td+td', '⇒ Follow-me eyes ⇒ Movable jaw');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td+td', '⇒ Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td+td', '⇒ Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td+td', 'Hidden pocket Squeaker in nose');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', 'Hidden pockets');
-        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', 'Hidden pocket');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td+td', '⇒ Hidden pocket ⇒ Squeaker in nose');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td+td', '⇒ Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', '⇒ Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', 'Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', '⇒ Standard commissions');
         self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', 'Arm sleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', 'Armsleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', 'Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', '⇒ Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', '⇒ Armsleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', '⇒ Arm sleeves');
         self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', 'Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', 'EUR');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', '⇒ EUR');
         self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
@@ -210,7 +193,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setOwner(null); // Simulate legacy submission
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         // grep-code-matched-multiple-creators
@@ -224,7 +207,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorNotExists($cityValueBeforeSelector);
 
         self::$client->submitForm('Update', [
-            'submission[directives]' => 'match-maker-id TEST001',
+            'manage[directives]' => 'match-maker-id TEST001',
         ]);
 
         self::assertResponseStatusCodeIs(200);
@@ -252,7 +235,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertAnySelectorTextContains('p', 'Creators named similarly:');
@@ -270,30 +253,30 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setComment('Old comment')->setDirectives('Old directives');
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
-        self::assertSelectorTextSame('#submission_comment', 'Old comment');
-        self::assertSelectorTextSame('#submission_status option[selected]', 'New');
-        self::assertSelectorTextSame('#submission_directives', 'Old directives');
+        self::assertSelectorTextSame('#manage_comment', 'Old comment');
+        self::assertSelectorTextSame('#manage_status option[selected]', 'New');
+        self::assertSelectorTextSame('#manage_directives', 'Old directives');
 
         self::$client->submitForm('Update', [
-            'submission[comment]'    => 'New comment',
-            'submission[directives]' => 'New directives',
-            'submission[status]'     => 'OTHER',
+            'manage[comment]'    => 'New comment',
+            'manage[directives]' => 'New directives',
+            'manage[status]'     => 'OTHER',
         ]);
 
         self::assertResponseStatusCodeIs(200);
 
         // Reload to make sure saved is OK
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('p', 'Adding a new creator.');
-        self::assertSelectorTextSame('#submission_comment', 'New comment');
-        self::assertSelectorTextSame('#submission_directives', 'New directives');
-        self::assertSelectorTextSame('#submission_status option[selected]', 'Other');
+        self::assertSelectorTextSame('#manage_comment', 'New comment');
+        self::assertSelectorTextSame('#manage_directives', 'New directives');
+        self::assertSelectorTextSame('#manage_status option[selected]', 'Other');
 
         self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
@@ -307,7 +290,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', []);
@@ -328,14 +311,14 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'");
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorTextSame('tr.INTRO.submitted td+td+td', 'Some submitted intro information');
         self::assertSelectorTextSame('tr.INTRO.after td+td+td', 'Some changed intro information');
 
-        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td+td', 'All species Most experience in k9s');
-        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td+td', 'Most species');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td+td', '⇒ All species ⇒ Most experience in k9s');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td+td', '⇒ Most species');
 
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.submitted td+td+td', '');
         self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td+td', 'Most experience in canines');
@@ -352,11 +335,11 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::$client->submitForm('Import', [
-            'submission[directives]' => 'invalid-directive',
+            'manage[directives]' => 'invalid-directive',
         ]);
 
         self::assertResponseStatusCodeIs(200);
@@ -372,28 +355,16 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, false);
         self::persistAndFlush($submission->setDirectives('Let me just put something random here'));
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
     public function testMissingSubmissionReturns404(): void
     {
-        self::$client->request('GET', '/mx/submission/wrongId');
+        self::$client->request('GET', '/submission/1/manage');
 
         self::assertResponseStatusCodeIs(404);
-    }
-
-    private function generateRandomFakeInclusionSubmissions(int $count): void
-    {
-        while (--$count >= 0) {
-            $creator = UserCreator::get();
-            $user = $creator->entity->getUser();
-
-            self::persist($user, $this->getEntityForSubmission($user, $creator, false));
-        }
-
-        self::flush();
     }
 
     public function testUpdatingHiddenCreator(): void
@@ -411,7 +382,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
         self::persistAndFlush($submission);
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorExists('#creator-hidden-warning');
@@ -420,7 +391,7 @@ class SubmissionsControllerTest extends FuzzrakeWebTestCase
         $existingCreator->setInactiveReason('');
         self::flush();
 
-        self::$client->request('GET', "/mx/submission/{$submission->getId()}");
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
 
         self::assertSelectorNotExists('#creator-hidden-warning');

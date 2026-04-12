@@ -8,10 +8,12 @@ enum Status: string
 {
     public const array ACTION_REQUIRED = [
         self::NEW,
+        self::IN_REVIEW,
         self::OTHER,
     ];
 
     case NEW = 'NEW';
+    case IN_REVIEW = 'IN_REVIEW';
     case AWAITING_RESPONSE = 'AWAITING_RESPONSE';
     case REPLACED = 'REPLACED';
     case IMPORTED = 'IMPORTED';
@@ -22,6 +24,7 @@ enum Status: string
     {
         return match ($this) {
             self::NEW => 'New',
+            self::IN_REVIEW => 'In review',
             self::AWAITING_RESPONSE => 'Awaiting response',
             self::REPLACED => 'Replaced',
             self::IMPORTED => 'Imported',
