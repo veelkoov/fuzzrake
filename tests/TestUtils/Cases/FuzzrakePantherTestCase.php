@@ -7,6 +7,7 @@ namespace App\Tests\TestUtils\Cases;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\CacheTrait;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
+use App\Tests\TestUtils\Cases\Traits\PathsTrait;
 use App\Tests\TestUtils\Cases\Traits\UsersTrait;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
@@ -21,6 +22,7 @@ abstract class FuzzrakePantherTestCase extends PantherTestCase
     use AssertsTrait;
     use CacheTrait;
     use EntityManagerTrait;
+    use PathsTrait;
     use UsersTrait;
 
     protected static Client $client;
