@@ -60,10 +60,13 @@
                         <td>{{ submission.comment|nl2br }}</td>
                     {% endif %}
                     <td>
-                        <a class="text-decoration-none" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSION_MANAGE'), {id: submission.id}) }}">
-                            Manage
-                        </a>
-                        |
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="text-decoration-none" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSION_MANAGE'), {id: submission.id}) }}">
+                                Manage
+                            </a>
+                            |
+                        {% endif %}
+
                         <a class="text-decoration-none" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSION_REVIEW'), {id: submission.id}) }}">
                             Review
                         </a>
