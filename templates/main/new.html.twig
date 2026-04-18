@@ -16,7 +16,7 @@
     <ul>
         {% for creator in creators %}
             <li>
-                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }}</a>
+                <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }}</a>
                 {% if creator.formerly %}
                     <span class="text-body-secondary">
                         / {{ creator.formerly|join(' / ') }}
@@ -28,7 +28,7 @@
 
     <h2>Want to be listed above?</h2>
 
-    <a class="btn btn-success m-2" href="{{ path('iu_form_step_start') }}">
+    <a class="btn btn-success m-2" href="{{ path('rt_iu_form_step_start') }}">
         Add your studio
     </a>
 {% endblock %}

@@ -18,7 +18,6 @@ use App\IuHandling\Import\ImportService;
 use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,7 +53,7 @@ class ReviewController extends AbstractController
     /**
      * @param positive-int $page
      */
-    #[Route(path: '/submissions/{page}/', name: RouteName::SUBMISSIONS_LIST, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
+    #[Route(path: '/submissions/{page}/', name: 'rt_submissions_list', requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
     public function list(Request $request, int $page): Response
     {
         if ($this->isGranted('ROLE_ADMIN')) {
@@ -69,7 +68,7 @@ class ReviewController extends AbstractController
             if ($filterForm->isSubmitted() && $filterForm->isValid()) {
                 $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
 
-                $this->redirectToRoute(RouteName::SUBMISSIONS_LIST, ['page' => $page]);
+                $this->redirectToRoute('rt_submissions_list', ['page' => $page]);
             }
         } else {
             $filter = new Filter();
@@ -86,7 +85,7 @@ class ReviewController extends AbstractController
     }
 
     #[IsGranted('review', 'submission')]
-    #[Route(path: '/submission/{id}/review', name: RouteName::SUBMISSION_REVIEW)]
+    #[Route(path: '/submission/{id}/review', name: 'rt_submission_review')]
     public function submissionReview(
         #[MapEntity] Submission $submission,
         #[CurrentUser] User $user,
@@ -156,7 +155,7 @@ class ReviewController extends AbstractController
 
     private function redirectToReview(Submission $submission): RedirectResponse
     {
-        return $this->redirectToRoute(RouteName::SUBMISSION_REVIEW, ['id' => $submission->getId()]);
+        return $this->redirectToRoute('rt_submission_review', ['id' => $submission->getId()]);
     }
 
     /**

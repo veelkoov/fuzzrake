@@ -5,7 +5,7 @@
 
 {% block body %}
     {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-outline-primary float-end" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSIONS_SOCIAL')) }}">Post on social</a>
+        <a class="btn btn-outline-primary float-end" href="{{ path('rt_submissions_social') }}">Post on social</a>
     {% endif %}
 
     <h1>{{ block('title') }}</h1>
@@ -61,13 +61,13 @@
                     {% endif %}
                     <td>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a class="text-decoration-none" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSION_MANAGE'), {id: submission.id}) }}">
+                            <a class="text-decoration-none" href="{{ path('rt_submission_manage', {id: submission.id}) }}">
                                 Manage
                             </a>
                             |
                         {% endif %}
 
-                        <a class="text-decoration-none" href="{{ path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSION_REVIEW'), {id: submission.id}) }}">
+                        <a class="text-decoration-none" href="{{ path('rt_submission_review', {id: submission.id}) }}">
                             Review
                         </a>
                     </td>
@@ -76,5 +76,5 @@
         </tbody>
     </table>
 
-    {{ pagination(submissions_page, path(constant('\\App\\ValueObject\\Routing\\RouteName::SUBMISSIONS_LIST'), {page: '1'}), 'submissions') }}
+    {{ pagination(submissions_page, path('rt_submissions_list', {page: '1'}), 'submissions') }}
 {% endblock %}

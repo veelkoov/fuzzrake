@@ -8,7 +8,6 @@ use App\Captcha\CaptchaService;
 use App\Form\FeedbackType;
 use App\Service\EmailService;
 use App\ValueObject\Feedback;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +24,7 @@ class FeedbackController extends AbstractController
     ) {
     }
 
-    #[Route('/feedback', RouteName::FEEDBACK_FORM)]
+    #[Route('/feedback', 'rt_feedback_form')]
     public function feedback(Request $request, Session $session): Response
     {
         $feedback = new Feedback();
@@ -42,7 +41,7 @@ class FeedbackController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && $captcha->isSolved()) {
             $this->sendFeedback($feedback);
 
-            return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
+            return $this->redirectToRoute('rt_feedback_sent');
         }
 
         return $this->render('feedback/feedback.html.twig', [
@@ -50,7 +49,7 @@ class FeedbackController extends AbstractController
         ]);
     }
 
-    #[Route('/feedback-sent', RouteName::FEEDBACK_SENT)]
+    #[Route('/feedback-sent', 'rt_feedback_sent')]
     public function feedbackSent(): Response
     {
         return $this->render('feedback/feedback_sent.html.twig');

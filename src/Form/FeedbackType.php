@@ -7,7 +7,6 @@ namespace App\Form;
 use App\Captcha\Form\CaptchaType;
 use App\Form\Transformers\NullToEmptyStringTransformer;
 use App\ValueObject\Feedback;
-use App\ValueObject\Routing\RouteName;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -30,7 +29,7 @@ class FeedbackType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $router = self::getRouter($options);
-        $contactPageUrl = htmlspecialchars($router->generate(RouteName::CONTACT));
+        $contactPageUrl = htmlspecialchars($router->generate('rt_contact'));
 
         $builder
             ->add('noContactBack', CheckboxType::class, [

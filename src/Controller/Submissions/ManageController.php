@@ -16,7 +16,6 @@ use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +43,7 @@ class ManageController extends AbstractController
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/submissions/social', name: RouteName::SUBMISSIONS_SOCIAL)]
+    #[Route(path: '/submissions/social', name: 'rt_submissions_social')]
     public function social(): Response
     {
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
@@ -57,7 +56,7 @@ class ManageController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/submission/{id}/manage', name: RouteName::SUBMISSION_MANAGE)]
+    #[Route(path: '/submission/{id}/manage', name: 'rt_submission_manage')]
     public function submissionManage(#[MapEntity] Submission $submission, Request $request): Response
     {
         $form = $this->createForm(ManageType::class, $submission)->handleRequest($request);
@@ -74,7 +73,7 @@ class ManageController extends AbstractController
                     $submission->setStatus(Status::IMPORTED);
                     $this->importService->import($importData);
 
-                    return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
+                    return $this->redirectToRoute('rt_submissions_list');
                 } else {
                     $form->get(ManageType::FLD_DIRECTIVES)->addError(
                         new FormError('Submission has not been accepted yet.'));
@@ -84,7 +83,7 @@ class ManageController extends AbstractController
             $this->entityManager->flush(); // Save the directives
 
             if ($this->clicked($form, ManageType::BTN_SAVE_AND_CLOSE)) {
-                return $this->redirectToRoute(RouteName::SUBMISSIONS_LIST);
+                return $this->redirectToRoute('rt_submissions_list');
             }
         }
 

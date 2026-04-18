@@ -108,11 +108,11 @@
 
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="text-end p-0">
-                    <a class="btn btn-warning" href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
+                    <a class="btn btn-warning" href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-edit"></i>
                     </a>
 
-                    <a class="btn btn-warning" href="{{ path('mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
+                    <a class="btn btn-warning" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-link"></i>
                     </a>
                 </div>
@@ -300,7 +300,7 @@
                 <div class="col-md-12 p-1">
                     <p>Commissions status is not being tracked.</p>
 
-                    <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                    <p><a href="{{ path('rt_tracking') }}" target="_blank">Learn more</a></p>
                 </div>
             {% else %}
                 <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-8' }}">
@@ -340,7 +340,7 @@
                             Last time tried on {{ creator.csLastCheck|nullable_datetime_utc }}.
                         </p>
 
-                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                        <p><a href="{{ path('rt_tracking') }}" target="_blank">Learn more</a></p>
                     {% endif %}
                 </div>
 
@@ -355,7 +355,7 @@
                             <br> Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
                         </p>
 
-                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                        <p><a href="{{ path('rt_tracking') }}" target="_blank">Learn more</a></p>
                     {% else %}
                         <img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">
                     {% endif %}

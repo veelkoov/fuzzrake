@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Controller\Utils\CreatorByCreatorIdTrait;
 use App\Repository\CreatorRepository;
 use App\Service\DataService;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +23,7 @@ class RestApiController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/api/artisans.json', name: RouteName::API_CREATORS)]
+    #[Route(path: '/api/artisans.json', name: 'rt_api_creators')]
     #[Cache(maxage: 3600, public: true)]
     public function creators(): JsonResponse
     {
@@ -33,7 +32,7 @@ class RestApiController extends AbstractController
         return new JsonResponse($result, json: true);
     }
 
-    #[Route(path: '/api/creator/{creatorId}', name: RouteName::API_CREATOR)]
+    #[Route(path: '/api/creator/{creatorId}', name: 'rt_api_creator')]
     #[Cache(maxage: 900, public: true)]
     public function creatorCard(string $creatorId): Response
     {

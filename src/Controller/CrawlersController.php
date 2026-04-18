@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
@@ -13,22 +12,22 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrawlersController extends AbstractController
 {
-    #[Route(path: '/sitemap.txt', name: RouteName::SITEMAP)]
+    #[Route(path: '/sitemap.txt', name: 'rt_sitemap')]
     #[Cache(maxage: 3600, public: true)]
     public function sitemap(): Response
     {
         $urls = arr_map([
-            RouteName::CONTACT,
-            RouteName::DONATE,
-            RouteName::EVENTS,
-            RouteName::INFO,
-            RouteName::MAIN,
-            RouteName::CREATOR_IDS,
-            RouteName::NEW_CREATORS,
-            RouteName::GUIDELINES,
-            RouteName::SHOULD_KNOW,
-            RouteName::STATISTICS,
-            RouteName::TRACKING,
+            'rt_contact',
+            'rt_donate',
+            'rt_events',
+            'rt_info',
+            'rt_main',
+            'rt_creator_ids',
+            'rt_new_creators',
+            'rt_guidelines',
+            'rt_should_know',
+            'rt_statistics',
+            'rt_tracking',
         ], fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $this->render('crawlers/sitemap.txt.twig', [

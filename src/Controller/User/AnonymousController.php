@@ -11,7 +11,6 @@ use App\Repository\UserRepository;
 use App\Security\Email;
 use App\Security\EmailVerifier;
 use App\Security\Role;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,11 +35,11 @@ class AnonymousController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/login', name: RouteName::USER_LOGIN)]
+    #[Route(path: '/login', name: 'rt_user_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         return $this->render('user/login.html.twig', [
@@ -49,12 +48,12 @@ class AnonymousController extends AbstractController
         ]);
     }
 
-    #[Route('/register', name: RouteName::USER_REGISTER)]
+    #[Route('/register', name: 'rt_user_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,
         SessionInterface $session, CaptchaService $captchaService): Response
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         $user = new User();
@@ -82,10 +81,10 @@ class AnonymousController extends AbstractController
         $this->emailVerifier->sendEmailConfirmation($user);
         $this->addFlash('success', 'Confirmation email has been sent. Please check your inbox and SPAM folders in a few minutes.');
 
-        return $this->redirectToRoute(RouteName::USER_LOGIN);
+        return $this->redirectToRoute('rt_user_login');
     }
 
-    #[Route('/verify-email', name: RouteName::USER_VERIFY_EMAIL)]
+    #[Route('/verify-email', name: 'rt_user_verify_email')]
     public function verifyEmail(Request $request, UserRepository $userRepository): Response
     {
         $id = $request->query->get('id');
@@ -94,7 +93,7 @@ class AnonymousController extends AbstractController
             $this->logger->info('Missing ID for email verification.');
             $this->addFlash('danger', 'Unable to verify email, please retry or contact website administration.');
 
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         $user = $userRepository->find($id);
@@ -103,7 +102,7 @@ class AnonymousController extends AbstractController
             $this->logger->info('Unable to find user for email verification.', ['given ID' => $id]);
             $this->addFlash('danger', 'Unable to verify email, please retry or contact website administration.');
 
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         try {
@@ -116,6 +115,6 @@ class AnonymousController extends AbstractController
             $this->addFlash('danger', $exception->getReason());
         }
 
-        return $this->redirectToRoute(RouteName::USER_MAIN);
+        return $this->redirectToRoute('rt_user_main');
     }
 }

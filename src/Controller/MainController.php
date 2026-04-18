@@ -12,7 +12,6 @@ use App\Repository\CreatorRepository;
 use App\Service\DataService;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\ValueObject\Routing\RouteName;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -34,7 +33,7 @@ class MainController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/', name: RouteName::MAIN)]
+    #[Route(path: '/', name: 'rt_main')]
     #[Cache(maxage: 900, public: true)]
     public function main(): Response
     {
@@ -44,7 +43,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/menu', name: RouteName::HTMX_MENU)]
+    #[Route(path: '/htmx/menu', name: 'rt_htmx_menu')]
     #[Cache(public: false, noStore: true)]
     public function menu(Request $request): Response
     {
@@ -53,7 +52,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/new', name: RouteName::NEW_CREATORS)]
+    #[Route(path: '/new', name: 'rt_new_creators')]
     #[Cache(maxage: 900, public: true)]
     public function newCreators(): Response
     {
@@ -62,7 +61,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/creator-card/{creatorId}', name: RouteName::HTMX_MAIN_CREATOR_CARD)]
+    #[Route(path: '/htmx/main/creator-card/{creatorId}', name: 'rt_htmx_main_creator_card')]
     #[Cache(maxage: 900, public: true)]
     public function creatorCard(string $creatorId): Response
     {
@@ -73,7 +72,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/updates-dialog/{creatorId}', name: RouteName::HTMX_MAIN_UPDATES_DIALOG)]
+    #[Route(path: '/htmx/main/updates-dialog/{creatorId}', name: 'rt_htmx_main_updates_dialog')]
     #[Cache(maxage: 900, public: true)]
     public function updatesDialog(string $creatorId): Response
     {
@@ -84,7 +83,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/creators-in-table', name: RouteName::HTMX_MAIN_CREATORS_IN_TABLE)]
+    #[Route(path: '/htmx/main/creators-in-table', name: 'rt_htmx_main_creators_in_table')]
     #[Cache(maxage: 900, public: true)]
     public function htmxCreatorsInTable(Request $request): Response
     {

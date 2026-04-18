@@ -10,7 +10,7 @@
             Matched multiple creators: {# grep-code-matched-multiple-creators #}
 
             {% for creator in importData.matchedCreators %}
-                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
+                <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
 
@@ -22,7 +22,7 @@
         {% set creator = importData.matchedCreators|first %}
 
         <p>
-            Updating: <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
+            Updating: <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
 
             {% if '' != creator.inactiveReason %}
                 <span id="creator-hidden-warning" class="badge bg-warning text-dark">Hidden</span>
@@ -35,7 +35,7 @@
             Creators named similarly:
 
             {% for creator in similarlyNamedCreators %}
-                <a href="{{ path('main', {_fragment: creator.lastCreatorId}) }}">{{ creator.allNames|join(' / ') }} ({{ creator.lastCreatorId }})</a>
+                <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.allNames|join(' / ') }} ({{ creator.lastCreatorId }})</a>
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
         </p>

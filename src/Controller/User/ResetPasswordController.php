@@ -10,7 +10,6 @@ use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Security\Email;
 use App\Security\SecurityMailer;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,12 +39,12 @@ class ResetPasswordController extends AbstractController
     ) {
     }
 
-    #[Route('', name: RouteName::USER_PASSWORD_RESET_REQUEST)]
+    #[Route('', name: 'rt_user_password_reset_request')]
     public function requestPasswordReset(Request $request, SessionInterface $session, SecurityMailer $mailer,
         CaptchaService $captchaService): Response
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         $form = $this->createForm(ResetPasswordRequestFormType::class);
@@ -64,11 +63,11 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    #[Route('/check-email', name: RouteName::USER_PASSWORD_RESET_EMAIL_SENT)]
+    #[Route('/check-email', name: 'rt_user_password_reset_email_sent')]
     public function emailSentConfirmation(): Response
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         // Generate a fake token if the user does not exist or someone hit this page directly.
@@ -82,11 +81,11 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    #[Route('/reset/{token}', name: RouteName::USER_PASSWORD_RESET_FORM)]
+    #[Route('/reset/{token}', name: 'rt_user_password_reset_form')]
     public function passwordResetForm(Request $request, UserPasswordHasherInterface $passwordHasher, ?string $token = null): Response
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         if (null !== $token) {
@@ -94,7 +93,7 @@ class ResetPasswordController extends AbstractController
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
             $this->storeTokenInSession($token);
 
-            return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_FORM);
+            return $this->redirectToRoute('rt_user_password_reset_form');
         }
 
         $token = $this->getTokenFromSession();
@@ -114,7 +113,7 @@ class ResetPasswordController extends AbstractController
                 $exception->getReason(),
             ));
 
-            return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_REQUEST);
+            return $this->redirectToRoute('rt_user_password_reset_request');
         }
 
         // The token is valid; allow the user to change their password.
@@ -138,7 +137,7 @@ class ResetPasswordController extends AbstractController
             $this->addFlash('success', 'Your password has been changed.');
             $this->logger->info('Password reset has been successful.', ['user ID' => $user->getId()]);
 
-            return $this->redirectToRoute(RouteName::USER_LOGIN);
+            return $this->redirectToRoute('rt_user_login');
         }
 
         return $this->render('user/password_reset_form.html.twig', [
@@ -149,7 +148,7 @@ class ResetPasswordController extends AbstractController
     private function processSendingPasswordResetEmail(string $typedEmail, SecurityMailer $mailer): RedirectResponse
     {
         if (null !== $this->getUser()) {
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
@@ -160,7 +159,7 @@ class ResetPasswordController extends AbstractController
         if (null === $user) {
             $this->logger->info('Password reset requested for non-registered email.', ['email' => Email::obfuscate($typedEmail)]);
 
-            return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
+            return $this->redirectToRoute('rt_user_password_reset_email_sent');
         }
 
         try {
@@ -177,13 +176,13 @@ class ResetPasswordController extends AbstractController
             //     $exception->getReason()
             // ));
 
-            return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
+            return $this->redirectToRoute('rt_user_password_reset_email_sent');
         }
 
         $mailer->sendPasswordResetLink($user, $resetToken);
         $this->setTokenObjectInSession($resetToken);
         $this->logger->info('Password reset email sent.', ['user ID' => $user->getId(), 'email' => $user->getEmail()]);
 
-        return $this->redirectToRoute(RouteName::USER_PASSWORD_RESET_EMAIL_SENT);
+        return $this->redirectToRoute('rt_user_password_reset_email_sent');
     }
 }

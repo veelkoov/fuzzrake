@@ -41,7 +41,7 @@
             <tbody>
                 {% for creator in query.result %}
                     <tr>
-                        <td><a href="{{ path('mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">{{ creator.lastCreatorId }}</a></td>
+                        <td><a href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">{{ creator.lastCreatorId }}</a></td>
                         <td>{{ creator.user.allowsFeedback ? 'YES' : 'NO' }}</td>
                         <td>{% if creator.user.allowsFeedback %}{{ creator.user.email }}{% endif %}</td>
                         <td>{{ creator.otherStyles|filter_by_query(query) }}</td>

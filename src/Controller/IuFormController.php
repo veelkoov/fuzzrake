@@ -16,7 +16,6 @@ use App\IuHandling\SubmissionService;
 use App\Repository\CreatorRepository;
 use App\Utils\Collections\ArrayReader;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,14 +42,14 @@ class IuFormController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/start', name: RouteName::USER_IU_FORM_START)]
+    #[Route(path: '/start', name: 'rt_iu_form_step_start')]
     public function start(Request $request): Response
     {
         $form = $this->createForm(Start::class, new IuFormChecklist());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute(RouteName::USER_IU_FORM_DATA);
+            return $this->redirectToRoute('rt_iu_form_step_data');
         }
 
         return $this->render('iu_form/start.html.twig', [
@@ -58,7 +57,7 @@ class IuFormController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/data', name: RouteName::USER_IU_FORM_DATA)]
+    #[Route(path: '/data', name: 'rt_iu_form_step_data')]
     public function data(
         #[CurrentUser] User $user,
         Request $request,
@@ -87,7 +86,7 @@ class IuFormController extends AbstractController
             try {
                 $submissionService->submit($user, $submissionData, $isUpdate);
 
-                return $this->redirectToRoute(RouteName::USER_IU_FORM_CONFIRMATION);
+                return $this->redirectToRoute('rt_iu_form_step_confirmation');
             } catch (SubmissionException $exception) {
                 $this->logger->error('Failed to submit I/U form data.', ['exception' => $exception]);
 
@@ -103,7 +102,7 @@ class IuFormController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/confirmation', name: RouteName::USER_IU_FORM_CONFIRMATION)]
+    #[Route(path: '/confirmation', name: 'rt_iu_form_step_confirmation')]
     public function confirmation(#[CurrentUser] User $user): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
