@@ -13,7 +13,6 @@ use App\Security\Email;
 use App\Security\EmailVerifier;
 use App\Security\Role;
 use App\Security\SecurityMailer;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Psr\Log\LoggerInterface;
@@ -45,14 +44,14 @@ class UnverifiedController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/logout', name: RouteName::USER_LOGOUT)]
+    #[Route(path: '/logout', name: 'rt_user_logout')]
     public function logout(): void
     {
         $this->logger->emergency(__METHOD__.' has been called.');
         throw new LogicException('This should have been intercepted by the firewall.');
     }
 
-    #[Route(path: '/main', name: RouteName::USER_MAIN)]
+    #[Route(path: '/main', name: 'rt_user_main')]
     public function main(Request $request, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
     {
         $this->assignRandomNicknameIfMissingAndFlush($user);
@@ -64,7 +63,7 @@ class UnverifiedController extends AbstractController
             $this->addFlash('success', 'Your contact preferences have been saved.');
             $entityManager->flush();
 
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         return $this->render('user/main.html.twig', [
@@ -72,7 +71,7 @@ class UnverifiedController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/resend-verification-email', name: RouteName::USER_RESEND_VERIFICATION_EMAIL)]
+    #[Route(path: '/resend-verification-email', name: 'rt_user_resend_verification_email')]
     public function resendVerificationEmail(#[CurrentUser] User $user): Response
     {
         if ($this->isGranted('ROLE_VERIFIED')) {
@@ -83,10 +82,10 @@ class UnverifiedController extends AbstractController
                 .' Please check your inbox and SPAM folders in a few minutes.');
         }
 
-        return $this->redirectToRoute(RouteName::USER_MAIN);
+        return $this->redirectToRoute('rt_user_main');
     }
 
-    #[Route(path: '/change-password', name: RouteName::USER_CHANGE_PASSWORD)]
+    #[Route(path: '/change-password', name: 'rt_user_change_password')]
     public function changePassword(Request $request, #[CurrentUser] User $user): Response
     {
         $form = $this->createForm(ChangePasswordFormType::class);
@@ -103,7 +102,7 @@ class UnverifiedController extends AbstractController
             $this->logger->info('Changed password.', ['user ID' => $user->getId()]);
             $this->addFlash('success', 'Your password has been changed.');
 
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         return $this->render('user/change_password.html.twig', [
@@ -111,7 +110,7 @@ class UnverifiedController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/change-email', name: RouteName::USER_CHANGE_EMAIL)]
+    #[Route(path: '/change-email', name: 'rt_user_change_email')]
     public function changeEmail(Request $request, #[CurrentUser] User $user, SecurityMailer $mailer,
         UserRepository $userRepository): Response
     {
@@ -149,7 +148,7 @@ class UnverifiedController extends AbstractController
             $this->addFlash('warning', 'Your email has been changed. Confirmation email has been sent.'
                 .' Please check your inbox and SPAM folders in a few minutes.');
 
-            return $this->redirectToRoute(RouteName::USER_MAIN);
+            return $this->redirectToRoute('rt_user_main');
         }
 
         return $this->render('user/change_email.html.twig', [

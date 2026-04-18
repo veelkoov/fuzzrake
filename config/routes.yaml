@@ -15,64 +15,64 @@ legacy_index:
   path: /index.html
   controller: &redirect Symfony\Bundle\FrameworkBundle\Controller\RedirectController
   defaults:
-    route: main
+    route: rt_main
 
 legacy_new:
   path: /new.html
   controller: *redirect
   defaults:
-    route: new_creators
+    route: rt_new_creators
 
 legacy_events:
   path: /events.html
   controller: *redirect
   defaults:
-    route: events
+    route: rt_events
 
 legacy_info:
   path: /info.html
   controller: *redirect
   defaults:
-    route: info
+    route: rt_info
 
 legacy_tracking:
   path: /tracking.html
   controller: *redirect
   defaults:
-    route: tracking
+    route: rt_tracking
 
 legacy_maker_ids:
   path: /maker_ids.html
   controller: *redirect
   defaults:
-    route: creator_ids
+    route: rt_creator_ids
 
 legacy_donate:
   path: /donate.html
   controller: *redirect
   defaults:
-    route: donate
+    route: rt_donate
 
 legacy_guidelines_1:
   path: /rules.html
   controller: *redirect
   defaults:
-    route: guidelines
+    route: rt_guidelines
 
 legacy_guidelines_2:
   path: /rules
   controller: *redirect
   defaults:
-    route: guidelines
+    route: rt_guidelines
 
 legacy_should_know:
   path: /should_know.html
   controller: *redirect
   defaults:
-    route: should_know
+    route: rt_should_know
 
 legacy_statistics:
   path: /statistics.html
   controller: *redirect
   defaults:
-    route: statistics
+    route: rt_statistics

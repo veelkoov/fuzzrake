@@ -10,7 +10,6 @@ use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
 use App\Service\DataService;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +52,7 @@ class StatisticsController extends AbstractController
     /**
      * @throws UnexpectedResultException
      */
-    #[Route(path: '/stats', name: RouteName::STATISTICS)]
+    #[Route(path: '/stats', name: 'rt_statistics')]
     #[Cache(maxage: 3600, public: true)]
     public function statistics(FiltersService $filtersService, DataService $dataService): Response
     {

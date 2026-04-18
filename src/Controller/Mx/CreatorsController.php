@@ -8,7 +8,6 @@ use App\Controller\Utils\ButtonClickedTrait;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\CreatorType;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,7 @@ class CreatorsController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
 
-    #[Route(path: '/{creatorId}/edit', name: RouteName::MX_CREATOR_EDIT, methods: ['GET', 'POST'])]
+    #[Route(path: '/{creatorId}/edit', name: 'rt_mx_creator_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, string $creatorId): Response
     {
         $creator = $this->getCreatorOrThrow404($creatorId);
@@ -32,7 +31,7 @@ class CreatorsController extends FuzzrakeAbstractController
         $creator->assureNsfwSafety();
 
         if ($form->isSubmitted() && $this->success($creator, $form)) {
-            return $this->redirectToRoute(RouteName::MAIN, ['_fragment' => $creator->getLastCreatorId()]);
+            return $this->redirectToRoute('rt_main', ['_fragment' => $creator->getLastCreatorId()]);
         }
 
         return $this->render('mx/creators/edit.html.twig', [

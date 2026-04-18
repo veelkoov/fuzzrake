@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\ValueObject\Routing\RouteName;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +24,7 @@ class EmailVerifier
     public function sendEmailConfirmation(User $user): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
-            RouteName::USER_VERIFY_EMAIL,
+            'rt_user_verify_email',
             (string) $user->getId(),
             $user->getEmail(),
             ['id' => $user->getId()]

@@ -4,7 +4,7 @@
 
     <span class="{{ positive ? 'upvotes' : 'downvotes' }}">
         {% if app.user !== post.user %}
-            <a href="{{ path('route_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
+            <a href="{{ path('rt_vote_post', {id: submission.id, postId: post.id, positive: positive}) }}">
                 {#--#}
                 <i class="{% if has_voted %}text-{{ color_class }} fa-solid{% else %}text-secondary fa-regular{% endif %} {{ positive ? 'fa-circle-up' : 'fa-circle-down' }}"></i>
                 {#--#}

@@ -22,13 +22,13 @@ security:
             login_throttling:
                 max_attempts: 3
             form_login:
-                login_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
-                check_path: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
-                default_target_path: !php/const App\ValueObject\Routing\RouteName::USER_MAIN
+                login_path: rt_user_login
+                check_path: rt_user_login
+                default_target_path: rt_user_main
                 enable_csrf: true
             logout:
-                path: !php/const App\ValueObject\Routing\RouteName::USER_LOGOUT
-                target: !php/const App\ValueObject\Routing\RouteName::USER_LOGIN
+                path: rt_user_logout
+                target: rt_user_login
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
