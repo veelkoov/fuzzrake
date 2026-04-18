@@ -134,7 +134,7 @@ class ReviewController extends AbstractController
     }
 
     #[IsGranted('vote', 'post')]
-    #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'route_vote_post')]
+    #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'rt_route_vote_post')]
     public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
         Request $request, bool $positive): Response
     {
