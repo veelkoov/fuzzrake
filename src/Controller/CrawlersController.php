@@ -18,13 +18,13 @@ class CrawlersController extends AbstractController
     {
         $urls = arr_map([
             'rt_contact',
+            'rt_creator_ids',
             'rt_donate',
             'rt_events',
+            'rt_guidelines',
             'rt_info',
             'rt_main',
-            'rt_creator_ids',
             'rt_new_creators',
-            'rt_guidelines',
             'rt_should_know',
             'rt_statistics',
             'rt_tracking',
