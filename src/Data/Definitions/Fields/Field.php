@@ -171,9 +171,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('linklistUrl', validationRegex: V::GENERIC_URL)]
     case URL_LINKLIST = 'URL_LINKLIST';
 
-    #[Props('furryAminoUrl', validationRegex: V::GENERIC_URL)]
-    case URL_FURRY_AMINO = 'URL_FURRY_AMINO';
-
     #[Props('etsyUrl', validationRegex: V::GENERIC_URL)]
     case URL_ETSY = 'URL_ETSY';
 

@@ -631,17 +631,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 1024)]
-    public function getFurryAminoUrl(): string
-    {
-        return $this->getUrl(Field::URL_FURRY_AMINO);
-    }
-
-    public function setFurryAminoUrl(string $url): self
-    {
-        return $this->setUrl(Field::URL_FURRY_AMINO, $url);
-    }
-
-    #[Length(max: 1024)]
     public function getEtsyUrl(): string
     {
         return $this->getUrl(Field::URL_ETSY);

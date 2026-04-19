@@ -828,20 +828,6 @@ test_data:
       just_id:
         before+update+after: ""
 
-  - URL_FURRY_AMINO:
-      max_to_max:
-        before: "https://example.com/c1/URL_FURRY_AMINO/before"
-        update+after: "https://example.com/c1/URL_FURRY_AMINO/after"
-      new_max:
-        update+after: "https://example.com/c2/URL_FURRY_AMINO"
-      min_to_max:
-        before: ""
-        update+after: "https://example.com/c3/URL_FURRY_AMINO"
-      new_min:
-        update+after: ""
-      just_id:
-        before+update+after: ""
-
   - URL_YOUTUBE:
       max_to_max:
         before: "https://example.com/c1/URL_YOUTUBE/before"

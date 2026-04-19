@@ -380,12 +380,6 @@ final class Data extends AbstractType
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
-            ->add('furryAminoUrl', UrlType::class, [
-                'label'            => 'Got Furry Amino? Please copy+paste full link to your profile here:',
-                'required'         => false,
-                'empty_data'       => '',
-                'default_protocol' => 'https',
-            ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Got any other websites/accounts? Please list them here:',
                 'help'       => 'Please note that they will <strong>not</strong> be visible on the website, but if I see a significant number of links to one portal, I might add support for it in the future. Please: one address = one line.',

@@ -59,7 +59,7 @@ class CreatorChangesTest extends FuzzrakeKernelTestCase
         $changes2->getChanged()
             ->setCity('Kouvola')
             ->setWebsiteUrl('')
-            ->setFurryAminoUrl('https://some-furry-amino-address/')
+            ->setFacebookUrl('https://some-facebook-address/')
             ->setOpenFor(['Sitruuna', 'Omena'])
             ->setNsfwWebsite(true)
             ->setNsfwSocial(false)

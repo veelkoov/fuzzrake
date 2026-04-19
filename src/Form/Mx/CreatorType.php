@@ -286,12 +286,6 @@ class CreatorType extends AbstractTypeWithDelete
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
-            ->add('furryAminoUrl', UrlType::class, [
-                'label'            => 'Furry Amino URL',
-                'required'         => false,
-                'empty_data'       => '',
-                'default_protocol' => 'https',
-            ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Other URLs',
                 'required'   => false,
