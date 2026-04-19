@@ -11,11 +11,11 @@ use App\Entity\User;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\Cases\Traits\MessageBusTrait;
 use App\Tests\TestUtils\UserCreator;
+use App\Utils\Exceptions\UncheckedException;
 use App\ValueObject\Messages\TrackCreatorsV1;
 use App\ValueObject\Messages\UpdateMiniaturesV1;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\Attributes\Medium;
-use RuntimeException;
 
 #[Medium]
 class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
@@ -145,7 +145,7 @@ class CreatorUrlListenerTest extends FuzzrakeKernelTestCase
                 'url' => $url,
             ]);
         } catch (Exception $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 

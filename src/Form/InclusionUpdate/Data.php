@@ -17,7 +17,6 @@ use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\ValueObject\Routing\RouteName;
 use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -46,10 +45,10 @@ final class Data extends AbstractType
         parent::buildForm($builder, $options);
 
         $router = self::getRouter($options);
-        $otherStylesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles']));
-        $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
-        $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
-        $creatorIdsPagePath = htmlspecialchars($router->generate(RouteName::CREATOR_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
+        $otherStylesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_styles']));
+        $otherOrderTypesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_order_types']));
+        $otherFeaturesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_features']));
+        $creatorIdsPagePath = htmlspecialchars($router->generate('rt_creator_ids', [], UrlGeneratorInterface::ABSOLUTE_PATH));
 
         $builder
             ->add('name', TextType::class, [

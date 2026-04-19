@@ -1,9 +1,12 @@
 import "../../styles/submissions.scss";
 
+// Not using requireJQ because this is included in all submission management/review pages.
+// Possible improvement here.
+
 jQuery(() => {
   setupDirectiveButtons(
     "button.fix-button",
-    (field, value) => `set ${field} "${value}"`,
+    (field, value) => `set ${field} ◇${value}◇`,
   );
   setupDirectiveButtons("button.clear-button", (field) => `clear ${field}`);
   setupOpenAllNewLinksButton();
@@ -20,7 +23,7 @@ function setupDirectiveButtons(
       $valueRow.data("value"),
     );
 
-    const directivesTextarea = jQuery("#submission_directives");
+    const directivesTextarea = jQuery("#manage_directives");
     const currentDirectives = (directivesTextarea.val() || "")
       .toString()
       .trim();

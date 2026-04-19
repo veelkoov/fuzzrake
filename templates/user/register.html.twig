@@ -43,7 +43,7 @@
             <div id="registrationAccordionItem2" class="accordion-collapse collapse" data-bs-parent="#registrationAccordion">
                 <div class="accordion-body">
                     <ol>
-                        <li>Please navigate to the main page using this link: <a class="disable-filters-goto-main-page" href="{{ path('main') }}" target="_blank"><i class="fa-solid fa-filter-circle-xmark"></i> Temporarily disable all the filters and <strong>open the main page</strong></a></li>
+                        <li>Please navigate to the main page using this link: <a class="disable-filters-goto-main-page" href="{{ path('rt_main') }}" target="_blank"><i class="fa-solid fa-filter-circle-xmark"></i> Temporarily disable all the filters and <strong>open the main page</strong></a></li>
                         <li>Use the search field trying to find your studio / your name. Check old names as well. Search by fragments (single words) of the name.</li>
                     </ol>
                 </div>
@@ -60,7 +60,7 @@
                     <ol>
                         <li>If you remember the email and password which you were using to submit your data previously, try simply logging in with them.</li>
                         <li>If you do not remember the password, but know for sure which email address you were using, try using the password reset function.</li>
-                        <li>Still no luck? Please <a href="{{ path(constant('App\\ValueObject\\Routing\\RouteName::CONTACT')) }}">contact the maintainer</a>, "<mark class="user-select-all">I want to claim my studio, » NAME/FORMER NAMES HERE «</mark>".</li>
+                        <li>Still no luck? Please <a href="{{ path('rt_contact') }}">contact the maintainer</a>, "<mark class="user-select-all">I want to claim my studio, » NAME/FORMER NAMES HERE «</mark>".</li>
                     </ol>
 
                     <p><span class="badge text-bg-warning">NOTE!</span> You will need to re-verify your email once you sign in for the first time.</p>

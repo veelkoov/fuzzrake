@@ -9,7 +9,6 @@ use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
 use App\Repository\CreatorRepository;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +27,8 @@ class EventsController extends FuzzrakeAbstractController
         parent::__construct($creatorRepository);
     }
 
-    #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
-    #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
+    #[Route(path: '/{id}/edit', name: 'rt_mx_event_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/new', name: 'rt_mx_event_new', methods: ['GET', 'POST'])]
     public function edit(Request $request, ?Event $event): Response
     {
         $event ??= new Event();
@@ -46,7 +45,7 @@ class EventsController extends FuzzrakeAbstractController
         if ($form->isSubmitted() && $this->success($event, $form)) {
             $this->manager->flush();
 
-            return $this->redirectToRoute(RouteName::EVENTS);
+            return $this->redirectToRoute('rt_events');
         }
 
         return $this->render('mx/events/edit.html.twig', [

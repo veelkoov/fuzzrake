@@ -13,7 +13,6 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
 use App\Utils\Mx\GroupedUrls;
-use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -114,11 +113,11 @@ final class UrlRemovalService
 
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
-        $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
+        $cardUrl = $this->primaryBaseUrl.$this->router->generate('rt_main',
             ['_fragment' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::USER_IU_FORM_START,
+        $updateUrl = $this->primaryBaseUrl.$this->router->generate('rt_iu_form_step_start',
             ['creatorId' => $creator->getLastCreatorId()], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
+        $contactUrl = $this->primaryBaseUrl.$this->router->generate('rt_contact',
             [], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         $subject = $data->hide ? "Your card at $this->websiteShortName has been hidden"

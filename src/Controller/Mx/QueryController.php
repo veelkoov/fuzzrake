@@ -7,7 +7,6 @@ namespace App\Controller\Mx;
 use App\Form\Mx\QueryType;
 use App\Utils\DataQuery;
 use App\Utils\Enforce;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/mx/query')]
 class QueryController extends FuzzrakeAbstractController
 {
-    #[Route(path: '/', name: RouteName::MX_QUERY)]
+    #[Route(path: '/', name: 'rt_mx_query')]
     public function query(Request $request): Response
     {
         $form = $this->createForm(QueryType::class);

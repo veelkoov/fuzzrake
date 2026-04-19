@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\HttpClient\Utils;
 
+use App\Utils\Exceptions\UncheckedException;
 use App\Utils\Json;
 use InvalidArgumentException;
 use JsonException;
-use RuntimeException;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -46,7 +46,7 @@ class CookieJarPersistence
         try {
             $this->filesystem->dumpFile($this->cachePath, Json::encode($cookieStrings, JSON_PRETTY_PRINT));
         } catch (JsonException $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 }

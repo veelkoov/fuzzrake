@@ -14,14 +14,14 @@ use App\Repository\CreatorRepository;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Exceptions\UnbelievableRuntimeException;
+use App\Utils\Exceptions\UncheckedException;
 use App\Utils\FieldReadInterface;
-use App\Utils\UnbelievableRuntimeException;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
-use RuntimeException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -158,7 +158,7 @@ class ImportService
             $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
             $this->messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS));
         } catch (ExceptionInterface $exception) {
-            throw new RuntimeException(previous: $exception);
+            throw new UncheckedException($exception);
         }
     }
 

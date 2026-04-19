@@ -24,25 +24,25 @@
                     While it is not verified, only a bare minimum of actions is available in your account. If you haven't received the verification email please check your SPAM folder, or request a new message by clicking the button below.
                 </p>
 
-                <a href="{{ path('user_resend_verification_email') }}" class="btn btn-warning btn-large">
+                <a href="{{ path('rt_user_resend_verification_email') }}" class="btn btn-warning btn-large">
                     <i class="fa-solid fa-envelope-circle-check"></i> Re-send verification email
                 </a>
             </div>
         </div>
     {% endif %}
 
-    <a href="{{ path('user_logout') }}" class="btn btn-outline-danger btn-large">
+    <a href="{{ path('rt_user_logout') }}" class="btn btn-outline-danger btn-large">
         <i class="fa-solid fa-user-large-slash"></i> Log out
     </a>
-    <a href="{{ path('user_change_email') }}" class="btn btn-outline-secondary btn-large">
+    <a href="{{ path('rt_user_change_email') }}" class="btn btn-outline-secondary btn-large">
         <i class="fa-solid fa-at"></i> Update email address
     </a>
-    <a href="{{ path('user_change_password') }}" class="btn btn-outline-secondary btn-large">
+    <a href="{{ path('rt_user_change_password') }}" class="btn btn-outline-secondary btn-large">
         <i class="fa-solid fa-key"></i> Change password
     </a>
 
     {% if is_granted('ROLE_CREATOR') %}
-        <a href="{{ path('iu_form_step_start') }}" class="btn btn-outline-primary btn-large">
+        <a href="{{ path('rt_iu_form_step_start') }}" class="btn btn-outline-primary btn-large">
             <i class="fa-solid fa-file-signature"></i> Update your studio information
         </a>
 

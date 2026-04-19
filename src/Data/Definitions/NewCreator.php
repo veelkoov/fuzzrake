@@ -7,9 +7,9 @@ namespace App\Data\Definitions;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Exceptions\UnbelievableRuntimeException;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;
-use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 
 class NewCreator

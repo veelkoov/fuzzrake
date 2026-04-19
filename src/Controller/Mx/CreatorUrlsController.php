@@ -12,7 +12,6 @@ use App\Management\UrlRemovalService;
 use App\Repository\CreatorUrlRepository;
 use App\Utils\Mx\CreatorUrlsSelectionData;
 use App\Utils\Mx\GroupedUrls;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,7 +20,7 @@ use Veelkoov\Debris\Lists\StringList;
 #[Route(path: '/mx/creator_urls')]
 class CreatorUrlsController extends FuzzrakeAbstractController
 {
-    #[Route(path: '/', name: RouteName::MX_CREATORS_URLS)]
+    #[Route(path: '/', name: 'rt_mx_creators_urls')]
     public function index(CreatorUrlRepository $repository): Response
     {
         $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
@@ -31,7 +30,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         ]);
     }
 
-    #[Route('/{creatorId}', name: RouteName::MX_CREATOR_URLS_SELECTION)]
+    #[Route('/{creatorId}', name: 'rt_mx_creator_urls_selection')]
     public function check(Request $request, string $creatorId): Response
     {
         $creator = $this->getCreatorOrThrow404($creatorId);
@@ -43,7 +42,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $urlIds = $data->getChosenUrls()->join(',');
 
-            return $this->redirectToRoute(RouteName::MX_CREATOR_URLS_REMOVAL, [
+            return $this->redirectToRoute('rt_mx_creator_urls_removal', [
                 'creatorId' => $creatorId,
                 'urlIds'    => $urlIds,
             ]);
@@ -56,7 +55,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         ]);
     }
 
-    #[Route('/{creatorId}/{urlIds}', name: RouteName::MX_CREATOR_URLS_REMOVAL)]
+    #[Route('/{creatorId}/{urlIds}', name: 'rt_mx_creator_urls_removal')]
     public function removal(
         UrlRemovalService $service,
         Request $request,
@@ -73,7 +72,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $service->handleRemoval($creator, $data);
 
-            return $this->redirectToRoute(RouteName::MAIN, ['_fragment' => $creatorId]);
+            return $this->redirectToRoute('rt_main', ['_fragment' => $creatorId]);
         }
 
         return $this->render('mx/creator_urls_removal.html.twig', [

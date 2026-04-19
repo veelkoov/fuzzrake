@@ -8,7 +8,6 @@ use App\Entity\Event;
 use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,16 +20,16 @@ class EventsController extends AbstractController
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/events', name: RouteName::EVENTS)]
+    #[Route(path: '/events', name: 'rt_events')]
     #[Cache(maxage: 900, public: true)]
     public function events(EventRepository $eventRepository): Response
     {
         return $this->render('events/events.html.twig', [
             'events' => $eventRepository->getRecent(),
             'feeds'  => [
-                'All updates'              => $this->generateUrl(RouteName::EVENTS_ATOM),
-                'Status updates'           => $this->generateUrl(RouteName::EVENTS_ATOM, ['types' => Event::TYPE_CS_UPDATED]),
-                'Generic and data updates' => $this->generateUrl(RouteName::EVENTS_ATOM, ['types' => Event::TYPE_DATA_UPDATED.','.Event::TYPE_GENERIC]),
+                'All updates'              => $this->generateUrl('rt_events_atom'),
+                'Status updates'           => $this->generateUrl('rt_events_atom', ['types' => Event::TYPE_CS_UPDATED]),
+                'Generic and data updates' => $this->generateUrl('rt_events_atom', ['types' => Event::TYPE_DATA_UPDATED.','.Event::TYPE_GENERIC]),
             ],
         ]);
     }
@@ -38,7 +37,7 @@ class EventsController extends AbstractController
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/events-atom.xml', name: RouteName::EVENTS_ATOM)]
+    #[Route(path: '/events-atom.xml', name: 'rt_events_atom')]
     #[Cache(maxage: 900, public: true)]
     public function events_atom(Request $request, EventRepository $eventRepository): Response
     {

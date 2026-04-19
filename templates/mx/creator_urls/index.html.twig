@@ -35,7 +35,7 @@
 
                 <tr>
                     <td>
-                        <a href="{{ path('mx_creator_edit', {creatorId: url.creator.id}) }}">{{ url.creator.creatorId|default((url.creator|smart).lastCreatorId) }}</a><br>
+                        <a href="{{ path('rt_mx_creator_edit', {creatorId: url.creator.id}) }}">{{ url.creator.creatorId|default((url.creator|smart).lastCreatorId) }}</a><br>
                         {{ url.creator.user.contactPermit.value|default('NO') }}
                     </td>
                     <td class="text-nowrap {{ class }}">
