@@ -15,9 +15,7 @@
 {% block body %}
     <h1>Feedback form</h1>
 
-    <div class="alert alert-warning" role="alert">
-        Adding new makers/studios is suspended until further notice.
-    </div>
+    {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
 
     {{ form_start(form) }}
 

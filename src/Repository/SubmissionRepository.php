@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Data\Submission\Filter;
 use App\Entity\Submission;
+use App\Utils\Collections\StatusToInt;
 use App\Utils\Exceptions\UncheckedException;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
@@ -74,5 +75,19 @@ class SubmissionRepository extends ServiceEntityRepository
         } catch (Exception $exception) {
             throw new UncheckedException($exception);
         }
+    }
+
+    public function getStatusToCount(): StatusToInt
+    {
+        return StatusToInt::mapFrom(
+            $this->createQueryBuilder('d_s')
+                ->select('d_s.status, COUNT(d_s) AS count')
+                ->groupBy('d_s.status')
+                ->orderBy('count', 'DESC')
+                ->getQuery()
+                ->getArrayResult(),
+            // @phpstan-ignore argument.type
+            static fn (array $row, mixed $_) => [$row['status'], $row['count']],
+        );
     }
 }
