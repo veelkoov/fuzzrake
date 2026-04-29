@@ -66,6 +66,16 @@
 
             <hr class="my-3">
             <button id="open-all-new-links" class="btn btn-info">Open all new links</button>
+            <button class="ms-3 btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmail"
+                    aria-expanded="false" aria-controls="collapseEmail">
+                <i class="fa-solid fa-at"></i>
+            </button>
+
+            <div class="collapse collapse mt-3" id="collapseEmail">
+                <div class="card card-body">
+                    <span class="user-select-all">{{ importData.submission.owner.email | default('No email :(') }}</span>
+                </div>
+            </div>
         </div>
         <div class="col-9">
 
