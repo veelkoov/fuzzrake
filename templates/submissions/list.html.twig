@@ -26,55 +26,57 @@
         {{ form_end(filter_form) }}
     {% endif %}
 
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Submitted at</th>
-                <th>Type</th>
-                <th>Maker ID | Maker name</th>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th>Status</th>
-                    <th>Comments</th>
-                {% endif %}
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for submission in submissions_page.items %}
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
                 <tr>
-                    <td class="text-nowrap">{{ submission.id }}</td>
-                    <td class="text-nowrap">{{ submission.submittedAtUtc|fragile_datetime_utc }}</td>
-                    <td>
-                        {%- if submission.isUpdate -%}
-                            <span class="badge {{ submission.status.isActionRequired ? 'text-bg-warning' : 'bg-secondary-subtle text-secondary-emphasis' }}">Update</span>
-                        {%- else -%}
-                            <span class="badge {{ submission.status.isActionRequired ? 'text-bg-success' : 'bg-secondary-subtle text-secondary-emphasis' }}">Inclusion</span>
-                        {%- endif -%}
-                    </td>
-                    <td>
-                        <span class="font-monospace">{{ submission.reader.get('MAKER_ID'|as_field) }}</span> | {{ submission.reader.get('NAME'|as_field) }}
-                    </td>
+                    <th>ID</th>
+                    <th>Submitted at</th>
+                    <th>Type</th>
+                    <th>Maker ID | Maker name</th>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <td>{{ submission.status.label }}</td>
-                        <td>{{ submission.comment|nl2br }}</td>
+                        <th>Status</th>
+                        <th>Comments</th>
                     {% endif %}
-                    <td>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a class="text-decoration-none" href="{{ path('rt_submission_manage', {id: submission.id}) }}">
-                                Manage
-                            </a>
-                            |
-                        {% endif %}
-
-                        <a class="text-decoration-none" href="{{ path('rt_submission_review', {id: submission.id}) }}">
-                            Review
-                        </a>
-                    </td>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for submission in submissions_page.items %}
+                    <tr>
+                        <td class="text-nowrap">{{ submission.id }}</td>
+                        <td class="text-nowrap">{{ submission.submittedAtUtc|fragile_datetime_utc }}</td>
+                        <td>
+                            {%- if submission.isUpdate -%}
+                                <span class="badge {{ submission.status.isActionRequired ? 'text-bg-warning' : 'bg-secondary-subtle text-secondary-emphasis' }}">Update</span>
+                            {%- else -%}
+                                <span class="badge {{ submission.status.isActionRequired ? 'text-bg-success' : 'bg-secondary-subtle text-secondary-emphasis' }}">Inclusion</span>
+                            {%- endif -%}
+                        </td>
+                        <td>
+                            <span class="font-monospace">{{ submission.reader.get('MAKER_ID'|as_field) }}</span> | {{ submission.reader.get('NAME'|as_field) }}
+                        </td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>{{ submission.status.label }}</td>
+                            <td>{{ submission.comment|nl2br }}</td>
+                        {% endif %}
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="text-decoration-none" href="{{ path('rt_submission_manage', {id: submission.id}) }}">
+                                    Manage
+                                </a>
+                                |
+                            {% endif %}
+
+                            <a class="text-decoration-none" href="{{ path('rt_submission_review', {id: submission.id}) }}">
+                                Review
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {{ pagination(submissions_page, path('rt_submissions_list', {page: '1'}), 'submissions') }}
 {% endblock %}
