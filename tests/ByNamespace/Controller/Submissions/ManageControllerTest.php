@@ -396,4 +396,10 @@ class ManageControllerTest extends FuzzrakeWebTestCase
 
         self::assertSelectorNotExists('#creator-hidden-warning');
     }
+
+    public function testSocialLoads(): void
+    {
+        self::$client->request('GET', '/submissions/social');
+        self::assertResponseStatusCodeIs(200);
+    }
 }

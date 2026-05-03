@@ -51,7 +51,7 @@ class ManageController extends AbstractController
         $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
             static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
-        return $this->render('mx/submissions/social.html.twig', [
+        return $this->render('submissions/social.html.twig', [
             'creators' => $creators,
         ]);
     }
