@@ -1,6 +1,7 @@
 ---
 - name: "Execute: composer install"
-  ansible.builtin.command: "docker exec -ti {{ php_fpm_container_name | quote }} composer install --no-dev"
+  ansible.builtin.command:
+    cmd: "docker exec {{ php_fpm_container_name | quote }} composer install --no-dev"
   register: "environment_cmd_res"
   changed_when: '"Nothing to install, update or remove" not in environment_cmd_res.stdout'
 
