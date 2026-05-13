@@ -68,7 +68,7 @@ class ReviewController extends AbstractController
             if ($filterForm->isSubmitted() && $filterForm->isValid()) {
                 $request->getSession()->set(self::SESSION_SUBMISSIONS_FILTER, $filter);
 
-                $this->redirectToRoute('rt_submissions_list', ['page' => $page]);
+                return $this->redirectToRoute('rt_submissions_list', ['page' => $page]);
             }
         } else {
             $filter = new Filter();
