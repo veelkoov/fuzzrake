@@ -54,7 +54,9 @@ Basically, to maximize the value of stuff which makes it to the side.
     - Commissions should be allowed for people who definitely have experience **in fursuit making**. Art like pictures, badges, etc., is not fursuit-related. Drawing makes you an artist who has some talent, but does not imply you can sew.
     - _User_ should not be forced to scroll through tens of unrelated posts.
 - [ ] Selected photos (if applicable) are exclusively of the makers' creations.
-    - Photos selected for getfursu.it must show only creations of the submitted studio. No other fursuits should be seen. This is confusing to _users_. Group photos may not be suitable.
+    - No group photos (unless only the maker's fursuits are shown)
+    - No collabs
+    - No photobombs
 - [ ] Links are OK
     - Work-in-progress websites, depending on how much they've progressed, may be troubling, may be downright frustrating and time-wasting. They make finding actual helpful information more difficult.
     - Registration/logging in should not be required.
