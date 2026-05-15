@@ -20,7 +20,9 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('message', TextareaType::class)
+            ->add('message', TextareaType::class, [
+                'empty_data' => '',
+            ])
         ;
     }
 
