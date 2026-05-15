@@ -32,13 +32,13 @@
             {{ _self.votes(submission, topic, 0) }}
         </div>
 
-        <div class="card-body topic-text">{{ topic.message|nl2br }}</div>
+        <div class="card-body topic-text pb-2">{{ topic.message|nl2br }}</div>
 
         {% if topic.responses is not empty %}
-            <div class="card-body ps-5 pb-0">
+            <div class="card-body ps-5 py-0">
                 {% for response in topic.responses %}
                     <div class="response" id="response-{{ response.id }}">
-                        <p class="mb-1 response-header">
+                        <p class="response-header mb-1">
                             <strong>{{ response.user.nickname }}</strong>
                             responded on {{ response.postedUtc|fragile_datetime_utc }}
                             <span class="text-body-tertiary">(#{{ response.id }})</span>
@@ -47,18 +47,23 @@
                             {{ _self.votes(submission, response, 0) }}
                         </p>
 
-                        <p class="response-text">{{ response.message|nl2br }}</p>
+                        <p class="response-text mt-0 mb-2">{{ response.message|nl2br }}</p>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
 
-        <div class="card-body ps-5">
-            {{ form_start(response_form) }}
-            {{ form_widget(response_form.message) }}
-            {{ form_errors(response_form.message) }}
-            <button type="submit" class="btn btn-primary btn-sm mt-2">Respond</button>
-            {{ form_end(response_form) }}
+        <div class="card-body ps-5 pt-0">
+            {% set response_form_id = 'response-form-' ~ topic.id %}
+            <a href="#{{ response_form_id }}" data-bs-toggle="collapse" class="text-decoration-none">Respond</a>
+
+            <div class="collapse" id="{{ response_form_id }}">
+                {{ form_start(response_form) }}
+                {{ form_widget(response_form.message) }}
+                {{ form_errors(response_form.message) }}
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Send</button>
+                {{ form_end(response_form) }}
+            </div>
         </div>
     </div>
 {% endfor %}

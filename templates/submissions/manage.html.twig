@@ -88,17 +88,7 @@
 
                 <tbody>
                     {% for field in fields %}
-                        {% set submitted_different = importData.submittedDifferent(field) %}
-                        {% set fixes_applied = importData.fixesApplied(field) %}
-                        {% set is_changing = importData.isChanging(field) %}
-
-                        {% set row_class = (submitted_different ? 'submitted-different' : 'submitted-same')
-                            ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
-                            ~ ' ' ~ (is_changing ? 'changing' : 'not-changing')
-                            ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
-                            ~ ' ' ~ (field.isFreeForm ? 'free-form' : 'structured')
-                        %}
-
+                        {% set row_class = submission_row_classes(importData, field) %}
                         {% set new_value_class = importData.fixedData|is_valid(field) ? '' : 'table-danger' %}
 
                         <tr class="{{ row_class }}">

@@ -12,7 +12,7 @@
 
         <tbody>
             {% for field in fields %}
-                {% set row_class = import_data.isChanging(field) ? 'changing' : 'not-changing' %}
+                {% set row_class = submission_row_classes(import_data, field) %}
 
                 <tr class="{{ row_class }}">
                     <td>
