@@ -50,9 +50,10 @@ Basically, to maximize the value of stuff which makes it to the side.
     - Email is the most universal way of contact. Contact form with response to the email is OK.
     - It is not OK to force someone to register in any service/social to be able to message a maker.
         - Example: I cannot message you through Facebook, my account is blocked, and I'm not giving them a scan of my ID, end of story.
-- [ ] It is easy to find examples of prior work.
+- [ ] Examples of prior work are easy to find and are sufficient.
     - Commissions should be allowed for people who definitely have experience **in fursuit making**. Art like pictures, badges, etc., is not fursuit-related. Drawing makes you an artist who has some talent, but does not imply you can sew.
     - _User_ should not be forced to scroll through tens of unrelated posts.
+    - _Maker/studio_ cannot offer what they can't prove they are able to deliver. E.g. if they did only handpaws and tails in the past, they can't advertise head commissions.
 - [ ] Selected photos (if applicable) are exclusively of the makers' creations.
     - No group photos (unless only the maker's fursuits are shown)
     - No collabs
