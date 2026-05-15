@@ -6,11 +6,13 @@ namespace App\Twig;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator as CreatorE;
+use App\IuHandling\Import\ImportData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
 use App\Utils\StrUtils;
 use Composer\Pcre\Preg;
 use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
 class AdminExtensions
 {
@@ -102,5 +104,15 @@ class AdminExtensions
     public function filterFilterByQuery(array $input, DataQuery $query): string
     {
         return implode(', ', $query->filterList($input));
+    }
+
+    #[AsTwigFunction('submission_row_classes')]
+    public function submissionRowClasses(ImportData $importData, Field $field): string
+    {
+        return ($importData->submittedDifferent($field) ? 'submitted-different' : 'submitted-same')
+            .' '.($importData->fixesApplied($field) ? 'fixes-applied' : 'not-fixed')
+            .' '.($importData->isChanging($field) ? 'changing' : 'not-changing')
+            .' '.($field->isInIuForm() ? 'in-iu-form' : 'automated')
+            .' '.($field->isFreeForm() ? 'free-form' : 'structured');
     }
 }
