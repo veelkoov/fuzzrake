@@ -229,7 +229,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         $topicCard = $this->getTopicCard($topicNumber);
         $topicPostId = $this->postIdFrom($topicCard, 'topic');
 
-        $form = $topicCard->selectButton('Respond')->form([
+        $form = $topicCard->selectButton('Send')->form([
             "topic_{$topicPostId}[message]" => $responseText,
         ]);
         self::submitValid($form);
