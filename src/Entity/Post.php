@@ -25,9 +25,6 @@ class Post
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $postedUtc;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private ?DateTimeImmutable $editedUtc = null;
-
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
@@ -76,18 +73,6 @@ class Post
     public function getPostedUtc(): DateTimeImmutable
     {
         return $this->postedUtc;
-    }
-
-    public function getEditedUtc(): ?DateTimeImmutable
-    {
-        return $this->editedUtc;
-    }
-
-    public function setEditedUtc(?DateTimeImmutable $editedUtc): self
-    {
-        $this->editedUtc = $editedUtc;
-
-        return $this;
     }
 
     public function getUser(): User
