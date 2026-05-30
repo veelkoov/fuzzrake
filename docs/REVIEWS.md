@@ -58,8 +58,11 @@ Basically, to maximize the value of stuff which makes it to the side.
     - No group photos (unless only the maker's fursuits are shown)
     - No collabs
     - No photobombs
-- [ ] Links are OK
+- [ ] Links are OK.
     - Work-in-progress websites, depending on how much they've progressed, may be troubling, may be downright frustrating and time-wasting. They make finding actual helpful information more difficult.
     - Registration/logging in should not be required.
         - Login/registration requirement MAY cause the _website/social/account_ to be disregarded during review as non-existent ("it does not count, you have virtually no website"). Because if the user cannot access it, they cannot check your content.
     - Showcasing art may be OK to show your related artistic skills; a food blog doesn't help choosing a fursuit maker.
+- [ ] FursuitReview link is in place.
+    - Make sure FSR link has been added in case the maker forgot, or received a review AFTER submitting.
+    - Leave a note if there is FSR page for the maker/studio; after adding, the FSR page requires an update.
