@@ -26,19 +26,15 @@
                 </tbody>
             </table>
 
-            <div class="card border-danger mb-3">
-                <div class="card-body text-danger">
-                    <p class="card-text" style="font-weight: bold; font-size: 100%">Number of reviewers: {{ reviewers_count }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md">
             <ul>
                 <li><em>{{ constant('App\\Data\\Submission\\Status::NEW').label }}</em> - submissions before initial verification.</li>
                 <li><em>{{ constant('App\\Data\\Submission\\Status::IN_REVIEW').label }}</em> - submission after the initial verification, available to the reviewers.</li>
                 <li><em>{{ constant('App\\Data\\Submission\\Status::AWAITING_RESPONSE').label }}</em> - an email has been sent to the maker, and there was no response yet.</li>
             </ul>
+        </div>
+
+        <div class="col-md">
+            <img alt="Number of studios/makers added per month, showing none added in 2026." src="{{ asset('images/creators_added_per_month.png') }}" class="img-fluid">
         </div>
     </div>
 
