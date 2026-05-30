@@ -13,20 +13,20 @@ class ListsTest extends TestCase
 {
     public function testIntersect(): void
     {
-        self::assertEqualsCanonicalizing(['aaa', 'ccc'], Lists::intersect(
+        self::assertSame(['aaa', 'ccc'], Lists::intersect(
             ['aaa', 'bbb', 'ccc', 'ddd'],
             ['aaa', 'eee', 'ccc', 'fff'],
         ));
-        self::assertEqualsCanonicalizing(['aaa', 'ccc'], array_intersect(
+        self::assertSame(['aaa', 2 => 'ccc'], array_intersect(
             ['aaa', 'bbb', 'ccc', 'ddd'],
             ['aaa', 'eee', 'ccc', 'fff'],
         ));
 
-        self::assertEqualsCanonicalizing(['3'], Lists::intersect(
+        self::assertSame(['3'], Lists::intersect(
             ['3', '2', '1', ''],
             ['3', 2, true, false],
         ));
-        self::assertEqualsCanonicalizing(['3', '2', '1', ''], array_intersect(
+        self::assertSame(['3', '2', '1', ''], array_intersect(
             ['3', '2', '1', ''],
             ['3', 2, true, false],
         ));

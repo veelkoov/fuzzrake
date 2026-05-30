@@ -16,7 +16,10 @@ final class LanguagesFixer extends AbstractListFixer
     private readonly ConfigurableStringFixer $fixer;
 
     /**
-     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string} $languages
+     * @param array{
+     *     nested_fixer: array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string},
+     *     regexp: string,
+     * } $languages
      */
     public function __construct(
         #[Autowire(param: 'languages')] array $languages,
@@ -24,7 +27,7 @@ final class LanguagesFixer extends AbstractListFixer
     ) {
         $this->replacementPattern = new Pattern($languages['regexp'], 'i');
 
-        $this->fixer = new ConfigurableStringFixer($languages);
+        $this->fixer = new ConfigurableStringFixer($languages['nested_fixer']);
     }
 
     #[Override]
