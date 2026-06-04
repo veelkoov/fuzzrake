@@ -6,7 +6,7 @@ I, Veelkoov, am not a native English speaker. I am more of an "introvert" person
 
 I live in central Europe, and work in an office, so I tend to work on getfursu.it on weekends and evenings, including responding to messages.
 
-The system which we will be using is very limited and will be improved, possibly often based on your feedback.
+The system which we will be using is currently **very simple and limited in features**. That's because this is an experiment, and I didn't want to invest much time into something which may not succeed. The software may be improved, possibly often based on your feedback, depending on how the experiment goes.
 
 The documents/information you may find helpful is:
 - https://getfursu.it/queue
