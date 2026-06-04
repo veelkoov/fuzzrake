@@ -65,4 +65,4 @@ Basically, to maximize the value of stuff which makes it to the side.
     - Showcasing art may be OK to show your related artistic skills; a food blog doesn't help choosing a fursuit maker.
 - [ ] FursuitReview link is in place.
     - Make sure FSR link has been added in case the maker forgot, or received a review AFTER submitting.
-    - Leave a note if there is FSR page for the maker/studio; after adding, the FSR page requires an update.
+    - Leaving a note in the review about the FSR is also important so that the FursuitReview studio/maker page will be linked back to getfursu.it.
