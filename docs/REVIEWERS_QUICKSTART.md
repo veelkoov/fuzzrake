@@ -11,3 +11,7 @@ The system which we will be using is very limited and will be improved, possibly
 The documents/information you may find helpful is:
 - https://getfursu.it/queue
 - [REVIEWS overview and checklist](./REVIEWS.md)
+
+Reviews system is available here after logging in: https://getfursu.it/submissions/1/
+
+In one sentence, as a reviewer, you will be navigating the list of submissions, and for each of them going through the checklist, verifying, commenting, and voting.
