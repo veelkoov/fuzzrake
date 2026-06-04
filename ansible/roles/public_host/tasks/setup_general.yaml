@@ -13,6 +13,7 @@
     name:
       - "@nodejs:24/common"
       - "augeas-libs" # Used by Certbot
+      - "dnf-automatic"
       - "firewalld"
       - "git"
       - "python3-firewall"
@@ -56,3 +57,16 @@
   ansible.builtin.hostname:
     name: "{{ fqdn }}"
     use: "systemd"
+
+- name: "Enable auto-restart after updating"
+  ansible.builtin.lineinfile:
+    insertafter: '^\[commands\]$'
+    line: "reboot = when-changed"
+    path: "/etc/dnf/automatic.conf"
+    regexp: "^reboot *="
+
+- name: "Enable dnf-automatic-install.timer"
+  ansible.builtin.systemd_service:
+    enabled: true
+    name: "dnf-automatic-install.timer"
+    state: "started"
