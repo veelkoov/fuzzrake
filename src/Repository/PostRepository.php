@@ -26,11 +26,11 @@ class PostRepository extends ServiceEntityRepository
     {
         // Optimization opportunity: return COUNT of votes instead of entities
         return $this->createQueryBuilder('d_p_topic')
-            ->leftJoin('d_p_topic.responses', 'd_p_response')
-            ->join('d_p_topic.user', 'd_u1')
-            ->leftJoin('d_p_topic.votes', 'd_v1')
-            ->leftJoin('d_p_response.user', 'd_u2')
-            ->leftJoin('d_p_response.votes', 'd_v2')
+            ->leftJoin('d_p_topic.responses', 'd_p_response')->addSelect('d_p_response')
+            ->join('d_p_topic.user', 'd_u1')->addSelect('d_u1')
+            ->leftJoin('d_p_topic.votes', 'd_v1')->addSelect('d_v1')
+            ->leftJoin('d_p_response.user', 'd_u2')->addSelect('d_u2')
+            ->leftJoin('d_p_response.votes', 'd_v2')->addSelect('d_v2')
             ->where('d_p_topic.submission = :submission')
             ->andWhere('d_p_topic.parent IS NULL')
             ->setParameter('submission', $submission)
