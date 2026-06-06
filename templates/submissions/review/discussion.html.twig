@@ -18,18 +18,22 @@
     </span>
 {% endmacro %}
 
+{% macro post_header(submission, post, action) %}
+    <strong>{{ post.user.nickname }}</strong>
+    {{ action }} on {{ post.postedUtc|fragile_datetime_utc }}
+    <span class="text-body-tertiary">(#{{ post.id }})</span>
+
+    {{ _self.votes(submission, post, 1) }}
+    {{ _self.votes(submission, post, 0) }}
+{% endmacro %}
+
 {% for topic_items in topics %}
     {% set topic = topic_items.entity %}
     {% set response_form = topic_items.response_form %}
 
     <div class="card mb-2 topic" id="topic-{{ topic.id }}">
         <div class="card-header topic-header">
-            <strong>{{ topic.user.nickname }}</strong>
-            wrote on {{ topic.postedUtc|fragile_datetime_utc }}
-            <span class="text-body-tertiary">(#{{ topic.id }})</span>
-
-            {{ _self.votes(submission, topic, 1) }}
-            {{ _self.votes(submission, topic, 0) }}
+            {{ _self.post_header(submission, topic, 'wrote') }}
         </div>
 
         <div class="card-body topic-text pb-2">{{ topic.message|nl2br }}</div>
@@ -39,12 +43,7 @@
                 {% for response in topic.responses %}
                     <div class="response" id="response-{{ response.id }}">
                         <p class="response-header mb-1">
-                            <strong>{{ response.user.nickname }}</strong>
-                            responded on {{ response.postedUtc|fragile_datetime_utc }}
-                            <span class="text-body-tertiary">(#{{ response.id }})</span>
-
-                            {{ _self.votes(submission, response, 1) }}
-                            {{ _self.votes(submission, response, 0) }}
+                            {{ _self.post_header(submission, response, 'responded') }}
                         </p>
 
                         <p class="response-text mt-0 mb-2">{{ response.message|nl2br }}</p>
