@@ -20,11 +20,23 @@
 
 {% macro post_header(submission, post, action) %}
     <strong>{{ post.user.nickname }}</strong>
-    {{ action }} on {{ post.postedUtc|fragile_datetime_utc }}
-    <span class="text-body-tertiary">(#{{ post.id }})</span>
+    <sub>
+        {{ action }} on {{ post.postedUtc|fragile_datetime_utc }}
+        <span class="text-body-tertiary">(#{{ post.id }})</span>
+    </sub>
 
     {{ _self.votes(submission, post, 1) }}
     {{ _self.votes(submission, post, 0) }}
+
+    {% if access_decision('edit', post).isGranted %}
+        &nbsp; <a href="{{ path('rt_edit_post', {id: post.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+    {% endif %}
+{% endmacro %}
+
+{% macro post_footer(post) %}
+    {% if post.editedUtc %}
+        <p class="text-end m-0"><sub>Edited {{ post.postedUtc|fragile_datetime_utc }}</sub></p>
+    {% endif %}
 {% endmacro %}
 
 {% for topic_items in topics %}
@@ -36,7 +48,11 @@
             {{ _self.post_header(submission, topic, 'wrote') }}
         </div>
 
-        <div class="card-body topic-text pb-2">{{ topic.message|nl2br }}</div>
+        <div class="card-body pb-2">
+            <p class="topic-text m-0">{{ topic.message|nl2br }}</p>
+
+            {{ _self.post_footer(topic) }}
+        </div>
 
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 py-0">
@@ -46,7 +62,11 @@
                             {{ _self.post_header(submission, response, 'responded') }}
                         </p>
 
-                        <p class="response-text mt-0 mb-2">{{ response.message|nl2br }}</p>
+                        <div class="mt-0 mb-2">
+                            <p class="response-text m-0">{{ response.message|nl2br }}</p>
+
+                            {{ _self.post_footer(response) }}
+                        </div>
                     </div>
                 {% endfor %}
             </div>

@@ -19,6 +19,7 @@ use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -135,8 +136,8 @@ class ReviewController extends AbstractController
 
     #[IsGranted('vote', 'post')]
     #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'rt_vote_post')]
-    public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
-        Request $request, bool $positive): Response
+    public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post,
+        #[CurrentUser] User $user, bool $positive): Response
     {
         $votes = $this->postVoteRepository->findFor($user, $post);
         $shouldRecreateVote = 0 === count($votes) || array_first($votes)->isPositive() !== $positive;
@@ -151,6 +152,13 @@ class ReviewController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectToReview($submission);
+    }
+
+    #[IsGranted('edit', 'post')] // TODO: TEST?
+    #[Route(path: '/edit-post/{id}', name: 'rt_edit_post')]
+    public function editPost(#[MapEntity] Post $post): Response
+    {
+        throw new RuntimeException('Not implemented');
     }
 
     private function redirectToReview(Submission $submission): RedirectResponse
