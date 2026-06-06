@@ -62,7 +62,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     }
 
     /**
-     * @return list<array{int, int, int, int, int}>
+     * @return list<array{int, int, int, int, int, int}>
      */
     public static function paginatedResultsDataProvider(): array
     {

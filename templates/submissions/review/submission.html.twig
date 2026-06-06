@@ -1,35 +1,33 @@
-<div class="table-responsive">
-    <table class="table table-sm" id="submission-review">
-        <thead>
-            <tr>
-                <th>Field</th>
+<table class="table table-sm" id="submission-review">
+    <thead>
+        <tr>
+            <th>Field</th>
+            {% if import_data.isUpdate %}
+                <th>Old data</th>
+            {% endif %}
+            <th>New data</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for field in fields %}
+            {% set row_class = submission_row_classes(import_data, field) %}
+
+            <tr class="{{ row_class }}">
+                <td>
+                    {{ field.name|replace({_: '<wbr>_'})|raw }}
+                </td>
+
                 {% if import_data.isUpdate %}
-                    <th>Old data</th>
+                    <td class="before text-break">
+                        {{ field|difference('danger', import_data.subjectCreator, import_data.fixedData)|link_urls|nl2br }}
+                    </td>
                 {% endif %}
-                <th>New data</th>
+
+                <td class="after text-break">
+                    {{ field|difference('success', import_data.fixedData, import_data.subjectCreator)|link_urls|nl2br }}
+                </td>
             </tr>
-        </thead>
-
-        <tbody>
-            {% for field in fields %}
-                {% set row_class = submission_row_classes(import_data, field) %}
-
-                <tr class="{{ row_class }}">
-                    <td>
-                        {{ field.name|replace({_: '<wbr>_'})|raw }}
-                    </td>
-
-                    {% if import_data.isUpdate %}
-                        <td class="before">
-                            {{ field|difference('danger', import_data.subjectCreator, import_data.fixedData)|link_urls }}
-                        </td>
-                    {% endif %}
-
-                    <td class="after">
-                        {{ field|difference('success', import_data.fixedData, import_data.subjectCreator)|link_urls }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        {% endfor %}
+    </tbody>
+</table>

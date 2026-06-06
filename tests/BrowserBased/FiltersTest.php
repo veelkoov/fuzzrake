@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBased;
 
+use App\Data\Definitions\Ages;
 use App\Tests\TestUtils\Cases\FuzzrakePantherTestCase;
-use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\FiltersData;
+use App\Tests\TestUtils\UserCreator;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -18,8 +19,44 @@ use PHPUnit\Framework\Attributes\Large;
 #[Large]
 class FiltersTest extends FuzzrakePantherTestCase
 {
-    use FiltersTestTrait;
     use MainPageTestsTrait;
+
+    /**
+     * @return iterable<string, array{list<Creator>, array<string, list<string>|bool>, list<string>}>
+     */
+    public static function filtersInBrowserDataProvider(): iterable
+    {
+        $checklistCreators = [
+            self::creator('TEST001', false, true),
+            self::creator('TEST002', false, false),
+            self::creator('TEST003', true, false),
+        ];
+        yield 'minor' => [$checklistCreators, ['isAdult' => false], ['TEST001']];
+        yield 'adult_sfw' => [$checklistCreators, ['isAdult' => true, 'wantsSfw' => true], ['TEST001', 'TEST002']];
+        yield 'adult_all' => [$checklistCreators, ['isAdult' => true, 'wantsSfw' => false], ['TEST001', 'TEST002', 'TEST003']];
+
+        $stylesCreators = [
+            self::creator('TEST001', styles: ['Toony']),
+            self::creator('TEST002', styles: [], otherStyles: ['Unique style']),
+            self::creator('TEST003', styles: [], otherStyles: []),
+        ];
+        yield 'styles_toony' => [$stylesCreators, ['styles' => ['Toony']], ['TEST001']];
+        yield 'styles_unknown' => [$stylesCreators, ['styles' => ['Other']], ['TEST002']];
+        yield 'styles_other' => [$stylesCreators, ['styles' => ['Unknown']], ['TEST003']];
+
+        $openForCreators = [
+            self::creator('TEST001', trackingIssues: true),
+            self::creator('TEST002', notTracked: true),
+        ];
+        yield 'op_for_has_issues' => [$openForCreators, ['openFor' => ['Tracking issues']], ['TEST001']];
+        yield 'op_for_not_tracked' => [$openForCreators, ['openFor' => ['Not tracked']], ['TEST002']];
+
+        $speciesCreators = [
+            self::creator('TEST001', speciesDoes: ['With antlers']),
+            self::creator('TEST002', speciesDoes: ['Fantasy creatures']),
+        ];
+        yield 'some_species' => [$speciesCreators, ['species' => ['Fantasy creatures']], ['TEST002']];
+    }
 
     /**
      * @param list<Creator>                    $creators
@@ -27,12 +64,13 @@ class FiltersTest extends FuzzrakePantherTestCase
      * @param list<string>                     $expectedCreatorIds
      *
      * @throws WebDriverException|JsonException
+     *
+     * Test filters by selecting the values by checkboxes' labels
      */
-    #[DataProvider('filterChoicesDataProvider')]
+    #[DataProvider('filtersInBrowserDataProvider')]
     public function testFiltersInBrowser(array $creators, array $filtersSet, array $expectedCreatorIds): void
     {
         self::persistAndFlush(...$creators, ...FiltersData::entitiesFrom($creators));
-        $this->clearCache();
 
         self::$client->request('GET', '/index.php/');
 
@@ -57,7 +95,7 @@ class FiltersTest extends FuzzrakePantherTestCase
             }
 
             foreach ($values as $value) {
-                self::$client->findElement(WebDriverBy::xpath("//input[@name=\"{$filter}[]\"][@value=\"$value\"]"))->click();
+                self::$client->findElement(WebDriverBy::xpath("//div[@id = \"filter-body-$filter\"]//label[contains(., \"$value\")]"))->click();
             }
         }
 
@@ -84,5 +122,33 @@ class FiltersTest extends FuzzrakePantherTestCase
             $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/following-sibling::fieldset';
             self::waitUntilShows($xpath);
         }
+    }
+
+    /**
+     * @param list<string> $styles
+     * @param list<string> $speciesDoes
+     * @param list<string> $openFor
+     * @param list<string> $otherStyles
+     */
+    private static function creator(string $creatorIdAndName, bool $nsfw = false, bool $worksWithMinors = true,
+        array $styles = [], array $otherStyles = [], array $openFor = [], bool $trackingIssues = false,
+        bool $notTracked = false, array $speciesDoes = [], string $inactiveReason = ''): Creator
+    {
+        return UserCreator::get()
+            ->setCreatorId($creatorIdAndName)
+            ->setName($creatorIdAndName)
+            ->setStyles($styles)
+            ->setOpenFor($openFor)
+            ->setSpeciesDoes($speciesDoes)
+            ->setAges(Ages::ADULTS)
+            ->setNsfwSocial($nsfw)
+            ->setNsfwWebsite($nsfw)
+            ->setDoesNsfw($nsfw)
+            ->setWorksWithMinors($worksWithMinors)
+            ->setOtherStyles($otherStyles)
+            ->setCsTrackerIssue($trackingIssues)
+            ->setCommissionsUrls($notTracked ? [] : ['https://example.com/'])
+            ->setInactiveReason($inactiveReason)
+        ;
     }
 }
