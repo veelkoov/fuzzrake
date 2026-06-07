@@ -48,8 +48,8 @@ final class PostVoter extends Voter
         }
 
         return match ($attribute) {
-            self::VOTE => $post->getUser() !== $user,
-            self::EDIT => $post->getUser() === $user,
+            self::VOTE => $post->getUser() !== $user, // Allow voting on posts by other users only
+            self::EDIT => $post->getUser() === $user, // Allow editing own posts only
             default => false,
         };
     }
