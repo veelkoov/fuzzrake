@@ -1,0 +1,12 @@
+{% extends 'submissions/_base.html.twig' %}
+
+{% block title %}Edit message #{{ post.id }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {{ form_start(post_form) }}
+    {{ form_row(post_form.message) }}
+    <button type="submit" class="btn btn-primary">Update</button>
+    {{ form_end(post_form) }}
+{% endblock %}

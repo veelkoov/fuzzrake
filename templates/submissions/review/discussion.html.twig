@@ -35,7 +35,7 @@
 
 {% macro post_footer(post) %}
     {% if post.editedUtc %}
-        <p class="text-end m-0"><sub>Edited {{ post.postedUtc|fragile_datetime_utc }}</sub></p>
+        <p class="text-end m-0"><sub>Edited {{ post.editedUtc|fragile_datetime_utc }}</sub></p>
     {% endif %}
 {% endmacro %}
 

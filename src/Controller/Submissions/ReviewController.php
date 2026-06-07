@@ -18,8 +18,8 @@ use App\IuHandling\Import\ImportService;
 use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
+use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -156,9 +156,21 @@ class ReviewController extends AbstractController
 
     #[IsGranted('edit', 'post')] // TODO: TEST?
     #[Route(path: '/edit-post/{id}', name: 'rt_edit_post')]
-    public function editPost(#[MapEntity] Post $post): Response
+    public function editPost(Request $request, #[MapEntity] Post $post): Response
     {
-        throw new RuntimeException('Not implemented');
+        $form = $this->createForm(PostType::class, $post)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setEditedUtc(UtcClock::now());
+            $this->entityManager->flush();
+
+            return $this->redirectToReview($post->getSubmission()); // TODO: Anchor
+        }
+
+        return $this->render('submissions/post_edit.html.twig', [
+            'post' => $post,
+            'post_form' => $form,
+        ]);
     }
 
     private function redirectToReview(Submission $submission): RedirectResponse
