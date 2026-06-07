@@ -155,7 +155,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
             $expectedDownvotes = -$topicData[2];
 
             $topicCard = $topicCards->eq($topicIndex);
-            $topicPostId = $this->postIdFrom($topicCard, 'topic'); // For form and links validation
+            $topicPostId = $this->postIdFrom($topicCard); // For form and links validation
 
             // Verify topic text
             $topicText = $topicCard->filter('.topic-text')->text();
@@ -176,7 +176,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
                 $expectedDownvotes = -$responseData[2];
 
                 $responseDiv = $responseDivs->eq($responseIndex);
-                $responsePostId = $this->postIdFrom($responseDiv, 'response'); // For links validation
+                $responsePostId = $this->postIdFrom($responseDiv); // For links validation
 
                 // Verify response text
                 $responseText = $responseDiv->filter('.response-text')->text();
@@ -227,7 +227,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
     private function respondToTopic(int $topicNumber, string $responseText): void
     {
         $topicCard = $this->getTopicCard($topicNumber);
-        $topicPostId = $this->postIdFrom($topicCard, 'topic');
+        $topicPostId = $this->postIdFrom($topicCard);
 
         $form = $topicCard->selectButton('Send')->form([
             "topic_{$topicPostId}[message]" => $responseText,
@@ -235,16 +235,13 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::submitValid($form);
     }
 
-    private function postIdFrom(Crawler $crawler, string $kind): int
+    private function postIdFrom(Crawler $crawler): int // grep-code-post-id-anchor
     {
         self::assertCount(1, $crawler);
 
         $idAttr = $crawler->attr('id') ?? '';
-        $idPrefix = $kind.'-';
-        self::assertStringStartsWith($idPrefix, $idAttr);
-
-        $postId = (int) str_strip_prefix($idAttr, $idPrefix);
-        self::assertSame($idAttr, "$idPrefix$postId");
+        $postId = (int) str_strip_prefix($idAttr, 'post-');
+        self::assertSame($idAttr, "post-$postId");
 
         return $postId;
     }
