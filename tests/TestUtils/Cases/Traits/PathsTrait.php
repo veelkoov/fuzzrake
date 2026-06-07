@@ -26,6 +26,11 @@ trait PathsTrait
         return "/submission/$submissionId/vote-post/$postId/$positive";
     }
 
+    protected function getPostEditPath(Post $postId): string
+    {
+        return "/edit-post/{$postId->getId()}";
+    }
+
     protected function getManagePath(Submission|int|null $submissionId): string
     {
         $submissionId = Enforce::int($submissionId instanceof Submission ? $submissionId->getId() : $submissionId);
