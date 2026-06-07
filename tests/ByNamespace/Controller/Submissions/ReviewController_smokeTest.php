@@ -20,12 +20,6 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
     public const string NEW_TOPIC_FORM_SELECTOR = 'div.discussion #new-topic-form';
     public const string TOPIC_CARDS_SELECTOR = 'div.discussion div.card.topic';
 
-    /**
-     * Tests:
-     * - Everyone can post and reply
-     * - You can't vote unless IN_REVIEW and not your post
-     * - Posting, reading
-     */
     public function testReviewControllerSmokeTest(): void
     {
         self::haveAnAdminUser();
@@ -45,6 +39,13 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         $this->validateContents($submissionId, [
             ['Topic 1 by admin text; topic 1 by admin text.', 0, 0, []],
             ['Topic 2 by admin text; topic 2 by admin text.', 0, 0, []],
+        ]);
+
+        $this->editTopic(2, 'Edited topic 2 by admin text; *edited* topic 2 by admin text.');
+
+        $this->validateContents($submissionId, [
+            ['Topic 1 by admin text; topic 1 by admin text.', 0, 0, []],
+            ['Edited topic 2 by admin text; *edited* topic 2 by admin text.', 0, 0, []],
         ]);
 
         // Allow reviewers
@@ -71,7 +72,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
             ['Topic 1 by admin text; topic 1 by admin text.', 1, 0, [
                 ['Response 1 by reviewer 1 to topic 1.', 0, 0],
             ]],
-            ['Topic 2 by admin text; topic 2 by admin text.', 0, -1, []],
+            ['Edited topic 2 by admin text; *edited* topic 2 by admin text.', 0, -1, []],
             ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, 0, [
                 ['Response 1 by reviewer 1 to topic 3.', 0, 0],
             ]],
@@ -89,6 +90,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
 
         // Respond to reviewer 1 topic 3
         $this->respondToTopic(3, 'Response 2 by reviewer 2 to topic 3.');
+        $this->editResponse(3, 2, 'Response 2 by reviewer 2 to topic 3, after editing.');
 
         // Do some voting
         $this->voteTopic(1, true);
@@ -102,12 +104,12 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
                 ['Response 1 by reviewer 1 to topic 1.', 0, -1],
                 ['Response 2 by reviewer 2 to topic 1.', 0, 0],
             ]],
-            ['Topic 2 by admin text; topic 2 by admin text.', 1, -1, [
+            ['Edited topic 2 by admin text; *edited* topic 2 by admin text.', 1, -1, [
                 ['Response 1 by reviewer 2 to topic 2.', 0, 0],
             ]],
             ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, -1, [
                 ['Response 1 by reviewer 1 to topic 3.', 0, -1],
-                ['Response 2 by reviewer 2 to topic 3.', 0, 0],
+                ['Response 2 by reviewer 2 to topic 3, after editing.', 0, 0],
             ]],
         ]);
 
@@ -129,12 +131,12 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
                 ['Response 1 by reviewer 1 to topic 1.', 0, -2],
                 ['Response 2 by reviewer 2 to topic 1.', 1, 0],
             ]],
-            ['Topic 2 by admin text; topic 2 by admin text.', 1, -1, [
+            ['Edited topic 2 by admin text; *edited* topic 2 by admin text.', 1, -1, [
                 ['Response 1 by reviewer 2 to topic 2.', 0, 0],
             ]],
             ['Topic 3 by reviewer 1 text; topic 3 by reviewer 1 text.', 0, -2, [
                 ['Response 1 by reviewer 1 to topic 3.', 0, -1],
-                ['Response 2 by reviewer 2 to topic 3.', 1, 0],
+                ['Response 2 by reviewer 2 to topic 3, after editing.', 1, 0],
             ]],
         ]);
     }
@@ -155,7 +157,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
             $expectedDownvotes = -$topicData[2];
 
             $topicCard = $topicCards->eq($topicIndex);
-            $topicPostId = $this->postIdFrom($topicCard, 'topic'); // For form and links validation
+            $topicPostId = $this->postIdFrom($topicCard); // For form and links validation
 
             // Verify topic text
             $topicText = $topicCard->filter('.topic-text')->text();
@@ -176,7 +178,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
                 $expectedDownvotes = -$responseData[2];
 
                 $responseDiv = $responseDivs->eq($responseIndex);
-                $responsePostId = $this->postIdFrom($responseDiv, 'response'); // For links validation
+                $responsePostId = $this->postIdFrom($responseDiv); // For links validation
 
                 // Verify response text
                 $responseText = $responseDiv->filter('.response-text')->text();
@@ -205,17 +207,12 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
 
     private function voteTopic(int $topicNumber, bool $positive): void
     {
-        $header = $this->getTopicCard($topicNumber)->filter('.topic-header');
-
-        $this->vote($header, $positive);
+        $this->vote($this->getTopicHeader($topicNumber), $positive);
     }
 
     private function voteResponse(int $topicNumber, int $responseNumber, bool $positive): void
     {
-        $header = $this->getTopicCard($topicNumber)->filter('div.response')
-            ->eq($responseNumber - 1)->filter('.response-header');
-
-        $this->vote($header, $positive);
+        $this->vote($this->getResponseHeader($topicNumber, $responseNumber), $positive);
     }
 
     private function vote(Crawler $crawler, bool $positive): void
@@ -227,7 +224,7 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
     private function respondToTopic(int $topicNumber, string $responseText): void
     {
         $topicCard = $this->getTopicCard($topicNumber);
-        $topicPostId = $this->postIdFrom($topicCard, 'topic');
+        $topicPostId = $this->postIdFrom($topicCard);
 
         $form = $topicCard->selectButton('Send')->form([
             "topic_{$topicPostId}[message]" => $responseText,
@@ -235,16 +232,31 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         self::submitValid($form);
     }
 
-    private function postIdFrom(Crawler $crawler, string $kind): int
+    private function editTopic(int $topicNumber, string $newMessage): void
+    {
+        self::$client->click($this->getTopicHeader($topicNumber)->filter('a.edit-post')->link());
+
+        self::submitValidForm('Update', [
+            'post[message]' => $newMessage,
+        ]);
+    }
+
+    private function editResponse(int $topicNumber, int $responseNumber, string $newMessage): void
+    {
+        self::$client->click($this->getResponseHeader($topicNumber, $responseNumber)->filter('a.edit-post')->link());
+
+        self::submitValidForm('Update', [
+            'post[message]' => $newMessage,
+        ]);
+    }
+
+    private function postIdFrom(Crawler $crawler): int // grep-code-post-id-anchor
     {
         self::assertCount(1, $crawler);
 
         $idAttr = $crawler->attr('id') ?? '';
-        $idPrefix = $kind.'-';
-        self::assertStringStartsWith($idPrefix, $idAttr);
-
-        $postId = (int) str_strip_prefix($idAttr, $idPrefix);
-        self::assertSame($idAttr, "$idPrefix$postId");
+        $postId = (int) str_strip_prefix($idAttr, 'post-');
+        self::assertSame($idAttr, "post-$postId");
 
         return $postId;
     }
@@ -282,5 +294,16 @@ class ReviewController_smokeTest extends FuzzrakeWebTestCase
         ]];
 
         self::assertContains($votingHrefs, $expectedOptionalVotingHrefs);
+    }
+
+    private function getTopicHeader(int $topicNumber): Crawler
+    {
+        return $this->getTopicCard($topicNumber)->filter('.topic-header');
+    }
+
+    private function getResponseHeader(int $topicNumber, int $responseNumber): Crawler
+    {
+        return $this->getTopicCard($topicNumber)->filter('div.response')
+            ->eq($responseNumber - 1)->filter('.response-header');
     }
 }

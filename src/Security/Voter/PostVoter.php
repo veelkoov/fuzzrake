@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class PostVoter extends Voter
 {
     public const string VOTE = 'vote';
+    public const string EDIT = 'edit';
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -27,7 +28,7 @@ final class PostVoter extends Voter
     #[Override]
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return arr_contains([self::VOTE], $attribute) && $subject instanceof Post;
+        return arr_contains([self::VOTE, self::EDIT], $attribute) && $subject instanceof Post;
     }
 
     #[Override]
@@ -39,10 +40,6 @@ final class PostVoter extends Voter
             return false;
         }
 
-        if (self::VOTE !== $attribute) {
-            return false;
-        }
-
         /** @var Post $post */
         $post = $subject;
 
@@ -50,7 +47,10 @@ final class PostVoter extends Voter
             return false; // You can't vote on posts if review is not accessible
         }
 
-        // Allow voting on posts by other users only
-        return $post->getUser() !== $user;
+        return match ($attribute) {
+            self::VOTE => $post->getUser() !== $user, // Allow voting on posts by other users only
+            self::EDIT => $post->getUser() === $user, // Allow editing own posts only
+            default => false,
+        };
     }
 }

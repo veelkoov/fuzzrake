@@ -18,6 +18,7 @@ use App\IuHandling\Import\ImportService;
 use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
+use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -101,7 +102,7 @@ class ReviewController extends AbstractController
             $this->entityManager->persist($newTopic);
             $this->entityManager->flush();
 
-            return $this->redirectToReview($submission);
+            return $this->redirectToReviewPost($newTopic);
         }
 
         $topics = [];
@@ -115,7 +116,7 @@ class ReviewController extends AbstractController
                 $this->entityManager->persist($response);
                 $this->entityManager->flush();
 
-                return $this->redirectToReview($submission);
+                return $this->redirectToReviewPost($response);
             }
 
             $topics[] = [
@@ -135,8 +136,8 @@ class ReviewController extends AbstractController
 
     #[IsGranted('vote', 'post')]
     #[Route(path: '/submission/{id}/vote-post/{postId}/{positive}', name: 'rt_vote_post')]
-    public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post, #[CurrentUser] User $user,
-        Request $request, bool $positive): Response
+    public function votePost(#[MapEntity] Submission $submission, #[MapEntity(id: 'postId')] Post $post,
+        #[CurrentUser] User $user, bool $positive): Response
     {
         $votes = $this->postVoteRepository->findFor($user, $post);
         $shouldRecreateVote = 0 === count($votes) || array_first($votes)->isPositive() !== $positive;
@@ -150,12 +151,34 @@ class ReviewController extends AbstractController
         }
         $this->entityManager->flush();
 
-        return $this->redirectToReview($submission);
+        return $this->redirectToReviewPost($post);
     }
 
-    private function redirectToReview(Submission $submission): RedirectResponse
+    #[IsGranted('edit', 'post')]
+    #[Route(path: '/edit-post/{id}', name: 'rt_edit_post')]
+    public function editPost(Request $request, #[MapEntity] Post $post): Response
     {
-        return $this->redirectToRoute('rt_submission_review', ['id' => $submission->getId()]);
+        $form = $this->createForm(PostType::class, $post)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setEditedUtc(UtcClock::now());
+            $this->entityManager->flush();
+
+            return $this->redirectToReviewPost($post);
+        }
+
+        return $this->render('submissions/post_edit.html.twig', [
+            'post' => $post,
+            'post_form' => $form,
+        ]);
+    }
+
+    private function redirectToReviewPost(Post $post): RedirectResponse
+    {
+        return $this->redirectToRoute('rt_submission_review', [
+            'id' => $post->getSubmission()->getId(),
+            '_fragment' => 'post-'.$post->getId(), // grep-code-post-id-anchor
+        ]);
     }
 
     /**
