@@ -43,7 +43,7 @@
     {% set topic = topic_items.entity %}
     {% set response_form = topic_items.response_form %}
 
-    <div class="card mb-2 topic" id="topic-{{ topic.id }}">
+    <div class="card mb-2 topic" id="post-{{ topic.id }}"> {# grep-code-post-id-anchor #}
         <div class="card-header topic-header">
             {{ _self.post_header(submission, topic, 'wrote') }}
         </div>
@@ -57,7 +57,7 @@
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 py-0">
                 {% for response in topic.responses %}
-                    <div class="response" id="response-{{ response.id }}">
+                    <div class="response" id="post-{{ response.id }}"> {# grep-code-post-id-anchor #}
                         <p class="response-header mb-1">
                             {{ _self.post_header(submission, response, 'responded') }}
                         </p>

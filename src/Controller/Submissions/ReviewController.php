@@ -102,7 +102,7 @@ class ReviewController extends AbstractController
             $this->entityManager->persist($newTopic);
             $this->entityManager->flush();
 
-            return $this->redirectToReview($submission);
+            return $this->redirectToReviewPost($newTopic);
         }
 
         $topics = [];
@@ -116,7 +116,7 @@ class ReviewController extends AbstractController
                 $this->entityManager->persist($response);
                 $this->entityManager->flush();
 
-                return $this->redirectToReview($submission);
+                return $this->redirectToReviewPost($response);
             }
 
             $topics[] = [
@@ -151,7 +151,7 @@ class ReviewController extends AbstractController
         }
         $this->entityManager->flush();
 
-        return $this->redirectToReview($submission);
+        return $this->redirectToReviewPost($post);
     }
 
     #[IsGranted('edit', 'post')] // TODO: TEST?
@@ -164,7 +164,7 @@ class ReviewController extends AbstractController
             $post->setEditedUtc(UtcClock::now());
             $this->entityManager->flush();
 
-            return $this->redirectToReview($post->getSubmission()); // TODO: Anchor
+            return $this->redirectToReviewPost($post);
         }
 
         return $this->render('submissions/post_edit.html.twig', [
@@ -173,9 +173,12 @@ class ReviewController extends AbstractController
         ]);
     }
 
-    private function redirectToReview(Submission $submission): RedirectResponse
+    private function redirectToReviewPost(Post $post): RedirectResponse
     {
-        return $this->redirectToRoute('rt_submission_review', ['id' => $submission->getId()]);
+        return $this->redirectToRoute('rt_submission_review', [
+            'id' => $post->getSubmission()->getId(),
+            '_fragment' => 'post-'.$post->getId(), // grep-code-post-id-anchor
+        ]);
     }
 
     /**
