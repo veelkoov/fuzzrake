@@ -29,7 +29,7 @@
     {{ _self.votes(submission, post, 0) }}
 
     {% if access_decision('edit', post).isGranted %}
-        &nbsp; <a href="{{ path('rt_edit_post', {id: post.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+        &nbsp; <a class="edit-post" href="{{ path('rt_edit_post', {id: post.id}) }}"><i class="fa-solid fa-pen-to-square"></i></a>
     {% endif %}
 {% endmacro %}
 
