@@ -43,6 +43,11 @@
   }
 }
 
+.discussion .unread {
+  border-left: 0.5ex solid $success;
+  padding-left: 1ex;
+}
+
 textarea#manage_directives {
   height: 20em;
 }

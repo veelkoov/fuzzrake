@@ -11,6 +11,7 @@ use App\Data\Submission\Status;
 use App\Entity\Post;
 use App\Entity\PostVote;
 use App\Entity\Submission;
+use App\Entity\TopicRead;
 use App\Entity\User;
 use App\Form\Submission\FilterType;
 use App\Form\Submission\PostType;
@@ -19,6 +20,7 @@ use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\PostReadTracker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -131,7 +134,26 @@ class ReviewController extends AbstractController
             'fields' => Fields::inIuForm(),
             'new_topic_form' => $newTopicForm,
             'topics' => $topics,
+            'tracker' => $this->getPostReadTracker($user, $topics),
+            'timestampUtc' => UtcClock::time(),
         ]);
+    }
+
+    /**
+     * @param positive-int $timestampUtc
+     */
+    #[Route(path: '/mark-topic-read/{id}/{timestampUtc}', name: 'rt_mark_topic_read', requirements: ['timestampUtc' => '[1-9]\d*'])]
+    public function markTopicRead(#[CurrentUser] User $user, #[MapEntity] Post $topic, int $timestampUtc): Response
+    {
+        if (null !== $topic->getParent()) {
+            throw new BadRequestHttpException();
+        }
+
+        $topicRead = $this->getPostReadTracker($user, $topic)->markRead($topic, $timestampUtc);
+        $this->entityManager->persist($topicRead);
+        $this->entityManager->flush();
+
+        return $this->redirectToReviewPost($topic);
     }
 
     #[IsGranted('vote', 'post')]
@@ -193,5 +215,20 @@ class ReviewController extends AbstractController
         }
 
         return $this->formFactory->createNamed($formName, PostType::class, $post);
+    }
+
+    /**
+     * @param list<array{entity: Post, response_form: mixed}>|Post $topics
+     */
+    private function getPostReadTracker(User $user, array|Post $topics): PostReadTracker
+    {
+        $topics = is_array($topics) ? array_column($topics, 'entity') : [$topics];
+
+        $topicRead = $this->entityManager->getRepository(TopicRead::class)->findBy([
+            'user' => $user,
+            'topic' => $topics,
+        ]);
+
+        return new PostReadTracker($topicRead, $user);
     }
 }

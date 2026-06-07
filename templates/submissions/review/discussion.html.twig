@@ -33,6 +33,10 @@
     {% endif %}
 {% endmacro %}
 
+{% macro optional_unread_class(context, post) %}
+    {% if not context.tracker.isRead(post) %}unread{% endif %}
+{% endmacro %}
+
 {% macro post_footer(post) %}
     {% if post.editedUtc %}
         <p class="text-end m-0"><sub>Edited {{ post.editedUtc|fragile_datetime_utc }}</sub></p>
@@ -49,7 +53,7 @@
         </div>
 
         <div class="card-body pb-2">
-            <p class="topic-text m-0">{{ topic.message|nl2br }}</p>
+            <p class="topic-text {{ _self.optional_unread_class(_context, topic) }} m-0">{{ topic.message|nl2br }}</p>
 
             {{ _self.post_footer(topic) }}
         </div>
@@ -57,7 +61,7 @@
         {% if topic.responses is not empty %}
             <div class="card-body ps-5 py-0">
                 {% for response in topic.responses %}
-                    <div class="response" id="post-{{ response.id }}"> {# grep-code-post-id-anchor #}
+                    <div class="response  {{ _self.optional_unread_class(_context, response) }}" id="post-{{ response.id }}"> {# grep-code-post-id-anchor #}
                         <p class="response-header mb-1">
                             {{ _self.post_header(submission, response, 'responded') }}
                         </p>
@@ -74,9 +78,14 @@
 
         <div class="card-body ps-5 pt-0">
             {% set response_form_id = 'response-form-' ~ topic.id %}
-            <a href="#{{ response_form_id }}" data-bs-toggle="collapse" class="text-decoration-none">Respond</a>
+            <a class="btn btn-sm btn-outline-primary" href="#{{ response_form_id }}" data-bs-toggle="collapse">
+                <i class="fa-solid fa-reply"></i> Respond
+            </a>
+            <a class="btn btn-sm btn-outline-primary" href="{{ path('rt_mark_topic_read', {id: topic.id}) }}">
+                <i class="fa-regular fa-square-check"></i> Mark topic as read
+            </a>
 
-            <div class="collapse" id="{{ response_form_id }}">
+            <div class="collapse mt-2" id="{{ response_form_id }}">
                 {{ form_start(response_form) }}
                 {{ form_widget(response_form.message) }}
                 {{ form_errors(response_form.message) }}
