@@ -154,7 +154,7 @@ class ReviewController extends AbstractController
         return $this->redirectToReviewPost($post);
     }
 
-    #[IsGranted('edit', 'post')] // TODO: TEST?
+    #[IsGranted('edit', 'post')]
     #[Route(path: '/edit-post/{id}', name: 'rt_edit_post')]
     public function editPost(Request $request, #[MapEntity] Post $post): Response
     {
