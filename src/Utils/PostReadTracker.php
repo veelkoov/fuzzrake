@@ -22,6 +22,10 @@ class PostReadTracker
 
     public function isRead(Post $post): bool
     {
+        if ($post->getUser() === $this->user) {
+            return true;
+        }
+
         $topic = null === $post->getParent() ? $post : $post->getParent();
         $topicRead = $this->getTopicReadFor($topic);
 
