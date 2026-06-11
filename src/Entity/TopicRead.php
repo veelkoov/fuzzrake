@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\TopicReadRepository;
+use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Exceptions\UncheckedException;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,7 +37,11 @@ class TopicRead
         $this->user = $user;
         $this->topic = $topic;
 
-        $this->lastRead = UtcClock::now();
+        try {
+            $this->lastRead = UtcClock::at('2026-01-01');
+        } catch (DateTimeException $exception) {
+            throw new UncheckedException($exception);
+        }
     }
 
     public function getId(): ?int

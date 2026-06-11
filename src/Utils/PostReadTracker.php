@@ -8,23 +8,16 @@ use App\Entity\Post;
 use App\Entity\TopicRead;
 use App\Entity\User;
 use App\Utils\DateTime\UtcClock;
-use Veelkoov\Debris\Base\DIntMap;
 
 class PostReadTracker
 {
     /**
-     * @var DIntMap<TopicRead>
-     */
-    private readonly DIntMap $topicsReads;
-
-    /**
      * @param TopicRead[] $topicsReads
      */
     public function __construct(
-        array $topicsReads,
+        private array $topicsReads,
         private readonly User $user,
     ) {
-        $this->topicsReads = DIntMap::fromValues($topicsReads, static fn (TopicRead $topicRead) => (int) $topicRead->getId());
     }
 
     public function isRead(Post $post): bool
@@ -45,6 +38,15 @@ class PostReadTracker
 
     private function getTopicReadFor(Post $topic): TopicRead
     {
-        return $this->topicsReads->getOrSet((int) $topic->getId(), fn () => new TopicRead($this->user, $topic));
+        foreach ($this->topicsReads as $topicRead) {
+            if ($topicRead->getTopic() === $topic) {
+                return $topicRead;
+            }
+        }
+
+        $result = new TopicRead($this->user, $topic);
+        $this->topicsReads[] = $result;
+
+        return $result;
     }
 }

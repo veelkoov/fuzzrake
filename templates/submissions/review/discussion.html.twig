@@ -81,7 +81,7 @@
             <a class="btn btn-sm btn-outline-primary" href="#{{ response_form_id }}" data-bs-toggle="collapse">
                 <i class="fa-solid fa-reply"></i> Respond
             </a>
-            <a class="btn btn-sm btn-outline-primary" href="{{ path('rt_mark_topic_read', {id: topic.id}) }}">
+            <a class="btn btn-sm btn-outline-primary" href="{{ path('rt_mark_topic_read', {id: topic.id, timestampUtc: timestampUtc}) }}">
                 <i class="fa-regular fa-square-check"></i> Mark topic as read
             </a>
 
