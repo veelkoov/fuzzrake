@@ -36,8 +36,8 @@
                     <th>Maker ID | Maker name</th>
                     {% if is_granted('ROLE_ADMIN') %}
                         <th>Status</th>
-                        <th>Comments</th>
                     {% endif %}
+                    <th>Comments</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -58,8 +58,8 @@
                         </td>
                         {% if is_granted('ROLE_ADMIN') %}
                             <td>{{ submission.status.label }}</td>
-                            <td>{{ submission.comment|nl2br }}</td>
                         {% endif %}
+                        <td>{{ submission.comment|nl2br }}</td>
                         <td>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <a class="text-decoration-none" href="{{ path('rt_submission_manage', {id: submission.id}) }}">
