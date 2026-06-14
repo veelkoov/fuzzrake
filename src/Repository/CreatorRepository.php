@@ -196,14 +196,17 @@ class CreatorRepository extends ServiceEntityRepository
         return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
     }
 
-    public function getDistinctStates(): StringSet
+    public function getDistinctStates(StringSet $fromCountries = new StringSet()): StringSet
     {
-        $result = $this->createQueryBuilder('d_c')
-            ->select('DISTINCT d_c.state')
-            ->getQuery()
-            ->getSingleColumnResult();
+        $builder = $this->createQueryBuilder('d_c')->select('DISTINCT d_c.state');
 
-        return new StringSet($result); // @phpstan-ignore argument.type (Lack of skill to fix this)
+        if ($fromCountries->isNotEmpty()) {
+            $builder->where('d_c.country IN (:countries)')->setParameter('countries', $fromCountries);
+        }
+
+        $result = $builder->getQuery()->getSingleColumnResult();
+
+        return new StringSet($result);
     }
 
     public function getActiveOffersPaymentPlansStats(): NullBoolToInt

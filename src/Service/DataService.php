@@ -76,9 +76,10 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::CREATORS, __METHOD__);
     }
 
-    public function getStates(): StringSet
+    public function getStates(): StringSet // FIXME: Parametrize (and improve cache keys) or rename
     {
-        return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::CREATORS, __METHOD__);
+        return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(StringSet::of('CA', 'US')),
+            CacheTags::CREATORS, __METHOD__);
     }
 
     public function getOpenFor(): StringSet
