@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 
 class Captcha
 {
@@ -101,7 +101,7 @@ class Captcha
      */
     private static function getCaptchaField(FormInterface $form): FormInterface
     {
-        return new DList($form)->filter(self::isCaptchaType(...))->single();
+        return new DVec($form)->filter(self::isCaptchaType(...))->single();
     }
 
     /**

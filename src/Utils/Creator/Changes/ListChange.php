@@ -6,17 +6,17 @@ namespace App\Utils\Creator\Changes;
 
 use App\Data\Definitions\Fields\Field;
 use Override;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 readonly class ListChange implements ChangeInterface
 {
-    public StringList $added;
-    public StringList $removed;
+    public StringVec $added;
+    public StringVec $removed;
 
     public function __construct(
         private Field $field,
-        private StringList $old,
-        private StringList $new,
+        private StringVec $old,
+        private StringVec $new,
     ) {
         [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
@@ -48,12 +48,12 @@ readonly class ListChange implements ChangeInterface
     }
 
     /**
-     * @return array{StringList, StringList}
+     * @return array{StringVec, StringVec}
      */
-    private static function calculateAddedRemoved(StringList $old, StringList $new): array
+    private static function calculateAddedRemoved(StringVec $old, StringVec $new): array
     {
-        $added = new StringList();
-        $removed = new StringList();
+        $added = new StringVec();
+        $removed = new StringVec();
 
         $common = $new->intersect($old);
 

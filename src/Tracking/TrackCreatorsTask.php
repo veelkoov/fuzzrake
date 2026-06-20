@@ -21,7 +21,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Vecs\IntVec;
 
 final class TrackCreatorsTask
 {
@@ -54,7 +54,7 @@ final class TrackCreatorsTask
 
         foreach ($idChunks as $idChunk) {
             $this->messageBus->dispatch(new TrackCreatorsV1(
-                new IntList($idChunk),
+                new IntVec($idChunk),
                 $message->retriesLimit,
                 $message->refetchPages,
             ));
@@ -89,7 +89,7 @@ final class TrackCreatorsTask
     /**
      * @throws ExceptionInterface
      */
-    private function handleFailedIds(IntList $failedIds, TrackCreatorsV1 $message): void
+    private function handleFailedIds(IntVec $failedIds, TrackCreatorsV1 $message): void
     {
         if ($failedIds->isEmpty()) {
             return;
@@ -109,9 +109,9 @@ final class TrackCreatorsTask
         );
     }
 
-    private function trackAndGetFailedIds(CreatorList $creators, bool $retryAllowed, bool $refetchPages): IntList
+    private function trackAndGetFailedIds(CreatorList $creators, bool $retryAllowed, bool $refetchPages): IntVec
     {
         return $creators->filterNot(fn (Creator $creator) => $this->tracker->track($creator, $retryAllowed,
-            $refetchPages))->mapInto(static fn (Creator $creator) => Enforce::int($creator->getId()), new IntList());
+            $refetchPages))->mapInto(new IntVec(), static fn (Creator $creator) => Enforce::int($creator->getId()));
     }
 }

@@ -11,8 +11,8 @@ use App\Species\Hierarchy\Species;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class CreatorSpeciesResolverTest extends TestCase
@@ -40,7 +40,7 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
-        $result = $subject->resolveDoes(new StringList(), new StringList());
+        $result = $subject->resolveDoes(new StringVec(), new StringVec());
         self::assertCount(0, $result);
     }
 
@@ -48,7 +48,7 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
-        $result = $subject->resolveDoes(new StringList(), StringList::of('Some unusual specie'));
+        $result = $subject->resolveDoes(new StringVec(), StringVec::of('Some unusual specie'));
         self::assertEqualsCanonicalizing(['Most species'], $result->getValuesArray());
     }
 
@@ -56,7 +56,7 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
-        $result = $subject->resolveDoes(StringList::of('Most species'), new StringList());
+        $result = $subject->resolveDoes(StringVec::of('Most species'), new StringVec());
 
         self::assertTrue($result->contains('Most species'));
         self::assertFalse($result->contains('Hidden'));
@@ -66,7 +66,7 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         $subject = new CreatorSpeciesResolver($this->getBasicSpecies());
 
-        $result = $subject->resolveDoes(StringList::of('Some weird specie'), new StringList());
+        $result = $subject->resolveDoes(StringVec::of('Some weird specie'), new StringVec());
 
         self::assertTrue($result->contains('Other'));
         self::assertFalse($result->contains('Some weird specie'));
@@ -105,25 +105,25 @@ class CreatorSpeciesResolverTest extends TestCase
     }
 
     /**
-     * @return list<array{StringList, StringList, string}>
+     * @return list<array{StringVec, StringVec, string}>
      */
     public static function getOrderedDoesDoesntSpeciesDataProvider(): array
     {
         return [
-            [StringList::of('A', 'C'), StringList::of('B', 'D'), '+A -B +C -D'],
-            [StringList::of('C', 'A'), StringList::of('D', 'B'), '+A -B +C -D'],
-            [StringList::of('B', 'D'), StringList::of('A', 'C'), '-A +B -C +D'],
-            [StringList::of('D', 'B'), StringList::of('C', 'A'), '-A +B -C +D'],
+            [StringVec::of('A', 'C'), StringVec::of('B', 'D'), '+A -B +C -D'],
+            [StringVec::of('C', 'A'), StringVec::of('D', 'B'), '+A -B +C -D'],
+            [StringVec::of('B', 'D'), StringVec::of('A', 'C'), '-A +B -C +D'],
+            [StringVec::of('D', 'B'), StringVec::of('C', 'A'), '-A +B -C +D'],
         ];
     }
 
     #[DataProvider('getOrderedDoesDoesntSpeciesDataProvider')]
-    public function testGetOrderedDoesDoesnt(StringList $does, StringList $doesnt, string $expected): void
+    public function testGetOrderedDoesDoesnt(StringVec $does, StringVec $doesnt, string $expected): void
     {
         $subject = new CreatorSpeciesResolver($this->getGetOrderedDoesDoesntSpecies());
 
         $result = $subject->getOrderedDoesDoesnt($does, $doesnt);
-        $strResult = StringList::mapFrom($result,
+        $strResult = StringVec::mapFrom($result,
             static fn (bool $does, Specie $specie) => ($does ? '+' : '-').$specie->getName())->join(' ');
 
         self::assertSame($expected, $strResult);
@@ -172,24 +172,24 @@ class CreatorSpeciesResolverTest extends TestCase
     }
 
     /**
-     * @return list<array{StringList, StringList, StringList}>
+     * @return list<array{StringVec, StringVec, StringVec}>
      */
     public static function resolveDoesDataProvider(): array
     {
         return [
-            [new StringList(),                       new StringList(),                          new StringList()],
-            [StringList::of('Mammals', 'Corgis'),    StringList::of('Canines', 'With antlers'), StringList::of('Mammals', 'Corgis')],
-            [StringList::of('Mammals'),              StringList::of('With antlers', 'Dogs'),    StringList::of('Mammals', 'Canines', 'Wolves')],
-            [StringList::of('Mammals', 'Deers'),     StringList::of('With antlers', 'Dogs'),    StringList::of('Mammals', 'Canines', 'Wolves', 'Deers')],
-            [StringList::of('Dogs', 'With antlers'), StringList::of(''),                        StringList::of('With antlers', 'Deers', 'Dogs', 'Corgis', 'Dalmatians')],
-            [StringList::of('Dogs', 'With antlers'), StringList::of('Deers'),                   StringList::of('With antlers', 'Dogs', 'Corgis', 'Dalmatians')],
-            [StringList::of('Dogs', 'Pancakes'),     StringList::of(''),                        StringList::of('Other', 'Dogs', 'Corgis', 'Dalmatians')],
-            [StringList::of('Dogs', 'Other'),        StringList::of('Dalmatians'),              StringList::of('Other', 'Dogs', 'Corgis')],
+            [new StringVec(),                       new StringVec(),                          new StringVec()],
+            [StringVec::of('Mammals', 'Corgis'),    StringVec::of('Canines', 'With antlers'), StringVec::of('Mammals', 'Corgis')],
+            [StringVec::of('Mammals'),              StringVec::of('With antlers', 'Dogs'),    StringVec::of('Mammals', 'Canines', 'Wolves')],
+            [StringVec::of('Mammals', 'Deers'),     StringVec::of('With antlers', 'Dogs'),    StringVec::of('Mammals', 'Canines', 'Wolves', 'Deers')],
+            [StringVec::of('Dogs', 'With antlers'), StringVec::of(''),                        StringVec::of('With antlers', 'Deers', 'Dogs', 'Corgis', 'Dalmatians')],
+            [StringVec::of('Dogs', 'With antlers'), StringVec::of('Deers'),                   StringVec::of('With antlers', 'Dogs', 'Corgis', 'Dalmatians')],
+            [StringVec::of('Dogs', 'Pancakes'),     StringVec::of(''),                        StringVec::of('Other', 'Dogs', 'Corgis', 'Dalmatians')],
+            [StringVec::of('Dogs', 'Other'),        StringVec::of('Dalmatians'),              StringVec::of('Other', 'Dogs', 'Corgis')],
         ];
     }
 
     #[DataProvider('resolveDoesDataProvider')]
-    public function testResolveDoes(StringList $does, StringList $doesnt, StringList $expected): void
+    public function testResolveDoes(StringVec $does, StringVec $doesnt, StringVec $expected): void
     {
         $subject = new CreatorSpeciesResolver($this->getResolveDoesSpecies());
 

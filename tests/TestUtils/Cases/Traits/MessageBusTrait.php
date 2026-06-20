@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Messenger\Test\Transport\TestTransport;
 use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;
@@ -28,11 +28,11 @@ trait MessageBusTrait
      *
      * @param class-string<T> $messageClass
      *
-     * @return DList<T>
+     * @return DVec<T>
      */
-    private function getQueued(string $messageClass): DList
+    private function getQueued(string $messageClass): DVec
     {
-        return new DList($this->getQueue()->messages($messageClass));
+        return new DVec($this->getQueue()->messages($messageClass));
     }
 
     private function clearQueue(): void

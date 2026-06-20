@@ -7,7 +7,7 @@ namespace App\Tracking\Data;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Web\Snapshots\Snapshot;
 use App\Utils\Web\Url\Url;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class AnalysisInput
 {
@@ -15,8 +15,8 @@ class AnalysisInput
         get => $this->snapshot->contents;
     }
 
-    public StringList $creatorAliases {
-        get => new StringList([$this->creator->getName(), ...$this->creator->getFormerly()]);
+    public StringVec $creatorAliases {
+        get => new StringVec([$this->creator->getName(), ...$this->creator->getFormerly()]);
     }
 
     public function __construct(

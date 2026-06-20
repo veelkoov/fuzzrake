@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class TrackingProcessingTest extends FuzzrakeTestCase
@@ -42,12 +42,12 @@ class TrackingProcessingTest extends FuzzrakeTestCase
     }
 
     #[DataProvider('analyseDataProvider')]
-    public function testAnalyse(string $caseName, string $contents, StringList $expected): void
+    public function testAnalyse(string $caseName, string $contents, StringVec $expected): void
     {
         $result = self::$aggregator->aggregate(self::$creator,
             [self::$processor->process(self::getAnalysisInput(contents: $contents))]);
 
-        $actual = new StringList()
+        $actual = new StringVec()
             ->addAll($result->openFor->map(static fn (string $item) => "+$item"))
             ->addAll($result->closedFor->map(static fn (string $item) => "-$item"));
 
@@ -59,7 +59,7 @@ class TrackingProcessingTest extends FuzzrakeTestCase
     }
 
     /**
-     * @return iterable<array{string, string, StringList}>
+     * @return iterable<array{string, string, StringVec}>
      */
     public static function analyseDataProvider(): iterable
     {
@@ -75,7 +75,7 @@ class TrackingProcessingTest extends FuzzrakeTestCase
             yield [
                 $caseName,
                 $contents,
-                new StringList($expected),
+                new StringVec($expected),
             ];
         }
     }

@@ -13,7 +13,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class AnalysisAggregatorTest extends FuzzrakeTestCase
@@ -47,10 +47,10 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testAggregatingEncounteredIssues(array $encounteredIssuesArray, bool $expected): void
     {
         /* Some consistent result is required, otherwise errors state would be set for other reasons */
-        $openFor = StringList::of('Commissions');
+        $openFor = StringVec::of('Commissions');
 
         $result = $this->subject->aggregate($this->creator, array_map(
-            static fn (bool $encountered) => new AnalysisResult('', $openFor, new StringList(), $encountered),
+            static fn (bool $encountered) => new AnalysisResult('', $openFor, new StringVec(), $encountered),
             $encounteredIssuesArray,
         ));
 
@@ -60,7 +60,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testSingleUrlOneOffer(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions'), StringList::of(), false),
+            new AnalysisResult('', StringVec::of('Commissions'), StringVec::of(), false),
         ]);
 
         self::assertSameItems(['Commissions'], $result->openFor);
@@ -71,7 +71,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testSingleUrlNoOffer(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of(), StringList::of(), false),
+            new AnalysisResult('', StringVec::of(), StringVec::of(), false),
         ]);
 
         self::assertSameItems([], $result->openFor);
@@ -82,8 +82,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testSingleEmptyUrlAnalysisSetsErrorStatus(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', new StringList(), new StringList(), false),
-            new AnalysisResult('', new StringList(), StringList::of('Quotes'), false),
+            new AnalysisResult('', new StringVec(), new StringVec(), false),
+            new AnalysisResult('', new StringVec(), StringVec::of('Quotes'), false),
         ]);
 
         self::assertSameItems([], $result->openFor);
@@ -94,8 +94,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testResultsFromMultipleUrlsAreProperlyAggregated(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Parts'), false),
-            new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Quotes'), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials'), StringVec::of('Parts'), false),
+            new AnalysisResult('', StringVec::of('Mini partials'), StringVec::of('Quotes'), false),
         ]);
 
         self::assertSameItems(['Commissions', 'Partials', 'Mini partials'], $result->openFor);
@@ -106,8 +106,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testContradictingOfferStatusesInASingleUrlCancelEachOtherAndSetErrorState(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Commissions'), false),
-            new AnalysisResult('', StringList::of('Mini partials'), new StringList(), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials'), StringVec::of('Commissions'), false),
+            new AnalysisResult('', StringVec::of('Mini partials'), new StringVec(), false),
         ]);
 
         self::assertSameItems(['Partials', 'Mini partials'], $result->openFor);
@@ -118,8 +118,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testContradictingOfferStatusesInASingleUrlSetErrorStateButDoesntCancelOtherUrlsDuplicate(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Commissions'), false),
-            new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Commissions'), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials'), StringVec::of('Commissions'), false),
+            new AnalysisResult('', StringVec::of('Mini partials'), StringVec::of('Commissions'), false),
         ]);
 
         self::assertSameItems(['Partials', 'Mini partials'], $result->openFor);
@@ -130,8 +130,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testContradictingOffersFromDifferentUrlsAreRemovedSettingErrorState(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Parts', 'Mini partials'), false),
-            new AnalysisResult('', StringList::of('Mini partials'), StringList::of('Commissions', 'Quotes'), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials'), StringVec::of('Parts', 'Mini partials'), false),
+            new AnalysisResult('', StringVec::of('Mini partials'), StringVec::of('Commissions', 'Quotes'), false),
         ]);
 
         self::assertSameItems(['Partials'], $result->openFor);
@@ -142,7 +142,7 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testMultipleContradictingOffersOnASingleUrlCancelEachOtherSettingErrorState(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Commissions'), StringList::of('Commissions'), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Commissions'), StringVec::of('Commissions'), false),
         ]);
 
         self::assertSameItems([], $result->openFor);
@@ -153,8 +153,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testDuplicatedOfferStatusInASingleUrlSetsErrorStateButIsNotCancelled(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials', 'Commissions'), new StringList(), false),
-            new AnalysisResult('', StringList::of('Mini partials'), new StringList(), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials', 'Commissions'), new StringVec(), false),
+            new AnalysisResult('', StringVec::of('Mini partials'), new StringVec(), false),
         ]);
 
         self::assertSameItems(['Commissions', 'Partials', 'Mini partials'], $result->openFor);
@@ -165,8 +165,8 @@ class AnalysisAggregatorTest extends FuzzrakeTestCase
     public function testDuplicatedOfferStatusInDifferentUrlIsOk(): void
     {
         $result = $this->subject->aggregate($this->creator, [
-            new AnalysisResult('', StringList::of('Commissions', 'Partials'), StringList::of('Mini partials'), false),
-            new AnalysisResult('', StringList::of('Commissions'), StringList::of('Heads', 'Mini partials'), false),
+            new AnalysisResult('', StringVec::of('Commissions', 'Partials'), StringVec::of('Mini partials'), false),
+            new AnalysisResult('', StringVec::of('Commissions'), StringVec::of('Heads', 'Mini partials'), false),
         ]);
 
         self::assertSameItems(['Commissions', 'Partials'], $result->openFor);

@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class Description
 {
@@ -37,9 +37,9 @@ class Description
         return $this->getList()->join("\n");
     }
 
-    public function getList(): StringList
+    public function getList(): StringVec
     {
-        return StringList::mapFrom($this->changes, static fn (ChangeInterface $change) => $change->getDescription());
+        return StringVec::mapFrom($this->changes, static fn (ChangeInterface $change) => $change->getDescription());
     }
 
     /**
@@ -57,7 +57,7 @@ class Description
     private function addChange(Field $field, mixed $old, mixed $new): void
     {
         if ($field->isList()) {
-            $change = new ListChange($field, new StringList(Enforce::strList($old)), new StringList(Enforce::strList($new)));
+            $change = new ListChange($field, new StringVec(Enforce::strList($old)), new StringVec(Enforce::strList($new)));
         } else {
             $change = new SimpleChange($field, $old, $new);
         }

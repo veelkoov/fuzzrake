@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tracking\Data;
 
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 readonly class AnalysisResults
 {
     public function __construct(
-        public StringList $openFor,
-        public StringList $closedFor,
+        public StringVec $openFor,
+        public StringVec $closedFor,
         public bool $hasEncounteredIssues,
     ) {
     }

@@ -13,8 +13,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
 
@@ -77,7 +77,7 @@ class CaptchaService implements CaptchaProvider
             $selectedAnswers->set($firstFalseAnswer, false);
             $selectedAnswers = $selectedAnswers->shuffle();
 
-            $options = DList::mapFrom(
+            $options = DVec::mapFrom(
                 $selectedAnswers,
                 fn (bool $value, string $key) => new QuestionOption($key, $this->animals->get($key), $value),
             )->getValuesArray();

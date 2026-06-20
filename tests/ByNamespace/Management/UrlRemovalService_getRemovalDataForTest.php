@@ -19,7 +19,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Small;
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
@@ -29,7 +29,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
         $creator = UserCreator::get(contactPermit: ContactPermit::NO)
             ->setWebsiteUrl('https://localhost/');
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringVec::of('URL_WEBSITE_0'));
 
         self::assertFalse($result->sendEmail);
     }
@@ -39,7 +39,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
         $creator = UserCreator::get(contactPermit: ContactPermit::CORRECTIONS)
             ->setWebsiteUrl('https://localhost/');
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringVec::of('URL_WEBSITE_0'));
 
         self::assertTrue($result->sendEmail);
     }
@@ -51,7 +51,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
             ->setCommissionsUrls(['https://localhost/'])
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_WEBSITE_0'));
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringVec::of('URL_WEBSITE_0'));
 
         self::assertTrue($result->hide);
     }
@@ -63,7 +63,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
             ->setCommissionsUrls(['https://localhost/'])
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_COMMISSIONS_0'));
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringVec::of('URL_COMMISSIONS_0'));
 
         self::assertFalse($result->hide);
     }
@@ -71,7 +71,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
     public function testNoRemovedUrlsThrowException(): void
     {
         self::expectException(InvalidArgumentException::class);
-        UrlRemovalService::getRemovalDataFor(new Creator(), StringList::of());
+        UrlRemovalService::getRemovalDataFor(new Creator(), StringVec::of());
     }
 
     public function testUnknownUrlIdThrowException(): void
@@ -79,7 +79,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
         $creator = new Creator()->setWebsiteUrl('https://localhost/');
 
         self::expectException(InvalidArgumentException::class);
-        UrlRemovalService::getRemovalDataFor($creator, StringList::of('WRONG'));
+        UrlRemovalService::getRemovalDataFor($creator, StringVec::of('WRONG'));
     }
 
     public function testRemovedAndRemainingAreCalculatedProperly(): void
@@ -91,16 +91,16 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
             ->setFaqUrl('https://localhost/faq')
         ;
 
-        $result = UrlRemovalService::getRemovalDataFor($creator, StringList::of('URL_FAQ_0', 'URL_COMMISSIONS_1', 'URL_PRICES_0'));
+        $result = UrlRemovalService::getRemovalDataFor($creator, StringVec::of('URL_FAQ_0', 'URL_COMMISSIONS_1', 'URL_PRICES_0'));
 
         self::assertSameItems(
             ['https://localhost/faq', 'https://com2.example.com/', 'https://prc1.example.com/'],
-            $result->removedUrls->mapInto(static fn (GroupedUrl $url) => $url->url, new StringList()),
+            $result->removedUrls->mapInto(new StringVec(), static fn (GroupedUrl $url) => $url->url),
         );
 
         self::assertSameItems(
             ['https://localhost/main', 'https://com1.example.com/', 'https://prc2.example.com/'],
-            $result->remainingUrls->mapInto(static fn (GroupedUrl $url) => $url->url, new StringList()),
+            $result->remainingUrls->mapInto(new StringVec(), static fn (GroupedUrl $url) => $url->url),
         );
     }
 

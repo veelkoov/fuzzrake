@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tracking\TextProcessing;
 
 use App\Utils\Traits\UtilityClass;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 final class GroupNamesTranslator
 {
@@ -21,9 +21,9 @@ final class GroupNamesTranslator
         'ArtisticLiberty' => 'Artistic liberty',
     ];
 
-    public static function toOffers(string $groupName): StringList
+    public static function toOffers(string $groupName): StringVec
     {
-        return StringList::mapFrom(explode('And', $groupName), self::prettify(...));
+        return StringVec::mapFrom(explode('And', $groupName), self::prettify(...));
     }
 
     private static function prettify(string $input): string

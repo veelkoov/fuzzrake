@@ -18,7 +18,7 @@ use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 final class UrlRemovalService
 {
@@ -43,7 +43,7 @@ final class UrlRemovalService
     ) {
     }
 
-    public static function getRemovalDataFor(Creator $creator, StringList $urlIdsForRemoval): CreatorUrlsRemovalData
+    public static function getRemovalDataFor(Creator $creator, StringVec $urlIdsForRemoval): CreatorUrlsRemovalData
     {
         $urls = GroupedUrls::from($creator);
 
@@ -152,7 +152,7 @@ final class UrlRemovalService
 
     private function getRemovedUrlsBulletList(CreatorUrlsRemovalData $data): string
     {
-        return StringList::mapFrom($data->removedUrls, static fn (GroupedUrl $url) => "- $url->url")->join("\n");
+        return StringVec::mapFrom($data->removedUrls, static fn (GroupedUrl $url) => "- $url->url")->join("\n");
     }
 
     private function getDataWithTrackingUrlsRemoved(CreatorUrlsRemovalData $data): CreatorUrlsRemovalData

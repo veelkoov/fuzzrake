@@ -9,7 +9,7 @@ use App\Tracking\Data\AnalysisInput;
 use App\Tracking\Patterns\Patterns;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class Preprocessor
 {
@@ -37,7 +37,7 @@ class Preprocessor
             |> $this->patterns->falsePositives->do(...);
     }
 
-    private function replaceCreatorAliases(string $input, StringList $aliases): string
+    private function replaceCreatorAliases(string $input, StringVec $aliases): string
     {
         $result = $input;
 
