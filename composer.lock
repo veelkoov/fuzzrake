@@ -8095,12 +8095,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/veelkoov/Debris.git",
-                "reference": "70accb2604f15481b52d8bdb0e8539523dea8fc3"
+                "reference": "cc200beb8b4b60ee71a2afbb79522dccf0e9114d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/70accb2604f15481b52d8bdb0e8539523dea8fc3",
-                "reference": "70accb2604f15481b52d8bdb0e8539523dea8fc3",
+                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/cc200beb8b4b60ee71a2afbb79522dccf0e9114d",
+                "reference": "cc200beb8b4b60ee71a2afbb79522dccf0e9114d",
                 "shasum": ""
             },
             "require": {
@@ -8152,7 +8152,7 @@
                 "source": "https://github.com/veelkoov/Debris/tree/optimize-scalars",
                 "issues": "https://github.com/veelkoov/Debris/issues"
             },
-            "time": "2026-06-27T21:46:39+00:00"
+            "time": "2026-06-27T23:33:02+00:00"
         }
     ],
     "packages-dev": [
