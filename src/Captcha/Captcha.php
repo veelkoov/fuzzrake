@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Veelkoov\Debris\Base\DVec;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 class Captcha
 {

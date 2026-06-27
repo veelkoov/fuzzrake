@@ -13,10 +13,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DVec;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 class CaptchaService implements CaptchaProvider
 {

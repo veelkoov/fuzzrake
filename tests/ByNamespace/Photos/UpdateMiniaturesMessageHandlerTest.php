@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Base\DSet;
+use Veelkoov\Debris\Sets\Base\DSet;
 
 #[Small]
 class UpdateMiniaturesMessageHandlerTest extends TestCase

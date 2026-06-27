@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
-use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\StringToString;
 
 #[Small]

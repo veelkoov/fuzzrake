@@ -6,7 +6,7 @@ namespace App\Utils\Collections;
 
 use App\Entity\User;
 use Override;
-use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 
 /**
  * @extends DStringMap<User>

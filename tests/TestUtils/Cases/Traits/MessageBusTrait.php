@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use Veelkoov\Debris\Base\DVec;
+use Veelkoov\Debris\Vecs\Base\DVec;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Messenger\Test\Transport\TestTransport;
 use Zenstruck\Messenger\Test\Transport\TransportEnvelopeCollection;

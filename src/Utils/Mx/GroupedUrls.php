@@ -8,7 +8,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
-use Veelkoov\Debris\Base\DVec;
+use Veelkoov\Debris\Vecs\Base\DVec;
 use Veelkoov\Debris\Vecs\StringVec;
 
 /**

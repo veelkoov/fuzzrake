@@ -24,12 +24,12 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Collections\Strings;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Strings;
 use Veelkoov\Debris\Vecs\IntVec;
 
 /**

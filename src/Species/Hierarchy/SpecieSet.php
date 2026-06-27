@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Species\Hierarchy;
 
-use Veelkoov\Debris\Base\DSet;
+use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
 
 /**

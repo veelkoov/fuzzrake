@@ -7,7 +7,7 @@ namespace App\Species;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Species\Hierarchy\SpecieSet;
-use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Sets\StringSet;
 use Veelkoov\Debris\Vecs\StringVec;

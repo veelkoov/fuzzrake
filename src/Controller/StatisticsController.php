@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
-use Veelkoov\Debris\Base\DIntMap;
+use Veelkoov\Debris\Maps\Base\DIntMap;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Vecs\StringVec;

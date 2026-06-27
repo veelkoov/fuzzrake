@@ -6,7 +6,7 @@ namespace App\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use Veelkoov\Debris\Base\DVec;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @extends DVec<Creator>
