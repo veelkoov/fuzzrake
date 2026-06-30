@@ -24,7 +24,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
-use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
@@ -138,7 +138,7 @@ class CreatorRepository extends ServiceEntityRepository
                 Field::OTHER_STYLES->value,
             ]),
             // grep-code-debris-needs-improvements
-            ...$items->mapInto(new DMap(), static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
+            ...$items->mapInto(new DStringMap(), static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
         ]);
 
         $queryBuilder = $this->getCreatorsQueryBuilder();
