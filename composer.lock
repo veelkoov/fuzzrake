@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6497b33001f2423187ffa612844e79f8",
+    "content-hash": "ca940623a9b6920b91681e4a52b120e2",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -8091,16 +8091,16 @@
         },
         {
             "name": "veelkoov/debris",
-            "version": "dev-optimize-scalars",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veelkoov/Debris.git",
-                "reference": "cc200beb8b4b60ee71a2afbb79522dccf0e9114d"
+                "reference": "34308dd6f15501a1b80a6080f8303359723d9dea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/cc200beb8b4b60ee71a2afbb79522dccf0e9114d",
-                "reference": "cc200beb8b4b60ee71a2afbb79522dccf0e9114d",
+                "url": "https://api.github.com/repos/veelkoov/Debris/zipball/34308dd6f15501a1b80a6080f8303359723d9dea",
+                "reference": "34308dd6f15501a1b80a6080f8303359723d9dea",
                 "shasum": ""
             },
             "require": {
@@ -8114,6 +8114,7 @@
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -8149,10 +8150,10 @@
                 }
             ],
             "support": {
-                "source": "https://github.com/veelkoov/Debris/tree/optimize-scalars",
+                "source": "https://github.com/veelkoov/Debris/tree/develop",
                 "issues": "https://github.com/veelkoov/Debris/issues"
             },
-            "time": "2026-06-27T23:33:02+00:00"
+            "time": "2026-06-29T19:31:29+00:00"
         }
     ],
     "packages-dev": [
@@ -9220,11 +9221,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
-                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4048833dd47b377287818841877fb3087289509c",
+                "reference": "4048833dd47b377287818841877fb3087289509c",
                 "shasum": ""
             },
             "require": {
@@ -9280,7 +9281,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-05T09:00:01+00:00"
+            "time": "2026-06-30T21:15:26+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
@@ -9361,21 +9362,22 @@
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.16",
+            "version": "2.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "6ab598e1bc106e6827fd346ae4a12b4a5d634c32"
+                "reference": "c2f977551f0736d60467b3d754b2e0cf4e337b3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/6ab598e1bc106e6827fd346ae4a12b4a5d634c32",
-                "reference": "6ab598e1bc106e6827fd346ae4a12b4a5d634c32",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/c2f977551f0736d60467b3d754b2e0cf4e337b3f",
+                "reference": "c2f977551f0736d60467b3d754b2e0cf4e337b3f",
                 "shasum": ""
             },
             "require": {
+                "phar-io/version": "^3.2",
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^2.1.32"
+                "phpstan/phpstan": "^2.2.3"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.0"
@@ -9385,7 +9387,8 @@
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
-                "phpunit/phpunit": "^9.6"
+                "phpunit/phpunit": "^9.6",
+                "shipmonk/name-collision-detector": "^2.1"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -9411,9 +9414,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.16"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.17"
             },
-            "time": "2026-02-14T09:05:21+00:00"
+            "time": "2026-06-29T05:32:23+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
