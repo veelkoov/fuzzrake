@@ -19,7 +19,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Throwable;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class CreatorUpdaterTest extends FuzzrakeTestCase
@@ -56,8 +56,8 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
         ;
 
         $analysisResults = new AnalysisResults(
-            new StringList(['Pancakes', 'Salmiakki']),
-            new StringList(['Cheddar', 'Pizza']),
+            new StringVec(['Pancakes', 'Salmiakki']),
+            new StringVec(['Cheddar', 'Pizza']),
             true,
         );
 
@@ -71,8 +71,8 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
         UtcClock::sleep(1);
 
         $analysisResults = new AnalysisResults(
-            new StringList(['Pancakes']),
-            new StringList(['Pizza', 'Salmiakki']),
+            new StringVec(['Pancakes']),
+            new StringVec(['Pizza', 'Salmiakki']),
             false,
         );
 
@@ -128,8 +128,8 @@ class CreatorUpdaterTest extends FuzzrakeTestCase
         ;
 
         $analysisResults = new AnalysisResults(
-            new StringList($newOpenFor),
-            new StringList($newClosedFor),
+            new StringVec($newOpenFor),
+            new StringVec($newClosedFor),
             $newCsTrackerIssue,
         );
 

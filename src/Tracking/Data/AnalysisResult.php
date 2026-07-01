@@ -7,21 +7,21 @@ namespace App\Tracking\Data;
 use App\Utils\StrUtils;
 use Override;
 use Stringable;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 readonly class AnalysisResult implements Stringable
 {
     public function __construct(
         public string $url,
-        public StringList $openFor,
-        public StringList $closedFor,
+        public StringVec $openFor,
+        public StringVec $closedFor,
         public bool $hasEncounteredIssues,
     ) {
     }
 
     public function with(
-        ?StringList $openFor = null,
-        ?StringList $closedFor = null,
+        ?StringVec $openFor = null,
+        ?StringVec $closedFor = null,
         ?bool $hasEncounteredIssues = null,
     ): self {
         return new self(

@@ -15,9 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
-use Veelkoov\Debris\Base\DIntMap;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Maps\Base\DIntMap;
+use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\StringToInt;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class StatisticsController extends AbstractController
 {
@@ -82,18 +83,18 @@ class StatisticsController extends AbstractController
 
     private function prepareTableData(FilterData $input): StringToInt
     {
-        /** @var DIntMap<StringList> $countToList */
+        /** @var DIntMap<StringVec> $countToList */
         $countToList = new DIntMap();
 
         foreach ($this->getLeafItems($input->items) as $item) {
             $countToList
-                ->getOrSet($item->count, static fn () => new StringList())
+                ->getOrSet($item->count, static fn () => new StringVec())
                 ->add($item->label);
         }
 
-        $countToJoined = new StringToInt($countToList
-            ->mapValues(static fn (StringList $item) => $item->join(', '))
-            ->flip());
+        $countToJoined = $countToList
+            ->mapValuesInto(new IntToString(), static fn (StringVec $item) => $item->join(', '))
+            ->flip();
 
         $result = $countToJoined->sorted(reverse: true);
 

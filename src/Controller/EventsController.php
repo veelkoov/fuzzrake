@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class EventsController extends AbstractController
 {
@@ -54,9 +54,9 @@ class EventsController extends AbstractController
         return $result;
     }
 
-    private function getChosenEventTypes(Request $request): StringList
+    private function getChosenEventTypes(Request $request): StringVec
     {
-        $requestedTypes = StringList::split(',', $request->query->get('types', ''));
+        $requestedTypes = StringVec::split(',', $request->query->get('types', ''));
 
         return $requestedTypes->intersect([
             Event::TYPE_DATA_UPDATED,

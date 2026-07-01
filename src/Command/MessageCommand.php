@@ -14,7 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[AsCommand(
     name: 'app:message',
@@ -26,12 +26,12 @@ final class MessageCommand
     private const string MSG_MINIATURES = 'MINIATURES';
     private const string MSG_TRACKING = 'TRACKING';
 
-    private readonly StringList $messageOptions;
+    private readonly StringVec $messageOptions;
 
     public function __construct(
         private readonly MessageBusInterface $messageBus,
     ) {
-        $this->messageOptions = StringList::of(self::MSG_SPECIES, self::MSG_MINIATURES, self::MSG_TRACKING);
+        $this->messageOptions = StringVec::of(self::MSG_SPECIES, self::MSG_MINIATURES, self::MSG_TRACKING);
     }
 
     /**

@@ -7,10 +7,10 @@ namespace App\Species;
 use App\Species\Hierarchy\Specie;
 use App\Species\Hierarchy\Species;
 use App\Species\Hierarchy\SpecieSet;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 final class CreatorSpeciesResolver
 {
@@ -50,10 +50,10 @@ final class CreatorSpeciesResolver
      * Based on the list of species done by the creator and the exceptions ("doesn't"),
      * calculate a list of names of all the species actually done.
      */
-    public function resolveDoes(StringList $speciesDoes, StringList $speciesDoesnt): StringSet
+    public function resolveDoes(StringVec $speciesDoes, StringVec $speciesDoesnt): StringSet
     {
         $assumedSpeciesDoes = $speciesDoes->isEmpty() && $speciesDoesnt->isNotEmpty()
-            ? StringList::of($this->mostSpecies->getName()) : $speciesDoes;
+            ? StringVec::of($this->mostSpecies->getName()) : $speciesDoes;
 
         $ordered = $this->getOrderedDoesDoesnt($assumedSpeciesDoes, $speciesDoesnt);
 
@@ -77,7 +77,7 @@ final class CreatorSpeciesResolver
     /**
      * @return DMap<Specie, bool> Specie => Does?
      */
-    public function getOrderedDoesDoesnt(StringList $speciesDoes, StringList $speciesDoesnt): DMap
+    public function getOrderedDoesDoesnt(StringVec $speciesDoes, StringVec $speciesDoesnt): DMap
     {
         /** @var DMap<Specie, bool> $result */
         $result = new DMap();

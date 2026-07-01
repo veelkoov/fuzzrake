@@ -6,13 +6,13 @@ namespace App\ValueObject\Messages;
 
 use App\Tracking\TrackCreatorsTask;
 use Symfony\Component\Messenger\Attribute\AsMessage;
-use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Vecs\IntVec;
 
 #[AsMessage('async-msg-queue')]
 final readonly class TrackCreatorsV1
 {
     public function __construct(
-        public IntList $idsOfCreators,
+        public IntVec $idsOfCreators,
         public int $retriesLimit = TrackCreatorsTask::MAX_RETRIES,
         public bool $refetchPages = true,
     ) {

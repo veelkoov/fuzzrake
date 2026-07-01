@@ -12,8 +12,8 @@ use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use Override;
 use PHPUnit\Framework\Attributes\Medium;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Medium]
 class DbSpeciesServiceTest extends FuzzrakeKernelTestCase
@@ -75,8 +75,8 @@ class DbSpeciesServiceTest extends FuzzrakeKernelTestCase
         $this->subject->getSpecieByName('B');
     }
 
-    private function getExistingSpecieNames(): StringList
+    private function getExistingSpecieNames(): StringVec
     {
-        return StringList::mapFrom($this->speciesRepository->findAll(), static fn (Specie $specie) => $specie->getName());
+        return StringVec::mapFrom($this->speciesRepository->findAll(), static fn (Specie $specie) => $specie->getName());
     }
 }

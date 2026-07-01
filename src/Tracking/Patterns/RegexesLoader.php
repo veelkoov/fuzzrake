@@ -9,15 +9,15 @@ use App\Utils\Exceptions\ConfigurationException;
 use Composer\Pcre\Preg;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class RegexesLoader
 {
     public readonly StringToString $cleaners;
     private readonly StringToString $tokensReplacements;
-    public readonly StringList $falsePositives;
-    public readonly StringList $offersStatuses;
+    public readonly StringVec $falsePositives;
+    public readonly StringVec $offersStatuses;
 
     /**
      * @param array{tokens_replacements: array<mixed>, cleaners: array<mixed>, false_positives: array<mixed>, offers_statuses: array<mixed>} $patterns
@@ -32,8 +32,8 @@ class RegexesLoader
         $this->loadTokensReplacements($patterns['tokens_replacements']);
         $this->tokensReplacements->freeze();
 
-        $this->falsePositives = StringList::fromUnsafe($patterns['false_positives'])->map($this->resolve(...))->freeze();
-        $this->offersStatuses = StringList::fromUnsafe($patterns['offers_statuses'])->map($this->resolve(...))->freeze();
+        $this->falsePositives = StringVec::fromUnsafe($patterns['false_positives'])->map($this->resolve(...))->freeze();
+        $this->offersStatuses = StringVec::fromUnsafe($patterns['offers_statuses'])->map($this->resolve(...))->freeze();
     }
 
     /**
@@ -41,7 +41,7 @@ class RegexesLoader
      */
     private function loadTokensReplacements(array $tokensReplacements): string
     {
-        $topTokens = new StringList();
+        $topTokens = new StringVec();
 
         foreach ($tokensReplacements as $key => $value) {
             if (!is_array($value) || !is_string($key)) {

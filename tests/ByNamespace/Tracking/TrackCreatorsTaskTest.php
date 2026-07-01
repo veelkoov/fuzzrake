@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
-use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Vecs\IntVec;
 
 #[Medium]
 class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
@@ -74,7 +74,7 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
         self::persistAndFlush($creator1, $creator2, $creator3, $creator4);
         self::clearQueue(); // The listener creates "refresh single creator tracking" messages
 
-        $intList = new IntList([
+        $intList = new IntVec([
             $creator1->getId() ?? 0,
             $creator2->getId() ?? 0,
             $creator3->getId() ?? 0,

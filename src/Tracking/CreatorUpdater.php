@@ -13,7 +13,7 @@ use App\Utils\PackedStringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class CreatorUpdater
 {
@@ -50,8 +50,8 @@ class CreatorUpdater
 
     private function createEvent(Creator $old, Creator $new, bool $hasEncounteredIssues): void
     {
-        $nowOpenFor = new StringList($new->getOpenFor())->minusAll($old->getOpenFor());
-        $nowLongerOpenFor = new StringList($old->getOpenFor())->minusAll($new->getOpenFor());
+        $nowOpenFor = new StringVec($new->getOpenFor())->minusAll($old->getOpenFor());
+        $nowLongerOpenFor = new StringVec($old->getOpenFor())->minusAll($new->getOpenFor());
 
         if ($nowOpenFor->isEmpty() && $nowLongerOpenFor->isEmpty()) {
             return;

@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Throwable;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 #[AllowMockObjectsWithoutExpectations]
@@ -58,7 +58,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
     {
         $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
-        $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
+        $analysisResults = new AnalysisResults(new StringVec(), new StringVec(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::never())->method('applyResults');
@@ -72,7 +72,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
     {
         $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
-        $analysisResults = new AnalysisResults(new StringList(), new StringList(), true);
+        $analysisResults = new AnalysisResults(new StringVec(), new StringVec(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
@@ -86,7 +86,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
     {
         $creator = new Creator()->setCreatorId('TEST001')->setCommissionsUrls(['']);
 
-        $analysisResults = new AnalysisResults(new StringList(['Pancakes']), new StringList(), true);
+        $analysisResults = new AnalysisResults(new StringVec(['Pancakes']), new StringVec(), true);
 
         $this->analysisAggregatorMock->expects(self::once())->method('aggregate')->willReturn($analysisResults);
         $this->creatorUpdaterMock->expects(self::once())->method('applyResults')->with($creator, $analysisResults);
@@ -124,7 +124,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         // Resulting in open for: URL, closed for: nothing, no issues.
         $this->snapshotProcessorMock->expects($this->exactly(2))->method('process')
             ->willReturnCallback(static fn (AnalysisInput $input) => new AnalysisResult($input->url->getUrl(),
-                StringList::of($input->url->getUrl()), StringList::of(), false));
+                StringVec::of($input->url->getUrl()), StringVec::of(), false));
 
         // Aggregator should now retrieve two results with URLs
         $this->analysisAggregatorMock->expects($this->once())->method('aggregate')
@@ -143,7 +143,7 @@ class CreatorTrackerTest extends FuzzrakeTestCase
                 self::assertEmpty($results[1]->closedFor);
                 self::assertFalse($results[1]->hasEncounteredIssues);
 
-                return new AnalysisResults(StringList::of('Success'), StringList::of(), false);
+                return new AnalysisResults(StringVec::of('Success'), StringVec::of(), false);
             });
 
         $result = $this->subject->track($creator, true, false);

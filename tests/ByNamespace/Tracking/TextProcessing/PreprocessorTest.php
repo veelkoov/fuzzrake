@@ -13,7 +13,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use Psr\Log\LoggerInterface;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class PreprocessorTest extends FuzzrakeTestCase
@@ -57,37 +57,37 @@ class PreprocessorTest extends FuzzrakeTestCase
     }
 
     /**
-     * @return list<array{string, StringList, string}>
+     * @return list<array{string, StringVec, string}>
      */
     public static function creatorAliasesAreGettingReplacedWithTheNamePlaceholderDataProvider(): array
     {
         return [
             [
                 'An Intergalactic House of Pancakes work',
-                new StringList(['Intergalactic House of Pancakes']),
+                new StringVec(['Intergalactic House of Pancakes']),
                 'an CREATOR_NAME work',
             ],
             [
                 "An Intergalactic House of Pancake's work",
-                new StringList(['Intergalactic House of Pancakes']),
+                new StringVec(['Intergalactic House of Pancakes']),
                 'an CREATOR_NAME work',
             ],
             [
                 "About Intergalactic Pancake's work",
-                new StringList(['Intergalactic Pancake']),
+                new StringVec(['Intergalactic Pancake']),
                 "about CREATOR_NAME's work",
             ],
             [
                 // Multiple aliases, 's form, case-insensitive, "creator" in aliases
                 "asdf Studio's uiop Creator asdf Studios zxcv",
-                new StringList(['StUdIoS', 'cReatOR']),
+                new StringVec(['StUdIoS', 'cReatOR']),
                 'asdf CREATOR_NAME uiop CREATOR_NAME asdf CREATOR_NAME zxcv',
             ],
         ];
     }
 
     #[DataProvider('creatorAliasesAreGettingReplacedWithTheNamePlaceholderDataProvider')]
-    public function testAliasesGetReplacedWithPlaceholder(string $input, StringList $aliases, string $expected): void
+    public function testAliasesGetReplacedWithPlaceholder(string $input, StringVec $aliases, string $expected): void
     {
         $result = $this->subject->getPreprocessedContent(self::getAnalysisInput(name: $aliases->at(0),
             formerly: $aliases->slice(1)->getValuesArray(), contents: $input));

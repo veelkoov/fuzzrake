@@ -15,8 +15,8 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\IntVec;
 
 #[AsEntityListener(event: Events::postPersist, method: 'postPersist', lazy: false, entity: CreatorUrl::class)]
 #[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', lazy: false, entity: CreatorUrl::class)]
@@ -102,7 +102,7 @@ class CreatorUrlListener
         $creatorId = (int) $creatorUrl->getCreator()->getId();
 
         if (!$this->wasSent(TrackCreatorsV1::class, $creatorId)) {
-            $this->messageBus->dispatch(new TrackCreatorsV1(IntList::of($creatorId)));
+            $this->messageBus->dispatch(new TrackCreatorsV1(IntVec::of($creatorId)));
             $this->markSent(TrackCreatorsV1::class, $creatorId);
         }
     }

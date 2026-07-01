@@ -6,11 +6,11 @@ namespace App\Filtering\RequestsHandling;
 
 use App\Filtering\Consts;
 use Symfony\Component\HttpFoundation\Request;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
-use Veelkoov\Debris\Maps\StringToStringList;
+use Veelkoov\Debris\Maps\StringToStringVec;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class RequestParser
 {
@@ -73,11 +73,11 @@ class RequestParser
         ));
     }
 
-    private static function getStrArraysFromRequest(Request $request): StringToStringList
+    private static function getStrArraysFromRequest(Request $request): StringToStringVec
     {
-        return StringToStringList::fromKeys(
+        return StringToStringVec::fromKeys(
             self::ARRAYS,
-            static fn (string $paramName) => StringList::fromUnsafe($request->query->all($paramName)),
+            static fn (string $paramName) => StringVec::fromUnsafe($request->query->all($paramName)),
         );
     }
 

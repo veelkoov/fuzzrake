@@ -14,8 +14,8 @@ use Composer\Pcre\Regex;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class SnapshotProcessor
 {
@@ -40,12 +40,12 @@ class SnapshotProcessor
         if (200 !== $input->snapshot->metadata->httpCode) {
             $this->logger->info('Skipping analysis of non-200 fetched result.');
 
-            return new AnalysisResult($input->url->getUrl(), new StringList(), new StringList(), true);
+            return new AnalysisResult($input->url->getUrl(), new StringVec(), new StringVec(), true);
         }
 
         $remainingContent = $this->preprocessor->getPreprocessedContent($input);
-        $openFor = new StringList();
-        $closedFor = new StringList();
+        $openFor = new StringVec();
+        $closedFor = new StringVec();
         $hasEncounteredIssues = false;
 
         foreach ($this->patterns->offersStatuses as $pattern) {
@@ -101,9 +101,9 @@ class SnapshotProcessor
         return $isOpen;
     }
 
-    private function getOffersFromGroups(StringToString $matches): StringList
+    private function getOffersFromGroups(StringToString $matches): StringVec
     {
-        $result = new StringList();
+        $result = new StringVec();
 
         foreach ($matches->getKeys() as $key) {
             $result->addAll(GroupNamesTranslator::toOffers($key));

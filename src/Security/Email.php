@@ -9,7 +9,7 @@ use App\Utils\Traits\UtilityClass;
 use Composer\Pcre\Preg;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 final class Email
 {
@@ -25,7 +25,7 @@ final class Email
             $input = $input->getEmail();
         }
 
-        return StringList::split('@', $input)
+        return StringVec::split('@', $input)
             ->map(function (string $input): string {
                 $len = mb_strlen($input);
 

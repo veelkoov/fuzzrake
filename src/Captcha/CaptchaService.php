@@ -13,10 +13,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 class CaptchaService implements CaptchaProvider
 {
@@ -24,9 +24,9 @@ class CaptchaService implements CaptchaProvider
     private readonly int $optionsPerQuestion;
     private readonly StringToString $animals;
     /**
-     * @var DMap<covariant string, StringToBool>
+     * @var DStringMap<StringToBool>
      */
-    private readonly DMap $questions;
+    private readonly DStringMap $questions;
 
     /**
      * @param array{
@@ -43,7 +43,7 @@ class CaptchaService implements CaptchaProvider
         $this->questionsPerChallenge = $parameters['questions_per_challenge'];
         $this->optionsPerQuestion = $parameters['options_per_question'];
         $this->animals = new StringToString($parameters['animals'], frozen: true);
-        $this->questions = DMap::mapFrom($parameters['questions'],
+        $this->questions = DStringMap::mapFrom($parameters['questions'],
             static fn ($value, string $key): array => [$key, new StringToBool($value, frozen: true)])->freeze();
     }
 
@@ -77,7 +77,7 @@ class CaptchaService implements CaptchaProvider
             $selectedAnswers->set($firstFalseAnswer, false);
             $selectedAnswers = $selectedAnswers->shuffle();
 
-            $options = DList::mapFrom(
+            $options = DVec::mapFrom(
                 $selectedAnswers,
                 fn (bool $value, string $key) => new QuestionOption($key, $this->animals->get($key), $value),
             )->getValuesArray();

@@ -10,7 +10,7 @@ use App\Utils\Collections\Lists;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
-use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 
 class FiltersData
 {

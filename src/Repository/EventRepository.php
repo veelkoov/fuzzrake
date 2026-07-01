@@ -10,7 +10,7 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
  * @extends ServiceEntityRepository<Event>
@@ -27,7 +27,7 @@ class EventRepository extends ServiceEntityRepository
      *
      * @throws DateTimeException
      */
-    public function getRecent(?StringList $types = null): array
+    public function getRecent(?StringVec $types = null): array
     {
         $query = $this->createQueryBuilder('d_e')
             ->where('d_e.timestamp >= :oldest')

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Definitions\Fields;
 
 use Override;
-use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Sets\StringSet;
 
 /**

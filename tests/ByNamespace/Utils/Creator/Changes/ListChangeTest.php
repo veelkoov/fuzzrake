@@ -8,14 +8,14 @@ use App\Data\Definitions\Fields\Field;
 use App\Utils\Creator\Changes\ListChange;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Small]
 class ListChangeTest extends TestCase
 {
     public function testNoChange(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('qwer'), StringList::of('qwer'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('qwer'), StringVec::of('qwer'));
 
         self::assertSame('OTHER_FEATURES did not change', $subject->getDescription());
         self::assertFalse($subject->isActuallyAChange());
@@ -23,12 +23,12 @@ class ListChangeTest extends TestCase
 
     public function testAdded(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of(), StringList::of('qwer'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of(), StringVec::of('qwer'));
 
         self::assertSame('Added OTHER_FEATURES: "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('qwer'), StringList::of('qwer', 'asdf'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('qwer'), StringVec::of('qwer', 'asdf'));
 
         self::assertSame('Added OTHER_FEATURES: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
@@ -36,12 +36,12 @@ class ListChangeTest extends TestCase
 
     public function testRemoved(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('qwer', 'asdf'), StringList::of('qwer'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('qwer', 'asdf'), StringVec::of('qwer'));
 
         self::assertSame('Removed OTHER_FEATURES: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('qwer'), StringList::of());
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('qwer'), StringVec::of());
 
         self::assertSame('Removed OTHER_FEATURES: "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
@@ -49,17 +49,17 @@ class ListChangeTest extends TestCase
 
     public function testAddedAndRemoved(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('asdf', 'qwer'), StringList::of('qwer', 'zxcv'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('asdf', 'qwer'), StringVec::of('qwer', 'zxcv'));
 
         self::assertSame('Added OTHER_FEATURES: "zxcv" and removed: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('asdf'), StringList::of('zxcv'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('asdf'), StringVec::of('zxcv'));
 
         self::assertSame('Added OTHER_FEATURES: "zxcv" and removed: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, StringList::of('asdf', 'qwer'), StringList::of('zxcv', 'uiop'));
+        $subject = new ListChange(Field::OTHER_FEATURES, StringVec::of('asdf', 'qwer'), StringVec::of('zxcv', 'uiop'));
 
         self::assertSame('Added OTHER_FEATURES: "zxcv", "uiop" and removed: "asdf", "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());

@@ -6,12 +6,12 @@ namespace App\Utils\Creator;
 
 use App\Entity\Creator as CreatorE;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
- * @extends DList<Creator>
+ * @extends DVec<Creator>
  */
-class CreatorList extends DList
+class CreatorList extends DVec
 {
     /**
      * @param array<CreatorE> $entities

@@ -8,13 +8,13 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\Base\DVec;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
- * @extends DList<GroupedUrl>
+ * @extends DVec<GroupedUrl>
  */
-final class GroupedUrls extends DList
+final class GroupedUrls extends DVec
 {
     public static function from(Creator $creator): self
     {
@@ -39,12 +39,12 @@ final class GroupedUrls extends DList
         return new self($urls);
     }
 
-    public function onlyWithIds(StringList $urlIds): self
+    public function onlyWithIds(StringVec $urlIds): self
     {
         return $this->filter(static fn (GroupedUrl $url) => $urlIds->contains($url->getId()));
     }
 
-    public function onlyWithoutIds(StringList $urlIds): self
+    public function onlyWithoutIds(StringVec $urlIds): self
     {
         return $this->filterNot(static fn (GroupedUrl $url) => $urlIds->contains($url->getId()));
     }
@@ -55,7 +55,7 @@ final class GroupedUrls extends DList
     public function getStringOrStrList(Field $urlType): string|array
     {
         $urls = $this->filter(static fn (GroupedUrl $url) => $url->type === $urlType)
-            ->mapInto(static fn (GroupedUrl $url): string => $url->url, new StringList());
+            ->mapInto(new StringVec(), static fn (GroupedUrl $url): string => $url->url);
 
         if ($urlType->isList()) {
             return $urls->getValuesArray();

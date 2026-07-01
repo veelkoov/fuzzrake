@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData\Data;
 
 use App\Filtering\FiltersData\Item;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
- * @extends DList<Item>
+ * @extends DVec<Item>
  */
-final class ItemList extends DList
+final class ItemList extends DVec
 {
 }

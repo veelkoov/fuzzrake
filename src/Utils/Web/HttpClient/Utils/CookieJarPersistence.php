@@ -12,7 +12,7 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class CookieJarPersistence
 {
@@ -25,7 +25,7 @@ class CookieJarPersistence
         $this->filesystem = new Filesystem();
 
         try {
-            $cookieStrings = StringList::fromUnsafe(Json::decode($this->filesystem->readFile($this->cachePath)));
+            $cookieStrings = StringVec::fromUnsafe(Json::decode($this->filesystem->readFile($this->cachePath)));
 
             foreach ($cookieStrings as $cookieString) {
                 $this->cookieJar->set(Cookie::fromString($cookieString));
@@ -37,7 +37,7 @@ class CookieJarPersistence
 
     public function save(): void
     {
-        $cookieStrings = new StringList();
+        $cookieStrings = new StringVec();
 
         foreach ($this->cookieJar->all() as $cookie) {
             $cookieStrings->add((string) $cookie);

@@ -6,7 +6,7 @@ namespace App\Species;
 
 use App\Entity\Specie;
 use Override;
-use Veelkoov\Debris\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 
 /**
  * @extends DStringMap<Specie>

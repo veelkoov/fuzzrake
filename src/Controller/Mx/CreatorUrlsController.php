@@ -15,7 +15,7 @@ use App\Utils\Mx\GroupedUrls;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
 #[Route(path: '/mx/creator_urls')]
 class CreatorUrlsController extends FuzzrakeAbstractController
@@ -64,7 +64,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
     ): Response {
         $creator = $this->getCreatorOrThrow404($creatorId);
 
-        $data = UrlRemovalService::getRemovalDataFor($creator, StringList::split(',', $urlIds));
+        $data = UrlRemovalService::getRemovalDataFor($creator, StringVec::split(',', $urlIds));
         $form = $this->createForm(CreatorUrlsRemovalType::class, $data, [
             'is_contact_allowed' => ContactPermit::isAtLeastCorrections($creator->entity->getUser()->getContactPermit()),
         ]);

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tracking\Patterns;
 
 use App\Utils\Regexp\Replacements;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class Patterns
 {
     public readonly Replacements $cleaners;
     public readonly Replacements $falsePositives;
-    public readonly StringList $offersStatuses;
+    public readonly StringVec $offersStatuses;
 
     public function __construct(RegexesLoader $regexesLoader)
     {

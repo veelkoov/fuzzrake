@@ -24,12 +24,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
-use Veelkoov\Debris\Collections\Strings;
-use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Strings;
+use Veelkoov\Debris\Vecs\IntVec;
 
 /**
  * @extends ServiceEntityRepository<Creator>
@@ -137,7 +138,7 @@ class CreatorRepository extends ServiceEntityRepository
                 Field::OTHER_STYLES->value,
             ]),
             // grep-code-debris-needs-improvements
-            ...$items->map(static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
+            ...$items->mapInto(new DStringMap(), static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
         ]);
 
         $queryBuilder = $this->getCreatorsQueryBuilder();
@@ -361,7 +362,7 @@ class CreatorRepository extends ServiceEntityRepository
         return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
     }
 
-    public function getWithIds(IntList $idsOfCreators): CreatorList
+    public function getWithIds(IntVec $idsOfCreators): CreatorList
     {
         $entities = $this->getCreatorsQueryBuilder()
             ->where('d_c.id IN (:idsOfCreators)')

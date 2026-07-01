@@ -9,8 +9,8 @@ use App\Tracking\Data\AnalysisResults;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class AnalysisAggregator
 {
@@ -48,7 +48,7 @@ class AnalysisAggregator
         $contradicting = $openFor->intersect($closedFor);
 
         if ($contradicting->isNotEmpty()) {
-            $resultsAsString = StringList::mapFrom($results, static fn (AnalysisResult $result) => (string) $result)
+            $resultsAsString = StringVec::mapFrom($results, static fn (AnalysisResult $result) => (string) $result)
                 ->join(' / ');
             $this->logger->info("Contradicting offers detected: $resultsAsString.");
 
@@ -57,7 +57,7 @@ class AnalysisAggregator
             $hasEncounteredIssues = true;
         }
 
-        return new AnalysisResults(new StringList($openFor), new StringList($closedFor), $hasEncounteredIssues);
+        return new AnalysisResults(new StringVec($openFor), new StringVec($closedFor), $hasEncounteredIssues);
     }
 
     private function normalizeResult(AnalysisResult $result): AnalysisResult
