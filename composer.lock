@@ -7804,16 +7804,16 @@
         },
         {
             "name": "twig/cache-extra",
-            "version": "v3.24.0",
+            "version": "v3.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/cache-extra.git",
-                "reference": "573e22cb5fe3da13ea785d28dee33a2a88e33d53"
+                "reference": "2c3b4612b6f9c66d25a38cf42f70ba954188d3f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/cache-extra/zipball/573e22cb5fe3da13ea785d28dee33a2a88e33d53",
-                "reference": "573e22cb5fe3da13ea785d28dee33a2a88e33d53",
+                "url": "https://api.github.com/repos/twigphp/cache-extra/zipball/2c3b4612b6f9c66d25a38cf42f70ba954188d3f6",
+                "reference": "2c3b4612b6f9c66d25a38cf42f70ba954188d3f6",
                 "shasum": ""
             },
             "require": {
@@ -7853,7 +7853,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/twigphp/cache-extra/tree/v3.24.0"
+                "source": "https://github.com/twigphp/cache-extra/tree/v3.28.0"
             },
             "funding": [
                 {
@@ -7865,7 +7865,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-07T08:07:38+00:00"
+            "time": "2026-06-13T10:59:44+00:00"
         },
         {
             "name": "twig/extra-bundle",
@@ -7943,16 +7943,16 @@
         },
         {
             "name": "twig/html-extra",
-            "version": "v3.24.0",
+            "version": "v3.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/html-extra.git",
-                "reference": "313900fb98b371b006a55b1a29241a192634be13"
+                "reference": "760893ed7bdd0a381e4e00004c6f6e26ad3881d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/html-extra/zipball/313900fb98b371b006a55b1a29241a192634be13",
-                "reference": "313900fb98b371b006a55b1a29241a192634be13",
+                "url": "https://api.github.com/repos/twigphp/html-extra/zipball/760893ed7bdd0a381e4e00004c6f6e26ad3881d7",
+                "reference": "760893ed7bdd0a381e4e00004c6f6e26ad3881d7",
                 "shasum": ""
             },
             "require": {
@@ -7995,7 +7995,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/twigphp/html-extra/tree/v3.24.0"
+                "source": "https://github.com/twigphp/html-extra/tree/v3.28.0"
             },
             "funding": [
                 {
@@ -8007,20 +8007,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-17T07:24:08+00:00"
+            "time": "2026-06-25T06:50:01+00:00"
         },
         {
             "name": "twig/twig",
-            "version": "v3.27.1",
+            "version": "v3.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ae2071bffb38f04847fc0864d730c94b9cb8ab74"
+                "reference": "597c12ed286fb9d1701a36684ce6e0cbe28ebc8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae2071bffb38f04847fc0864d730c94b9cb8ab74",
-                "reference": "ae2071bffb38f04847fc0864d730c94b9cb8ab74",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/597c12ed286fb9d1701a36684ce6e0cbe28ebc8b",
+                "reference": "597c12ed286fb9d1701a36684ce6e0cbe28ebc8b",
                 "shasum": ""
             },
             "require": {
@@ -8075,7 +8075,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.27.1"
+                "source": "https://github.com/twigphp/Twig/tree/v3.28.0"
             },
             "funding": [
                 {
@@ -8087,7 +8087,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-30T17:09:26+00:00"
+            "time": "2026-07-03T20:44:34+00:00"
         },
         {
             "name": "veelkoov/debris",
@@ -8708,20 +8708,19 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.7.0",
+            "version": "v5.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82"
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/dca41cd15c2ac9d055ad70dbfd011130757d1f82",
-                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
                 "shasum": ""
             },
             "require": {
-                "ext-ctype": "*",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
                 "php": ">=7.4"
@@ -8760,9 +8759,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.7.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
             },
-            "time": "2025-12-06T11:56:16+00:00"
+            "time": "2026-07-04T14:30:18+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -9221,11 +9220,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.3",
+            "version": "2.2.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4048833dd47b377287818841877fb3087289509c",
-                "reference": "4048833dd47b377287818841877fb3087289509c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
+                "reference": "909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
                 "shasum": ""
             },
             "require": {
@@ -9281,7 +9280,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-30T21:15:26+00:00"
+            "time": "2026-07-05T06:31:06+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
@@ -9362,16 +9361,16 @@
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.17",
+            "version": "2.0.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "c2f977551f0736d60467b3d754b2e0cf4e337b3f"
+                "reference": "f5dc20ff8082d02339b60cab68ec3eb0d859fb30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/c2f977551f0736d60467b3d754b2e0cf4e337b3f",
-                "reference": "c2f977551f0736d60467b3d754b2e0cf4e337b3f",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/f5dc20ff8082d02339b60cab68ec3eb0d859fb30",
+                "reference": "f5dc20ff8082d02339b60cab68ec3eb0d859fb30",
                 "shasum": ""
             },
             "require": {
@@ -9414,9 +9413,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.17"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.18"
             },
-            "time": "2026-06-29T05:32:23+00:00"
+            "time": "2026-07-04T12:16:09+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -9890,24 +9889,24 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.30",
+            "version": "12.5.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "900400a5b616d6fb306f9549f6da33ba615d3fbb"
+                "reference": "0608d157a284f15cc73b99a3327eff06b66a176d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/900400a5b616d6fb306f9549f6da33ba615d3fbb",
-                "reference": "900400a5b616d6fb306f9549f6da33ba615d3fbb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0608d157a284f15cc73b99a3327eff06b66a176d",
+                "reference": "0608d157a284f15cc73b99a3327eff06b66a176d",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-filter": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "ext-xml": "*",
                 "ext-xmlwriter": "*",
                 "myclabs/deep-copy": "^1.13.4",
                 "phar-io/manifest": "^2.0.4",
@@ -9968,7 +9967,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.30"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.31"
             },
             "funding": [
                 {
@@ -9976,7 +9975,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-06-15T13:12:30+00:00"
+            "time": "2026-07-06T14:54:16+00:00"
         },
         {
             "name": "react/cache",
@@ -10506,16 +10505,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.5.2",
+            "version": "2.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "49ff6339174bdbdf50b0b35ecbcff14a05ac9e24"
+                "reference": "adaa18d7cd6b3c960967cfbc98c03efb3116ac0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/49ff6339174bdbdf50b0b35ecbcff14a05ac9e24",
-                "reference": "49ff6339174bdbdf50b0b35ecbcff14a05ac9e24",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/adaa18d7cd6b3c960967cfbc98c03efb3116ac0e",
+                "reference": "adaa18d7cd6b3c960967cfbc98c03efb3116ac0e",
                 "shasum": ""
             },
             "require": {
@@ -10554,7 +10553,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.5.2"
+                "source": "https://github.com/rectorphp/rector/tree/2.5.4"
             },
             "funding": [
                 {
@@ -10562,7 +10561,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-22T11:39:33+00:00"
+            "time": "2026-07-06T12:41:46+00:00"
         },
         {
             "name": "sebastian/cli-parser",
