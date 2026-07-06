@@ -19,6 +19,7 @@ use App\IuHandling\Import\ImportService;
 use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
+use App\Reviews\SubmissionActivityService;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\PostReadTracker;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,8 +59,11 @@ class ReviewController extends AbstractController
      * @param positive-int $page
      */
     #[Route(path: '/submissions/{page}/', name: 'rt_submissions_list', requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
-    public function list(Request $request, int $page): Response
-    {
+    public function list(
+        SubmissionActivityService $activityService,
+        Request $request,
+        int $page,
+    ): Response {
         if ($this->isGranted('ROLE_ADMIN')) {
             $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
             if (!$filter instanceof Filter) {
@@ -80,11 +84,13 @@ class ReviewController extends AbstractController
             $filterForm = null;
         }
 
+        $summaries = $activityService->getWeeklyPostsSummaries();
         $submissionsPage = $this->submissionRepository->getPage($filter, $page);
 
         return $this->render('submissions/list.html.twig', [
             'filter_form' => $filterForm,
             'submissions_page' => $submissionsPage,
+            'summaries' => $summaries,
         ]);
     }
 

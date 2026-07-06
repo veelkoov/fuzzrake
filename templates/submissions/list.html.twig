@@ -8,7 +8,49 @@
         <a class="btn btn-outline-primary float-end" href="{{ path('rt_submissions_social') }}">Post on social</a>
     {% endif %}
 
-    <h1>{{ block('title') }}</h1>
+    <div class="d-flex flex-row-reverse justify-content-between align-items-center">
+        <span><button class="btn btn-sm btn-outline-secondary"  type="button" data-bs-toggle="collapse" data-bs-target="#subm-act-container" aria-expanded="false" aria-controls="subm-act-container">Toggle activity</button></span>
+        <h1>{{ block('title') }}</h1>
+    </div>
+
+    <div id="subm-act-container" class="collapse pb-3">
+        <ul class="nav nav-underline" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="subm-act-normal-tab" data-bs-toggle="tab" data-bs-target="#subm-act-normal-pane"
+                        type="button" role="tab" aria-controls="subm-act-normal-pane" aria-selected="true">Normal
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="subm-act-markdown-tab" data-bs-toggle="tab" data-bs-target="#subm-act-markdown-pane"
+                        type="button" role="tab" aria-controls="subm-act-markdown-pane" aria-selected="false">Markdown
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content p-2">
+            <div class="tab-pane fade show active" id="subm-act-normal-pane" role="tabpanel" aria-labelledby="subm-act-normal-tab" tabindex="0">
+                {% for day, submission_summaries in summaries %}
+                    <p class="mb-1">On {{ day }}:</p>
+                    <ul class="mb-1">
+                        {% for summary in submission_summaries %}
+                            <li>
+                                {{ summary.nicknames }} posted/updated {{ summary.count }} message(s) in <a class="text-decoration-none" href="{{ path('rt_submission_review', {id: summary.submissionId}) }}">#{{ summary.submissionId }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="subm-act-markdown-pane" role="tabpanel" aria-labelledby="subm-act-markdown-tab" tabindex="0">
+                {% for day, submission_summaries in summaries %}
+                    <div class="user-select-all">
+                        On {{ day }}:<br>
+                        {% for summary in submission_summaries %}
+                            - {{ summary.nicknames }} posted/updated {{ summary.count }} message(s) in [#{{ summary.submissionId }}]({{ url('rt_submission_review', {id: summary.submissionId}) }})<br>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
     {% if filter_form !== null %}
         {{ form_errors(filter_form) }}
