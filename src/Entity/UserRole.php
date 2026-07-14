@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRoleRepository::class)]
 #[ORM\Table(name: 'user_roles')]
+#[ORM\UniqueConstraint(fields: ['user', 'role'])]
 class UserRole
 {
     #[ORM\Id]
