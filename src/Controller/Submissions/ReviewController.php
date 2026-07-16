@@ -11,7 +11,6 @@ use App\Data\Submission\Status;
 use App\Entity\Post;
 use App\Entity\PostVote;
 use App\Entity\Submission;
-use App\Entity\TopicRead;
 use App\Entity\User;
 use App\Form\Submission\FilterType;
 use App\Form\Submission\PostType;
@@ -20,8 +19,8 @@ use App\Repository\PostRepository;
 use App\Repository\PostVoteRepository;
 use App\Repository\SubmissionRepository;
 use App\Reviews\SubmissionActivityService;
+use App\Reviews\SubmissionTopicService;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\PostReadTracker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,6 +51,7 @@ class ReviewController extends AbstractController
         private readonly PostRepository $postRepository,
         private readonly PostVoteRepository $postVoteRepository,
         private readonly FormFactoryInterface $formFactory,
+        private readonly SubmissionTopicService $submissionTopicService,
     ) {
     }
 
@@ -63,6 +63,7 @@ class ReviewController extends AbstractController
         SubmissionActivityService $activityService,
         Request $request,
         int $page,
+        #[CurrentUser] User $user,
     ): Response {
         if ($this->isGranted('ROLE_ADMIN')) {
             $filter = $request->getSession()->get(self::SESSION_SUBMISSIONS_FILTER);
@@ -91,6 +92,7 @@ class ReviewController extends AbstractController
             'filter_form' => $filterForm,
             'submissions_page' => $submissionsPage,
             'summaries' => $summaries,
+            'unread_counts' => $this->submissionTopicService->getUnreadCounts($user, $submissionsPage->items),
         ]);
     }
 
@@ -140,7 +142,7 @@ class ReviewController extends AbstractController
             'fields' => Fields::inIuForm(),
             'new_topic_form' => $newTopicForm,
             'topics' => $topics,
-            'tracker' => $this->getPostReadTracker($user, $topics),
+            'tracker' => $this->submissionTopicService->getPostReadTracker($user, $topics),
             'timestampUtc' => UtcClock::time(),
         ]);
     }
@@ -155,7 +157,7 @@ class ReviewController extends AbstractController
             throw new BadRequestHttpException();
         }
 
-        $topicRead = $this->getPostReadTracker($user, $topic)->markRead($topic, $timestampUtc);
+        $topicRead = $this->submissionTopicService->getPostReadTracker($user, $topic)->markRead($topic, $timestampUtc);
         $this->entityManager->persist($topicRead);
         $this->entityManager->flush();
 
@@ -221,20 +223,5 @@ class ReviewController extends AbstractController
         }
 
         return $this->formFactory->createNamed($formName, PostType::class, $post);
-    }
-
-    /**
-     * @param list<array{entity: Post, response_form: mixed}>|Post $topics
-     */
-    private function getPostReadTracker(User $user, array|Post $topics): PostReadTracker
-    {
-        $topics = is_array($topics) ? array_column($topics, 'entity') : [$topics];
-
-        $topicRead = $this->entityManager->getRepository(TopicRead::class)->findBy([
-            'user' => $user,
-            'topic' => $topics,
-        ]);
-
-        return new PostReadTracker($topicRead, $user);
     }
 }

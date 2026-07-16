@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Reviews;
 
 use App\Entity\Post;
 use App\Entity\TopicRead;

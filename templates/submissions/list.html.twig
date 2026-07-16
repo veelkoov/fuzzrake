@@ -112,6 +112,10 @@
 
                             <a class="text-decoration-none" href="{{ path('rt_submission_review', {id: submission.id}) }}">
                                 Review
+
+                                {% if unread_counts.getOrDefaultOf(submission.id, 0) %}
+                                    <span class="badge text-bg-primary">{{ unread_counts.get(submission.id) }}</span>
+                                {% endif %}
                             </a>
                         </td>
                     </tr>
