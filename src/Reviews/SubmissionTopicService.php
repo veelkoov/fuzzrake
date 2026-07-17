@@ -53,6 +53,7 @@ class SubmissionTopicService
                 ) AS p
                 LEFT JOIN topics_reads AS tr
                     ON tr.topic_id = p.topic_id
+                    AND tr.user_id = :user_id
                 WHERE (tr.last_read IS NULL OR tr.last_read < p.time_utc)
                     AND (tr.user_id IS NULL OR tr.user_id = :user_id)
                 GROUP BY submission_id

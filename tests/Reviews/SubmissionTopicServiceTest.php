@@ -77,4 +77,24 @@ class SubmissionTopicServiceTest extends FuzzrakeKernelTestCase
             [true, false, 1],
         ];
     }
+
+    public function testRegressionOnlyOwnTopicReadsCount(): void
+    {
+        self::mockTime();
+
+        $reviewer1 = TestUser::get(roles: [Role::REVIEWER]);
+        $reviewer2 = TestUser::get(roles: [Role::REVIEWER]);
+
+        $submission = new Submission(false);
+
+        $topic = new Post($reviewer1, $submission);
+        $topicRead = new TopicRead($reviewer1, $topic)->setLastRead(UtcClock::at('+1 minute'));
+
+        self::persistAndFlush($reviewer1, $reviewer2, $submission, $topic, $topicRead);
+
+        $subject = self::getContainerService(SubmissionTopicService::class);
+        $result = $subject->getUnreadCounts($reviewer2, [$submission]);
+
+        self::assertSame([(int) $submission->getId() => 1], $result->toArray());
+    }
 }
