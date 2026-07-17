@@ -4,12 +4,14 @@
 {% block title %}Submissions{% endblock %}
 
 {% block body %}
-    {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-outline-primary float-end" href="{{ path('rt_submissions_social') }}">Post on social</a>
-    {% endif %}
-
     <div class="d-flex flex-row-reverse justify-content-between align-items-center">
-        <span><button class="btn btn-sm btn-outline-secondary"  type="button" data-bs-toggle="collapse" data-bs-target="#subm-act-container" aria-expanded="false" aria-controls="subm-act-container">Toggle activity</button></span>
+        <span>
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#subm-act-container" aria-expanded="false" aria-controls="subm-act-container">Toggle activity</button>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ path('rt_submissions_social') }}">Post on social</a>
+            {% endif %}
+        </span>
+
         <h1>{{ block('title') }}</h1>
     </div>
 
