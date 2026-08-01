@@ -12,7 +12,7 @@ class Kernel extends BaseKernel
     /**
      * @return list<string> An array of allowed values for APP_ENV
      */
-    private function getAllowedEnvs(): array
+    private function getAllowedEnvs(): array // @phpstan-ignore method.unused (False-positive; overrides trait's method)
     {
         return ['prod', 'dev', 'test', 'beta'];
     }
