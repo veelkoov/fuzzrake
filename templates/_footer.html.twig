@@ -1,36 +1,21 @@
 <div class="container footer py-5">
-    <hr class="mt-5" />
-
     <div class="путін-хуйло"><div></div><div></div></div>
 
-    <div class="row">
+    <div class="row text-center">
         <div class="col-sm">
-            <div class="card text-bg-light mb-4">
-                <div class="card-header">Privacy &amp; cookies</div>
-                <div class="card-body">
-                    <p class="card-text">
-                        This website may be using a single functional, session cookie. Otherwise, neither cookies nor other treats are being utilized.
-                    </p>
-                </div>
-            </div>
+            This website may be using a single functional, session cookie. Otherwise, neither cookies nor other treats are being utilized.
         </div>
 
         <div class="col-sm">
-            <div class="card text-bg-light mb-4">
-                <div class="card-header">License</div>
-                <div class="card-body row">
-                    <div class="col-auto pt-1">
-                        <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
-                            <img alt="Creative Commons License" src="{{ asset('images/cc-by-sa-4.0-88x31.png') }}" />
-                        </a>
-                    </div>
-                    <div class="col ps-0">
-                        <p class="card-text">
-                            Except where otherwise noted, all data&amp;information available on this website is licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license. More information available <a href="{{ path('rt_info') }}">here</a>.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            Except where otherwise noted, all the data and information available on this website is licensed under
+            <span class="text-nowrap">
+                {# TODO: Do not use CDN #}
+                <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+                <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"
+                ><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"
+                ><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+                | Find more <a href="{{ path('rt_info') }}">here</a>.
+            </span>
         </div>
     </div>
 </div>

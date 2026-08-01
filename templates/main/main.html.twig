@@ -14,6 +14,7 @@
 
 {% block body %}
     {{ include('main/parts/intro.html.twig') }}
+    {# TODO: Data here is maintained exclusively by the makers now. Only they can provide accurate and complete information. If you see your maker/studio information missing or outdated, please let them know! #}
 
     {{ include('main/parts/checklist.html.twig') }}
 
@@ -118,9 +119,7 @@
 
     <div id="creators-table-pagination"></div>
 
-    <div class="container text-center">
-        <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">
-    </div>
+    {# TODO: Removed images in the repo #}
 
     <div id="loading-indicator" class="htmx-indicator">
         <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">

@@ -4,9 +4,19 @@
 
 @import "../../node_modules/flag-icons/css/flag-icons.min.css";
 
-.intro-updated-info {
-  color: #6c757d;
-  font-size: 0.7em;
+a { // TODO: Remove where added extra
+  text-decoration: none;
+}
+
+#main-page-intro {
+  .intro-updated-info {
+    color: #6c757d;
+    font-size: 0.7em;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .ages {
