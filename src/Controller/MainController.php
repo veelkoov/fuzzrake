@@ -72,17 +72,6 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/updates-dialog/{creatorId}', name: 'rt_htmx_main_updates_dialog')]
-    #[Cache(maxage: 900, public: true)]
-    public function updatesDialog(string $creatorId): Response
-    {
-        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
-
-        return $this->render('main/htmx/updates_dialog.html.twig', [
-            'creator' => $creator,
-        ]);
-    }
-
     #[Route(path: '/htmx/main/creators-in-table', name: 'rt_htmx_main_creators_in_table')]
     #[Cache(maxage: 900, public: true)]
     public function htmxCreatorsInTable(Request $request): Response

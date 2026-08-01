@@ -87,21 +87,10 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function openDataOutdatedPopupFromTheCreatorCard(): void
+    private function closeCreatorCardUpByClickingTheCross(): void
     {
-        $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
-
-        self::$client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
-        self::waitUntilShows('#creator-updates-modal-content');
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    private function closeDataOutdatedPopUpByClickingTheCloseButton(): void
-    {
-        self::$client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
-        self::$client->waitForInvisibility('#creator-updates-modal-content', 5);
+        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal .modal-header > button'))->click();
+        self::$client->waitForInvisibility('#creator-card-modal', 5);
     }
 
     /**

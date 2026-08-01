@@ -65,27 +65,12 @@ class MainPageTest extends FuzzrakePantherTestCase
         $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ');
         self::assertSelectorIsVisible('//a[@id="creator-id" and @href="#TEST001"]');
 
+        $this->closeCreatorCardUpByClickingTheCross();
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        $this->openDataOutdatedPopupFromTheCreatorCard();
-        self::assertStringContainsString('Test creator 1 CZ', self::$client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
-
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Open the links dropdown
         self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
         self::$client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
-
-        // Click the last link - data outdated
-        self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        self::waitUntilShows('#creator-updates-modal-content');
-        self::assertStringContainsString('Test creator 3 DE', self::$client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
-
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Check if text search works
         $this->clearTypeInTextSearch('CZ');

@@ -1,5 +1,3 @@
-{% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
-
 {% macro list_cs_opt(items) %}
     {% if items %}
         {{ items|join(', ') }}
@@ -362,19 +360,23 @@
             {% endif %}
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer hstack">
             <small>Last time updated: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</small>
 
-            <span class="ms-auto">
-                <button type="button" class="btn btn-light border border-warning"
-                        {{ update_dialog_open_attrs(creator.lastCreatorId) }}>
+            <div class="dropdown ms-auto">
+                <button class="btn btn-light border-warning dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                     Data outdated/inaccurate?
                 </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ path('rt_iu_form_step_start', {creatorId: creator.lastCreatorId}) }}">Send updates as the maker</a></li>
+                    <li><a class="dropdown-item" href="{{ path('rt_feedback_form', {creator: creator.lastCreatorId}) }}" target="_blank">Submit the feedback form</a></li> {# grep-creator-query-parameter #}
+                </ul>
+            </div>
 
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-            </span>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
         </div>
     </div>
 </div>
