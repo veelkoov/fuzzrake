@@ -49,7 +49,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         self::persistAndFlush($creator);
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());

@@ -49,53 +49,64 @@
         </div>
     </div>
 
-    {# twig-cs-fixer-disable PunctuationSpacing.After #}
-    {# Unable to disable for the following lines only #}
-    {% set columns = [
-        {id: 'creator-id',        label: 'Maker ID',          alignment_class: 'text-center'},
-        {id: 'state',             label: 'State',             alignment_class: 'text-center'},
-        {id: 'languages',         label: 'Languages',         alignment_class: 'text-center'},
-        {id: 'production-models', label: 'Production models', alignment_class: 'text-center'},
-        {id: 'styles',            label: 'Styles',            alignment_class: 'text-center'},
-        {id: 'types',             label: 'Types',             alignment_class: 'text-center'},
-        {id: 'features',          label: 'Features',          alignment_class: 'text-center'},
-        {id: 'species',           label: 'Species',           alignment_class: 'text-center'},
-        {id: 'commissions',       label: 'Commissions',       alignment_class: 'text-center'},
-        {id: 'links',             label: 'Links',             alignment_class: 'text-end'},
-    ] %}
-
-    <div id="main-primary-content" class="row d-none">
-        <div class="col-md-6">
-            <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-expanded="false">
-                        Columns
-                    </button>
-                    <ul id="columns-visibility-links" class="dropdown-menu">
-                        {% for column in columns %}
-                            <li>
-                                <a class="dropdown-item" href="#" data-column-id="{{ column.id }}">{{ column.label }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
-                        data-bs-target="#filters-modal">
-                    Filters
-
-                    <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
-                </button>
-
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
-                    Legend
-                </button>
-            </div>
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
         </div>
+    </div>
+{% endblock %}
 
-        <div class="col-md-6 text-md-end">
-            <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
+{# twig-cs-fixer-disable PunctuationSpacing.After #}
+{# Unable to disable for the following lines only #}
+{% set columns = [
+    {id: 'creator-id',        label: 'Maker ID',          alignment_class: 'text-center'},
+    {id: 'state',             label: 'State',             alignment_class: 'text-center'},
+    {id: 'languages',         label: 'Languages',         alignment_class: 'text-center'},
+    {id: 'production-models', label: 'Production models', alignment_class: 'text-center'},
+    {id: 'styles',            label: 'Styles',            alignment_class: 'text-center'},
+    {id: 'types',             label: 'Types',             alignment_class: 'text-center'},
+    {id: 'features',          label: 'Features',          alignment_class: 'text-center'},
+    {id: 'species',           label: 'Species',           alignment_class: 'text-center'},
+    {id: 'commissions',       label: 'Commissions',       alignment_class: 'text-center'},
+    {id: 'links',             label: 'Links',             alignment_class: 'text-end'},
+] %}
+
+{% block body_no_wrap %}
+    <div class="container-fluid main-primary-content d-none">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside" aria-expanded="false">
+                            Columns
+                        </button>
+                        <ul id="columns-visibility-links" class="dropdown-menu">
+                            {% for column in columns %}
+                                <li>
+                                    <a class="dropdown-item" href="#" data-column-id="{{ column.id }}">{{ column.label }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
+                            data-bs-target="#filters-modal">
+                        Filters
+
+                        <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
+                        Legend
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-6 text-md-end">
+                <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
+            </div>
         </div>
 
         <div id="data-table-container">
@@ -117,14 +128,7 @@
         </div>
     </div>
 
-    <div id="creators-table-pagination"></div>
-
-    {# TODO: Removed images in the repo #}
-
-    <div id="loading-indicator" class="htmx-indicator">
-        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">Loading...</span>
-        </div>
+    <div class="container main-primary-content d-none">
+        <div id="creators-table-pagination"></div>
     </div>
 {% endblock %}

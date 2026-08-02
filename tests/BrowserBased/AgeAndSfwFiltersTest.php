@@ -96,10 +96,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
-
-        $infoText = 'Currently '.count($creators).' makers from 0 countries are listed here.';
-        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        $this->loadMainPage(count($creators), 0);
 
         self::$client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 

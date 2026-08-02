@@ -40,9 +40,13 @@
                 {% endfor %}
             {% endfor %}
         {% endif %}
-
-        {% block body %}{% endblock %}
     </div>
+
+    <div class="container">
+        {%- block body %}{% endblock -%}
+    </div>
+
+    {%- block body_no_wrap %}{% endblock -%}
 
     {{ include('_footer.html.twig') }}
 
