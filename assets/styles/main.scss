@@ -260,7 +260,7 @@ table#creators-table {
     }
   }
 
-  ul {
+  ul:not(.dropdown-menu) {
     padding-left: 1rem;
     margin-bottom: 0;
   }

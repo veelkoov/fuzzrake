@@ -21,6 +21,8 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 
+    private const string DATA_OUTDATED_BTN_SELECTOR = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
+
     /**
      * @return array<array{string, Creator}>
      */
@@ -51,9 +53,8 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());
-        $this->openDataOutdatedPopupFromTheCreatorCard();
-
-        self::$client->clickLink('submit the feedback form');
+        self::$client->findElement(WebDriverBy::xpath(self::DATA_OUTDATED_BTN_SELECTOR))->click();
+        self::$client->clickLink('Submit the feedback form');
 
         self::assertCount(2, self::$client->getWindowHandles());
         $handle = self::$client->getWindowHandles()[1];

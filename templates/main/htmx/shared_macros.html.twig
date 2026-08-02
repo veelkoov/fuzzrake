@@ -1,7 +1,0 @@
-{% macro update_dialog_open_attrs(creator_id) %}
-    hx-get="{{ path('rt_htmx_main_updates_dialog', {creatorId: creator_id}) }}"
-    hx-target="#creator-updates-modal"
-    hx-trigger="click"
-    data-bs-toggle="modal"
-    data-bs-target="#creator-updates-modal"
-{% endmacro %}
