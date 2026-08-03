@@ -1,3 +1,5 @@
+{# TODO: Eliminate #}
+
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
 {% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
@@ -159,6 +161,6 @@
     </tr>
 {% endfor %}
 
-<div hx-swap-oob="true" id="creators-table-pagination">
-    {{ pagination(creators_page, '#creators-table', 'matched fursuit makers', 'goToPage(1);') }}
+<div hx-swap-oob="true" id="main-creators-pagination">
+    {{ pagination(creators_page, '#main-creators-list', 'matched fursuit makers', 'goToPage(1);') }}
 </div>

@@ -1,3 +1,4 @@
+{# TODO: Get rid of #}
 {% macro card_open_attrs(creator_id) %}
     hx-get="{{ path('rt_htmx_main_creator_card', {creatorId: creator_id}) }}"
     hx-target="#creator-card-modal"

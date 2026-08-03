@@ -103,7 +103,7 @@ if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
 })();
 
 (function setUpColumnsManager(): void {
-  new ColumnsManager("#creators-table", "#columns-visibility-links a");
+  // new ColumnsManager("#creators-table", "#columns-visibility-links a"); // FIXME
 })();
 
 jQuery("#creator-card-modal").on("shown.bs.modal", function (): void {
@@ -141,3 +141,5 @@ window.goToPage = function (pageNumber: number): void {
     }
   });
 })();
+
+jQuery(() => { jQuery('#checklist-dismiss-btn').trigger('click'); }); // FIXME: Revert

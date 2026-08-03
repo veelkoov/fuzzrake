@@ -122,7 +122,7 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 
             $displayedCreatorIds = [
                 ...$displayedCreatorIds,
-                ...$crawler->filter('#creators-table-body tr')
+                ...$crawler->filter('#creators-table-body tr') // FIXME
                     ->each(fn (Crawler $node, $_) => $node->attr('id', '')),
             ];
 

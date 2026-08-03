@@ -35,7 +35,7 @@ trait MainPageTestsTrait
      */
     private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
     {
-        $locator = "//div[@id=\"creators-table-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
+        $locator = "//div[@id=\"main-creators-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
 
         self::$client->waitFor($locator, 3);
     }

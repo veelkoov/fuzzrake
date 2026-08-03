@@ -1,0 +1,135 @@
+{% macro based_in(state, city) %}
+    {% set text = [state, city]|filter(i => i)|join(', ') %}
+
+    {% if text %}
+        {{ text -}}
+    {% else %}
+        {# Providing location is voluntary. TODO: Require state for US and Canada #}
+    {% endif %}
+{% endmacro %}
+
+{% macro crafting_since(input) %}
+    {% set months = {
+        '01': 'Jan',
+        '02': 'Feb',
+        '03': 'Mar',
+        '04': 'Apr',
+        '05': 'May',
+        '06': 'Jun',
+        '07': 'Jul',
+        '08': 'Aug',
+        '09': 'Sep',
+        10: 'Oct',
+        11: 'Nov',
+        12: 'Dec',
+    } %}
+
+    {% if input %}
+        {% set parts = input|split('-') %}
+
+        {{ months[parts[1]] }} {{ parts[0] }}
+    {% else %}
+        {{ unknown_value() }}
+    {%- endif -%}
+{% endmacro %}
+
+<div class="row">
+    <div class="col">
+        {{ creator.name }}
+    </div>
+    <div class="col">
+        <span class="fi fi-{{ creator.country|lower }}"></span>
+        {{ _self.based_in(creator.state, creator.city) }}
+    </div>
+    <div class="col">
+        Crafting since {{ _self.crafting_since(creator.since) }}
+    </div>
+    <div class="col">
+        {% if creator.creatorId %}
+            <a href="{{ url('rt_creator', {'creatorId': creator.creatorId}) }}">
+                <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
+            </a>
+        {% endif %}
+    </div>
+    {# FIXME: Must not be cached/served to anonymoous #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="col">
+            <a class="btn btn-warning" href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}"
+               role="button">
+                <i class="fas fa-edit"></i>
+            </a>
+
+            <a class="btn btn-warning"
+               href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
+                <i class="fas fa-link"></i>
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% if creator.formerly %}
+    <div class="row">
+        <div class="col">
+            Formerly/a.k.a. ▶ {{ creator.formerly|join(' ▶ ') }}
+        </div>
+    </div>
+{% endif %}
+
+{% if creator.inactiveReason %}
+    <div class="row">
+        <div class="col">
+            <strong>This maker has been hidden for the following reason:</strong><br>
+            {{ creator.inactiveReason }}
+        </div>
+    </div>
+{% endif %}
+
+{% if creator.hasValidPhotos %}
+    <div class="row">
+        <div class="col overflow-auto imgs-container">
+            {% for photo_url in creator.photoUrls %}
+                <div>
+                    <a href="{{ photo_url }}" target="_blank"><img src="{{ creator.miniatureUrls[loop.index0] }}" alt=""></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{% if creator.intro %}
+    <div class="row">
+        <div class="col">
+            <p class="lead nl2br">
+                {{- creator.intro -}}
+            </p>
+        </div>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col">
+        <strong>
+            {% if creator.hasAllergyWarning is null %}
+                {% if '' == creator.allergyWarningInfo %}
+                    No information for allergic customers
+                    {{ unknown_value() }}
+                {% else %}
+                    Allergy warning
+                    {{ unknown_value() }}
+                {% endif %}
+            {% elseif creator.hasAllergyWarning %}
+                Allergy warning
+                <i class="text-warning fa-solid fa-triangle-exclamation"></i>
+            {% else %}
+                No allergy warning
+                <i class="text-success fa-solid fa-circle-xmark"></i>
+            {% endif %}
+        </strong>
+
+        {% if '' != creator.allergyWarningInfo %}
+            {{ creator.allergyWarningInfo|nl2br }}
+        {% elseif creator.hasAllergyWarning %}
+            Please check the provided links for details or contact the maker regarding this matter.
+        {% endif %}
+    </div>
+</div>

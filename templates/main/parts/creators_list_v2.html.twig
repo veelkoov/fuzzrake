@@ -1,0 +1,19 @@
+{% from 'shared_parts/shared_macros.html.twig' import pagination %}
+
+{% for creator in creators_page.items %}
+    {% set creator_idx = loop.index %}
+
+    {{ include('main/parts/creator_card_v2.html.twig') }}
+
+    {% if not loop.last %}
+        <div class="row">
+            <div class="col">
+                <hr>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<div hx-swap-oob="true" id="main-creators-pagination">
+    {{ pagination(creators_page, '#main-creators-list', 'matched fursuit makers', 'goToPage(1);') }}
+</div>
