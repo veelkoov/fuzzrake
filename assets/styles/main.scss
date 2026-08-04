@@ -17,20 +17,6 @@ a { // TODO: Remove where added extra
   }
 }
 
-.ages {
-  &.fa-user-minus {
-    color: #ffcc00;
-  }
-
-  &.fa-user-plus {
-    color: #4cae4c;
-  }
-
-  &.fa-user {
-    color: #bbb;
-  }
-}
-
 div#data-table-container {
   table .creator-id,
   table .state,

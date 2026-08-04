@@ -1,33 +1,5 @@
 {# TODO: Eliminate #}
 
-{% macro list_cs_opt(items) %}
-    {% if items %}
-        {{ items|join(', ') }}
-    {% else %}
-        {{ unknown_value() }}
-    {% endif %}
-{% endmacro %}
-
-{% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
-    {% if comment %}
-        <span class="nl2br">{{ comment }}</span>
-    {% endif %}
-
-    {% if items or other_items %}
-        <ul>
-            {% for item in items %}
-                <li>{{ item }}</li>
-            {% endfor %}
-
-            {% if other_items %}
-                <li>{{ other_items|join('; ') }}</li>
-            {% endif %}
-        </ul>
-    {% else %}
-        {{ unknown_value() }}
-    {% endif %}
-{% endmacro %}
-
 {% macro link(uri, label, icon_class, additional_button_class = '') %}
     {% if uri %}
         <a class="btn btn-light {{ additional_button_class }}" href="{{ uri }}" target="_blank">
@@ -39,93 +11,6 @@
 <div class="modal-dialog modal-xl">
     <div id="creator-card-modal-content" class="modal-content">
         <div class="modal-body row px-4 py-2">
-            <div class="col-md-6 p-1">
-                <p class="mb-0 small text-md-end">
-                    Ages of studio members: {{ ages_description(creator, true) }}
-                </p>
-            </div>
-
-            <div class="col-md-3 p-1">
-                <h5>Produces</h5>
-
-                <div class="small pb-2">
-                    {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
-                </div>
-
-                <h5>Styles</h5>
-
-                <div class="small">
-                    {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
-                </div>
-            </div>
-
-            <div class="col-md-5 p-1">
-                <h5>Types</h5>
-
-                <div class="small">
-                    {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
-                </div>
-            </div>
-
-            <div class="col-md-4 p-1">
-                <h5>Features</h5>
-
-                <div class="small">
-                    {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
-                </div>
-            </div>
-
-            <div class="col-md-6 p-1">
-                <h5>Species</h5>
-
-                <div class="small pb-2">
-                    {% if creator.speciesComment %}
-                        <span class="nl2br">{{ creator.speciesComment }}</span><br>
-                    {% endif %}
-
-                    {% if creator.speciesDoes %}
-                        <strong>Does</strong>: {{ creator.speciesDoes|join(', ') }}
-                        {% if creator.speciesDoesnt %}<br>{% endif %}
-                    {% endif %}
-
-                    {% if creator.speciesDoesnt %}
-                        <strong>Doesn't</strong>: {{ creator.speciesDoesnt|join(', ') }}
-                    {% endif %}
-
-                    {% if not creator.speciesDoes and not creator.speciesDoesnt %}
-                        {{ unknown_value() }}
-                    {% endif %}
-                </div>
-
-                <h5>Languages</h5>
-
-                <div class="small">
-                    {{ _self.list_cs_opt(creator.languages) }}
-                </div>
-            </div>
-
-            <div class="col-md-6 p-1">
-                <h5>Payment plans {{ nullable_boolean_symbol(creator.offersPaymentPlans) }}</h5>
-
-                {% if creator.paymentPlansInfo %}
-                    <div class="small pb-2">
-                        <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
-                    </div>
-                {% endif %}
-
-                <h5>Currencies</h5>
-
-                <div class="small pb-2">
-                    {{ _self.list_cs_opt(creator.currenciesAccepted) }}
-                </div>
-
-                <h5>Methods</h5>
-
-                <div class="small">
-                    {{ _self.list_cs_opt(creator.paymentMethods) }}
-                </div>
-            </div>
-
             <div class="col-md-12 p-1">
                 <h5>Links</h5>
 
@@ -223,41 +108,18 @@
                 </div>
 
                 <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-4 text-end' }}">
-                    {% if creator.isStatusKnown %}
-                        <p>
-                            Status is tracked and updated automatically based on the contents of:
-                            {% for uri in creator.commissionsUrls %}
-                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>
-                                {%- if not loop.last %},{% endif %}
-                            {%- endfor %}.
-                            <br> Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
-                        </p>
+                    <p>
+                        Status is tracked and updated automatically based on the contents of:
+                        {% for uri in creator.commissionsUrls %}
+                        <a href="{{ uri }}" target="_blank">{{ uri }}</a>
+                        {%- if not loop.last %},{% endif %}
+                        {%- endfor %}.
+                        <br> Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
+                    </p>
 
-                        <p><a href="{{ path('rt_tracking') }}" target="_blank">Learn more</a></p>
-                    {% else %}
-                        <img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">
-                    {% endif %}
+                    <p><a href="{{ path('rt_tracking') }}" target="_blank">Learn more</a></p>
                 </div>
             {% endif %}
-        </div>
-
-        <div class="modal-footer hstack">
-            <small>Last time updated: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</small>
-
-            <div class="dropdown ms-auto">
-                <button class="btn btn-light border-warning dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Data outdated/inaccurate?
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{{ path('rt_iu_form_step_start', {creatorId: creator.lastCreatorId}) }}">Send updates as the maker</a></li>
-                    <li><a class="dropdown-item" href="{{ path('rt_feedback_form', {creator: creator.lastCreatorId}) }}" target="_blank">Submit the feedback form</a></li> {# grep-creator-query-parameter #}
-                </ul>
-            </div>
-
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-            </button>
         </div>
     </div>
 </div>

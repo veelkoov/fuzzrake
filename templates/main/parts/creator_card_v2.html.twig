@@ -33,16 +33,47 @@
     {%- endif -%}
 {% endmacro %}
 
+{% macro list_cs_opt(items) %}
+    {% if items %}
+        {% for item in items %} ‣&nbsp;{{ item }} {% endfor %}
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
+    {% if comment %}
+        <span class="nl2br">{{ comment }}</span>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+
+            {% if other_items %}
+                <li>{{ other_items|join('; ') }}</li>
+            {% endif %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
 <div class="row">
     <div class="col">
         {{ creator.name }}
     </div>
     <div class="col">
         <span class="fi fi-{{ creator.country|lower }}"></span>
-        {{ _self.based_in(creator.state, creator.city) }}
+        {{ _self.based_in(creator.state, creator.city) }}<br>
+        <small>
+            Speaking: {{ _self.list_cs_opt(creator.languages) }}
+        </small>
     </div>
     <div class="col">
-        Crafting since {{ _self.crafting_since(creator.since) }}
+        <small>Crafting since {{ _self.crafting_since(creator.since) }}</small>
     </div>
     <div class="col">
         {% if creator.creatorId %}
@@ -70,10 +101,35 @@
 {% if creator.formerly %}
     <div class="row">
         <div class="col">
-            Formerly/a.k.a. ▶ {{ creator.formerly|join(' ▶ ') }}
+            <small>Formerly/a.k.a. {{  _self.list_cs_opt(creator.formerly) }}</small>
         </div>
     </div>
 {% endif %}
+
+<div class="row">
+    <div class="col">
+        Last update: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}
+    </div>
+    <div class="col">
+        <div class="dropdown">
+            <button class="btn btn-light border-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Data outdated/inaccurate?
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="{{ path('rt_iu_form_step_start', {creatorId: creator.lastCreatorId}) }}">
+                        Send updates as the maker
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ path('rt_feedback_form', {creator: creator.lastCreatorId}) }}" {# grep-creator-query-parameter #} target="_blank">
+                        Submit the feedback form
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 {% if creator.inactiveReason %}
     <div class="row">
@@ -131,5 +187,92 @@
         {% elseif creator.hasAllergyWarning %}
             Please check the provided links for details or contact the maker regarding this matter.
         {% endif %}
+    </div>
+
+    <div class="col">
+        Ages of studio members: {{ ages_description(creator, true) }}
+    </div>
+</div>
+
+<div class="d-flex flex-wrap">
+    <div class="look-ma-am-box">
+        <h5>Produces</h5>
+
+        <div class="small pb-2">
+            {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Styles</h5>
+
+        <div class="small">
+            {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box" style="flex-grow: 2">
+        <h5>Types</h5>
+
+        <div class="small">
+            {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box" style="flex-grow: 2">
+        <h5>Features</h5>
+
+        <div class="small">
+            {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Species</h5>
+
+        <div class="small pb-2">
+            {% if creator.speciesComment %}
+                <span class="nl2br">{{ creator.speciesComment }}</span><br>
+            {% endif %}
+
+            {% if creator.speciesDoes %}
+                <strong>Does</strong>: {{ _self.list_cs_opt(creator.speciesDoes) }}
+                {% if creator.speciesDoesnt %}<br>{% endif %}
+            {% endif %}
+
+            {% if creator.speciesDoesnt %}
+                <strong>Doesn't</strong>: {{ _self.list_cs_opt(creator.speciesDoesnt) }}
+            {% endif %}
+
+            {% if not creator.speciesDoes and not creator.speciesDoesnt %}
+                {{ unknown_value() }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Payment plans {{ nullable_boolean_symbol(creator.offersPaymentPlans) }}</h5>
+
+        {% if creator.paymentPlansInfo %}
+            <div class="small pb-2">
+                <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Prices in*</h5>
+
+        <div class="small pb-2">
+            {{ _self.list_cs_opt(creator.currenciesAccepted) }}
+        </div>
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Accepted payments</h5>
+
+        <div class="small">
+            {{ _self.list_cs_opt(creator.paymentMethods) }}
+        </div>
     </div>
 </div>

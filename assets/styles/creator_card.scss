@@ -4,6 +4,8 @@
 
 @import "../../node_modules/flag-icons/css/flag-icons.min.css";
 
+// FIXME: Poor name choice for the entrypoint
+
 div.imgs-container {
   div {
     display: table-cell;
@@ -97,5 +99,30 @@ div.imgs-container {
       transform: rotate(90deg);
       object-position: 0 50%;
     }
+  }
+}
+
+.ages {
+  &.fa-user-minus {
+    color: #ffcc00;
+  }
+
+  &.fa-user-plus {
+    color: #4cae4c;
+  }
+
+  &.fa-user {
+    color: #bbb;
+  }
+}
+
+.look-ma-am-box {
+  border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  flex-grow: 1;
+}
+
+@media (min-width: 768px) {
+  .look-ma-am-box {
+    max-width: 50% !important;
   }
 }
