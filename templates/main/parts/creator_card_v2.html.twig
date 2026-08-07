@@ -77,7 +77,7 @@
     </div>
     <div class="col">
         {% if creator.creatorId %}
-            <a href="{{ url('rt_creator', {'creatorId': creator.creatorId}) }}">
+            <a href="{{ url('rt_creator', {creatorId: creator.creatorId}) }}">
                 <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
             </a>
         {% endif %}
@@ -101,7 +101,7 @@
 {% if creator.formerly %}
     <div class="row">
         <div class="col">
-            <small>Formerly/a.k.a. {{  _self.list_cs_opt(creator.formerly) }}</small>
+            <small>Formerly/a.k.a. {{ _self.list_cs_opt(creator.formerly) }}</small>
         </div>
     </div>
 {% endif %}
@@ -274,5 +274,73 @@
         <div class="small">
             {{ _self.list_cs_opt(creator.paymentMethods) }}
         </div>
+    </div>
+
+    <div class="look-ma-am-box">
+        <h5>Commissions status</h5>
+
+        {% if not creator.isTracked %}
+            <p>
+                Commissions status is not being tracked.
+
+                <small>
+                    <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                </small>
+            </p>
+        {% elseif creator.isStatusKnown %}
+            {% if creator.csTrackerIssue %}
+                <p>
+                    <small>
+                        <i class="inaccurate fas fa-question-circle"></i>
+                        Note: the software encountered apparent difficulties while figuring out the status;
+                        the information is most probably inaccurate/<wbr>incomplete.
+                    </small>
+                </p>
+            {% endif %}
+
+            <table class="table table-sm table-striped table-borderless">
+                <tbody>
+                {% for item in creator.openFor %}
+                    <tr>
+                        <td>{{ item }}</td>
+                        <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                    </tr>
+                {% endfor %}
+                {% for item in creator.closedFor %}
+                    <tr>
+                        <td>{{ item }}</td>
+                        <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <p>
+                <small>
+                    Status is tracked and updated automatically based on the contents of:
+                    {% for uri in creator.commissionsUrls %}
+                        <a href="{{ uri }}" target="_blank">{{ uri }}</a>
+                        {%- if not loop.last %},{% endif %}
+                    {%- endfor %}.
+                    Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
+
+                    <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                </small>
+            </p>
+        {% else %}
+            <p>
+                <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
+
+                <small>
+                    It should be tracked and updated automatically based on the contents of:
+                    {% for uri in creator.commissionsUrls %}
+                        <a href="{{ uri }}" target="_blank">{{ uri }}</a>,
+                    {% endfor %}
+                    however the software failed to "understand" the contents.
+                    Last time tried on {{ creator.csLastCheck|nullable_datetime_utc }}.
+                    <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                </small>
+            </p>
+        {% endif %}
     </div>
 </div>

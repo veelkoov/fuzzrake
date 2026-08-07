@@ -119,6 +119,7 @@ div.imgs-container {
 .look-ma-am-box {
   border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
   flex-grow: 1;
+  padding: 1ex;
 }
 
 @media (min-width: 768px) {
