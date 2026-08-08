@@ -6,6 +6,45 @@
 
 // FIXME: Poor name choice for the entrypoint
 
+div.creator-card-standalone {
+  button.toggle {
+    display: none;
+  }
+}
+
+div.creator-card-in-list {
+  button.toggle span.toggle-symbol:after {
+    font-family: monospace;
+  }
+}
+
+div.creator-card-in-list:not(.expanded) {
+  button.toggle span.toggle-symbol:after {
+    content: '+';
+  }
+
+  & > *:not(.header) {
+    display: none !important;
+  }
+
+  .show-expanded {
+    display: none !important;
+  }
+}
+
+div.creator-card-in-list.expanded {
+  button.toggle span.toggle-symbol:after {
+    content: '-';
+  }
+}
+
+div.creator-card-standalone,
+div.creator-card-in-list.expanded {
+  .hide-expanded {
+    display: none !important;
+  }
+}
+
 div.imgs-container {
   div {
     display: table-cell;

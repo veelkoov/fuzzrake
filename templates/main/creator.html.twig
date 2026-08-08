@@ -15,7 +15,7 @@
 {% block title %}{{ creator.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ creator.name }}</h1>
-
-    {{ include('main/parts/creator_card_v2.html.twig') }}
+    <div class="creator-card-standalone">
+        {{ include('main/parts/creator_card_v2.html.twig') }}
+    </div>
 {% endblock %}

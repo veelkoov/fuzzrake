@@ -12,7 +12,7 @@
     click from:#creator-mode-parameter-field"
 
     hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
-    hx-on::after-request="jQuery('.main-primary-content').removeClass('d-none');"
+    hx-on::after-request="jQuery('.main-primary-content').removeClass('d-none'); messageBus.dispatch('creators-page-loaded');"
 
     hx-include="#checklist-container, #filters-modal-body, #search-text-field, #creator-mode-parameter-field, #page-number"
 
