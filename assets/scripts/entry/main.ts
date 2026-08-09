@@ -106,10 +106,6 @@ if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
   // new ColumnsManager("#creators-table", "#columns-visibility-links a"); // FIXME
 })();
 
-jQuery("#creator-card-modal").on("shown.bs.modal", function (): void {
-  localizeDateTimes(jQuery("#creator-card-modal"));
-});
-
 // @ts-expect-error I am incompetent, and I don't care to learn frontend
 window.goToPage = function (pageNumber: number): void {
   requireJQ("#page-number").val(pageNumber).trigger("click");
