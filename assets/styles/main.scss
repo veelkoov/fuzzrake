@@ -2,7 +2,8 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 
-a { // TODO: Remove where added extra
+a {
+  // TODO: Remove where added extra
   text-decoration: none;
 }
 
@@ -45,7 +46,8 @@ div#data-table-container {
   }
 }
 
-table#creators-table { /* FIXME: OLD */
+table#creators-table {
+  /* FIXME: OLD */
   thead {
     th {
       vertical-align: middle;

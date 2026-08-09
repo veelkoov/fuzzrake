@@ -8,22 +8,23 @@ export default class ColumnsManager {
     "links",
   ];
   private static readonly STORAGE_VERSION: string = "2";
+  private static readonly UPDATE_EVENT: string = "change";
 
-  private $classesBearer: JQuery<HTMLElement>;
-  private $toggleLinks: JQuery<HTMLElement>;
+  private readonly classesBearer: JQuery<HTMLElement>;
+  private readonly selectors: JQuery<HTMLElement>;
 
   constructor(classesBearerSelector: string, toggleLinksSelector: string) {
-    this.$classesBearer = requireJQ(classesBearerSelector);
-    this.$toggleLinks = requireJQ(toggleLinksSelector, 1, null);
+    this.classesBearer = requireJQ(classesBearerSelector);
+    this.selectors = requireJQ(toggleLinksSelector, 1, null);
 
     this.loadOrUseDefaults();
-    this.$toggleLinks.on("click", (event) =>
-      this.handleVisibilityLinkClick(event),
-    );
+    this.selectors.on(ColumnsManager.UPDATE_EVENT, (event) => {
+      this.handleSelectorChange(jQuery(event.target));
+    });
   }
 
   public save(): void {
-    const state = this.$toggleLinks
+    const state = this.selectors
       .filter(".active")
       .map((_, element): string => element.dataset["columnId"] || "")
       .toArray()
@@ -47,45 +48,40 @@ export default class ColumnsManager {
       visibleColumnIds = ColumnsManager.VISIBLE_BY_DEFAULT;
     }
 
-    this.$toggleLinks.each((_, element) => {
-      const $link = jQuery(element);
-      const columnId = $link.data("columnId");
+    this.selectors.each((_, element) => {
+      const selector = jQuery(element);
+      const columnId = this.getColumnId(selector);
 
-      if (visibleColumnIds.includes(columnId)) {
-        this.showColumn($link);
-      } else {
-        this.hideColumn($link);
-      }
+      this.setSelected(selector, visibleColumnIds.includes(columnId));
+      this.handleSelectorChange(selector);
     });
   }
 
-  private handleVisibilityLinkClick(
-    event: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
-  ): void {
-    event.preventDefault();
-
-    const $link = jQuery(event.target);
-
-    if ($link.hasClass("active")) {
-      this.hideColumn($link);
+  private handleSelectorChange(selector: JQuery<HTMLElement>): void {
+    if (!this.isSelected(selector)) {
+      this.hideColumn(selector);
     } else {
-      this.showColumn($link);
+      this.showColumn(selector);
     }
-
-    this.save();
   }
 
-  private showColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
-    $relatedVisibilityLink.addClass("active");
-
-    const columnId = $relatedVisibilityLink.data("columnId");
-    this.$classesBearer.addClass(`show-${columnId}`);
+  private showColumn(selector: JQuery<HTMLElement>): void {
+    this.classesBearer.addClass(`show-${this.getColumnId(selector)}`);
   }
 
-  private hideColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
-    $relatedVisibilityLink.removeClass("active");
+  private hideColumn(selector: JQuery<HTMLElement>): void {
+    this.classesBearer.removeClass(`show-${this.getColumnId(selector)}`);
+  }
 
-    const columnId = $relatedVisibilityLink.data("columnId");
-    this.$classesBearer.removeClass(`show-${columnId}`);
+  private getColumnId(selector: JQuery<HTMLElement>) {
+    return selector.val()?.toString() || "";
+  }
+
+  private isSelected(selector: JQuery<HTMLElement>) {
+    return selector.prop("checked");
+  }
+
+  private setSelected(selector: JQuery<HTMLElement>, newSelected: boolean) {
+    selector.prop("checked", newSelected);
   }
 }

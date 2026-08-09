@@ -63,44 +63,49 @@
 ] %}
 
 {% block body_no_wrap %}
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="pref-fltr-offcanvas" aria-labelledby="pref-fltr-offcanvas-label">
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title" id="pref-fltr-offcanvas-label">Preferences & filters</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <h5>Always shown</h5>
+
+            {% for column in columns %}
+                <div class="form-check">
+                    <input class="form-check-input colvis" type="checkbox" value="{{ column.id }}" id="checkbox-{{ column.id }}">
+                    <label class="form-check-label" for="checkbox-{{ column.id }}">
+                        {{ column.label }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
     <div class="container-fluid main-primary-content d-none">
         <div class="row">
-            <div class="col-md-6">
-                <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                data-bs-auto-close="outside" aria-expanded="false">
-                            Columns {# FIXME #}
-                        </button>
-                        <ul id="columns-visibility-links" class="dropdown-menu">
-                            {% for column in columns %}
-                                <li>
-                                    <a class="dropdown-item" href="#" data-column-id="{{ column.id }}">{{ column.label }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
-                            data-bs-target="#filters-modal">
-                        Filters
-
-                        <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
-                    </button>
-
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
-                        Legend
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-md-6 text-md-end">
+            <div class="col">
                 <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
+
+                <button class="btn btn-sm btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#pref-fltr-offcanvas" aria-controls="pref-fltr-offcanvas">
+                    Preferences & filters <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
+                </button>
+
+                {# FIXME: Remove #}
+                <button id="open-filters-button" type="button" class="btn btn-sm btn-success text-nowrap" data-bs-toggle="modal"
+                        data-bs-target="#filters-modal">
+                    Filters
+                </button>
+
+                {# FIXME: Remove #}
+                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
+                    Legend
+                </button>
             </div>
         </div>
 
-        <div id="main-creators-list" class="row">
-        </div>
+        <div id="main-creators-list" class="row"></div>
     </div>
 
     <div class="container main-primary-content d-none">

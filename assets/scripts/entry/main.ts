@@ -103,7 +103,7 @@ if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
 })();
 
 (function setUpColumnsManager(): void {
-  // new ColumnsManager("#creators-table", "#columns-visibility-links a"); // FIXME
+  new ColumnsManager("#main-creators-list", "#pref-fltr-offcanvas .colvis");
 })();
 
 // @ts-expect-error I am incompetent, and I don't care to learn frontend
@@ -138,4 +138,6 @@ window.goToPage = function (pageNumber: number): void {
   });
 })();
 
-jQuery(() => { jQuery('#checklist-dismiss-btn').trigger('click'); }); // FIXME: Revert
+jQuery(() => {
+  jQuery("#checklist-dismiss-btn").trigger("click");
+}); // FIXME: Revert

@@ -18,7 +18,7 @@ div.creator-card {
 
 div.creator-card:not(.expanded) {
   button.toggle span.toggle-symbol:after {
-    content: '+';
+    content: "+";
   }
 
   & > *:not(.header) {
@@ -32,7 +32,7 @@ div.creator-card:not(.expanded) {
 
 div.creator-card.expanded {
   button.toggle span.toggle-symbol:after {
-    content: '-';
+    content: "-";
   }
 
   .hide-expanded {
