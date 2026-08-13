@@ -16,11 +16,11 @@ readonly class FilterData
     ) {
     }
 
-    public static function from(MutableFilterData $source): self
+    public static function from(MutableFilterData $source, int $totalForPopularity): self
     {
         return new FilterData(
-            $source->items->getReadonlyList(),
-            SpecialItemList::mapFrom($source->specialItems, SpecialItem::from(...)),
+            ItemList::from($source->items, $totalForPopularity),
+            SpecialItemList::from($source->specialItems, $totalForPopularity),
         );
     }
 }

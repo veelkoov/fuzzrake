@@ -13,17 +13,28 @@ readonly class Item
         public string $value,
         public string $label,
         public int $count,
+        public float $popularity,
         public ItemList $subitems = new ItemList(),
     ) {
     }
 
-    public static function from(MutableItem $source): self
+    public static function from(MutableItem $source, int $totalForPopularity): self
     {
         return new self(
             $source->value,
             $source->label,
             $source->getCount(),
-            $source->subitems->getReadonlyList(),
+            self::calcPopular($source->getCount(), $totalForPopularity),
+            ItemList::from($source->subitems, $totalForPopularity),
         );
+    }
+
+    public static function calcPopular(int $count, int $total): float
+    {
+        if ($total <= 0.0) {
+            return 0.0; // Better have falsified stats than failure due to bug in a less significant feature
+        }
+
+        return $count / $total;
     }
 }

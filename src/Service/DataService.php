@@ -71,6 +71,11 @@ class DataService
         return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::CREATORS, __METHOD__);
     }
 
+    public function countAllCreators(): int
+    {
+        return $this->cache->get(fn () => $this->creatorRepository->countAll(), CacheTags::CREATORS, __METHOD__);
+    }
+
     public function getCountries(): StringSet
     {
         return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::CREATORS, __METHOD__);
