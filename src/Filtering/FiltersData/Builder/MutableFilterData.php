@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData\Builder;
 
-use App\Filtering\FiltersData\Builder\Data\MutableSpecialItemList;
-
 readonly class MutableFilterData
 {
     public MutableSet $items;

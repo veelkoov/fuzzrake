@@ -16,8 +16,22 @@
             <label class="form-check-label" for="{{ id }}">
                 <i class="{{ item.faIcon }}"></i>
 
-                {{ item.label -}}&nbsp;<span class="count">({{ item.count }})</span>
+                {{ item.label -}}&nbsp;{{ _self.popularity(item) }}
             </label>
         </div>
     {% endfor %}
 {% endmacro %}
+
+{% macro popularity(item) -%}
+    <span class="count">
+        {%- set class = item.popularity > 0.0 ? 'fa-solid' : 'fa-regular' -%}
+        <i class="{{ class }} fa-square-full"></i>
+        {%- set class = item.popularity >= 0.25 ? 'fa-solid' : 'fa-regular' -%}
+        <i class="{{ class }} fa-square-full"></i>
+        {%- set class = item.popularity >= 0.50 ? 'fa-solid' : 'fa-regular' -%}
+        <i class="{{ class }} fa-square-full"></i>
+        {%- set class = item.popularity >= 0.85 ? 'fa-solid' : 'fa-regular' -%}
+        <i class="{{ class }} fa-square-full"></i>
+        {#- No whitespace -#}
+    </span>
+{%- endmacro %}

@@ -13,16 +13,18 @@ readonly class SpecialItem
         public string $label,
         public string $faIcon,
         public int $count,
+        public float $popularity,
     ) {
     }
 
-    public static function from(MutableSpecialItem $source): self
+    public static function from(MutableSpecialItem $source, int $totalForPopularity): self
     {
         return new self(
             $source->value,
             $source->label,
             $source->faIcon,
             $source->getCount(),
+            Item::calcPopular($source->getCount(), $totalForPopularity),
         );
     }
 }

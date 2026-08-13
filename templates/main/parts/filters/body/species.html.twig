@@ -1,3 +1,5 @@
+{% import 'main/parts/filters/body/shared_macros.html.twig' as macros %}
+
 {% macro choices(items, filter_name) %}
     {% import _self as _macro_self %}
 
@@ -8,7 +10,7 @@
                 <input id="{{ id }}" class="form-check-input" type="checkbox" name="{{ filter_name }}[]" data-label="{{ specie.value }}" value="{{ specie.value }}">
 
                 <label class="form-check-label" for="{{ id }}">
-                    {{ specie.label }}&nbsp;<span class="count">({{ specie.count }})</span>
+                    {{ specie.label }}&nbsp;{{ macros.popularity(specie) }}
                 </label>
 
                 <span class="descendants-indicator d-none">

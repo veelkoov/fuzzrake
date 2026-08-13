@@ -19,8 +19,8 @@ class AppExtensionsTest extends TestCase
 
         $input = new ItemList([
             // anyTHIng won't match
-            new Item('anything1', 'something', 0),
-            new Item('anything2', 'will not match', 0),
+            new Item('anything1', 'something', 0, 0.0),
+            new Item('anything2', 'will not match', 0, 0.0),
         ]);
 
         $result = $subject->filterItemsMatchingFilter($input, 'ThI');

@@ -81,7 +81,7 @@ class FiltersService
             $item->subitems->sort();
         }
 
-        return FilterData::from($result);
+        return FilterData::from($result, $this->dataService->countActiveCreators());
     }
 
     public function getStatesFilterData(): FilterData
@@ -100,7 +100,7 @@ class FiltersService
             $result->items->addOrIncItem($state, $count);
         }
 
-        return FilterData::from($result);
+        return FilterData::from($result, $this->dataService->countActiveCreators());
     }
 
     /**
@@ -121,7 +121,7 @@ class FiltersService
             $result->items->addComplexItem($offer, $offer, $openCount);
         }
 
-        return FilterData::from($result);
+        return FilterData::from($result, $this->dataService->countActiveCreators());
     }
 
     private function getPaymentPlans(): FilterData
@@ -132,7 +132,7 @@ class FiltersService
         $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE, $stats->getOrDefaultOf(false, 0));
         $result->items->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED, $stats->getOrDefaultOf(true, 0));
 
-        return FilterData::from($result);
+        return FilterData::from($result, $this->dataService->countActiveCreators());
     }
 
     /**
@@ -140,9 +140,9 @@ class FiltersService
      */
     private function getInactiveFilterData(): FilterData
     {
-        $inactiveCount = $this->creatorRepository->countAll() - $this->dataService->countActiveCreators();
+        $inactiveCount = $this->dataService->countAllCreators() - $this->dataService->countActiveCreators();
 
-        return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
+        return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)), $this->dataService->countAllCreators());
     }
 
     public function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
@@ -157,11 +157,11 @@ class FiltersService
             $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
         }
 
-        $specialItems = SpecialItemList::mapFrom($specialItems, SpecialItem::from(...));
+        $specialItems = SpecialItemList::from($specialItems, $this->dataService->countActiveCreators());
 
         $items = ItemList::mapFrom(
             $this->dataService->countDistinctInActiveCreatorsHaving($primaryField),
-            fn (int $count, string $item): Item => new Item($item, $item, $count),
+            fn (int $count, string $item): Item => new Item($item, $item, $count, Item::calcPopular($count, $this->dataService->countActiveCreators())),
         );
 
         return new FilterData($items, $specialItems);

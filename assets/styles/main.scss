@@ -273,8 +273,10 @@ table#creators-table {
   }
 
   .count {
-    font-size: 90%;
-    color: #aaa;
+    font-size: 0.5rem;
+    color: #ccc;
+    vertical-align: middle;
+    text-wrap: nowrap;
   }
 
   .species {

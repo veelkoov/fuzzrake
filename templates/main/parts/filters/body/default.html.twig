@@ -19,7 +19,7 @@
                     <input id="{{ id }}" class="form-check-input" type="checkbox" name="{{ filter_name }}[]" value="{{ item.value }}">
 
                     <label class="form-check-label" for="{{ id }}">
-                        {{ item.label -}}&nbsp;<span class="count">({{ item.count }})</span>
+                        {{ item.label }}&nbsp;{{ macros.popularity(item) }}
                     </label>
                 </div>
             </div>

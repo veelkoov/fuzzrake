@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\FiltersData\Builder\Data;
+namespace App\Filtering\FiltersData\Builder;
 
-use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
