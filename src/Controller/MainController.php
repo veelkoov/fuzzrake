@@ -43,7 +43,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/c/{creatorId}', name: 'rt_creator')]
+    #[Route(path: '/c/{creatorId}', name: 'rt_creator')] // grep-code-creator-card-path
     #[Cache(maxage: 900, public: true)]
     public function creator(string $creatorId): Response
     {
