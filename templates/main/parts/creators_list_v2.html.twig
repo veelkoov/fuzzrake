@@ -1,12 +1,14 @@
 {% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
-{% for creator in creators_page.items %}
-    {% set creator_idx = loop.index %}
+<div class="col">
+    {% for creator in creators_page.items %}
+        {% set creator_idx = loop.index %}
 
-    <div class="creator-card pb-4 {% if not loop.first %}border-top border-secondary-subtle{% endif %}">
-        {{ include('main/parts/creator_card_v2.html.twig') }}
-    </div>
-{% endfor %}
+        <div class="creator-card my-2">
+            {{ include('main/parts/creator_card_v2.html.twig') }}
+        </div>
+    {% endfor %}
+</div>
 
 <div hx-swap-oob="true" id="main-creators-pagination">
     {{ pagination(creators_page, '#main-creators-list', 'matched fursuit makers', 'goToPage(1);') }}

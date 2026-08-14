@@ -65,7 +65,7 @@
 {% block body_no_wrap %}
     <div class="offcanvas offcanvas-start" tabindex="-1" id="pref-fltr-offcanvas" aria-labelledby="pref-fltr-offcanvas-label">
         <div class="offcanvas-header">
-            <h4 class="offcanvas-title" id="pref-fltr-offcanvas-label">Preferences & filters</h4>
+            <h4 class="offcanvas-title" id="pref-fltr-offcanvas-label">Preferences</h4>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
@@ -89,13 +89,11 @@
                 <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
 
                 <button class="btn btn-sm btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#pref-fltr-offcanvas" aria-controls="pref-fltr-offcanvas">
-                    Preferences & filters <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
+                    Preferences
                 </button>
 
-                {# FIXME: Remove #}
-                <button id="open-filters-button" type="button" class="btn btn-sm btn-success text-nowrap" data-bs-toggle="modal"
-                        data-bs-target="#filters-modal">
-                    Filters
+                <button id="open-filters-button" type="button" class="btn btn-sm btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#filters-modal">
+                    Filters <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
                 </button>
 
                 {# FIXME: Remove #}
