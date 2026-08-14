@@ -20,13 +20,14 @@ export default class ColumnsManager {
     this.loadOrUseDefaults();
     this.selectors.on(ColumnsManager.UPDATE_EVENT, (event) => {
       this.handleSelectorChange(jQuery(event.target));
+      this.save();
     });
   }
 
   public save(): void {
     const state = this.selectors
-      .filter(".active")
-      .map((_, element): string => element.dataset["columnId"] || "")
+      .filter((_, element) => this.isSelected(jQuery(element)))
+      .map((_, element): string => this.getColumnId(jQuery(element)))
       .toArray()
       .join(",");
 
@@ -73,15 +74,15 @@ export default class ColumnsManager {
     this.classesBearer.removeClass(`show-${this.getColumnId(selector)}`);
   }
 
-  private getColumnId(selector: JQuery<HTMLElement>) {
+  private getColumnId(selector: JQuery<HTMLElement>): string {
     return selector.val()?.toString() || "";
   }
 
-  private isSelected(selector: JQuery<HTMLElement>) {
-    return selector.prop("checked");
+  private isSelected(selector: JQuery<HTMLElement>): boolean {
+    return selector.is(":checked");
   }
 
-  private setSelected(selector: JQuery<HTMLElement>, newSelected: boolean) {
+  private setSelected(selector: JQuery<HTMLElement>, newSelected: boolean): void {
     selector.prop("checked", newSelected);
   }
 }
