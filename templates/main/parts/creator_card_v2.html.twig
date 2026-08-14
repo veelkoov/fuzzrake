@@ -1,13 +1,3 @@
-{% macro based_in(state, city) %}
-    {% set text = [state, city]|filter(i => i)|join(', ') %}
-
-    {% if text %}
-        {{ text -}}
-    {% else %}
-        {# Providing location is voluntary. TODO: Require state for US and Canada #}
-    {% endif %}
-{% endmacro %}
-
 {% macro crafting_since(input) %}
     {% set months = {
         '01': 'Jan',
@@ -69,7 +59,7 @@
     {% endif %}
 {% endmacro %}
 
-<div class="header d-flex flex-wrap p-1 align-items-center">
+<div class="header d-flex flex-wrap p-1 align-items-center {% if creator.isHidden %}hidden{% endif %}">
     <button type="button" class="m-1 toggle btn btn-outline-secondary"><span class="toggle-symbol"></span></button>
 
     <div class="p-1">
@@ -90,8 +80,19 @@
 
     <p class="p-1 mb-0">
         <span class="fi fi-{{ creator.country|lower }}"></span>
-        {{ _self.based_in(creator.state, creator.city) }}<br>
-        <small>
+
+        {% if creator.state != '' -%}
+            <span class="state">{{ creator.state }}</span>
+        {%- endif -%}
+        {%- if creator.city != '' -%}
+            <span class="show-expanded">
+                {%- if creator.state != '' %}, {% endif -%}
+                {{- creator.city -}}
+            </span>
+        {%- endif %}
+
+        <small class="languages">
+            <br>
             Speaking: {{ _self.list_cs_opt(creator.languages) }}
         </small>
     </p>
