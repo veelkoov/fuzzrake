@@ -51,7 +51,7 @@ div.creator-card:not(.expanded) {
     display: none !important;
   }
 
-  &:not(.show-creator-id) .creator-card:not(.expanded) .creator-id {
+  &:not(.show-creator-id) .creator-card:not(.expanded) .header:not(.matched-creator-id) .creator-id {
     display: none;
   }
 }

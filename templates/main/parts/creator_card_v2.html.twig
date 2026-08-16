@@ -59,7 +59,10 @@
     {% endif %}
 {% endmacro %}
 
-<div class="header d-flex flex-wrap p-1 align-items-center {% if creator.isHidden %}hidden{% endif %}">
+<div class="header d-flex flex-wrap p-1 align-items-center {{ html_classes({
+            inactive: creator.isHidden,
+            'matched-creator-id': creator.hasCreatorId(searched_creator_id),
+        }) }}">
     <button type="button" class="m-1 toggle btn btn-outline-secondary"><span class="toggle-symbol"></span></button>
 
     <div class="p-1">
@@ -68,7 +71,7 @@
         {% if creator.creatorId %}
             <span class="creator-id small align-top">
                 <a href="{{ url('rt_creator', {creatorId: creator.creatorId}) }}">
-                    <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-primary border-dark' : 'text-bg-light border-dark-subtle'}} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
+                    <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle'}} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
                 </a>
             </span>
         {% endif %}
