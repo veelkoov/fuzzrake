@@ -68,7 +68,7 @@
         {% if creator.creatorId %}
             <span class="creator-id small align-top">
                 <a href="{{ url('rt_creator', {creatorId: creator.creatorId}) }}">
-                    <span class="badge text-bg-light border border-dark-subtle"><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
+                    <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-primary border-dark' : 'text-bg-light border-dark-subtle'}} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
                 </a>
             </span>
         {% endif %}
