@@ -66,6 +66,22 @@ div.creator-card.expanded {
   }
 }
 
+div.creator-card ul {
+  padding-left: 0;
+
+  li {
+    display: inline;
+  }
+
+  li:before {
+    content: '‣\00a0';
+  }
+
+  li.other {
+    opacity: 70%;
+  }
+}
+
 div.imgs-container {
   div {
     display: table-cell;

@@ -33,7 +33,7 @@
 
 {% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
     {% if comment %}
-        <span class="nl2br">{{ comment }}</span>
+        <span class="nl2br comment">{{ comment }}</span>
     {% endif %}
 
     {% if items or other_items %}
@@ -42,9 +42,9 @@
                 <li>{{ item }}</li>
             {% endfor %}
 
-            {% if other_items %}
-                <li>{{ other_items|join('; ') }}</li>
-            {% endif %}
+            {% for item in other_items %}
+                <li class="other">{{ item }}</li>
+            {% endfor %}
         </ul>
     {% else %}
         {{ unknown_value() }}
