@@ -33,26 +33,28 @@ div.creator-card:not(.expanded) {
     content: "+";
   }
 
-  & > *:not(.header) {
-    display: none !important;
-  }
-
   .show-expanded {
     display: none !important;
   }
 }
 
 #main-creators-list {
-  &:not(.show-state) .creator-card:not(.expanded) .state {
-    display: none !important;
-  }
-
-  &:not(.show-languages) .creator-card:not(.expanded) .languages {
-    display: none !important;
-  }
-
   &:not(.show-creator-id) .creator-card:not(.expanded) .header:not(.matched-creator-id) .creator-id {
     display: none;
+  }
+
+  //&:not(.show-state) .creator-card:not(.expanded) .state {
+  //  display: none !important;
+  //}
+  //
+  //&:not(.show-languages) .creator-card:not(.expanded) .languages {
+  //  display: none !important;
+  //}
+
+  @each $item in languages, state, features, production-models, styles, order-types, links, commissions, species {
+    &:not(.show-#{$item}) .creator-card:not(.expanded) .#{$item} {
+      display: none !important;
+    }
   }
 }
 

@@ -169,7 +169,7 @@
 </div>
 
 {% if creator.inactiveReason %}
-    <div class="row">
+    <div class="row show-expanded">
         <div class="col">
             <strong>This maker has been hidden for the following reason:</strong><br>
             {{ creator.inactiveReason }}
@@ -178,7 +178,7 @@
 {% endif %}
 
 {% if creator.hasValidPhotos %}
-    <div class="row">
+    <div class="row show-expanded">
         <div class="col overflow-auto imgs-container">
             {% for photo_url in creator.photoUrls %}
                 <div>
@@ -190,7 +190,7 @@
 {% endif %}
 
 {% if creator.intro %}
-    <div class="row">
+    <div class="row show-expanded">
         <div class="col">
             <p class="lead nl2br">
                 {{- creator.intro -}}
@@ -200,7 +200,7 @@
 {% endif %}
 
 <div class="d-flex flex-wrap">
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box production-models">
         <h5>Produces</h5>
 
         <div class="small pb-2">
@@ -208,7 +208,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box styles">
         <h5>Styles</h5>
 
         <div class="small">
@@ -216,7 +216,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box" style="flex-grow: 2">
+    <div class="look-ma-am-box order-types" style="flex-grow: 2">
         <h5>Types</h5>
 
         <div class="small">
@@ -224,7 +224,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box" style="flex-grow: 2">
+    <div class="look-ma-am-box features" style="flex-grow: 2">
         <h5>Features</h5>
 
         <div class="small">
@@ -232,7 +232,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box species">
         <h5>Species</h5>
 
         <div class="small pb-2">
@@ -253,7 +253,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box show-expanded">
         <h5>{{ nullable_boolean_symbol(creator.offersPaymentPlans) }} Payment plans</h5>
 
         {% if creator.paymentPlansInfo %}
@@ -263,7 +263,7 @@
         {% endif %}
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box show-expanded">
         <h5>Prices in*</h5>
 
         <div class="small pb-2">
@@ -271,7 +271,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box show-expanded">
         <h5>Accepted payments</h5>
 
         <div class="small">
@@ -279,7 +279,7 @@
         </div>
     </div>
 
-    <div class="look-ma-am-box">
+    <div class="look-ma-am-box commissions">
         <div class="d-flex mb-1 align-items-end">
             <h5 class="mb-0 me-2">Commissions status</h5>
 
@@ -339,10 +339,9 @@
             </p>
         {% endif %}
     </div>
-
 </div>
 
-<div class="d-flex flex-wrap justify-content-center">
+<div class="d-flex flex-wrap justify-content-center links">
     {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
     {{ _self.link(creator.fursuitReviewUrl, 'Check FursuitReview reviews', 'fas fa-balance-scale', 'border border-primary') }}
 
