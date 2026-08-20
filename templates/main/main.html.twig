@@ -23,7 +23,6 @@
     </div>
     {{ include('main/parts/htmx_events.html.twig') }}
     {{ include('main/parts/filters.html.twig') }}
-    {{ include('main/parts/legend_modal.html.twig') }}
 
     {{ include('main/parts/intro.html.twig') }}
     {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
@@ -89,11 +88,6 @@
 
                 <button id="open-filters-button" type="button" class="btn btn-sm btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#filters-modal">
                     Filters <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
-                </button>
-
-                {# FIXME: Remove #}
-                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
-                    Legend
                 </button>
             </div>
         </div>

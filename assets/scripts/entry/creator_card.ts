@@ -3,7 +3,9 @@ import MessageBus from "../class/MessageBus";
 import { localizeDateTimes } from "../datetimes";
 
 MessageBus.listen("creators-page-loaded", () => {
-  jQuery("div.creator-card button.toggle").on("click", function () {
+  const toggler = jQuery("div.creator-card .header .toggle");
+  toggler.addClass("toggling");
+  toggler.on("click", function () {
     jQuery(this).parents("div.creator-card").toggleClass("expanded");
   });
 
