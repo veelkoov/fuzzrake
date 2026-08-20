@@ -51,6 +51,7 @@ class MainController extends AbstractController
 
         return $this->render('main/creator.html.twig', [
             'creator' => $creator,
+            'searched_creator_id' => '',
         ]);
     }
 

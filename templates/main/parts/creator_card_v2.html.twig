@@ -59,19 +59,45 @@
     {% endif %}
 {% endmacro %}
 
+{% macro ages_icon(creator) %}
+    {% if creator.ages == constant('\\App\\Data\\Definitions\\Ages::MINORS') %}
+        <i class="ages fa-solid fa-user-minus"></i>
+    {% elseif creator.ages == constant('\\App\\Data\\Definitions\\Ages::MIXED') %}
+        <i class="ages fa-solid fa-user-plus"></i>
+        <i class="ages fa-solid fa-user-minus"></i>
+    {% elseif creator.ages == constant('\\App\\Data\\Definitions\\Ages::ADULTS') %}
+    {% elseif creator.ages is null %}
+        <i class="ages fa-solid fa-user"></i>
+    {% else %}
+        {{ a_bug() }}
+    {% endif %}
+{% endmacro %}
+
 <div class="header d-flex flex-wrap p-1 align-items-center {{ html_classes({
-            inactive: creator.isHidden,
+            hidden: creator.isHidden,
             'matched-creator-id': creator.hasCreatorId(searched_creator_id),
         }) }}">
     <button type="button" class="m-1 toggle btn btn-outline-secondary"><span class="toggle-symbol"></span></button>
 
     <div class="p-1">
-        <h3 class="mb-0 d-inline">{{ creator.name }}</h3>
+        <h6 class="name mb-0 d-inline">{{ creator.name }}</h6>
+
+        {%- if creator.isHidden -%}
+            &nbsp;[hidden]
+        {%- endif -%}
+
+        {% if is_new(creator) %} {# FIXME #}
+            <span class="text-nowrap new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
+        {% endif %}
+
+        <span class="hide-expanded">
+            {{ _self.ages_icon(creator) }}
+        </span>
 
         {% if creator.creatorId %}
             <span class="creator-id small align-top">
                 <a href="{{ url('rt_creator', {creatorId: creator.creatorId}) }}">
-                    <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle'}} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
+                    <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle' }} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
                 </a>
             </span>
         {% endif %}
@@ -100,13 +126,20 @@
         </small>
     </p>
 
-    <p class="p-1 mb-0 text-center">
+    <p class="p-1 mb-0 text-center show-expanded">
         Crafting since {{ _self.crafting_since(creator.since) }}
         <br>
-        <small>{{ ages_description(creator, true) }}</small>
+        <small>
+            {{ _self.ages_icon(creator) }}
+            {% if creator.ages is null %}
+                {{ unknown_value() }} Studio members age is unknown
+            {% else %}
+                {{ creator.ages.label }}
+            {% endif %}
+        </small>
     </p>
 
-    <p class="p-1 mb-0">
+    <p class="p-1 mb-0 show-expanded">
         <strong>
             {% if creator.hasAllergyWarning is null %}
                 {% if '' == creator.allergyWarningInfo %}
