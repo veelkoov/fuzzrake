@@ -15,12 +15,21 @@
 {% endblock %}
 
 {% block body %}
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </div>
+    </div>
+    {{ include('main/parts/htmx_events.html.twig') }}
+    {{ include('main/parts/filters.html.twig') }}
+    {{ include('main/parts/legend_modal.html.twig') }}
+
     {{ include('main/parts/intro.html.twig') }}
+    {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
     {# TODO: Data here is maintained exclusively by the makers now. Only they can provide accurate and complete information. If you see your maker/studio information missing or outdated, please let them know! #}
 
     {{ include('main/parts/checklist.html.twig') }}
-
-    {{ include('main/parts/htmx_events.html.twig') }}
 
     <div id="creator-mode-banner" class="card border-danger mb-3 d-none">
         <div class="card-header">
@@ -33,34 +42,7 @@
             <a id="btn-reenable-filters" href="{{ path('rt_main') }}" class="btn btn-light btn-outline-danger">Re-enable filters</a>
         </div>
     </div>
-
-    {{ include('main/parts/filters.html.twig') }}
-
-    {{ include('main/parts/legend_modal.html.twig') }}
-
-    <div id="loading-indicator" class="htmx-indicator">
-        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">Loading...</span>
-        </div>
-    </div>
 {% endblock %}
-
-{# TODO: Remove #}
-{# twig-cs-fixer-disable PunctuationSpacing.After #}
-{# Unable to disable for the following lines only #}
-{% set columns = [
-    {id: 'creator-id',        label: 'Maker ID',          alignment_class: 'text-center'},
-    {id: 'state',             label: 'State',             alignment_class: 'text-center'},
-    {id: 'languages',         label: 'Languages',         alignment_class: 'text-center'},
-    {id: 'production-models', label: 'Production models', alignment_class: 'text-center'},
-    {id: 'styles',            label: 'Styles',            alignment_class: 'text-center'},
-    {id: 'types',             label: 'Types',             alignment_class: 'text-center'},
-    {id: 'features',          label: 'Features',          alignment_class: 'text-center'},
-    {id: 'species',           label: 'Species',           alignment_class: 'text-center'},
-    {id: 'commissions',       label: 'Commissions',       alignment_class: 'text-center'},
-    {id: 'links',             label: 'Links',             alignment_class: 'text-end'},
-] %}
 
 {% block body_no_wrap %}
     <div class="offcanvas offcanvas-start" tabindex="-1" id="pref-fltr-offcanvas" aria-labelledby="pref-fltr-offcanvas-label">
@@ -72,11 +54,22 @@
         <div class="offcanvas-body">
             <h5>Always shown</h5>
 
-            {% for column in columns %}
+            {% for column_id, col_label in {
+                'creator-id': 'Maker ID',
+                state: 'State',
+                languages: 'Languages',
+                'production-models': 'Production models',
+                styles: 'Styles',
+                types: 'Types',
+                features: 'Features',
+                species: 'Species',
+                commissions: 'Commissions',
+                links: 'Links',
+            } %}
                 <div class="form-check">
-                    <input class="form-check-input colvis" type="checkbox" value="{{ column.id }}" id="checkbox-{{ column.id }}">
-                    <label class="form-check-label" for="checkbox-{{ column.id }}">
-                        {{ column.label }}
+                    <input class="form-check-input colvis" type="checkbox" value="{{ column_id }}" id="checkbox-{{ column_id }}">
+                    <label class="form-check-label" for="checkbox-{{ column_id }}">
+                        {{ col_label }}
                     </label>
                 </div>
             {% endfor %}
@@ -84,6 +77,8 @@
     </div>
 
     <div class="container-fluid main-primary-content d-none">
+        <div class="row"><div class="col"><p class="bg-dark">Align</p></div></div>{# TODO: Remove #}
+
         <div class="row">
             <div class="col">
                 <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">

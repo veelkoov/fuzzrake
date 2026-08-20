@@ -4,7 +4,7 @@
     {% for creator in creators_page.items %}
         {% set creator_idx = loop.index %}
 
-        <div class="creator-card my-2">
+        <div class="creator-card">
             {{ include('main/parts/creator_card_v2.html.twig') }}
         </div>
     {% endfor %}

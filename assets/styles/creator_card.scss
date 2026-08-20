@@ -21,7 +21,6 @@ div.creator-card {
 
   /* TODO: Really? */
   border: 1px solid $secondary-border-subtle;
-  border-radius: 0.375rem;
 }
 
 div.creator-card:not(.expanded) {
@@ -43,14 +42,6 @@ div.creator-card:not(.expanded) {
     display: none;
   }
 
-  //&:not(.show-state) .creator-card:not(.expanded) .state {
-  //  display: none !important;
-  //}
-  //
-  //&:not(.show-languages) .creator-card:not(.expanded) .languages {
-  //  display: none !important;
-  //}
-
   @each $item in languages, state, features, production-models, styles, order-types, links, commissions, species {
     &:not(.show-#{$item}) .creator-card:not(.expanded) .#{$item} {
       display: none !important;
@@ -68,7 +59,7 @@ div.creator-card.expanded {
   }
 }
 
-div.creator-card ul {
+div.creator-card ul.condensed {
   padding-left: 0;
 
   li {
