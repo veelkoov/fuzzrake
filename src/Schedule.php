@@ -27,7 +27,7 @@ class Schedule implements ScheduleProviderInterface
             ->stateful($this->cache) // ensure missed tasks are executed
             ->processOnlyLastMissedRun(true) // ensure only last missed task is run
 
-            ->add(RecurringMessage::every('12 hours', new InitiateTrackingV1())) // grep-code-tracking-frequency
+            ->add(RecurringMessage::cron('0 6,18 * * *', new InitiateTrackingV1())) // grep-code-tracking-frequency
         ;
     }
 }

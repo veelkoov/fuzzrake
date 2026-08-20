@@ -21,6 +21,7 @@
         "doctrine/doctrine-bundle": "^3.1.0",
         "doctrine/doctrine-migrations-bundle": "^4.0.0",
         "doctrine/orm": "*",
+        "dragonmantank/cron-expression": "^3.6",
         "nette/utils": "^v4.0.5",
         "phpoffice/phpspreadsheet": "^5.3.0",
         "symfony/apache-pack": "^1.0",
