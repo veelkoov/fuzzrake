@@ -40,9 +40,15 @@
                 {% endfor %}
             {% endfor %}
         {% endif %}
-
-        {% block body %}{% endblock %}
     </div>
+
+    <div class="container">
+        <div class="row"><div class="col"><p class="bg-dark">Align</p></div></div>{# TODO: Remove #}
+
+        {%- block body %}{% endblock -%}
+    </div>
+
+    {%- block body_no_wrap %}{% endblock -%}
 
     {{ include('_footer.html.twig') }}
 

@@ -4,29 +4,20 @@ import Checklist from "../main/Checklist";
 import ColumnsManager from "../main/ColumnsManager";
 import FiltersManager from "../main/FiltersManager";
 import { creatorIdHashRegexp } from "../consts";
-import { localizeDateTimes } from "../datetimes";
 import { requireJQ, toggle } from "../jQueryUtils";
 
+// FIXME: Before YYYY-MM-DD cards were opened with such anchors
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
-    AgeAndSfwConfig.getInstance().getCreatorMode() ||
-    !window.location.hash.match(creatorIdHashRegexp)
+    !AgeAndSfwConfig.getInstance().getCreatorMode() &&
+    window.location.hash.match(creatorIdHashRegexp)
   ) {
-    return;
+    const location = window.location;
+    const creatorId = location.hash.slice(1);
+    const newUrl = `${location.protocol}//${location.host}/c/${creatorId}`; // grep-code-creator-card-path
+
+    window.location.replace(newUrl);
   }
-
-  const creatorId = window.location.hash.slice(1);
-  const type = "htmx:configRequest";
-
-  const listener = (event: Event): void => {
-    if (event instanceof CustomEvent && event.detail.path.includes("_______")) {
-      event.detail.path = event.detail.path.replace("_______", creatorId);
-      document.body.removeEventListener(type, listener);
-    }
-  };
-  document.body.addEventListener(type, listener);
-
-  requireJQ("#open-creator-card-given-creator-id-anchor").trigger("click");
 });
 
 if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
@@ -103,12 +94,8 @@ if (AgeAndSfwConfig.getInstance().getCreatorMode()) {
 })();
 
 (function setUpColumnsManager(): void {
-  new ColumnsManager("#creators-table", "#columns-visibility-links a");
+  new ColumnsManager("#main-creators-list", "#pref-fltr-offcanvas .colvis");
 })();
-
-jQuery("#creator-card-modal").on("shown.bs.modal", function (): void {
-  localizeDateTimes(jQuery("#creator-card-modal"));
-});
 
 // @ts-expect-error I am incompetent, and I don't care to learn frontend
 window.goToPage = function (pageNumber: number): void {
@@ -141,3 +128,8 @@ window.goToPage = function (pageNumber: number): void {
     }
   });
 })();
+
+/* FIXME: Revert */
+jQuery(() => {
+  jQuery("#checklist-dismiss-btn").trigger("click");
+});

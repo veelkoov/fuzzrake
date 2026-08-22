@@ -20,6 +20,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
+    .addEntry('creator_card', './assets/scripts/entry/creator_card.ts')
     .addEntry('events', './assets/scripts/entry/events.ts')
     .addEntry('feedback', './assets/scripts/entry/feedback.ts')
     .addEntry('general', './assets/scripts/entry/general.ts')

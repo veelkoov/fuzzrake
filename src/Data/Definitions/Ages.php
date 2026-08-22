@@ -17,9 +17,9 @@ enum Ages: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::MINORS => 'Everyone is under 18',
-            self::MIXED  => 'There is a mix of people over and under 18',
-            self::ADULTS => 'Everyone is over 18',
+            self::MINORS => 'All studio members are under 18',
+            self::MIXED  => 'Mix of people over and under 18 in the studio',
+            self::ADULTS => 'All studio members are over 18',
         };
     }
 }

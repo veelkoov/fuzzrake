@@ -1,0 +1,23 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('creator_card') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {{ encore_entry_link_tags('creator_card') }}
+{% endblock %}
+
+{% block title %}{{ creator.name }}{% endblock %}
+
+{% block body %}
+    {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
+
+    <div class="creator-card expanded standalone">
+        {{ include('main/parts/creator_card_v2.html.twig') }}
+    </div>
+{% endblock %}

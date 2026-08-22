@@ -6,9 +6,13 @@ import "htmx.org";
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Navbar from "../class/navbar/Navbar";
 import { localizeDateTimes } from "../datetimes";
+import MessageBus from "../class/MessageBus";
 
 // @ts-expect-error I am incompetent, and I don't care to learn frontend
 global.jQuery = jQuery;
+
+// @ts-expect-error I am still incompetent, and I still don't care to learn frontend
+window.messageBus = MessageBus;
 
 jQuery(() => {
   localizeDateTimes(jQuery("body"));

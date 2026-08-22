@@ -37,7 +37,7 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(3, 3);
         $this->skipCheckListAdultAllowNsfw(3);
 
         $this->openFiltersPopUp();
@@ -124,7 +124,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::persistAndFlush($creator1, $creator2);
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(2, 2);
         $this->skipCheckListAdultAllowNsfw(2);
 
         self::assertSelectorExists('#TEST002 span.new-creator');
@@ -158,7 +158,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::persistAndFlush(UserCreator::get(true)->setCountry('FI'));
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openFiltersPopUp();
@@ -172,7 +172,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         $this->waitExpectLoadedCreatorsTable(1, 1);
 
         usleep(500_000); // Lame grep-code-dumb-workarounds-in-tests
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1, true);
 
         $this->openFiltersPopUp();
@@ -188,7 +188,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::persistAndFlush(UserCreator::get(true)
             ->setCreatorId('TEST001')->setCountry('FI')->setStyles(['Toony']));
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
         // Check the defaults: styles are visible, creator IDs are hidden
@@ -205,7 +205,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
 
         // Reload the page
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1, true);
 
         // Check if the change has persisted between page loads

@@ -1,37 +1,14 @@
-<div id="main-page-intro" class="alert alert-light alert-dismissible fade show" role="alert">
+<div id="main-page-intro" class="alert alert-light alert-dismissible fade show" role="banner">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-    <div class="row">
-        <div class="col-md-9">
-            <h4 class="alert-heading pb-0 mb-0">Fursuit makers database</h4>
+    <h4 class="alert-heading pb-0 mb-0">Fursuit makers database</h4>
 
-            <p class="intro-updated-info">
-                Data last updated: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }}.
-            </p>
+    <p class="intro-updated-info">
+        Data last updated: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }}.
+    </p>
 
-            <p>
-                Welcome to the spawnbase of the furries! Currently {{ stats.activeCreatorsCount|fragile_int }}&nbsp;makers from
-                {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here.
-            </p>
-
-            {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
-
-            <p class="small">
-                Data here is maintained exclusively by the makers now. Only they can provide accurate and complete information. If you see your maker/studio information missing or outdated, please let them know!
-            </p>
-
-            <p class="text-center">
-                <a class="btn btn-outline-primary m-2" href="{{ path('rt_feedback_form') }}" target="_blank">
-                    Report a bug or request a feature
-                </a>
-                <a class="btn btn-outline-success m-2" href="{{ path('rt_iu_form_step_start') }}">
-                    Join or update your studio's info
-                </a>
-            </p>
-        </div>
-
-        <div class="col-md-3 px-0 text-center">
-            <img src="{{ asset('images/website-banner-top-transparent.webp') }}" class="img-fluid" alt="" />
-        </div>
-    </div>
+    <p>
+        Welcome to the spawnbase of the furries! Currently {{ stats.activeCreatorsCount|fragile_int }}&nbsp;makers/studios
+        from {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here.
+    </p>
 </div>

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Data\Definitions\Ages;
 use App\Data\Definitions\NewCreator;
 use App\Filtering\FiltersData\Data\ItemList;
 use App\Filtering\FiltersData\Item;
@@ -35,6 +34,12 @@ class AppExtensions
     public function unknownValue(): string
     {
         return '<i class="fas fa-question-circle" title="Unknown"></i>';
+    }
+
+    #[AsTwigFunction('a_bug', isSafe: ['html'])]
+    public function aBug(): string
+    {
+        return '<i class="text-danger fa-solid fa-bug" title="Unexpected value, that is probably a bug (AGAIN)"></i>';
     }
 
     #[AsTwigFunction('nullable_boolean_symbol', isSafe: ['html'])]
@@ -82,46 +87,16 @@ class AppExtensions
         return 'https://bewares.getfursu.it/#search:'.Json::encode($names);
     }
 
-    #[AsTwigFunction('get_cst_issue_text')]
-    public function getCstIssueText(Creator $creator): string
-    {
-        if (!$creator->isTracked() || !$creator->getCsTrackerIssue()) {
-            return '';
-        }
-
-        return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
-    }
-
-    #[AsTwigFunction('ages_description', isSafe: ['html'])]
-    public function agesDescription(Creator $creator, bool $addText): string
-    {
-        $result = '';
-
-        if ($addText) {
-            if (null === $creator->getAges()) {
-                $result .= $this->unknownValue();
-            } else {
-                $result .= $creator->getAges()->getLabel();
-            }
-        }
-
-        $classes = match ($creator->getAges()) {
-            Ages::MINORS => ['fa-solid fa-user-minus'],
-            Ages::MIXED  => ['fa-solid fa-user-plus', 'fa-solid fa-user-minus'],
-            Ages::ADULTS => [],
-            default      => ['fa-solid fa-user'],
-        };
-
-        if (0 < count($classes)) {
-            $result .= ' ';
-        }
-
-        foreach ($classes as $class) {
-            $result .= "<i class=\"ages $class\"></i>";
-        }
-
-        return $result;
-    }
+    // TODO: When shown not expanded?
+    //    #[AsTwigFunction('get_cst_issue_text')]
+    //    public function getCstIssueText(Creator $creator): string
+    //    {
+    //        if (!$creator->isTracked() || !$creator->getCsTrackerIssue()) {
+    //            return '';
+    //        }
+    //
+    //        return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
+    //    }
 
     #[AsTwigFilter('filter_items_matching')]
     public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList

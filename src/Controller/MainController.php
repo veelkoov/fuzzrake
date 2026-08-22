@@ -34,12 +34,24 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/', name: 'rt_main')]
-    #[Cache(maxage: 900, public: true)]
+    #[Cache(maxage: 0, public: false, noStore: true)] // TODO: Revert
     public function main(): Response
     {
         return $this->render('main/main.html.twig', [
             'filters' => $this->filterService->getCachedFiltersTplData(),
             'stats'   => $this->dataService->getMainPageStats(),
+        ]);
+    }
+
+    #[Route(path: '/c/{creatorId}', name: 'rt_creator')] // grep-code-creator-card-path
+    #[Cache(maxage: 900, public: true)]
+    public function creator(string $creatorId): Response
+    {
+        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
+
+        return $this->render('main/creator.html.twig', [
+            'creator' => $creator,
+            'searched_creator_id' => '',
         ]);
     }
 
@@ -61,6 +73,7 @@ class MainController extends AbstractController
         ]);
     }
 
+    // TODO: Remove
     #[Route(path: '/htmx/main/creator-card/{creatorId}', name: 'rt_htmx_main_creator_card')]
     #[Cache(maxage: 900, public: true)]
     public function creatorCard(string $creatorId): Response
@@ -72,9 +85,9 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/creators-in-table', name: 'rt_htmx_main_creators_in_table')]
+    #[Route(path: '/htmx/main/creators-list', name: 'rt_htmx_main_creators_list')]
     #[Cache(maxage: 900, public: true)]
-    public function htmxCreatorsInTable(Request $request): Response
+    public function htmxCreatorsList(Request $request): Response
     {
         try {
             $choices = $this->requestParser->getChoices($request);
@@ -86,9 +99,9 @@ class MainController extends AbstractController
                 $searchedCreatorId = '';
             }
 
-            return $this->render('main/htmx/creators_in_table.html.twig', [
-                'creators_page'        => $creatorsPage,
-                'searched_creator_id'  => $searchedCreatorId,
+            return $this->render('main/parts/creators_list_v2.html.twig', [
+                'creators_page'       => $creatorsPage,
+                'searched_creator_id' => $searchedCreatorId,
             ]);
         } catch (InvalidArgumentException $exception) {
             return throw new BadRequestException(previous: $exception);
