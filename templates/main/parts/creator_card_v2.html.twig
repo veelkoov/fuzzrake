@@ -79,7 +79,8 @@
         }) }}">
     <div class="row">
         <div class="col toggle">
-            <div class="p-1">
+            <div class="row">
+            <div class="col">
                 <h6 class="name mb-0 d-inline">{{ creator.name }}</h6>
 
                 {%- if creator.isHidden -%}
@@ -107,7 +108,7 @@
                 {% endif %}
             </div>
 
-            <p class="p-1 mb-0">
+            <div class="col">
                 <span class="fi fi-{{ creator.country|lower }}"></span>
 
                 {% if creator.state != '' -%}
@@ -124,9 +125,9 @@
                     <br>
                     Speaking: {{ _self.list_cs_opt(creator.languages) }}
                 </small>
-            </p>
+            </div>
 
-            <p class="p-1 mb-0 text-center show-expanded">
+            <div class="col text-center show-expanded">
                 Crafting since {{ _self.crafting_since(creator.since) }}
                 <br>
                 <small>
@@ -137,9 +138,9 @@
                         {{ creator.ages.label }}
                     {% endif %}
                 </small>
-            </p>
+            </div>
 
-            <p class="p-1 mb-0 show-expanded">
+            <div class="col show-expanded">
                 <strong>
                     {% if creator.hasAllergyWarning is null %}
                         {% if '' == creator.allergyWarningInfo %}
@@ -161,13 +162,11 @@
                         Please check the provided links for details or contact the maker regarding this matter.
                     {% endif %}
                 </span>
-            </p>
-
-            <div class="flex-grow-1"></div>
+            </div>
 
             {# FIXME: Must not be cached/served to anonymoous #}
             {% if is_granted('ROLE_ADMIN') %}
-                <p class="p-1 mb-0 show-expanded">
+                <div class="col show-expanded">
                     <a class="btn btn-warning" href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-edit"></i>
                     </a>
@@ -175,10 +174,10 @@
                     <a class="btn btn-warning" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
                         <i class="fas fa-link"></i>
                     </a>
-                </p>
+                </div>
             {% endif %}
 
-            <div class="p-1 small text-center show-expanded">
+            <div class="col small text-center show-expanded">
                 Last update: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}
 
                 <div class="dropdown">
@@ -200,6 +199,8 @@
                 </div>
             </div>
         </div>
+        </div>
+
         <div class="col-auto open-new-card">
             <a href="{{ path('rt_creator', {creatorId: creator.creatorId}) }}">
                 <i class="fa-solid fa-up-right-from-square"></i>
@@ -219,7 +220,7 @@
     {% endif %}
 
     {% if creator.hasValidPhotos %}
-        <div class="row show-expanded">
+        <div class="row photos">
             <div class="col overflow-auto imgs-container">
                 {% for photo_url in creator.photoUrls %}
                     <div>

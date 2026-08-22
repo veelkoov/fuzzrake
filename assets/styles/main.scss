@@ -13,102 +13,22 @@
   }
 }
 
-div#data-table-container {
-  table .creator-id,
-  table .state,
-  table .languages,
-  table .production-models,
-  table .styles,
-  table .types,
-  table .features,
-  table .species,
-  table .commissions,
-  table .links {
-    display: none;
-  }
-
-  table.show-creator-id .creator-id,
-  table.show-state .state,
-  table.show-languages .languages,
-  table.show-production-models .production-models,
-  table.show-styles .styles,
-  table.show-types .types,
-  table.show-features .features,
-  table.show-species .species,
-  table.show-commissions .commissions,
-  table.show-links .links {
-    display: table-cell;
-  }
-}
-
 table#creators-table {
   /* FIXME: OLD */
-  thead {
-    th {
-      vertical-align: middle;
-    }
-  }
-
   tbody {
-    tr.hidden {
-      display: none;
-    }
-
-    tr.matched-creator-id td {
-      background-color: #99cb84;
-    }
-
-    td {
-      cursor: pointer;
-      vertical-align: middle;
-    }
-
-    td.features,
-    td.types,
-    td.styles,
-    td.production-models,
-    td.languages,
     td.species,
     td.commissions {
-      font-size: 75%;
-    }
-
-    td.species,
-    td.commissions {
-      ul {
-        list-style: none;
-        padding: 0;
-
-        li {
-          display: inline-block;
-          margin-right: 1ex;
-        }
-
-        li.yes i {
-          color: #4cae4c;
-        }
-
-        li.inaccurate i {
-          color: #ffc107;
-        }
-
-        li.no i {
-          color: #f20600;
-        }
+      li.yes i {
+        color: #4cae4c;
       }
-    }
 
-    td.commissions {
-      text-align: center;
-    }
+      li.inaccurate i {
+        color: #ffc107;
+      }
 
-    td.creator-id {
-      font-family: monospace;
-    }
-
-    td.links {
-      text-align: right;
-      cursor: default;
+      li.no i {
+        color: #f20600;
+      }
     }
   }
 }
