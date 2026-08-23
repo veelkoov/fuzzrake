@@ -8,17 +8,21 @@
     gpgkey: "https://dl.yarnpkg.com/rpm/pubkey.gpg"
     name: "yarn"
 
+- name: "Enable epel-release"
+  ansible.builtin.dnf:
+    name: "epel-release"
+    state: "installed"
+
 - name: "Install required packages"
   ansible.builtin.dnf:
     name:
-      - "@nodejs:24/common"
-      - "augeas-libs" # Used by Certbot
+      - "certbot"
       - "dnf-automatic"
       - "firewalld"
       - "git"
+      - "nodejs24"
+      - "python3-certbot-apache"
       - "python3-firewall"
-      - "python3-pip"
-      - "python3-requests"
       - "vim"
       - "yarn"
     state: "installed"
