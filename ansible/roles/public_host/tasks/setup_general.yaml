@@ -20,6 +20,7 @@
       - "dnf-automatic"
       - "firewalld"
       - "git"
+      - "kernel-modules-extra" # Required for Docker on RL10; TODO: this one package requires restart
       - "nodejs24"
       - "python3-certbot-apache"
       - "python3-firewall"
