@@ -1,18 +1,4 @@
 ---
-- name: "Install Certbot"
-  ansible.builtin.pip:
-    name:
-      - "certbot"
-      - "certbot-apache"
-    virtualenv: "/opt/certbot/"
-    virtualenv_command: "python3 -m venv"
-
-- name: "Link Certbot into /usr/bin/"
-  ansible.builtin.file:
-    state: "link"
-    path: "/usr/bin/certbot"
-    src: "/opt/certbot/bin/certbot"
-
 - name: "Install Apache HTTP"
   ansible.builtin.dnf:
     name: "httpd"
@@ -94,9 +80,3 @@
     dest: "/etc/logrotate.d/httpd"
     mode: "0644"
     backup: true
-
-- name: "Setup certbot renew cronjob"
-  ansible.builtin.cron:
-    job: "{ date; certbot renew; } >> /var/log/certbot_renew.log"
-    name: "certbot renew"
-    special_time: "weekly"
