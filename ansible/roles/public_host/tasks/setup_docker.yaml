@@ -10,15 +10,17 @@
       - "docker-latest-logrotate"
       - "docker-logrotate"
       - "docker-engine"
+      - "podman"
+      - "runc"
     state: "absent"
 
 - name: "Setup Docker repository"
   ansible.builtin.yum_repository:
-    baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    baseurl: "https://download.docker.com/linux/rhel/$releasever/$basearch/stable"
     description: "Docker CE Stable - $basearch"
     enabled: "1"
     gpgcheck: "1"
-    gpgkey: "https://download.docker.com/linux/centos/gpg"
+    gpgkey: "https://download.docker.com/linux/rhel/gpg"
     name: "docker-ce-stable"
 
 - name: "Install Docker packages"

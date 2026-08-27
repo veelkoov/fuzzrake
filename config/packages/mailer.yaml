@@ -1,9 +1,3 @@
 framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
-        # Handled by the service provider since mid-June 2026 apparently
-        # dkim_signer:
-        #     key: '%env(resolve:DKIM_PRIVATE_KEY)%'
-        #     domain: 'getfursu.it'
-        #     select: 'rsa_1'
-        #     passphrase: '%env(DKIM_PRIVATE_KEY_PASSPHRASE)%'
