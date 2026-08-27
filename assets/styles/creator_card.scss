@@ -35,11 +35,22 @@ div.creator-card:not(.expanded) {
   }
 }
 
-div.creator-card.expanded .header {
-  margin-bottom: 1ex;
+div.creator-card .header {
   background-color: $body-secondary-bg;
-  border-radius: 1em;
-  padding: 0.75em;
+  border-radius: 0.75em 0.75em 0 0;
+  padding: 0.5em;
+}
+
+div.creator-card:not(.expanded) .header {
+  border-radius: 0.75em;
+  margin-bottom: 1ex;
+}
+
+div.creator-card.expanded .body {
+  margin-bottom: 1em;
+  background-color: $body-tertiary-bg;
+  border-radius: 0 0 0.75em 0.75em;
+  padding: 0.25em;
 }
 
 #main-creators-list {
