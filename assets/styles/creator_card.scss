@@ -12,6 +12,31 @@ a {
 }
 
 div.creator-card {
+  padding-top: 0.25rem;
+
+  > .header {
+    border-radius: 0.75rem 0.75rem 0 0;
+    background-color: $body-secondary-bg;
+
+    padding: 0.5rem;
+  }
+
+  &:not(.expanded) .header {
+    border-radius: 0.75rem;
+
+    margin-bottom: 1rex;
+  }
+
+  &.expanded .body {
+    border-radius: 0 0 0.75rem 0.75rem;
+    background-color: $body-tertiary-bg;
+
+    margin-bottom: 1rem;
+    padding: 0.25rem;
+  }
+}
+
+div.creator-card {
   .toggling {
     cursor: pointer;
   }
@@ -33,24 +58,6 @@ div.creator-card:not(.expanded) {
   .show-expanded {
     display: none !important;
   }
-}
-
-div.creator-card .header {
-  background-color: $body-secondary-bg;
-  border-radius: 0.75em 0.75em 0 0;
-  padding: 0.5em;
-}
-
-div.creator-card:not(.expanded) .header {
-  border-radius: 0.75em;
-  margin-bottom: 1ex;
-}
-
-div.creator-card.expanded .body {
-  margin-bottom: 1em;
-  background-color: $body-tertiary-bg;
-  border-radius: 0 0 0.75em 0.75em;
-  padding: 0.25em;
 }
 
 #main-creators-list {
