@@ -84,10 +84,11 @@
                     <h6 class="name mb-0 d-inline">{{ creator.name }}</h6>
 
                     {%- if creator.isHidden -%}
-                        &nbsp;[hidden]
+                        &nbsp;<span class="badge text-bg-secondary">Hidden</span>
                     {%- endif -%}
 
                     {% if is_new(creator) %} {# FIXME #}
+                        {# <td>Added to getfursu.it within the last 6 weeks</td> #}{# grep-amount-of-days-considered-new #}
                         <span class="text-nowrap new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
                     {% endif %}
 
@@ -96,8 +97,8 @@
                     </span>
 
                     {% if creator.creatorId %}
-                        <span class="creator-id small align-top">
-                            <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle' }} border "><i class="fas fa-link"></i> {{ creator.creatorId -}}</span>
+                        <span class="creator-id small">
+                            <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle' }} border ">✂️ {{ creator.creatorId -}}</span>
                         </span>
                     {% endif %}
 
@@ -171,7 +172,7 @@
                             <i class="fas fa-edit"></i>
                         </a>
 
-                        <a class="btn btn-warning" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
+                        <a class="btn btn-warning align-middle" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}" role="button">
                             <i class="fas fa-link"></i>
                         </a>
                     </div>
@@ -211,10 +212,15 @@
 
 <div class="body">
     {% if creator.inactiveReason %}
-        <div class="row show-expanded">
+        <div class="row gx-0 show-expanded">
+            <div class="col col-auto">
+                <p class="m-2 fs-3"><i class="fa-solid fa-eye-slash"></i></p>
+            </div>
             <div class="col">
-                <strong>This maker has been hidden for the following reason:</strong><br>
-                {{ creator.inactiveReason }}
+                <p class="m-2">
+                    <strong>This maker has been hidden for the following reason:</strong><br>
+                    {{ creator.inactiveReason }}
+                </p>
             </div>
         </div>
     {% endif %}
@@ -236,7 +242,7 @@
     {% if creator.intro %}
         <div class="row show-expanded">
             <div class="col">
-                <p class="lead nl2br">
+                <p class="m-2 lead nl2br">
                     {{- creator.intro -}}
                 </p>
             </div>
@@ -327,9 +333,11 @@
             <div class="d-flex mb-1 align-items-end">
                 <h5 class="mb-0 me-2">Commissions status</h5>
 
-                <span class="text-secondary smaller">
-                    Updated on {{ creator.csLastCheck|nullable_datetime_utc }}
-                </span>
+                {% if creator.isTracked %}
+                    <span class="text-secondary smaller">
+                        Updated on {{ creator.csLastCheck|nullable_datetime_utc }}
+                    </span>
+                {% endif %}
             </div>
 
             {% if not creator.isTracked %}
@@ -337,6 +345,7 @@
                     Commissions status is not being tracked.
 
                     <small>
+                        <br>
                         <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
                     </small>
                 </p>
@@ -385,11 +394,7 @@
         </div>
     </div>
 
-    {# TODO #}
-    {# <td class="new-creator"><i class="fa-solid fa-leaf"></i> recently added</td> #}
-    {# <td>Added to getfursu.it within the last 6 weeks</td> #}{# grep-amount-of-days-considered-new #}
-
-    <div class="d-flex flex-wrap justify-content-center links">
+    <div class="d-flex flex-wrap justify-content-center links my-2">
         {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'fw-bold') }}
         {{ _self.link(creator.fursuitReviewUrl, 'Check FursuitReview reviews', 'fas fa-balance-scale', 'fw-bold') }}
 
