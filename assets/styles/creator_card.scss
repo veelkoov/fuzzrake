@@ -12,26 +12,27 @@ a {
 }
 
 div.creator-card {
-  padding-top: 0.25rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+
+  border: 1px solid $secondary-border-subtle;
+  border-radius: 0.75rem;
+
+  &.expanded {
+    margin-bottom: 1rem;
+  }
 
   > .header {
-    border-radius: 0.75rem 0.75rem 0 0;
-    background-color: $body-secondary-bg;
-
     padding: 0.5rem;
-  }
-
-  &:not(.expanded) .header {
-    border-radius: 0.75rem;
-
-    margin-bottom: 1rex;
-  }
-
-  &.expanded .body {
-    border-radius: 0 0 0.75rem 0.75rem;
     background-color: $body-tertiary-bg;
+    border-radius: 0.75rem;
+  }
 
-    margin-bottom: 1rem;
+  &.expanded > .header {
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+
+  .body {
     padding: 0.25rem;
   }
 }

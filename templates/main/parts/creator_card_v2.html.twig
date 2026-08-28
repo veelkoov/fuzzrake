@@ -78,9 +78,9 @@
             'matched-creator-id': creator.hasCreatorId(searched_creator_id),
         }) }}">
     <div class="row">
-        <div class="col toggle">
+        <div class="col">
             <div class="row row-cols-auto">
-                <div class="col">
+                <div class="col toggle">
                     <h6 class="name mb-0 d-inline">{{ creator.name }}</h6>
 
                     {%- if creator.isHidden -%}
@@ -106,7 +106,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col">
+                <div class="col toggle">
                     <span class="fi fi-{{ creator.country|lower }}"></span>
 
                     {% if creator.state != '' -%}
@@ -125,7 +125,7 @@
                     </small>
                 </div>
 
-                <div class="col text-center show-expanded">
+                <div class="col toggle text-center show-expanded">
                     Crafting since {{ _self.crafting_since(creator.since) }}
                     <br>
                     <small>
@@ -138,7 +138,7 @@
                     </small>
                 </div>
 
-                <div class="col show-expanded">
+                <div class="col toggle show-expanded">
                     <strong>
                         {% if creator.hasAllergyWarning is null %}
                             {% if '' == creator.allergyWarningInfo %}
@@ -162,9 +162,7 @@
                     </span>
                 </div>
 
-                <div class="col flex-fill">
-
-                </div>
+                <div class="col toggle flex-fill"></div>
 
                 {# FIXME: Must not be cached/served to anonymoous #}
                 {% if is_granted('ROLE_ADMIN') %}
