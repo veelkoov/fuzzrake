@@ -93,3 +93,16 @@ span.utc_datetime {
 
   padding-bottom: 1.5em;
 }
+
+.img-small-on-big-screens {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: 0.1rem;
+}
+
+@media (min-width: 768px) {
+  .img-small-on-big-screens {
+    max-width: 49%;
+  }
+}

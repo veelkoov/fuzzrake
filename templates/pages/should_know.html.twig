@@ -2,12 +2,6 @@
 
 {% block title %}What you should know{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-
-    <script async src="https://platform.twitter.com/widgets.js"></script>
-{% endblock %}
-
 {% set refs = {
     FSR1: {
         uri: 'https://fursuitreview.com/blog/what-is-a-fursuit-types-styles-padding/',
@@ -48,6 +42,10 @@
         {% endfor %}
     </p>
 {% endmacro %}
+
+{% macro img(src, alt) -%}
+    <a href="{{ asset(src) }}"><img src="{{ asset(src) }}" class="img-small-on-big-screens" alt="{{ alt }}"></a>
+{%- endmacro %}
 
 {% block contents %}
     {% from 'pages/should_know.html.twig' import read_more %}
@@ -185,19 +183,50 @@
 
     <ul>
         <li>
-            If an artists shares their work only privately, that's a red flag. Legitimate makers will post their work publicly. <br />
+            If an artists shares their work only privately, that's a red flag. Legitimate makers will post their work publicly.
 
-            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">A quick and very-repostable guide in response to all them scam accounts popping up pretending to be fursuit makers! <a href="https://t.co/Gm79AfDVml">pic.twitter.com/Gm79AfDVml</a></p>&mdash; Pajama Cat Studio (@PJCatStudio) <a href="https://twitter.com/PJCatStudio/status/1506272358646140929?ref_src=twsrc%5Etfw">March 22, 2022</a></blockquote>
+            <figure class="border border-secondary-subtle rounded p-1 mt-1">
+                <blockquote class="blockquote">
+                    <p>A quick and very-repostable guide in response to all them scam accounts popping up pretending to be fursuit makers!</p>
+
+                    {{ _self.img('images/should_know/pcs1.jpeg', 'Rouge\'s Guide to Fake Fursuit Makers: how to avoid fursuit scams. Free permission to respot anywhere! By Pajama Cat Studio') }}
+                    {#- -#}
+                    {{ _self.img('images/should_know/pcs2.jpeg', 'Look for a public gallery. Most professional makers will have public work accounts or, even better, a website. Even hobbyists will likely have work posted publicly to their accounts. Be wary of a &quot;maker&quot; that only shares their work through DM!') }}
+                    {#- -#}
+                    {{ _self.img('images/should_know/pcs3.jpeg', 'Search the original makers. Reverse image search any work a &quot;maker&quot; sends you (and look for watermarks!). Scam makers also steal logos and names from other makers - search these too! Find the original maker and contact them to see if you\'ve been talking to the real deal.') }}
+                    {#- -#}
+                    {{ _self.img('images/should_know/pcs4.jpeg', '&quot;Oh, I used to work for them!&quot; When caught stealing work, scam makers often claim to have worked for the bigger makers in question. Just... Don\'t fall for this one. If you think they might be truthful, contact the original maker and ask if this is a former employee of theirs.') }}
+                </blockquote>
+                <figcaption class="blockquote-footer mb-0">
+                    Pajama Cat Studio (@PJCatStudio) <a href="https://twitter.com/PJCatStudio/status/1506272358646140929?ref_src=twsrc%5Etfw">March 22, 2022</a>
+                </figcaption>
+            </figure>
         </li>
         <li>
-            <strong>Use e-mail for communication.</strong> Some messengers allow erasing of the history for both sides. If discussing something over IM, send a compilation of things agreed on through e-mail and request confirmation (this will also reduce risk of misunderstandings).<br />
+            <strong>Use e-mail for communication.</strong> Some messengers allow erasing of the history for both sides. If discussing something over IM, send a compilation of things agreed on through e-mail and request confirmation (this will also reduce risk of misunderstandings).<br>
 
-            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Co-signed by us.<br><br>Please just use email to verify important details/ dates/ payments sent. Have some kind of paper trail that can&#39;t be deleted. <a href="https://t.co/dOS7zf7Ipj">https://t.co/dOS7zf7Ipj</a></p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1421136884626038784?ref_src=twsrc%5Etfw">July 30, 2021</a></blockquote>
+            <figure class="border border-secondary-subtle rounded p-1 mt-1">
+                <blockquote class="blockquote">
+                    <p>Co-signed by us.<br><br>Please just use email to verify important details/ dates/ payments sent. Have some kind of paper trail that can't be deleted.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer mb-0">
+                    Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1421136884626038784?ref_src=twsrc%5Etfw">July 30, 2021</a>
+                </figcaption>
+            </figure>
         </li>
         <li>
-            If a maker wants "friends and family" option on PayPal, and they are not popular, be especially careful. <br />
+            If a maker wants "friends and family" option on PayPal, and they are not popular, be especially careful.
 
-            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">In light of the alarming amount of bewares that have come our way regarding sales gone wrong and the client has paid via &quot;Friends and Family&quot; on Paypal... Abbie has a friendly <a href="https://twitter.com/hashtag/PSA?src=hash&amp;ref_src=twsrc%5Etfw">#PSA</a> for you.<br><br>Please share, share, SHARE this. You are not protected if you pay via F&amp;F. So don&#39;t. <a href="https://t.co/XcKIg345Cj">pic.twitter.com/XcKIg345Cj</a></p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1265030367544664065?ref_src=twsrc%5Etfw">May 25, 2020</a></blockquote>
+            <figure class="border border-secondary-subtle rounded p-1 mt-1">
+                <blockquote class="blockquote">
+                    <p>In light of the alarming amount of bewares that have come our way regarding sales gone wrong and the client has paid via &quot;Friends and Family&quot; on Paypal... Abbie has a friendly #PSA for you.<br><br>Please share, share, SHARE this. You are not protected if you pay via F&amp;F. So don't.</p>
+
+                    {{ _self.img('images/should_know/ab1.jpeg', 'If you are asked to pay for items via Friends &amp; Family RUN AWAY (&amp; report them to PayPal)') }}
+                </blockquote>
+                <figcaption class="blockquote-footer mb-0">
+                    Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1265030367544664065?ref_src=twsrc%5Etfw">May 25, 2020</a>
+                </figcaption>
+            </figure>
         </li>
         <li>
             Offers "too good to be true" are scam.
@@ -268,7 +297,16 @@
         </li>
 
         <li>
-            In case things go wrong, <a href="https://twitter.com/Artists_Beware/status/1491512169539649538" target="_blank">you may be offered a refund. Take it.</a>
+            In case things go wrong, you may be offered a refund. Take it.
+
+            <figure class="border border-secondary-subtle rounded p-1 mt-1 text-center">
+                <blockquote class="blockquote">
+                    {{ _self.img('images/should_know/ab2.png', 'When an Artist or a Builder offers to REFUND you on an owed project... TAKE IT! (Trust us. Plz.)') }}
+                </blockquote>
+                <figcaption class="blockquote-footer mb-0">
+                    Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1491512169539649538?ref_src=twsrc%5Etfw">February 9, 2022</a>
+                </figcaption>
+            </figure>
         </li>
     </ul>
 
@@ -323,7 +361,14 @@
         </li>
     </ul>
 
-    <blockquote class="twitter-tweet"><p lang="en" dir="ltr">On the other side: ESL individuals may use words that sound harsh or rude. That can be due to bad English translations. Don&#39;t assume bad intentions automatically.</p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1339017089286348801?ref_src=twsrc%5Etfw">December 16, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <figure class="border border-secondary-subtle rounded p-1 mt-1">
+        <blockquote class="blockquote">
+            <p>On the other side: ESL individuals may use words that sound harsh or rude. That can be due to bad English translations. Don't assume bad intentions automatically.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer mb-0">
+            Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1339017089286348801?ref_src=twsrc%5Etfw">December 16, 2020</a>
+        </figcaption>
+    </figure>
 
     <h1 id="read-more" class="pt-4">Read more</h1>
 
