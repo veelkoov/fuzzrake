@@ -23,8 +23,6 @@ final class PrecomputeDataCommand
     public function __invoke(
         SymfonyStyle $io,
     ): int {
-        $io->comment('Creators public data JSON string');
-        $this->dataService->getCreatorsPublicDataJsonString();
         $io->comment('Provided info stats');
         $this->dataService->getProvidedInfoStats();
 
