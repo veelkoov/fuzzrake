@@ -80,7 +80,6 @@ final class Data extends AbstractType
             ])
             ->add('state', TextType::class, [
                 'label'      => 'State',
-                'help'       => 'Only for the US and Canada, otherwise please leave empty.',
                 'required'   => false,
                 'empty_data' => '',
             ])
