@@ -61,6 +61,20 @@ div.creator-card:not(.expanded) {
   }
 }
 
+div.creator-card.expanded {
+  .hide-expanded {
+    display: none !important;
+  }
+}
+
+.look-ma-am-box .box-header {
+  margin-bottom: 0.5rem;
+
+  h5 {
+    margin-bottom: 0;
+  }
+}
+
 #main-creators-list {
   &:not(.show-creator-id)
     .creator-card:not(.expanded)
@@ -78,14 +92,9 @@ div.creator-card:not(.expanded) {
   }
 }
 
-div.creator-card.expanded {
-  .hide-expanded {
-    display: none !important;
-  }
-}
-
 div.creator-card ul.condensed {
-  padding-left: 0;
+  padding: 0;
+  margin: 0;
 
   li {
     display: inline;
