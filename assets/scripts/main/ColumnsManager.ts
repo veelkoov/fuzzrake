@@ -5,9 +5,9 @@ export default class ColumnsManager {
   private static readonly VISIBLE_BY_DEFAULT = [
     "styles",
     "commissions",
-    "links",
+    "allergy-warning",
   ];
-  private static readonly STORAGE_VERSION: string = "2";
+  private static readonly STORAGE_VERSION: string = "3";
   private static readonly UPDATE_EVENT: string = "change";
 
   private readonly classesBearer: JQuery<HTMLElement>;

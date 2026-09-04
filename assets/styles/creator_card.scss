@@ -78,7 +78,7 @@ div.creator-card.expanded {
   }
 
   @each $item in languages, state, features, production-models, styles,
-    order-types, links, commissions, species, photos
+    order-types, links, commissions, species, photos, allergy-warning
   {
     &:not(.show-#{$item}) .creator-card:not(.expanded) .#{$item} {
       display: none !important;
