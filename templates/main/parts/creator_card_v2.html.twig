@@ -31,9 +31,18 @@
     {% endif %}
 {% endmacro %}
 
+{% macro yes_no_list(yes_items, no_items) %}
+    {% for item in yes_items %}
+        <span class="text-nowrap">{{ nullable_boolean_symbol(true) }} {{ item }}&nbsp;</span>
+    {% endfor %}
+    {% for item in no_items %}
+        <span class="text-nowrap">{{ nullable_boolean_symbol(false) }} {{ item }}&nbsp;</span>
+    {% endfor %}
+{% endmacro %}
+
 {% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
     {% if comment %}
-        <span class="nl2br comment">{{ comment }}</span>
+        <p class="nl2br comment">{{ comment }}</p>
     {% endif %}
 
     {% if items or other_items %}
@@ -78,9 +87,9 @@
             'matched-creator-id': creator.hasCreatorId(searched_creator_id),
         }) }}">
     <div class="row">
-        <div class="col">
+        <div class="col toggle">
             <div class="row row-cols-auto">
-                <div class="col col-auto toggle header-box">
+                <div class="col col-auto header-box">
                     <h5 class="name mb-0 d-inline">{{ creator.name }}</h5>
 
                     {%- if creator.isHidden -%}
@@ -107,7 +116,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col col-auto toggle header-box">
+                <div class="col col-auto header-box">
                     <span class="fi fi-{{ creator.country|lower }}"></span>
 
                     {% if creator.state != '' -%}
@@ -126,7 +135,7 @@
                     </small>
                 </div>
 
-                <div class="col col-auto toggle header-box show-expanded">
+                <div class="col col-auto header-box show-expanded">
                     Crafting since {{ _self.crafting_since(creator.since) }}
                     <br>
                     <small>
@@ -139,7 +148,7 @@
                     </small>
                 </div>
 
-                <div class="col col-auto toggle header-box show-expanded">
+                <div class="col col-auto header-box show-expanded">
                     <strong>
                         {% if creator.hasAllergyWarning is null %}
                             {% if '' == creator.allergyWarningInfo %}
@@ -165,14 +174,12 @@
             </div>
         </div>
 
-        <div class="col-auto open-new-card">
+        <div class="col-auto open-new-card text-end">
             {# FIXME: Must not be cached/served to anonymoous #}
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">
                     <i class="fas fa-edit"></i>
                 </a>
-
-                <br class="show-expanded">
 
                 <a href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}">
                     <i class="fas fa-link"></i>
@@ -233,7 +240,7 @@
                 <h5>Produces</h5>
             </div>
 
-            <div class="small">
+            <div class="box-content">
                 {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
             </div>
         </div>
@@ -243,7 +250,7 @@
                 <h5>Styles</h5>
             </div>
 
-            <div class="small">
+            <div class="box-content">
                 {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
             </div>
         </div>
@@ -253,7 +260,7 @@
                 <h5>Types</h5>
             </div>
 
-            <div class="small">
+            <div class="box-content">
                 {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
             </div>
         </div>
@@ -263,7 +270,7 @@
                 <h5>Features</h5>
             </div>
 
-            <div class="small">
+            <div class="box-content">
                 {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
             </div>
         </div>
@@ -278,12 +285,7 @@
                     <span class="nl2br">{{ creator.speciesComment }}</span><br>
                 {% endif %}
 
-                {% for item in creator.speciesDoes %}
-                    {{ nullable_boolean_symbol(true) }}&nbsp;{{ item }}&nbsp;
-                {% endfor %}
-                {% for item in creator.speciesDoesnt %}
-                    {{ nullable_boolean_symbol(false) }}&nbsp;{{ item }}&nbsp;
-                {% endfor %}
+                {{ _self.yes_no_list(creator.speciesDoes, creator.speciesDoesnt) }}
 
                 {% if not creator.speciesDoes and not creator.speciesDoesnt %}
                     {{ unknown_value() }}
@@ -355,12 +357,7 @@
                         </p>
                     {% endif %}
 
-                    {% for item in creator.openFor %}
-                        {{ nullable_boolean_symbol(true) }}&nbsp;{{ item }}&nbsp;
-                    {% endfor %}
-                    {% for item in creator.closedFor %}
-                        {{ nullable_boolean_symbol(false) }}&nbsp;{{ item }}&nbsp;
-                    {% endfor %}
+                    {{ _self.yes_no_list(creator.openFor, creator.closedFor) }}
 
                     <p class="mt-2">
                         <small>
@@ -390,8 +387,8 @@
         </div>
     </div>
 
-    <div class="d-flex flex-wrap flex-sm-nowrap align-items-end text-center my-2 px-2">
-        <div class="links">
+    <div class="d-flex flex-wrap flex-sm-nowrap justify-content-center align-items-end text-center my-2 px-2">
+        <div class="links flex-fill">
             {{ _self.link(ab_search_uri(creator), 'Artists Beware records', 'fas fa-balance-scale', 'fw-bold') }}
             {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview reviews', 'fas fa-balance-scale', 'fw-bold') }}
 
@@ -424,7 +421,7 @@
             {{ _self.link(creator.furtrackUrl, 'Furtrack', 'fas fa-camera') }}
         </div>
 
-        <div class="show-expanded flex-fill">
+        <div class="show-expanded">
             <span class="text-nowrap small">Last update: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</span>
 
             <div class="dropdown">

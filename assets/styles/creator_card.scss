@@ -35,9 +35,7 @@ div.creator-card {
   .body {
     padding: 0 !important; // Avoid empty short body on missing, always-shown elements
   }
-}
 
-div.creator-card {
   .toggling {
     cursor: pointer;
   }
@@ -48,6 +46,10 @@ div.creator-card {
 
   span.creator-id {
     font-family: monospace;
+  }
+
+  .links a {
+    color: #6089c5;
   }
 }
 
@@ -64,14 +66,6 @@ div.creator-card:not(.expanded) {
 div.creator-card.expanded {
   .hide-expanded {
     display: none !important;
-  }
-}
-
-.look-ma-am-box .box-header {
-  margin-bottom: 0.5rem;
-
-  h5 {
-    margin-bottom: 0;
   }
 }
 
@@ -92,26 +86,41 @@ div.creator-card.expanded {
   }
 }
 
-div.creator-card ul.condensed {
-  padding: 0;
-  margin: 0;
-
-  li {
-    display: inline;
+div.creator-card {
+  .comment {
+    margin-bottom: 0.25rem;
   }
 
-  li:before {
-    content: "‣\00a0";
-  }
+  ul.condensed {
+    padding: 0;
+    margin: 0;
 
-  li.other {
-    opacity: 70%;
+    li {
+      display: inline;
+    }
+
+    li:before {
+      content: "▶\00a0";
+        font-size: 50%;
+        vertical-align: middle;
+    }
+
+    li.other {
+      opacity: 70%;
+
+      &:before {
+        content: "▷\00a0";
+        font-size: 50%;
+        vertical-align: middle;
+      }
+    }
   }
 }
 
 div.imgs-container {
   display: flex;
   overflow: auto;
+  padding: 0.5ex;
 
   a + a {
     margin-left: 1ex;
@@ -226,5 +235,13 @@ div.imgs-container {
 @media (min-width: 768px) {
   .look-ma-am-box {
     max-width: 50% !important;
+  }
+}
+
+.look-ma-am-box .box-header {
+  margin-bottom: 0.5rem;
+
+  h5 {
+    margin-bottom: 0;
   }
 }
