@@ -49,7 +49,7 @@
     {{ include('_footer.html.twig') }}
 
     {% if is_granted('IS_AUTHENTICATED') %}
-        <div hx-get="{{ path('rt_userinfo') }}" hx-trigger="load" hx-on:htmx:after-on-load="messageBus.dispatch('retrieved-userinfo')"></div>
+        <div hx-get="{{ path('rt_userinfo') }}" hx-trigger="load" hx-on:htmx:after-on-load="messageBus.dispatch('event-retrieved-userinfo')"></div>
     {% endif %}
 
     {% block javascripts %}
