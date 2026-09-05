@@ -36,12 +36,11 @@ export default class ColumnsManager {
   }
 
   public loadOrUseDefaults(): void {
-    const missingValue = "59314295-b5d8-4c91-b6c7-ff2f71dd3e08"; // TODO: allow returning null instead of default
-    const state: string = Storage.getString("columns/state", missingValue);
+    const state: string | null = Storage.getStringOrNull("columns/state");
     let visibleColumnIds: string[];
 
     if (
-      missingValue !== state &&
+      null !== state &&
       ColumnsManager.STORAGE_VERSION ===
         Storage.getString("columns/version", "")
     ) {
