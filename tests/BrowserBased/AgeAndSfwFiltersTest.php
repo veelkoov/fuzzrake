@@ -122,8 +122,8 @@ class AgeAndSfwFiltersTest extends FuzzrakePantherTestCase
 
             $displayedCreatorIds = [
                 ...$displayedCreatorIds,
-                ...$crawler->filter('#creators-table-body tr') // FIXME
-                    ->each(fn (Crawler $node, $_) => $node->attr('id', '')),
+                ...$crawler->filter('div.creator-card')
+                    ->each(fn (Crawler $node, $_) => $node->attr('id', 'no id attr')),
             ];
 
             if (0 < $crawler->filter('#next-items-page-link')->count()) {

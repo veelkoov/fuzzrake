@@ -53,7 +53,8 @@ class MainController_filtersTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
 
         $resultCreatorIds = $this->getCrawlerForPartialTableHtml(self::$client->getResponse()->getContent())
-            ->filter('span.creator-id')->each(static fn (Crawler $node, $_) => $node->text(''));
+            ->filter('div.creator-card')
+            ->each(static fn (Crawler $node, $_) => $node->attr('id', 'no id attr'));
 
         self::assertSameItems($expectedCreatorIds, $resultCreatorIds, "$query query failed.");
     }

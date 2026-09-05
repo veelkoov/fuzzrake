@@ -11,10 +11,10 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
@@ -133,21 +133,26 @@ class MainPageTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * @throws NoSuchElementException
-     * @throws TimeoutException
+     * @throws WebDriverException
      */
-    public function testOpeningCreatorCardByCreatorId(): void
+    #[DataProvider('openingCreatorCardByCreatorIdDataProvider')]
+    public function testOpeningCreatorCardByCreatorId(string $path): void
     {
         self::persistAndFlush(UserCreator::get(true)
-            ->setCreatorId('TEST001')->setInactiveReason('Testing')); // Must show up even if deactivated
+            ->setName('Opening standalone card')
+            ->setCreatorId('TEST001')
+            ->setInactiveReason('Testing')); // Must show up even if deactivated
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/#TEST001');
+        self::$client->request('GET', $path);
 
-        self::waitUntilShows('#creator-card-modal #creator-id', 1000);
-        self::assertSelectorTextSame('#creator-card-modal #creator-id', 'TEST001');
-        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal-content .modal-header button'))->click();
-        self::waitUntilHides('#creator-card-modal #creator-id');
+        self::assertSelectorTextSame('.creator-card h5.name', 'Opening standalone card');
+        self::assertSelectorTextContains('.creator-card .creator-id', 'TEST001');
+    }
+
+    public static function openingCreatorCardByCreatorIdDataProvider(): iterable
+    {
+        return [['/#TEST001'], ['/c/TEST001']];
     }
 
     /**
