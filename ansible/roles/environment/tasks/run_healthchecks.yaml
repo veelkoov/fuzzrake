@@ -4,7 +4,7 @@
     url: "https://{{ server_name }}{{ item }}"
   loop:
     - "/"
-    - "/htmx/main/creators-in-table?isAdult=1&wantsSfw=0&page=1&creatorMode=0"
+    - "/htmx/main/creators-list?isAdult=1&wantsSfw=0&page=1&creatorMode=0"
     - "/contact"
     - "/events"
     - "/feedback"
