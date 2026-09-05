@@ -34,7 +34,7 @@ class MainController extends AbstractController
     }
 
     #[Route(path: '/', name: 'rt_main')]
-    #[Cache(maxage: 0, public: false, noStore: true)] // TODO: Revert
+    #[Cache(maxage: 900, public: true)]
     public function main(): Response
     {
         return $this->render('main/main.html.twig', [
@@ -70,18 +70,6 @@ class MainController extends AbstractController
     {
         return $this->render('main/new.html.twig', [
             'creators' => Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
-        ]);
-    }
-
-    // TODO: Remove
-    #[Route(path: '/htmx/main/creator-card/{creatorId}', name: 'rt_htmx_main_creator_card')]
-    #[Cache(maxage: 900, public: true)]
-    public function creatorCard(string $creatorId): Response
-    {
-        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
-
-        return $this->render('main/htmx/creator_card.html.twig', [
-            'creator' => $creator,
         ]);
     }
 
