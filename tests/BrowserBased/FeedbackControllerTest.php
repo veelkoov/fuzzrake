@@ -52,7 +52,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
-        $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName());
+        $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName()); // FIXME
         self::$client->findElement(WebDriverBy::xpath(self::DATA_OUTDATED_BTN_SELECTOR))->click();
         self::$client->clickLink('Submit the feedback form');
 

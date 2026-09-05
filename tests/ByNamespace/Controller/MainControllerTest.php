@@ -75,16 +75,19 @@ class MainControllerTest extends FuzzrakeWebTestCase
     public static function commissionsStatusDisplayDataProvider(): array
     {
         $allTexts = [
-            $notTracked = 'Commissions status is not being tracked',
-            $failed = 'Failed to automatically determine commissions status',
-            $issues = 'encountered apparent difficulties while figuring out the status',
+            $notTracked = 'Not tracked.',
+            $failed = 'Failed to detect.',
+            $issues = 'Note: encountered apparent difficulties during detection; expect inaccuracies.',
             $tracked = 'Status is tracked and updated automatically based on the contents of',
             $learnMoreLabel = 'Learn more about automatic tracking',
             $learnMoreAttr = '/tracking"',
             $offer = 'PancakesOffer',
-            $statusOpen = 'Open',
-            $statusClosed = 'Closed',
             $url = 'https://example.com/commissions',
+
+            // Poor test design (traditionally), but we have the two exclusive alternatives,
+            // so the test can't fail due to both not matching.
+            $statusOpen = '<i class="text-success fa-solid fa-circle-check"></i> PancakesOffer',
+            $statusClosed = '<i class="text-danger fa-solid fa-square-xmark"></i> PancakesOffer',
         ];
 
         return [

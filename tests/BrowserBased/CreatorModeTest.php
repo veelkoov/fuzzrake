@@ -80,7 +80,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         self::waitUntilShows('#aasImNotAdult');
         self::$client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-        self::waitUntilShows('#creators-table'); // FIXME
+        self::waitUntilShows('#main-creators-list');
 
         // Expect: checklist is dismissed, but only minors-friendly creator shows up
 
@@ -111,7 +111,7 @@ class CreatorModeTest extends FuzzrakePantherTestCase
         // Action: submit the checklist with previous settings kept
 
         self::$client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-        self::waitUntilShows('#creators-table'); // FIXME
+        self::waitUntilShows('#main-creators-list');
 
         // Expect: checklist is dismissed, once again only minors-friendly creator shows up
 

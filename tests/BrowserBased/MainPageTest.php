@@ -62,13 +62,13 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->waitExpectLoadedCreatorsTable(2, 2);
 
-        $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ');
+        $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ'); // FIXME
         self::assertSelectorIsVisible('//a[@id="creator-id" and @href="#TEST001"]');
 
-        $this->closeCreatorCardUpByClickingTheCross();
+        $this->closeCreatorCardUpByClickingTheCross(); // FIXME
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        // Open the links dropdown
+        // Open the links dropdown // FIXME
         self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
         self::$client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
 
@@ -191,31 +191,36 @@ class MainPageTest extends FuzzrakePantherTestCase
     public function testColumnVisibilityGetSavedAndRestored(): void
     {
         self::persistAndFlush(UserCreator::get(true)
-            ->setCreatorId('TEST001')->setCountry('FI')->setStyles(['Toony']));
+            ->setCreatorId('TEST001')
+            ->setCountry('FI')
+            ->setStyles(['Toony']));
 
         $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
-        // Check the defaults: styles are visible, creator IDs are hidden
-        self::assertSelectorIsVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsNotVisible('//td[contains(., "TEST001")]');
+        $creatorIdSelector = '//div[@id="TEST001"]//span[contains(@class, "creator-id") and contains(., "TEST001")]';
+        $stylesSelector = '//div[@id="TEST001"]//div[contains(@class, "styles") and contains(., "Toony")]';
 
-        // Show creator ID column, hide styles column
-        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Columns"]'))->click();
-        self::$client->findElement(WebDriverBy::linkText('Maker ID'))->click();
-        self::$client->findElement(WebDriverBy::linkText('Styles'))->click();
+        // Check the defaults: styles are visible, creator IDs are hidden
+        self::assertSelectorIsVisible($stylesSelector);
+        self::assertSelectorIsNotVisible($creatorIdSelector);
+
+        // Show creator ID, hide styles
+        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Preferences"]'))->click();
+        self::$client->findElement(WebDriverBy::id('checkbox-creator-id'))->click();
+        self::$client->findElement(WebDriverBy::id('checkbox-styles'))->click();
 
         // Check if the change has been applied
-        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+        self::assertSelectorIsNotVisible($stylesSelector);
+        self::assertSelectorIsVisible($creatorIdSelector);
 
         // Reload the page
         $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1, true);
 
         // Check if the change has persisted between page loads
-        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+        self::assertSelectorIsNotVisible($stylesSelector);
+        self::assertSelectorIsVisible($creatorIdSelector);
     }
 
     /**
