@@ -46,8 +46,6 @@
         {%- block body %}{% endblock -%}
     </div>
 
-    {%- block body_no_wrap %}{% endblock -%}
-
     {{ include('_footer.html.twig') }}
 
     {% if is_granted('IS_AUTHENTICATED') %}

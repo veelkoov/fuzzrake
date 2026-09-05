@@ -40,9 +40,7 @@
             <a id="btn-reenable-filters" href="{{ path('rt_main') }}" class="btn btn-light btn-outline-danger">Re-enable filters</a>
         </div>
     </div>
-{% endblock %}
 
-{% block body_no_wrap %}
     <div class="offcanvas offcanvas-start" tabindex="-1" id="pref-fltr-offcanvas" aria-labelledby="pref-fltr-offcanvas-label">
         <div class="offcanvas-header">
             <h4 class="offcanvas-title" id="pref-fltr-offcanvas-label">Preferences</h4>
@@ -76,7 +74,7 @@
         </div>
     </div>
 
-    <div class="container-fluid main-primary-content d-none">
+    <div class="main-primary-content d-none">
         <div class="row">
             <div class="col">
                 <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
@@ -94,7 +92,7 @@
         <div id="main-creators-list" class="row"></div>
     </div>
 
-    <div class="container main-primary-content d-none">
+    <div class="main-primary-content d-none">
         <div id="main-creators-pagination"></div>
     </div>
 {% endblock %}
