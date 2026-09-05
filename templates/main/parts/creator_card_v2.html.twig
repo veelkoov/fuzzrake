@@ -31,7 +31,11 @@
     {% endif %}
 {% endmacro %}
 
-{% macro yes_no_list(yes_items, no_items) %}
+{% macro yes_no_list(yes_items, no_items, comment = '') %}
+    {% if comment %}
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
+    {% endif %}
+
     {% for item in yes_items %}
         <span class="text-nowrap">{{ nullable_boolean_symbol(true) }} {{ item }}&nbsp;</span>
     {% endfor %}
@@ -42,7 +46,7 @@
 
 {% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
     {% if comment %}
-        <p class="nl2br comment">{{ comment }}</p>
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
     {% endif %}
 
     {% if items or other_items %}
@@ -52,7 +56,7 @@
             {% endfor %}
 
             {% for item in other_items %}
-                <li class="other">{{ item }}</li>
+                <li class="other show-expanded">{{ item }}</li>
             {% endfor %}
         </ul>
     {% else %}
@@ -310,47 +314,11 @@
             </div>
 
             <div class="box-content">
-                {% if creator.speciesComment %}
-                    <span class="nl2br">{{ creator.speciesComment }}</span><br>
-                {% endif %}
-
-                {{ _self.yes_no_list(creator.speciesDoes, creator.speciesDoesnt) }}
+                {{ _self.yes_no_list(creator.speciesDoes, creator.speciesDoesnt, creator.speciesComment) }}
 
                 {% if not creator.speciesDoes and not creator.speciesDoesnt %}
                     {{ unknown_value() }}
                 {% endif %}
-            </div>
-        </div>
-
-        <div class="look-ma-am-box show-expanded">
-            <div class="box-header">
-                <h5>{{ nullable_boolean_symbol(creator.offersPaymentPlans) }} Payment plans</h5>
-            </div>
-
-            {% if creator.paymentPlansInfo %}
-                <div class="box-content">
-                    <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="look-ma-am-box show-expanded">
-            <div class="box-header">
-                <h5>Prices in</h5>
-            </div>
-
-            <div class="box-content">
-                {{ _self.list_cs_opt(creator.currenciesAccepted) }}
-            </div>
-        </div>
-
-        <div class="look-ma-am-box show-expanded">
-            <div class="box-header">
-                <h5>Accepted payments</h5>
-            </div>
-
-            <div class="box-content">
-                {{ _self.list_cs_opt(creator.paymentMethods) }}
             </div>
         </div>
 
@@ -410,6 +378,38 @@
                         </small>
                     </p>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>{{ nullable_boolean_symbol(creator.offersPaymentPlans) }} Payment plans</h5>
+            </div>
+
+            {% if creator.paymentPlansInfo %}
+                <div class="box-content">
+                    <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>Prices in</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_cs_opt(creator.currenciesAccepted) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>Accepted payments</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_cs_opt(creator.paymentMethods) }}
             </div>
         </div>
     </div>
