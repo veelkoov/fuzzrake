@@ -13,13 +13,21 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function skipCheckListAdultAllowNsfw(int $numberOfCreators, bool $expectFilled = false): void
+    private function loadMainPage(int $expectedNumberOfCreators, int $expectedNumberOfCountries): void
     {
-        $infoText = "Currently $numberOfCreators makers from $numberOfCreators countries are listed here.";
-        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        self::$client->request('GET', '/index.php/');
 
+        $infoText = "Currently $expectedNumberOfCreators makers/studios from $expectedNumberOfCountries countries are listed here.";
+        self::$client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function skipCheckListAdultAllowNsfw(int $expectedNumberOfCreators, bool $expectFilled = false): void
+    {
         $this->fillChecklist(true, false, $expectFilled);
-        $this->waitExpectLoadedCreatorsTable($numberOfCreators, $numberOfCreators); // Assumes no paging happening
+        $this->waitExpectLoadedCreatorsTable($expectedNumberOfCreators, $expectedNumberOfCreators); // Assumes no paging happening
     }
 
     /**
@@ -27,7 +35,7 @@ trait MainPageTestsTrait
      */
     private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
     {
-        $locator = "//div[@id=\"creators-table-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
+        $locator = "//div[@id=\"main-creators-pagination\"]/p[contains(text(), \"Displaying $displaying out of $outOf matched fursuit makers.\")]";
 
         self::$client->waitFor($locator, 3);
     }
@@ -76,21 +84,11 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function openCreatorCardByClickingOnTheirNameInTheTable(string $creatorName): void
+    private function openCreatorCardByClickingOnTheHeader(string $creatorId): void
     {
-        self::$client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector("#$creatorId.creator-card .header"))->click();
 
-        self::waitUntilShows('#creator-name');
-        self::assertSelectorTextSame('#creator-name', $creatorName);
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    private function closeCreatorCardUpByClickingTheCross(): void
-    {
-        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal .modal-header > button'))->click();
-        self::$client->waitForInvisibility('#creator-card-modal', 5);
+        self::waitUntilShows("#$creatorId.creator-card div.updates");
     }
 
     /**

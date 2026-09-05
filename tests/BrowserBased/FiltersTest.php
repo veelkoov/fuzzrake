@@ -103,10 +103,10 @@ class FiltersTest extends FuzzrakePantherTestCase
         self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
-        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedCreatorIds).' out of');
+        self::assertSelectorTextContains('#main-creators-pagination', 'Displaying '.count($expectedCreatorIds).' out of');
 
         foreach ($expectedCreatorIds as $creatorId) {
-            self::assertSelectorIsVisible("tr#$creatorId");
+            self::assertSelectorIsVisible("div#$creatorId.creator-card");
         }
     }
 

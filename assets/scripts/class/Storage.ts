@@ -7,6 +7,10 @@ export default class Storage {
     return this.get(key) ?? defaultValue;
   }
 
+  public static getStringOrNull(key: string): string | null {
+    return this.get(key);
+  }
+
   public static saveString(
     key: string,
     value: string,

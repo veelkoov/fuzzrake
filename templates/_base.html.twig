@@ -40,11 +40,17 @@
                 {% endfor %}
             {% endfor %}
         {% endif %}
+    </div>
 
-        {% block body %}{% endblock %}
+    <div class="container">
+        {%- block body %}{% endblock -%}
     </div>
 
     {{ include('_footer.html.twig') }}
+
+    {% if is_granted('IS_AUTHENTICATED') %}
+        <div hx-get="{{ path('rt_userinfo') }}" hx-trigger="load" hx-on:htmx:after-on-load="messageBus.dispatch('event-retrieved-userinfo')"></div>
+    {% endif %}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('general') }}

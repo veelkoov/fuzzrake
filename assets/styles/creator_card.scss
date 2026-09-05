@@ -1,0 +1,244 @@
+// https://getbootstrap.com/docs/5.3/customize/optimize/#lean-sass-imports
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+@import "../../node_modules/flag-icons/css/flag-icons.min.css";
+
+a {
+  text-decoration: none;
+}
+
+div.creator-card {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+
+  border: 1px solid $secondary-border-subtle;
+  border-radius: 0.75rem;
+
+  &.expanded {
+    margin-bottom: 1rem;
+  }
+
+  > .header {
+    padding: 0.5rem;
+    background-color: $body-tertiary-bg;
+    border-radius: 0.75rem;
+  }
+
+  &.expanded > .header {
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+
+  .body {
+    padding: 0 !important; // Avoid empty short body on missing, always-shown elements
+  }
+
+  .toggling {
+    cursor: pointer;
+  }
+
+  &.standalone div.open-new-card {
+    display: none;
+  }
+
+  span.creator-id {
+    font-family: monospace;
+  }
+
+  .links a {
+    color: #6089c5;
+  }
+}
+
+div.creator-card:not(.expanded) {
+  .header.hidden {
+    opacity: 0.5;
+  }
+
+  .show-expanded {
+    display: none !important;
+  }
+}
+
+div.creator-card.expanded {
+  .hide-expanded {
+    display: none !important;
+  }
+}
+
+#main-creators-list {
+  &:not(.show-creator-id)
+    .creator-card:not(.expanded)
+    .header:not(.matched-creator-id)
+    .creator-id {
+    display: none;
+  }
+
+  @each $item in languages, state, features, production-models, styles,
+    order-types, links, commissions, species, photos, allergy-warning
+  {
+    &:not(.show-#{$item}) .creator-card:not(.expanded) .#{$item} {
+      display: none !important;
+    }
+  }
+}
+
+div.creator-card {
+  .comment {
+    margin-bottom: 0.25rem;
+  }
+
+  ul.condensed {
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline;
+    }
+
+    li:before {
+      content: "▶\00a0";
+      font-size: 50%;
+      vertical-align: middle;
+    }
+
+    li.other {
+      opacity: 70%;
+
+      &:before {
+        content: "▷\00a0";
+        font-size: 50%;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+div.imgs-container {
+  display: flex;
+  overflow: auto;
+  padding: 0.5ex;
+
+  a + a {
+    margin-left: 1ex;
+  }
+
+  img {
+    width: 25ex;
+    height: 25ex;
+    object-fit: cover;
+  }
+
+  img[src$="#r90"] {
+    transform: rotate(90deg);
+  }
+  img[src$="#r180"] {
+    transform: rotate(180deg);
+  }
+  img[src$="#r270"] {
+    transform: rotate(270deg);
+  }
+
+  img[src$="#0050r90"] {
+    transform: rotate(90deg);
+    object-position: 0 50%;
+  }
+
+  img[src$="#4550"] {
+    object-position: 45% 50%;
+  }
+
+  img[src$="#5040"] {
+    object-position: 50% 40%;
+  }
+
+  img[src$="#5020"] {
+    object-position: 50% 20%;
+  }
+
+  img[src$="#7050"] {
+    object-position: 70% 50%;
+  }
+
+  img[src$="#4050"] {
+    object-position: 40% 50%;
+  }
+
+  img[src$="#0050"] {
+    object-position: 0 50%;
+  }
+
+  img[src$="#10050"] {
+    object-position: 100% 50%;
+  }
+
+  @for $i from 1 through 5 {
+    img[src$="#d#{$i * 10}"] {
+      object-position: 50% #{50% - $i * 10%};
+    }
+  }
+
+  @for $i from 1 through 5 {
+    img[src$="#u#{$i * 10}"] {
+      object-position: 50% #{50% + $i * 10%};
+    }
+  }
+
+  img[src$="#r90d10"] {
+    transform: rotate(90deg);
+    object-position: 40% 50%;
+  }
+
+  img[src$="#r90d20"] {
+    transform: rotate(90deg);
+    object-position: 30% 50%;
+  }
+
+  img[src$="#r90d30"] {
+    transform: rotate(90deg);
+    object-position: 20% 50%;
+  }
+
+  img[src$="#r90d40"] {
+    transform: rotate(90deg);
+    object-position: 10% 50%;
+  }
+
+  img[src$="#r90d50"] {
+    transform: rotate(90deg);
+    object-position: 0 50%;
+  }
+}
+
+.ages {
+  &.fa-user-minus {
+    color: #ffcc00;
+  }
+
+  &.fa-user-plus {
+    color: #4cae4c;
+  }
+
+  &.fa-user {
+    color: #bbb;
+  }
+}
+
+.look-ma-am-box {
+  flex-grow: 1;
+  padding: 1ex;
+}
+
+@media (min-width: 768px) {
+  .look-ma-am-box {
+    max-width: 50% !important;
+  }
+}
+
+.look-ma-am-box .box-header {
+  margin-bottom: 0.5rem;
+
+  h5 {
+    margin-bottom: 0;
+  }
+}

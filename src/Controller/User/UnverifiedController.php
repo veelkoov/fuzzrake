@@ -44,6 +44,14 @@ class UnverifiedController extends AbstractController
     ) {
     }
 
+    #[Route(path: '/userinfo', name: 'rt_userinfo')]
+    public function userinfo(#[CurrentUser] User $user): Response
+    {
+        $userRolesCsSafe = htmlspecialchars(implode(',', $user->getRoles()));
+
+        return new Response('<div id="userinfo" data-roles="'.$userRolesCsSafe.'"></div>');
+    }
+
     #[Route(path: '/logout', name: 'rt_user_logout')]
     public function logout(): void
     {

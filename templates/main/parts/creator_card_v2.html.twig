@@ -1,0 +1,473 @@
+{% macro crafting_since(input) %}
+    {% set months = {
+        '01': 'Jan',
+        '02': 'Feb',
+        '03': 'Mar',
+        '04': 'Apr',
+        '05': 'May',
+        '06': 'Jun',
+        '07': 'Jul',
+        '08': 'Aug',
+        '09': 'Sep',
+        10: 'Oct',
+        11: 'Nov',
+        12: 'Dec',
+    } %}
+
+    {% if input %}
+        {% set parts = input|split('-') %}
+
+        {{ months[parts[1]] }} {{ parts[0] }}
+    {% else %}
+        {{ unknown_value() }}
+    {%- endif -%}
+{% endmacro %}
+
+{% macro list_cs_opt(items) %}
+    {% if items %}
+        {% for item in items %} ‣&nbsp;{{ item }} {% endfor %}
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro yes_no_list(yes_items, no_items, comment = '') %}
+    {% if comment %}
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
+    {% endif %}
+
+    {% for item in yes_items %}
+        <span class="text-nowrap">{{ nullable_boolean_symbol(true) }} {{ item }}&nbsp;</span>
+    {% endfor %}
+    {% for item in no_items %}
+        <span class="text-nowrap">{{ nullable_boolean_symbol(false) }} {{ item }}&nbsp;</span>
+    {% endfor %}
+{% endmacro %}
+
+{% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
+    {% if comment %}
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul class="condensed">
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+
+            {% for item in other_items %}
+                <li class="other show-expanded">{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro link(uri, label, icon_class, additional_button_class = '') %}
+    {% if uri %}
+        <a class="{{ additional_button_class }} p-1 text-nowrap" href="{{ uri }}" target="_blank">
+            <i class="{{ icon_class }}"></i> {{ label }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro ages_icon(creator) %}
+    {% if creator.ages == constant('\\App\\Data\\Definitions\\Ages::MINORS') %}
+        <i class="ages fa-solid fa-user-minus"></i>
+    {% elseif creator.ages == constant('\\App\\Data\\Definitions\\Ages::MIXED') %}
+        <i class="ages fa-solid fa-user-plus"></i>
+        <i class="ages fa-solid fa-user-minus"></i>
+    {% elseif creator.ages == constant('\\App\\Data\\Definitions\\Ages::ADULTS') %}
+    {% elseif creator.ages is null %}
+        <i class="ages fa-solid fa-user"></i>
+    {% else %}
+        {{ a_bug() }}
+    {% endif %}
+{% endmacro %}
+
+<div class="header {{ html_classes({
+            hidden: creator.isHidden,
+            'matched-creator-id': creator.hasCreatorId(searched_creator_id),
+        }) }}">
+    <div class="row">
+        <div class="col toggle">
+            <div class="row row-cols-auto">
+                <div class="col col-auto header-box">
+                    <h5 class="name mb-0 d-inline">{{ creator.name }}</h5>
+
+                    {%- if creator.isHidden -%}
+                        &nbsp;<span class="badge text-bg-secondary">Hidden</span>
+                    {%- endif -%}
+
+                    {% if creator.creatorId %}
+                        <span class="creator-id small">
+                            <span class="badge {{ creator.hasCreatorId(searched_creator_id) ? 'text-bg-warning border-dark' : 'text-bg-light border-dark-subtle' }} border ">✂️ {{ creator.creatorId -}}</span>
+                        </span>
+                    {% endif %}
+
+                    <span class="hide-expanded">
+                        {{ _self.ages_icon(creator) }}
+
+                        {% if is_new(creator) %}
+                            <span class="text-nowrap new-creator"><i class="fa-solid fa-leaf"></i></span>
+                        {% endif %}
+                    </span>
+
+                    {% if creator.formerly %}
+                        <p class="small mb-0 show-expanded">Formerly/a.k.a. {{ _self.list_cs_opt(creator.formerly) }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="col col-auto header-box">
+                    <span class="fi fi-{{ creator.country|lower }}"></span>
+
+                    {% if creator.state != '' -%}
+                        <span class="state">{{ creator.state }}</span>
+                    {%- endif -%}
+                    {%- if creator.city != '' -%}
+                        <span class="show-expanded">
+                            {%- if creator.state != '' %}, {% endif -%}
+                            {{- creator.city -}}
+                        </span>
+                    {%- endif %}
+
+                    <small class="languages">
+                        <br>
+                        Speaking: {{ _self.list_cs_opt(creator.languages) }}
+                    </small>
+                </div>
+
+                <div class="col col-auto header-box show-expanded">
+                    Crafting since {{ _self.crafting_since(creator.since) }}
+                    <br>
+                    <small>
+                        {{ _self.ages_icon(creator) }}
+                        {% if creator.ages is null %}
+                            {{ unknown_value() }} Studio members age is unknown
+                        {% else %}
+                            {{ creator.ages.label }}
+                        {% endif %}
+                    </small>
+                </div>
+
+                <div class="col col-auto header-box hide-expanded allergy-warning">
+                    <strong>
+                        {% if creator.hasAllergyWarning is null %}
+                            {{ unknown_value() }}&nbsp;Allergy warning
+                        {% elseif creator.hasAllergyWarning %}
+                            <i class="text-warning fa-solid fa-triangle-exclamation"></i>&nbsp;Allergy warning
+                        {% else %}
+                            <i class="text-success fa-solid fa-square-xmark"></i>&nbsp;No allergy warning
+                        {% endif %}
+                    </strong>
+
+                    <span class="show-expanded">
+                        {% if '' != creator.allergyWarningInfo %}
+                            {{ creator.allergyWarningInfo|nl2br }}
+                        {% elseif creator.hasAllergyWarning %}
+                            Please check the provided links for details or contact the maker regarding this matter.
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-auto open-new-card text-end">
+            <a class="admin-user-only" href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">
+                <i class="fas fa-edit"></i>
+            </a>
+
+            <a class="admin-user-only" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}">
+                <i class="fas fa-link"></i>
+            </a>
+
+            <br class="admin-user-only show-expanded">
+
+            <a href="{{ path('rt_creator', {creatorId: creator.lastCreatorId}) }}" target="_blank">
+                <i class="fa-solid fa-up-right-from-square"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="body">
+    {% if creator.inactiveReason %}
+        <div class="row gx-0 show-expanded">
+            <div class="col col-auto">
+                <p class="m-2 fs-3"><i class="fa-solid fa-eye-slash"></i></p>
+            </div>
+            <div class="col">
+                <p class="m-2">
+                    <strong>This maker has been hidden for the following reason:</strong><br>
+                    {{ creator.inactiveReason }}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if creator.hasValidPhotos %}
+        <div class="row photos">
+            <div class="col">
+                <div class="imgs-container">
+                    {% for photo_url in creator.photoUrls %}
+                        <a href="{{ photo_url }}" target="_blank">
+                            <img class="rounded" src="{{ creator.miniatureUrls[loop.index0] }}" alt="">
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row show-expanded">
+        {% if is_new(creator) %}
+            <div class="col-auto">
+                <div class="m-2">
+                    <span class="new-creator"><i class="fa-solid fa-leaf"></i></span>
+                    Added to getfursu.it within the last 6 weeks {# grep-amount-of-days-considered-new #}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="col-auto">
+            <div class="m-2">
+                <strong>
+                    {% if creator.hasAllergyWarning is null %}
+                        {% if '' == creator.allergyWarningInfo %}
+                            {{ unknown_value() }}&nbsp;No info for allergic customers
+                        {% else %}
+                            {{ unknown_value() }}&nbsp;Allergy warning:
+                        {% endif %}
+                    {% elseif creator.hasAllergyWarning %}
+                        <i class="text-warning fa-solid fa-triangle-exclamation"></i>&nbsp;Allergy warning:
+                    {% else %}
+                        <i class="text-success fa-solid fa-square-xmark"></i>&nbsp;No allergy warning
+                    {% endif %}
+                </strong>
+
+                <p class="show-expanded nl2br m-0">
+                    {%- if '' != creator.allergyWarningInfo -%}
+                        {{ creator.allergyWarningInfo }}
+                    {%- elseif creator.hasAllergyWarning -%}
+                        Please check the provided links for details or contact the maker regarding this matter.
+                    {%- endif -%}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if creator.intro %}
+        <div class="row show-expanded">
+            <div class="col">
+                <p class="m-2 lead nl2br">
+                    {{- creator.intro -}}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="d-flex flex-wrap">
+        <div class="look-ma-am-box production-models">
+            <div class="box-header">
+                <h5>Produces</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box styles">
+            <div class="box-header">
+                <h5>Styles</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box order-types">
+            <div class="box-header">
+                <h5>Types</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box features">
+            <div class="box-header">
+                <h5>Features</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box species">
+            <div class="box-header">
+                <h5>Species</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.yes_no_list(creator.speciesDoes, creator.speciesDoesnt, creator.speciesComment) }}
+
+                {% if not creator.speciesDoes and not creator.speciesDoesnt %}
+                    {{ unknown_value() }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box commissions">
+            <div class="box-header d-flex flex-wrap align-items-end">
+                <h5 class="text-nowrap me-2">Commissions status</h5>
+
+                {% if creator.isTracked %}
+                    <span class="text-secondary smaller text-nowrap show-expanded">
+                        Updated on {{ creator.csLastCheck|nullable_datetime_utc }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="box-content">
+                {% if not creator.isTracked %}
+                    <p class="mb-0">
+                        Not tracked.
+
+                        <small class="show-expanded">
+                            <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                        </small>
+                    </p>
+                {% elseif creator.isStatusKnown %}
+                    {% if creator.csTrackerIssue %}
+                        <p class="mb-1">
+                            <small>
+                                <i class="inaccurate fas fa-question-circle"></i>
+                                Note: encountered apparent difficulties during detection; expect inaccuracies.
+                            </small>
+                        </p>
+                    {% endif %}
+
+                    {{ _self.yes_no_list(creator.openFor, creator.closedFor) }}
+
+                    <p class="mt-2 mb-0 show-expanded">
+                        <small>
+                            Status is tracked and updated automatically based on the contents of:
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>
+                                {%- if not loop.last %},{% endif %}
+                            {%- endfor %}.
+                            <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                        </small>
+                    </p>
+                {% else %}
+                    <p class="mb-0">
+                        <i class="inaccurate fas fa-question-circle"></i> Failed to detect.
+
+                        <small class="show-expanded">
+                            Status should be tracked and updated automatically based on the contents of:
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>,
+                            {% endfor %}
+                            however the software failed to "understand" the contents.
+                            <a href="{{ path('rt_tracking') }}" target="_blank">Learn more about automatic tracking.</a>
+                        </small>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>{{ nullable_boolean_symbol(creator.offersPaymentPlans) }} Payment plans</h5>
+            </div>
+
+            {% if creator.paymentPlansInfo %}
+                <div class="box-content">
+                    <span class="nl2br">{{ creator.paymentPlansInfo }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>Prices in</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_cs_opt(creator.currenciesAccepted) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box show-expanded">
+            <div class="box-header">
+                <h5>Accepted payments</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_cs_opt(creator.paymentMethods) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap flex-sm-nowrap justify-content-center align-items-end text-center">
+        <div class="links flex-fill my-2 px-1">
+            {{ _self.link(ab_search_uri(creator), 'Artists Beware records', 'fas fa-balance-scale', 'fw-bold') }}
+            {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview reviews', 'fas fa-balance-scale', 'fw-bold') }}
+
+            {{ _self.link(creator.websiteUrl, 'Official website', 'fas fa-link') }}
+            {{ _self.link(creator.linklistUrl, 'List of links', 'fas fa-link') }}
+            {% for uri in creator.pricesUrls %}
+                {{ _self.link(uri, 'Prices', 'fas fa-dollar-sign') }}
+            {% endfor %}
+            {{ _self.link(creator.faqUrl, 'FAQ', 'fas fa-comments') }}
+            {{ _self.link(creator.queueUrl, 'Queue', 'fas fa-clipboard-list') }}
+
+            {{ _self.link(creator.furAffinityUrl, 'Fur Affinity', 'fas fa-image') }}
+            {{ _self.link(creator.deviantArtUrl, 'DeviantArt', 'fab fa-deviantart') }}
+            {{ _self.link(creator.mastodonUrl, 'Mastodon', 'fab fa-mastodon') }}
+            {{ _self.link(creator.blueskyUrl, 'Bluesky', 'fab fa-bluesky') }}
+            {{ _self.link(creator.facebookUrl, 'Facebook', 'fab fa-facebook') }}
+            {{ _self.link(creator.tumblrUrl, 'Tumblr', 'fab fa-tumblr') }}
+            {{ _self.link(creator.twitterUrl, 'Twitter', 'fab fa-twitter') }}
+            {{ _self.link(creator.instagramUrl, 'Instagram', 'fab fa-instagram') }}
+            {{ _self.link(creator.youtubeUrl, 'YouTube', 'fab fa-youtube') }}
+            {{ _self.link(creator.tiktokUrl, 'TikTok', 'fab fa-tiktok') }}
+            {{ _self.link(creator.telegramChannelUrl, 'Telegram channel', 'fab fa-telegram') }}
+
+            {{ _self.link(creator.etsyUrl, 'Etsy', 'fab fa-etsy') }}
+            {{ _self.link(creator.theDealersDenUrl, 'The Dealers Den', 'fas fa-shopping-cart') }}
+            {{ _self.link(creator.otherShopUrl, 'On-line shop', 'fas fa-shopping-cart') }}
+            {{ _self.link(creator.donationsUrl, 'Donations', 'fas fa-circle-dollar-to-slot') }}
+
+            {{ _self.link(creator.scritchUrl, 'Scritch', 'fas fa-camera') }}
+            {{ _self.link(creator.furtrackUrl, 'Furtrack', 'fas fa-camera') }}
+        </div>
+
+        <div class="updates show-expanded my-2 px-1">
+            <span class="text-nowrap small">Last update: {{ creator.lastUpdateDateTime|nullable_datetime_utc }}</span>
+
+            <div class="dropdown">
+                <button class="btn btn-sm btn-light border-dark-subtle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Data outdated/inaccurate?
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{{ path('rt_iu_form_step_start', {creatorId: creator.lastCreatorId}) }}">
+                            Send updates as the maker
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ path('rt_feedback_form', {creator: creator.lastCreatorId}) }}" {# grep-creator-query-parameter #} target="_blank">
+                            Submit the feedback form
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -49,11 +49,12 @@ class MainController_filtersTest extends FuzzrakeWebTestCase
 
         $query = implode('&', $queryParts);
 
-        self::$client->request('GET', '/htmx/main/creators-in-table?'.$query);
+        self::$client->request('GET', '/htmx/main/creators-list?'.$query);
         self::assertResponseStatusCodeIs(200);
 
         $resultCreatorIds = $this->getCrawlerForPartialTableHtml(self::$client->getResponse()->getContent())
-            ->filter('td.creator-id')->each(static fn (Crawler $node, $_) => $node->text(''));
+            ->filter('div.creator-card')
+            ->each(static fn (Crawler $node, $_) => $node->attr('id', 'no id attr'));
 
         self::assertSameItems($expectedCreatorIds, $resultCreatorIds, "$query query failed.");
     }

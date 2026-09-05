@@ -4,20 +4,30 @@
     {{ parent() }}
 
     {{ encore_entry_script_tags('main') }}
+    {{ encore_entry_script_tags('creator_card') }}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 
     {{ encore_entry_link_tags('main') }}
+    {{ encore_entry_link_tags('creator_card') }}
 {% endblock %}
 
 {% block body %}
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </div>
+    </div>
+    {{ include('main/parts/htmx_events.html.twig') }}
+    {{ include('main/parts/filters.html.twig') }}
+
     {{ include('main/parts/intro.html.twig') }}
+    {{ include('shared_parts/adding_studios_on_hold.html.twig') }}
 
     {{ include('main/parts/checklist.html.twig') }}
-
-    {{ include('main/parts/htmx_events.html.twig') }}
 
     <div id="creator-mode-banner" class="card border-danger mb-3 d-none">
         <div class="card-header">
@@ -31,94 +41,58 @@
         </div>
     </div>
 
-    {{ include('main/parts/filters.html.twig') }}
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="pref-fltr-offcanvas" aria-labelledby="pref-fltr-offcanvas-label">
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title" id="pref-fltr-offcanvas-label">Preferences</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
 
-    {{ include('main/parts/legend_modal.html.twig') }}
+        <div class="offcanvas-body">
+            <h5>Always shown</h5>
 
-    <div id="creator-card-modal" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div id="creator-card-modal-content" class="modal-content"></div>
+            {% for column_id, col_label in {
+                photos: 'Photos',
+                'creator-id': 'Maker ID',
+                state: 'State',
+                languages: 'Languages',
+                'production-models': 'Production models',
+                styles: 'Styles',
+                types: 'Types',
+                features: 'Features',
+                species: 'Species',
+                commissions: 'Commissions',
+                links: 'Links',
+                'allergy-warning': 'Allergy warning',
+            } %}
+                <div class="form-check">
+                    <input class="form-check-input colvis" type="checkbox" value="{{ column_id }}" id="checkbox-{{ column_id }}">
+                    <label class="form-check-label" for="checkbox-{{ column_id }}">
+                        {{ col_label }}
+                    </label>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
-    {# twig-cs-fixer-disable PunctuationSpacing.After #}
-    {# Unable to disable for the following lines only #}
-    {% set columns = [
-        {id: 'creator-id',        label: 'Maker ID',          alignment_class: 'text-center'},
-        {id: 'state',             label: 'State',             alignment_class: 'text-center'},
-        {id: 'languages',         label: 'Languages',         alignment_class: 'text-center'},
-        {id: 'production-models', label: 'Production models', alignment_class: 'text-center'},
-        {id: 'styles',            label: 'Styles',            alignment_class: 'text-center'},
-        {id: 'types',             label: 'Types',             alignment_class: 'text-center'},
-        {id: 'features',          label: 'Features',          alignment_class: 'text-center'},
-        {id: 'species',           label: 'Species',           alignment_class: 'text-center'},
-        {id: 'commissions',       label: 'Commissions',       alignment_class: 'text-center'},
-        {id: 'links',             label: 'Links',             alignment_class: 'text-end'},
-    ] %}
+    <div class="main-primary-content d-none">
+        <div class="row">
+            <div class="col">
+                <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
 
-    <div id="main-primary-content" class="row d-none">
-        <div class="col-md-6">
-            <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-expanded="false">
-                        Columns
-                    </button>
-                    <ul id="columns-visibility-links" class="dropdown-menu">
-                        {% for column in columns %}
-                            <li>
-                                <a class="dropdown-item" href="#" data-column-id="{{ column.id }}">{{ column.label }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
-                        data-bs-target="#filters-modal">
-                    Filters
-
-                    <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
+                <button class="btn btn-sm btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#pref-fltr-offcanvas" aria-controls="pref-fltr-offcanvas">
+                    Preferences
                 </button>
 
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legend-modal">
-                    Legend
+                <button id="open-filters-button" type="button" class="btn btn-sm btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#filters-modal">
+                    Filters <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>
                 </button>
             </div>
         </div>
 
-        <div class="col-md-6 text-md-end">
-            <input id="search-text-field" class="my-1" type="text" name="textSearch" placeholder="Search">
-        </div>
-
-        <div id="data-table-container">
-            <table id="creators-table" class="table table-striped table-sm table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th class="name text-start">Fursuit maker /&nbsp;studio name</th>
-                        {% for column in columns %}
-                            <th class="{{ column.id }} {{ column.alignment_class }}">
-                                {{ column.label }}
-                            </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-
-                <tbody id="creators-table-body">
-                </tbody>
-            </table>
-        </div>
+        <div id="main-creators-list" class="row"></div>
     </div>
 
-    <div id="creators-table-pagination"></div>
-
-    <div class="container text-center">
-        <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">
-    </div>
-
-    <div id="loading-indicator" class="htmx-indicator">
-        <div class="alert alert-light text-primary border-primary-subtle shadow" role="alert">
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">Loading...</span>
-        </div>
+    <div class="main-primary-content d-none">
+        <div id="main-creators-pagination"></div>
     </div>
 {% endblock %}

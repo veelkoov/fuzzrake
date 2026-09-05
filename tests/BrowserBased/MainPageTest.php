@@ -11,10 +11,9 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
@@ -37,7 +36,7 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(3, 3);
         $this->skipCheckListAdultAllowNsfw(3);
 
         $this->openFiltersPopUp();
@@ -62,15 +61,10 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->waitExpectLoadedCreatorsTable(2, 2);
 
-        $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ');
-        self::assertSelectorIsVisible('//a[@id="creator-id" and @href="#TEST001"]');
-
-        $this->closeCreatorCardUpByClickingTheCross();
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        // Open the links dropdown
-        self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
-        self::$client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
+        $creatorIdLocator = '#TEST001.creator-card span.creator-id';
+        self::assertSelectorIsNotVisible($creatorIdLocator);
+        $this->openCreatorCardByClickingOnTheHeader('TEST001');
+        self::assertSelectorIsVisible($creatorIdLocator);
 
         // Check if text search works
         $this->clearTypeInTextSearch('CZ');
@@ -97,20 +91,6 @@ class MainPageTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * If only I was competent enough to be able to fix this test properly. grep-code-dumb-workarounds-in-tests.
-     *
-     * @throws Exception
-     */
-    private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(): void
-    {
-        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
-        usleep(100000);
-
-        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
-        usleep(100000);
-    }
-
-    /**
      * @throws DateTimeException
      * @throws WebDriverException
      */
@@ -124,7 +104,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::persistAndFlush($creator1, $creator2);
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(2, 2);
         $this->skipCheckListAdultAllowNsfw(2);
 
         self::assertSelectorExists('#TEST002 span.new-creator');
@@ -133,21 +113,26 @@ class MainPageTest extends FuzzrakePantherTestCase
     }
 
     /**
-     * @throws NoSuchElementException
-     * @throws TimeoutException
+     * @throws WebDriverException
      */
-    public function testOpeningCreatorCardByCreatorId(): void
+    #[DataProvider('openingCreatorCardByCreatorIdDataProvider')]
+    public function testOpeningCreatorCardByCreatorId(string $path): void
     {
         self::persistAndFlush(UserCreator::get(true)
-            ->setCreatorId('TEST001')->setInactiveReason('Testing')); // Must show up even if deactivated
+            ->setName('Opening standalone card')
+            ->setCreatorId('TEST001')
+            ->setInactiveReason('Testing')); // Must show up even if deactivated
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/#TEST001');
+        self::$client->request('GET', $path);
 
-        self::waitUntilShows('#creator-card-modal #creator-id', 1000);
-        self::assertSelectorTextSame('#creator-card-modal #creator-id', 'TEST001');
-        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal-content .modal-header button'))->click();
-        self::waitUntilHides('#creator-card-modal #creator-id');
+        self::assertSelectorTextSame('.creator-card h5.name', 'Opening standalone card');
+        self::assertSelectorTextContains('.creator-card .creator-id', 'TEST001');
+    }
+
+    public static function openingCreatorCardByCreatorIdDataProvider(): iterable
+    {
+        return [['/#TEST001'], ['/c/TEST001']];
     }
 
     /**
@@ -158,7 +143,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         self::persistAndFlush(UserCreator::get(true)->setCountry('FI'));
         $this->clearCache();
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openFiltersPopUp();
@@ -172,7 +157,7 @@ class MainPageTest extends FuzzrakePantherTestCase
         $this->waitExpectLoadedCreatorsTable(1, 1);
 
         usleep(500_000); // Lame grep-code-dumb-workarounds-in-tests
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1, true);
 
         $this->openFiltersPopUp();
@@ -186,31 +171,36 @@ class MainPageTest extends FuzzrakePantherTestCase
     public function testColumnVisibilityGetSavedAndRestored(): void
     {
         self::persistAndFlush(UserCreator::get(true)
-            ->setCreatorId('TEST001')->setCountry('FI')->setStyles(['Toony']));
+            ->setCreatorId('TEST001')
+            ->setCountry('FI')
+            ->setStyles(['Toony']));
 
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
-        // Check the defaults: styles are visible, creator IDs are hidden
-        self::assertSelectorIsVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsNotVisible('//td[contains(., "TEST001")]');
+        $creatorIdSelector = '//div[@id="TEST001"]//span[contains(@class, "creator-id") and contains(., "TEST001")]';
+        $stylesSelector = '//div[@id="TEST001"]//div[contains(@class, "styles") and contains(., "Toony")]';
 
-        // Show creator ID column, hide styles column
-        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Columns"]'))->click();
-        self::$client->findElement(WebDriverBy::linkText('Maker ID'))->click();
-        self::$client->findElement(WebDriverBy::linkText('Styles'))->click();
+        // Check the defaults: styles are visible, creator IDs are hidden
+        self::assertSelectorIsVisible($stylesSelector);
+        self::assertSelectorIsNotVisible($creatorIdSelector);
+
+        // Show creator ID, hide styles
+        self::$client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Preferences"]'))->click();
+        self::$client->findElement(WebDriverBy::id('checkbox-creator-id'))->click();
+        self::$client->findElement(WebDriverBy::id('checkbox-styles'))->click();
 
         // Check if the change has been applied
-        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+        self::assertSelectorIsNotVisible($stylesSelector);
+        self::assertSelectorIsVisible($creatorIdSelector);
 
         // Reload the page
-        self::$client->request('GET', '/index.php/');
+        $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1, true);
 
         // Check if the change has persisted between page loads
-        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
-        self::assertSelectorIsVisible('//td[contains(., "TEST001")]');
+        self::assertSelectorIsNotVisible($stylesSelector);
+        self::assertSelectorIsVisible($creatorIdSelector);
     }
 
     /**

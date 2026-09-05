@@ -6,6 +6,14 @@ html {
   scroll-behavior: auto !important;
 }
 
+.smaller {
+  font-size: 0.75rem;
+}
+
+.nl2br {
+  white-space: pre-wrap;
+}
+
 div.footer {
   font-size: 75%;
 }
@@ -46,9 +54,7 @@ span.utc_datetime {
   text-underline-offset: 0.2ex;
 }
 
-.new-creator,
-#legend-modal .new-creator // More precise selector, otherwise was overwritten by Bootstrap styles
-{
+.new-creator {
   color: #4cae4c;
 }
 
@@ -105,4 +111,14 @@ span.utc_datetime {
   .img-small-on-big-screens {
     max-width: 49%;
   }
+}
+
+.cc-by-sa-4-0 img {
+  max-width: 1em;
+  max-height: 1em;
+  margin-left: 0.2em;
+}
+
+body:not(.user-is-admin) .admin-user-only {
+  display: none;
 }
