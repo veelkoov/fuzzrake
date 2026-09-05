@@ -6,9 +6,9 @@ import FiltersManager from "../main/FiltersManager";
 import { creatorIdHashRegexp } from "../consts";
 import { requireJQ, toggle } from "../jQueryUtils";
 
-// FIXME: Before YYYY-MM-DD cards were opened with such anchors
 jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   if (
+    // Before 2026-09-05 cards were opened with such anchors
     !AgeAndSfwConfig.getInstance().getCreatorMode() &&
     window.location.hash.match(creatorIdHashRegexp)
   ) {
@@ -128,8 +128,3 @@ window.goToPage = function (pageNumber: number): void {
     }
   });
 })();
-
-/* FIXME: Revert */
-jQuery(() => {
-  jQuery("#checklist-dismiss-btn").trigger("click");
-});
