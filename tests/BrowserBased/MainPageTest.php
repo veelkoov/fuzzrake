@@ -13,7 +13,6 @@ use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
@@ -62,15 +61,10 @@ class MainPageTest extends FuzzrakePantherTestCase
 
         $this->waitExpectLoadedCreatorsTable(2, 2);
 
-        $this->openCreatorCardByClickingOnTheirNameInTheTable('Test creator 1 CZ'); // FIXME
-        self::assertSelectorIsVisible('//a[@id="creator-id" and @href="#TEST001"]');
-
-        $this->closeCreatorCardUpByClickingTheCross(); // FIXME
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
-
-        // Open the links dropdown // FIXME
-        self::$client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
-        self::$client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
+        $creatorIdLocator = '#TEST001.creator-card span.creator-id';
+        self::assertSelectorIsNotVisible($creatorIdLocator);
+        $this->openCreatorCardByClickingOnTheHeader('TEST001');
+        self::assertSelectorIsVisible($creatorIdLocator);
 
         // Check if text search works
         $this->clearTypeInTextSearch('CZ');
@@ -94,20 +88,6 @@ class MainPageTest extends FuzzrakePantherTestCase
         foreach ($notSelected as $country) {
             self::assertSelectorExists("input[type=checkbox][value='$country']:not(:checked)");
         }
-    }
-
-    /**
-     * If only I was competent enough to be able to fix this test properly. grep-code-dumb-workarounds-in-tests.
-     *
-     * @throws Exception
-     */
-    private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(): void
-    {
-        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
-        usleep(100000);
-
-        self::$client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
-        usleep(100000);
     }
 
     /**

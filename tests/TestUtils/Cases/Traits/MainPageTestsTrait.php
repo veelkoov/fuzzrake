@@ -84,21 +84,11 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private function openCreatorCardByClickingOnTheirNameInTheTable(string $creatorName): void
+    private function openCreatorCardByClickingOnTheHeader(string $creatorId): void
     {
-        self::$client->findElement(WebDriverBy::xpath('//td[contains(., "'.$creatorName.'")]'))->click();
+        self::$client->findElement(WebDriverBy::cssSelector("#$creatorId.creator-card .header"))->click();
 
-        self::waitUntilShows('#creator-name');
-        self::assertSelectorTextSame('#creator-name', $creatorName);
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    private function closeCreatorCardUpByClickingTheCross(): void
-    {
-        self::$client->findElement(WebDriverBy::cssSelector('#creator-card-modal .modal-header > button'))->click();
-        self::$client->waitForInvisibility('#creator-card-modal', 5);
+        self::waitUntilShows("#$creatorId.creator-card div.updates");
     }
 
     /**

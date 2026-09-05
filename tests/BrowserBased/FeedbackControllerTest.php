@@ -21,8 +21,6 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
 {
     use MainPageTestsTrait;
 
-    private const string DATA_OUTDATED_BTN_SELECTOR = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
-
     /**
      * @return array<array{string, Creator}>
      */
@@ -52,8 +50,8 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         $this->loadMainPage(1, 1);
         $this->skipCheckListAdultAllowNsfw(1);
 
-        $this->openCreatorCardByClickingOnTheirNameInTheTable($creator->getName()); // FIXME
-        self::$client->findElement(WebDriverBy::xpath(self::DATA_OUTDATED_BTN_SELECTOR))->click();
+        $this->openCreatorCardByClickingOnTheHeader($creator->getLastCreatorId());
+        self::$client->findElement(WebDriverBy::cssSelector("#$expectedCreatorId.creator-card .updates button"))->click();
         self::$client->clickLink('Submit the feedback form');
 
         self::assertCount(2, self::$client->getWindowHandles());
@@ -106,7 +104,7 @@ class FeedbackControllerTest extends FuzzrakePantherTestCase
         self::$client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
-        self::assertSelectorTextContains($noticeCssSel, 'All the information needs to be updated by the makers themselves.');
+        self::assertSelectorTextContains($noticeCssSel, 'Data here is maintained and updated exclusively by the makers now.');
 
         // 6th option
         self::$client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
