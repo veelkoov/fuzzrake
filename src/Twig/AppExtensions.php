@@ -87,17 +87,6 @@ class AppExtensions
         return 'https://bewares.getfursu.it/#search:'.Json::encode($names);
     }
 
-    // TODO: When shown not expanded?
-    //    #[AsTwigFunction('get_cst_issue_text')]
-    //    public function getCstIssueText(Creator $creator): string
-    //    {
-    //        if (!$creator->isTracked() || !$creator->getCsTrackerIssue()) {
-    //            return '';
-    //        }
-    //
-    //        return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
-    //    }
-
     #[AsTwigFilter('filter_items_matching')]
     public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {

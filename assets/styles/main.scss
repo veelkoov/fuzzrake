@@ -13,26 +13,6 @@
   }
 }
 
-table#creators-table {
-  /* FIXME: OLD */
-  tbody {
-    td.species,
-    td.commissions {
-      li.yes i {
-        color: #4cae4c;
-      }
-
-      li.inaccurate i {
-        color: #ffc107;
-      }
-
-      li.no i {
-        color: #f20600;
-      }
-    }
-  }
-}
-
 #filters-modal-body {
   fieldset legend {
     font-size: 1rem;
