@@ -26,7 +26,7 @@ function react_to_subject_changes(): void {
 
       case "Other maker's information is (partially) outdated":
         message =
-          "getfursu.it maintainer does not update information about makers. All the information needs to be updated by the makers themselves. If you know some information here is outdated, please remind the maker to send updates.";
+          "Data here is maintained and updated exclusively by the makers now. Only they can provide accurate and complete information. If you see your maker/studio information missing or outdated, please ask THEM to update it!";
         break;
     }
 
