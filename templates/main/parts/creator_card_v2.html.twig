@@ -170,18 +170,15 @@
         </div>
 
         <div class="col-auto open-new-card text-end">
-            {# FIXME: Must not be cached/served to anonymoous #}
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">
-                    <i class="fas fa-edit"></i>
-                </a>
+            <a class="admin-user-only" href="{{ path('rt_mx_creator_edit', {creatorId: creator.lastCreatorId}) }}">
+                <i class="fas fa-edit"></i>
+            </a>
 
-                <a href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}">
-                    <i class="fas fa-link"></i>
-                </a>
+            <a class="admin-user-only" href="{{ path('rt_mx_creator_urls_selection', {creatorId: creator.lastCreatorId}) }}">
+                <i class="fas fa-link"></i>
+            </a>
 
-                <br class="show-expanded">
-            {% endif %}
+            <br class="admin-user-only show-expanded">
 
             <a href="{{ path('rt_creator', {creatorId: creator.lastCreatorId}) }}" target="_blank">
                 <i class="fa-solid fa-up-right-from-square"></i>
