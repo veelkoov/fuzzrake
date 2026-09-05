@@ -53,6 +53,10 @@ class MainControllerTest extends FuzzrakeWebTestCase
         self::assertNotEmpty($crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 3A / Formerly 3B"]'));
     }
 
+    /**
+     * @param list<string> $textsPresent
+     * @param list<string> $allTexts
+     */
     #[DataProvider('commissionsStatusDisplayDataProvider')]
     public function testCommissionsStatusDisplay(Creator $creator, array $textsPresent, array $allTexts): void
     {
@@ -70,7 +74,7 @@ class MainControllerTest extends FuzzrakeWebTestCase
     }
 
     /**
-     * @return list<array{Creator, list<string>, list<string>}>
+     * @return array<string, array{Creator, list<string>, list<string>}>
      */
     public static function commissionsStatusDisplayDataProvider(): array
     {
