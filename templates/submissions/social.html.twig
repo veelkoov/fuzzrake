@@ -4,6 +4,14 @@
 
 {% set creator_s = creators|length > 1 ? 'makers' : 'maker' %}
 
+{% macro pretty_url(creator) %}
+    {{- url('rt_creator', {creatorId: creator.creatorId}, true)|replace({'//': ''}) -}}
+{% endmacro %}
+
+{% macro ugly_url(creator) %}
+    {{- url('rt_creator', {creatorId: creator.creatorId}) -}}
+{% endmacro %}
+
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
@@ -19,7 +27,7 @@
                 <br><br>
 
                 {% for creator in creators %}
-                    - [getfursu.it/#{{ creator.creatorId }}](https://getfursu.it/#{{ creator.creatorId }})
+                    - [{{ _self.pretty_url(creator) }}]({{ _self.ugly_url(creator) }})
                     {% if '' != creator.tumblrUrl %}
                         {{ creator.tumblrUrl|tumblr_at }}
                     {% endif %}
@@ -40,7 +48,7 @@
                 Fursuit {{ creator_s }} added:<br>
 
                 {% for creator in creators %}
-                    - https://getfursu.it/#{{ creator.creatorId }}
+                    - {{ _self.ugly_url(creator) }}
 
                     {% if '' != creator.mastodonUrl %}
                         {{ creator.mastodonUrl|mastodon_at }}
@@ -66,7 +74,7 @@
                 Fursuit {{ creator_s }} added:<br>
 
                 {% for creator in creators %}
-                    - https://getfursu.it/#{{ creator.creatorId }}
+                    - {{ _self.ugly_url(creator) }}
 
                     {% if '' != creator.blueskyUrl %}
                         {{ creator.blueskyUrl|bluesky_at }}
@@ -90,7 +98,7 @@
                 Fursuit {{ creator_s }} added:<br>
 
                 {% for creator in creators %}
-                    - https://getfursu.it/#{{ creator.creatorId }}
+                    - {{ _self.ugly_url(creator) }}
 
                     {% if '' != creator.twitterUrl %}
                         <span class="user-select-all">@{{ creator.twitterUrl|split('/')[3] }}</span>
