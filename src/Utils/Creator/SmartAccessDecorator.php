@@ -1278,17 +1278,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      * @return list<string>
      */
     #[StrListLength(max: 64)]
-    public function getCurrenciesAccepted(): array
+    public function getPricesIn(): array
     {
-        return PackedStringList::unpack($this->entity->getCurrenciesAccepted());
+        return PackedStringList::unpack($this->entity->getPricesIn());
     }
 
     /**
-     * @param list<string> $currenciesAccepted
+     * @param list<string> $pricesIn
      */
-    public function setCurrenciesAccepted(array $currenciesAccepted): self
+    public function setPricesIn(array $pricesIn): self
     {
-        $this->entity->setCurrenciesAccepted(PackedStringList::pack($currenciesAccepted));
+        $this->entity->setPricesIn(PackedStringList::pack($pricesIn));
 
         return $this;
     }

@@ -96,9 +96,9 @@ class Fixer
 
             F::URL_COMMISSIONS, F::URL_PRICES, F::URL_PHOTOS => $this->urlListFixer,
 
-            F::LANGUAGES           => $this->languagesFixer,
-            F::PAYMENT_METHODS     => $this->payMethodFixer,
-            F::CURRENCIES_ACCEPTED => $this->currencyFixer,
+            F::LANGUAGES       => $this->languagesFixer,
+            F::PAYMENT_METHODS => $this->payMethodFixer,
+            F::PRICES_IN       => $this->currencyFixer,
 
             default => $this->noopListFixer,
         };

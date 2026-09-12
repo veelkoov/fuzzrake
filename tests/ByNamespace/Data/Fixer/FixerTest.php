@@ -77,7 +77,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
                 ['Bank transfers (in Abcd: Defgh, Ijklm, NOPQ and any Rstuv), Paypal and Cash'],
                 ['Bank transfers (in Abcd: Defgh, Ijklm, NOPQ and any Rstuv)', 'PayPal', 'Cash'],
             ],
-            [Field::CURRENCIES_ACCEPTED, ['Euro, Usd'], ['EUR', 'USD']],
+            [Field::PRICES_IN, ['Euro, Usd'], ['EUR', 'USD']],
             [
                 Field::LANGUAGES,
                 ['English and a little bit of Finnish, Estonian (with Google translate)'],

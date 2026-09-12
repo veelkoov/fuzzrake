@@ -99,7 +99,7 @@ class CreatorType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('currenciesAccepted', TextareaType::class, [
+            ->add('pricesIn', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -351,7 +351,7 @@ class CreatorType extends AbstractTypeWithDelete
         }
 
         foreach ([
-            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherProducts',
+            'commissionsUrls', 'pricesIn', 'formerly', 'languages', 'otherFeatures', 'otherProducts',
             'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
             'formerCreatorIds', 'miniatureUrls',
         ] as $fieldName) {

@@ -85,7 +85,7 @@ class Creator implements Stringable
     private string $paymentMethods = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $currenciesAccepted = '';
+    private string $pricesIn = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $speciesComment = '';
@@ -381,14 +381,14 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getCurrenciesAccepted(): string
+    public function getPricesIn(): string
     {
-        return $this->currenciesAccepted;
+        return $this->pricesIn;
     }
 
-    public function setCurrenciesAccepted(string $currenciesAccepted): self
+    public function setPricesIn(string $pricesIn): self
     {
-        $this->currenciesAccepted = $currenciesAccepted;
+        $this->pricesIn = $pricesIn;
 
         return $this;
     }

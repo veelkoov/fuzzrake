@@ -98,8 +98,9 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('paymentMethods', type: Type::STR_LIST, validationRegex: V::PAY_METHODS)]
     case PAYMENT_METHODS = 'PAYMENT_METHODS';
 
-    #[Props('currenciesAccepted', type: Type::STR_LIST, validationRegex: V::CURRENCIES)]
-    case CURRENCIES_ACCEPTED = 'CURRENCIES_ACCEPTED';
+    // Previously called "currencies accepted"
+    #[Props('pricesIn', type: Type::STR_LIST, validationRegex: V::CURRENCIES)]
+    case PRICES_IN = 'PRICES_IN';
 
     #[Props('speciesComment')]
     case SPECIES_COMMENT = 'SPECIES_COMMENT';

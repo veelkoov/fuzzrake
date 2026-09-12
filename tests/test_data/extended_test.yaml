@@ -311,7 +311,7 @@ test_data:
       just_id:
         before+update+after: []
 
-  - CURRENCIES_ACCEPTED:
+  - PRICES_IN:
       max_to_max:
         before: ["CA C1 A", "CA C1 B before", "CA C1 C"]
         update+after: ["CA C1 B AFTER", "CA C1 C", "CA C1 D"]

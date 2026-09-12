@@ -88,7 +88,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
             ->setOtherFeatures(['Hidden pocket', 'Squeaker in nose'])
             ->setOffers([Offers::STANDARD_COMMISSIONS])
             ->setOtherProducts(['Arm sleeves'])
-            ->setCurrenciesAccepted(['Euro'])
+            ->setPricesIn(['Euro'])
         ;
 
         self::persistAndFlush($creator);
@@ -122,7 +122,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
             ->setOtherProducts(['Armsleeves'])
 
             // Submitted the same, fixed, changed
-            ->setCurrenciesAccepted(['Euro'])
+            ->setPricesIn(['Euro'])
         ;
 
         $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
@@ -171,10 +171,10 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.OTHER_PRODUCTS.after td+td+td', '⇒ Arm sleeves');
         self::assertSelectorExists('tr.OTHER_PRODUCTS.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', '⇒ Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', '⇒ Euro');
-        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td+td', '⇒ EUR');
-        self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
+        self::assertSelectorTextSame('tr.PRICES_IN.before td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.PRICES_IN.submitted td+td+td', '⇒ Euro');
+        self::assertSelectorTextSame('tr.PRICES_IN.after td+td+td', '⇒ EUR');
+        self::assertSelectorExists('tr.PRICES_IN.submitted-same.fixes-applied.changing');
     }
 
     public function testSubmissionMatchingMultipleCreators(): void
