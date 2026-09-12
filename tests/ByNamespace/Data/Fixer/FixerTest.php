@@ -84,7 +84,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
                 ['English', 'Finnish (limited)', 'Estonian (with a translator)'],
             ],
             [Field::FEATURES, ['Follow-me eyes', 'Attached tail'], ['Attached tail', 'Follow-me eyes']],
-            [Field::ORDER_TYPES, ['Aaaaa'], ['Aaaaa']],
+            [Field::PRODUCTS, ['Aaaaa'], ['Aaaaa']],
             [Field::URL_MINIATURES, ['https://example.com/'], ['https://example.com/']],
             [Field::URL_COMMISSIONS, ['https://example.com/'], ['https://example.com/']],
             [Field::SPECIES_DOES, ['Dogs and cats'], ['Dogs and cats']],

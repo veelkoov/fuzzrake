@@ -58,13 +58,13 @@ class Creator implements Stringable
     private ?Ages $ages = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $productionModelsComment = '';
+    private string $offersComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $stylesComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $orderTypesComment = '';
+    private string $productsComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $featuresComment = '';
@@ -273,14 +273,14 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getProductionModelsComment(): string
+    public function getOffersComment(): string
     {
-        return $this->productionModelsComment;
+        return $this->offersComment;
     }
 
-    public function setProductionModelsComment(string $productionModelsComment): self
+    public function setOffersComment(string $offersComment): self
     {
-        $this->productionModelsComment = $productionModelsComment;
+        $this->offersComment = $offersComment;
 
         return $this;
     }
@@ -297,14 +297,14 @@ class Creator implements Stringable
         return $this;
     }
 
-    public function getOrderTypesComment(): string
+    public function getProductsComment(): string
     {
-        return $this->orderTypesComment;
+        return $this->productsComment;
     }
 
-    public function setOrderTypesComment(string $orderTypesComment): self
+    public function setProductsComment(string $productsComment): self
     {
-        $this->orderTypesComment = $orderTypesComment;
+        $this->productsComment = $productsComment;
 
         return $this;
     }

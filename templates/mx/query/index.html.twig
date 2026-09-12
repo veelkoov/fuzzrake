@@ -34,7 +34,7 @@
                     <th>Feedback?</th>
                     <th>Contact</th>
                     <th>Styles</th>
-                    <th>Order types</th>
+                    <th>Products</th>
                     <th>Features</th>
                 </tr>
             </thead>
@@ -45,7 +45,7 @@
                         <td>{{ creator.user.allowsFeedback ? 'YES' : 'NO' }}</td>
                         <td>{% if creator.user.allowsFeedback %}{{ creator.user.email }}{% endif %}</td>
                         <td>{{ creator.otherStyles|filter_by_query(query) }}</td>
-                        <td>{{ creator.otherOrderTypes|filter_by_query(query) }}</td>
+                        <td>{{ creator.otherProducts|filter_by_query(query) }}</td>
                         <td>{{ creator.otherFeatures|filter_by_query(query) }}</td>
                     </tr>
                 {% endfor %}

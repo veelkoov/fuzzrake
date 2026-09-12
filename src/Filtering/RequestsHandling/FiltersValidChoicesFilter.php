@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filtering\RequestsHandling;
 
 use App\Data\Definitions\Features;
-use App\Data\Definitions\OrderTypes;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
 use App\Data\Definitions\Styles;
 use App\Filtering\Consts;
 use App\Service\DataService;
@@ -34,10 +34,10 @@ class FiltersValidChoicesFilter
             new StringSet(Styles::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
         $features = self::onlyValidValues($choices->features,
             new StringSet(Features::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
-        $orderTypes = self::onlyValidValues($choices->orderTypes,
-            new StringSet(OrderTypes::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
-        $productionModels = self::onlyValidValues($choices->productionModels,
-            new StringSet(ProductionModels::getValues()), Consts::FILTER_VALUE_UNKNOWN);
+        $products = self::onlyValidValues($choices->products,
+            new StringSet(Products::getValues()), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
+        $offers = self::onlyValidValues($choices->offers,
+            new StringSet(Offers::getValues()), Consts::FILTER_VALUE_UNKNOWN);
 
         $species = self::onlyValidValues($choices->species,
             $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
@@ -56,8 +56,8 @@ class FiltersValidChoicesFilter
             $languages,
             $styles,
             $features,
-            $orderTypes,
-            $productionModels,
+            $products,
+            $offers,
             $openFor,
             $species,
             $paymentPlans,

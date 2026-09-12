@@ -53,8 +53,8 @@ class FiltersValidChoicesFilterTest extends FuzzrakeTestCase
         self::assertSameItems(['Finnish', 'Czech', '?'], $result->languages);
         self::assertSameItems(['Toony', '?', '*'], $result->styles);
         self::assertSameItems(['LED eyes', '?', '*'], $result->features);
-        self::assertSameItems(['Full plantigrade', '?', '*'], $result->orderTypes);
-        self::assertSameItems(['Standard commissions', '?'], $result->productionModels);
+        self::assertSameItems(['Full plantigrade', '?', '*'], $result->products);
+        self::assertSameItems(['Standard commissions', '?'], $result->offers);
         self::assertSameItems(['Pancakes', '!', '-'], $result->openFor);
         self::assertSameItems(['Birds', '?'], $result->species);
         self::assertSameItems(['Not available', 'Available', '?'], $result->paymentPlans);

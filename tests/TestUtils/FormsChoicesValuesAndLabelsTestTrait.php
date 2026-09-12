@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use App\Data\Definitions\Features;
-use App\Data\Definitions\OrderTypes;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
 use App\Data\Definitions\Styles;
 
 trait FormsChoicesValuesAndLabelsTestTrait
@@ -18,8 +18,8 @@ trait FormsChoicesValuesAndLabelsTestTrait
     {
         $choices = [
             ...Features::getValues(),
-            ...ProductionModels::getValues(),
-            ...OrderTypes::getValues(),
+            ...Offers::getValues(),
+            ...Products::getValues(),
             ...Styles::getValues(),
         ];
 

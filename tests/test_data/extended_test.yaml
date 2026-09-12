@@ -325,21 +325,21 @@ test_data:
       just_id:
         before+update+after: []
 
-  - PRODUCTION_MODELS_COMMENT:
+  - OFFERS_COMMENT:
       max_to_max:
-        before: "Creator 1 PRODUCTION_MODELS_COMMENT before update"
-        update+after: "Creator 1 PRODUCTION_MODELS_COMMENT after update"
+        before: "Creator 1 OFFERS_COMMENT before update"
+        update+after: "Creator 1 OFFERS_COMMENT after update"
       new_max:
-        update+after: "Creator 2 PRODUCTION_MODELS_COMMENT"
+        update+after: "Creator 2 OFFERS_COMMENT"
       min_to_max:
         before: ""
-        update+after: "Creator 3 PRODUCTION_MODELS_COMMENT"
+        update+after: "Creator 3 OFFERS_COMMENT"
       new_min:
         update+after: ""
       just_id:
         before+update+after: ""
 
-  - PRODUCTION_MODELS:
+  - OFFERS:
       max_to_max:
         before:
           - "Premades"
@@ -420,21 +420,21 @@ test_data:
       just_id:
         before+update+after: []
 
-  - ORDER_TYPES_COMMENT:
+  - PRODUCTS_COMMENT:
       max_to_max:
-        before: "Creator 1 ORDER_TYPES_COMMENT before update"
-        update+after: "Creator 1 ORDER_TYPES_COMMENT after update"
+        before: "Creator 1 PRODUCTS_COMMENT before update"
+        update+after: "Creator 1 PRODUCTS_COMMENT after update"
       new_max:
-        update+after: "Creator 2 ORDER_TYPES_COMMENT"
+        update+after: "Creator 2 PRODUCTS_COMMENT"
       min_to_max:
         before: ""
-        update+after: "Creator 3 ORDER_TYPES_COMMENT"
+        update+after: "Creator 3 PRODUCTS_COMMENT"
       new_min:
         update+after: ""
       just_id:
         before+update+after: ""
 
-  - ORDER_TYPES:
+  - PRODUCTS:
       max_to_max:
         before:
           - "Feetpaws (as parts/separate)"
@@ -472,7 +472,7 @@ test_data:
       just_id:
         before+update+after: []
 
-  - OTHER_ORDER_TYPES:
+  - OTHER_PRODUCTS:
       max_to_max:
         before: ["OTH_OTP C1 A", "OTH_OTP C1 B before", "OTH_OTP C1 C"]
         update+after: ["OTH_OTP C1 B after", "OTH_OTP C1 C", "OTH_OTP C1 D"]

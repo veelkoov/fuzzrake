@@ -90,9 +90,9 @@ class Fixer
         return match ($field) {
             F::SPECIES_DOES, F::SPECIES_DOESNT => $this->speciesListFixer,
 
-            F::PRODUCTION_MODELS, F::FEATURES, F::STYLES, F::ORDER_TYPES => $this->definedListFixer,
+            F::OFFERS, F::FEATURES, F::STYLES, F::PRODUCTS => $this->definedListFixer,
 
-            F::FORMERLY, F::OTHER_FEATURES, F::OTHER_ORDER_TYPES, F::OTHER_STYLES => $this->freeListFixer,
+            F::FORMERLY, F::OTHER_FEATURES, F::OTHER_PRODUCTS, F::OTHER_STYLES => $this->freeListFixer,
 
             F::URL_COMMISSIONS, F::URL_PRICES, F::URL_PHOTOS => $this->urlListFixer,
 

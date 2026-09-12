@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\Controller\Submissions;
 
 use App\Data\Definitions\Features;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\Cases\Traits\MocksTrait;
 use App\Tests\TestUtils\UserCreator;
@@ -86,8 +86,8 @@ class ManageControllerTest extends FuzzrakeWebTestCase
             ->setCountry('FI')
             ->setFeatures([Features::FOLLOW_ME_EYES, Features::MOVABLE_JAW])
             ->setOtherFeatures(['Hidden pocket', 'Squeaker in nose'])
-            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
-            ->setOtherOrderTypes(['Arm sleeves'])
+            ->setOffers([Offers::STANDARD_COMMISSIONS])
+            ->setOtherProducts(['Arm sleeves'])
             ->setCurrenciesAccepted(['Euro'])
         ;
 
@@ -116,10 +116,10 @@ class ManageControllerTest extends FuzzrakeWebTestCase
             ->setOtherFeatures(['Hidden pockets'])
 
             // Submitted the same, NOT fixed, NOT changed
-            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
+            ->setOffers([Offers::STANDARD_COMMISSIONS])
 
             // Submitted different, fixed, NOT changed
-            ->setOtherOrderTypes(['Armsleeves'])
+            ->setOtherProducts(['Armsleeves'])
 
             // Submitted the same, fixed, changed
             ->setCurrenciesAccepted(['Euro'])
@@ -161,15 +161,15 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td+td', '⇒ Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td+td', '⇒ Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td+td', '⇒ Standard commissions');
-        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td+td', '⇒ Standard commissions');
-        self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted-same.not-fixed.not-changing');
+        self::assertSelectorTextSame('tr.OFFERS.before td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.OFFERS.submitted td+td+td', '⇒ Standard commissions');
+        self::assertSelectorTextSame('tr.OFFERS.after td+td+td', '⇒ Standard commissions');
+        self::assertSelectorExists('tr.OFFERS.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td+td', '⇒ Arm sleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td+td', '⇒ Armsleeves');
-        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td+td', '⇒ Arm sleeves');
-        self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted-different.fixes-applied.not-changing');
+        self::assertSelectorTextSame('tr.OTHER_PRODUCTS.before td+td+td', '⇒ Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_PRODUCTS.submitted td+td+td', '⇒ Armsleeves');
+        self::assertSelectorTextSame('tr.OTHER_PRODUCTS.after td+td+td', '⇒ Arm sleeves');
+        self::assertSelectorExists('tr.OTHER_PRODUCTS.submitted-different.fixes-applied.not-changing');
 
         self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td+td', '⇒ Euro');
         self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td+td', '⇒ Euro');

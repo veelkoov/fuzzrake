@@ -6,7 +6,7 @@ namespace App\Data\Definitions;
 
 use Override;
 
-final class OrderTypes extends Dictionary
+final class Products extends Dictionary
 {
     public const string HEAD = 'Head (as parts/separate)';
     public const string MINI_PARTIAL = 'Mini partial (head + handpaws + tail)';

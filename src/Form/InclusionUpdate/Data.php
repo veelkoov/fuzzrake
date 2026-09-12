@@ -7,8 +7,8 @@ namespace App\Form\InclusionUpdate;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\ValidationGroups;
-use App\Data\Definitions\OrderTypes;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
 use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
@@ -46,7 +46,7 @@ final class Data extends AbstractType
 
         $router = self::getRouter($options);
         $otherStylesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_styles']));
-        $otherOrderTypesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_order_types']));
+        $otherProductsPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_products']));
         $otherFeaturesPath = htmlspecialchars($router->generate('rt_statistics', ['_fragment' => 'other_features']));
         $creatorIdsPagePath = htmlspecialchars($router->generate('rt_creator_ids', [], UrlGeneratorInterface::ABSOLUTE_PATH));
 
@@ -162,15 +162,15 @@ final class Data extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('productionModels', ChoiceType::class, [
-                'label'    => 'What do you do?',
+            ->add('offers', ChoiceType::class, [
+                'label'    => 'What do you offer?',
                 'required' => false,
-                'choices'  => ProductionModels::getFormChoices(),
+                'choices'  => Offers::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('productionModelsComment', TextareaType::class, [
-                'label'      => 'Any comments on the production models?',
+            ->add('offersComment', TextareaType::class, [
+                'label'      => 'Any comments on the offers?',
                 'help'       => 'Example: <em>I usually work with pre-mades, but I\'m willing to do an interesting commission</em>.',
                 'help_html'  => true,
                 'required'   => false,
@@ -197,22 +197,22 @@ final class Data extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('orderTypes', ChoiceType::class, [
+            ->add('products', ChoiceType::class, [
                 'label'    => 'What kind of fursuits/items do you sell?',
                 'required' => false,
-                'choices'  => OrderTypes::getFormChoices(),
+                'choices'  => Products::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('otherOrderTypes', TextareaType::class, [
+            ->add('otherProducts', TextareaType::class, [
                 'label'      => 'Any other kinds/items?',
-                'help'       => 'You can check what other makers listed <a href="'.$otherOrderTypesPath.'" target="_blank">here</a>. Please: one item = one line.',
+                'help'       => 'You can check what other makers listed <a href="'.$otherProductsPath.'" target="_blank">here</a>. Please: one item = one line.',
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('orderTypesComment', TextareaType::class, [
-                'label'      => 'Any comments on the order types?',
+            ->add('productsComment', TextareaType::class, [
+                'label'      => 'Any comments on the products?',
                 'help'       => 'Example: <em>Especially pumped to do digitigrades because I have too much foam stacked, and I want to get rid of it.</em>',
                 'help_html'  => true,
                 'required'   => false,
@@ -457,12 +457,12 @@ final class Data extends AbstractType
             ])
         ;
 
-        foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
+        foreach (['offers', 'styles', 'products', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
-            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
+            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherProducts',
             'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
