@@ -57,9 +57,9 @@ class StatisticsController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function statistics(FiltersService $filtersService, DataService $dataService): Response
     {
-        $productionModels = $filtersService->getValuesFilterData(Field::PRODUCTION_MODELS);
-        $orderTypes = $filtersService->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
-        $otherOrderTypes = $filtersService->getValuesFilterData(Field::OTHER_ORDER_TYPES);
+        $offers = $filtersService->getValuesFilterData(Field::OFFERS);
+        $products = $filtersService->getValuesFilterData(Field::PRODUCTS, Field::OTHER_PRODUCTS);
+        $otherProducts = $filtersService->getValuesFilterData(Field::OTHER_PRODUCTS);
         $styles = $filtersService->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES);
         $otherStyles = $filtersService->getValuesFilterData(Field::OTHER_STYLES);
         $features = $filtersService->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES);
@@ -67,17 +67,18 @@ class StatisticsController extends AbstractController
         $countries = $filtersService->getCountriesFilterData();
 
         return $this->render('statistics/statistics.html.twig', [
-            'countries'        => $this->prepareTableData($countries),
-            'productionModels' => $this->prepareTableData($productionModels),
-            'orderTypes'       => $this->prepareTableData($orderTypes),
-            'otherOrderTypes'  => $this->prepareListData($otherOrderTypes->items),
-            'styles'           => $this->prepareTableData($styles),
-            'otherStyles'      => $this->prepareListData($otherStyles->items),
-            'features'         => $this->prepareTableData($features),
-            'otherFeatures'    => $this->prepareListData($otherFeatures->items),
-            'commissionsStats' => $dataService->getOfferStatusStats(),
+            'countries'     => $this->prepareTableData($countries),
+            'offers'        => $this->prepareTableData($offers),
+            'products'      => $this->prepareTableData($products),
+            'otherProducts' => $this->prepareListData($otherProducts->items),
+            'styles'        => $this->prepareTableData($styles),
+            'otherStyles'   => $this->prepareListData($otherStyles->items),
+            'features'      => $this->prepareTableData($features),
+            'otherFeatures' => $this->prepareListData($otherFeatures->items),
+            'matchWords'    => self::MATCH_WORDS,
+
+            'offerStatusStats' => $dataService->getOfferStatusStats(),
             'providedInfo'     => $dataService->getProvidedInfoStats(),
-            'matchWords'       => self::MATCH_WORDS,
         ]);
     }
 

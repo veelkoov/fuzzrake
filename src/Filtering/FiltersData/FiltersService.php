@@ -39,11 +39,11 @@ class FiltersService
     public function getCachedFiltersTplData(): FiltersData
     {
         return $this->cache->get(fn () => new FiltersData(
-            $this->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES),
+            $this->getValuesFilterData(Field::PRODUCTS, Field::OTHER_PRODUCTS),
             $this->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES),
             $this->getPaymentPlans(),
             $this->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES),
-            $this->getValuesFilterData(Field::PRODUCTION_MODELS),
+            $this->getValuesFilterData(Field::OFFERS),
             $this->getOpenFor(),
             $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),

@@ -34,10 +34,10 @@ class ExtendedTest extends IuSubmissionsTestCase
     use ClockSensitiveTrait;
 
     private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
-        Field::PRODUCTION_MODELS,
+        Field::OFFERS,
         Field::FEATURES,
         Field::STYLES,
-        Field::ORDER_TYPES,
+        Field::PRODUCTS,
     ];
 
     private const array EXPANDED_RADIOS = [ // Choice (enum) fields in the form of multiple radios

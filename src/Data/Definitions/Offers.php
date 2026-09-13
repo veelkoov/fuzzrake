@@ -6,11 +6,12 @@ namespace App\Data\Definitions;
 
 use Override;
 
-final class ProductionModels extends Dictionary
+final class Offers extends Dictionary
 {
     public const string STANDARD_COMMISSIONS = 'Standard commissions';
     public const string ARTISTIC_LIBERTY_COMMISSIONS = 'Artistic liberty commissions';
     public const string PREMADES = 'Premades';
+    // TODO: Repairs, refurbishments
 
     #[Override]
     public static function getValues(): array

@@ -55,7 +55,7 @@ class CreatorValueRepositoryTest extends FuzzrakeKernelTestCase
             UserCreator::get()->setFeatures(['GH', 'IJ'])->setInactiveReason('Inactive'), // Doesn't count
             UserCreator::get()->setOtherFeatures(['KL', 'MN']),
             UserCreator::get()->setStyles(['OP']), // Not (other) features
-            UserCreator::get()->setOrderTypes(['QR']), // Not (other) features
+            UserCreator::get()->setProducts(['QR']), // Not (other) features
         );
 
         $subject = self::getEM()->getRepository(CreatorValue::class);

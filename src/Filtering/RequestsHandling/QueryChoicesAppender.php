@@ -49,9 +49,9 @@ class QueryChoicesAppender
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
-        $this->applyCreatorValuesCount($builder, $this->choices->productionModels, Field::PRODUCTION_MODELS);
+        $this->applyCreatorValuesCount($builder, $this->choices->offers, Field::OFFERS);
         $this->applyCreatorValuesCount($builder, $this->choices->styles, Field::STYLES, Field::OTHER_STYLES);
-        $this->applyCreatorValuesCount($builder, $this->choices->orderTypes, Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $this->applyCreatorValuesCount($builder, $this->choices->products, Field::PRODUCTS, Field::OTHER_PRODUCTS);
         $this->applyCreatorValuesCount($builder, $this->choices->features, Field::FEATURES, Field::OTHER_FEATURES, true);
         $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
     }

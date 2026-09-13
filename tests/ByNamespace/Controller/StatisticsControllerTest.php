@@ -6,8 +6,8 @@ namespace App\Tests\ByNamespace\Controller;
 
 use App\Data\Definitions\Features;
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\OrderTypes;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\UserCreator;
 use PHPUnit\Framework\Attributes\Medium;
@@ -36,20 +36,20 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
             ->setName('A1')
             ->setCreatorId('TEST0041')
             ->setFeatures([Features::FOLLOW_ME_EYES])
-            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
+            ->setOffers([Offers::STANDARD_COMMISSIONS])
             ->setCountry('CZ')
         ;
         $a2 = UserCreator::get()
             ->setName('A2')
             ->setCreatorId('TEST0042')
             ->setFeatures([Features::FOLLOW_ME_EYES])
-            ->setOrderTypes([OrderTypes::FULL_DIGITIGRADE])
+            ->setProducts([Products::FULL_DIGITIGRADE])
             ->setCountry('SK')
         ;
         $a3 = UserCreator::get()
             ->setName('A3')
             ->setCreatorId('TEST0043')
-            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
+            ->setOffers([Offers::STANDARD_COMMISSIONS])
             ->setInactiveReason('Hidden')
             ->setCountry('IT')
         ;
@@ -61,8 +61,8 @@ class StatisticsControllerTest extends FuzzrakeWebTestCase
 
         self::assertResponseStatusCodeIs(200);
         self::assertRowValueEquals('2 (100.00%)', Features::FOLLOW_ME_EYES, $crawler);
-        self::assertRowValueEquals('1 (50.00%)', ProductionModels::STANDARD_COMMISSIONS, $crawler);
-        self::assertRowValueEquals('1 (50.00%)', OrderTypes::FULL_DIGITIGRADE, $crawler);
+        self::assertRowValueEquals('1 (50.00%)', Offers::STANDARD_COMMISSIONS, $crawler);
+        self::assertRowValueEquals('1 (50.00%)', Products::FULL_DIGITIGRADE, $crawler);
         self::assertRowValueEquals('2 (100.00%)', 'Unknown', $crawler->filterXPath('//h1[text()="Styles"]')->nextAll()->first());
         self::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
         self::assertRowValueEquals('2 (100.00%)', Field::NAME->value, $crawler);

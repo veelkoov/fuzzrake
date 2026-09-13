@@ -134,7 +134,7 @@ class CreatorRepository extends ServiceEntityRepository
             new Parameter('empty', ''),
             new Parameter('otherFieldNames', [
                 Field::OTHER_FEATURES->value,
-                Field::OTHER_ORDER_TYPES->value,
+                Field::OTHER_PRODUCTS->value,
                 Field::OTHER_STYLES->value,
             ]),
             // grep-code-debris-needs-improvements

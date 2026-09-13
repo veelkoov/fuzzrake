@@ -14,7 +14,7 @@ final class SchemaFixer
     use UtilityClass;
 
     private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const int CURRENT_SCHEMA_VERSION = 19;
+    private const int CURRENT_SCHEMA_VERSION = 20;
 
     /**
      * @param psJsonFieldsData $data
@@ -64,6 +64,20 @@ final class SchemaFixer
 
                 $data[Field::HAS_ALLERGY_WARNING->value] = null;
                 $data[Field::ALLERGY_WARNING_INFO->value] = '';
+                // no break
+
+            case 19:
+                $data[Field::OFFERS_COMMENT->value] = $data['PRODUCTION_MODELS_COMMENT'];
+                $data[Field::OFFERS->value] = $data['PRODUCTION_MODELS'];
+                unset($data['PRODUCTION_MODELS_COMMENT']);
+                unset($data['PRODUCTION_MODELS']);
+
+                $data[Field::PRODUCTS_COMMENT->value] = $data['ORDER_TYPES_COMMENT'];
+                $data[Field::OTHER_PRODUCTS->value] = $data['OTHER_ORDER_TYPES'];
+                $data[Field::PRODUCTS->value] = $data['ORDER_TYPES'];
+                unset($data['ORDER_TYPES_COMMENT']);
+                unset($data['OTHER_ORDER_TYPES']);
+                unset($data['ORDER_TYPES']);
         }
 
         return $data;

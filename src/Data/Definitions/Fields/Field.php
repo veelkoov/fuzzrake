@@ -48,11 +48,12 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('city')]
     case CITY = 'CITY';
 
-    #[Props('productionModelsComment', inStats: false)]
-    case PRODUCTION_MODELS_COMMENT = 'PRODUCTION_MODELS_COMMENT';
+    #[Props('offersComment', inStats: false)]
+    case OFFERS_COMMENT = 'OFFERS_COMMENT';
 
-    #[Props('productionModels', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
-    case PRODUCTION_MODELS = 'PRODUCTION_MODELS';
+    // Previously called "production models"
+    #[Props('offers', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
+    case OFFERS = 'OFFERS';
 
     #[Props('stylesComment', inStats: false)]
     case STYLES_COMMENT = 'STYLES_COMMENT';
@@ -63,14 +64,15 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('otherStyles', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
     case OTHER_STYLES = 'OTHER_STYLES';
 
-    #[Props('orderTypesComment', inStats: false)]
-    case ORDER_TYPES_COMMENT = 'ORDER_TYPES_COMMENT';
+    #[Props('productsComment', inStats: false)]
+    case PRODUCTS_COMMENT = 'PRODUCTS_COMMENT';
 
-    #[Props('orderTypes', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
-    case ORDER_TYPES = 'ORDER_TYPES';
+    // Previously called "order types"
+    #[Props('products', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
+    case PRODUCTS = 'PRODUCTS';
 
-    #[Props('otherOrderTypes', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
-    case OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+    #[Props('otherProducts', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
+    case OTHER_PRODUCTS = 'OTHER_PRODUCTS';
 
     #[Props('featuresComment', inStats: false)]
     case FEATURES_COMMENT = 'FEATURES_COMMENT';
@@ -96,8 +98,9 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('paymentMethods', type: Type::STR_LIST, validationRegex: V::PAY_METHODS)]
     case PAYMENT_METHODS = 'PAYMENT_METHODS';
 
-    #[Props('currenciesAccepted', type: Type::STR_LIST, validationRegex: V::CURRENCIES)]
-    case CURRENCIES_ACCEPTED = 'CURRENCIES_ACCEPTED';
+    // Previously called "currencies accepted"
+    #[Props('pricesIn', type: Type::STR_LIST, validationRegex: V::CURRENCIES)]
+    case PRICES_IN = 'PRICES_IN';
 
     #[Props('speciesComment')]
     case SPECIES_COMMENT = 'SPECIES_COMMENT';

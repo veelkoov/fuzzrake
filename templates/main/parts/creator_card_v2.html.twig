@@ -268,13 +268,13 @@
     {% endif %}
 
     <div class="d-flex flex-wrap">
-        <div class="look-ma-am-box production-models">
+        <div class="look-ma-am-box offers">
             <div class="box-header">
-                <h5>Produces</h5>
+                <h5>Offers</h5>
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
+                {{ _self.list_with_others_comment_opt(creator.offers, [], creator.offersComment) }}
             </div>
         </div>
 
@@ -288,13 +288,13 @@
             </div>
         </div>
 
-        <div class="look-ma-am-box order-types">
+        <div class="look-ma-am-box products">
             <div class="box-header">
-                <h5>Types</h5>
+                <h5>Products</h5>
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
+                {{ _self.list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment) }}
             </div>
         </div>
 
@@ -399,7 +399,7 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_cs_opt(creator.currenciesAccepted) }}
+                {{ _self.list_cs_opt(creator.pricesIn) }}
             </div>
         </div>
 

@@ -127,7 +127,7 @@ class DataQuery
         }
 
         return $this->listMatches($creator->getOtherFeatures())
-            || $this->listMatches($creator->getOtherOrderTypes())
+            || $this->listMatches($creator->getOtherProducts())
             || $this->listMatches($creator->getOtherStyles());
     }
 

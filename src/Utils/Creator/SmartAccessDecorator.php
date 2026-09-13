@@ -1025,14 +1025,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 1024)]
-    public function getProductionModelsComment(): string
+    public function getOffersComment(): string
     {
-        return $this->entity->getProductionModelsComment();
+        return $this->entity->getOffersComment();
     }
 
-    public function setProductionModelsComment(string $productionModelsComment): self
+    public function setOffersComment(string $offersComment): self
     {
-        $this->entity->setProductionModelsComment($productionModelsComment);
+        $this->entity->setOffersComment($offersComment);
 
         return $this;
     }
@@ -1040,17 +1040,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    public function getProductionModels(): array
+    public function getOffers(): array
     {
-        return PartialCreatorValueListAccessor::get($this, Field::PRODUCTION_MODELS);
+        return PartialCreatorValueListAccessor::get($this, Field::OFFERS);
     }
 
     /**
-     * @param list<string> $productionModels
+     * @param list<string> $offers
      */
-    public function setProductionModels(array $productionModels): self
+    public function setOffers(array $offers): self
     {
-        PartialCreatorValueListAccessor::set($this, Field::PRODUCTION_MODELS, $productionModels);
+        PartialCreatorValueListAccessor::set($this, Field::OFFERS, $offers);
 
         return $this;
     }
@@ -1106,14 +1106,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 1024)]
-    public function getOrderTypesComment(): string
+    public function getProductsComment(): string
     {
-        return $this->entity->getOrderTypesComment();
+        return $this->entity->getProductsComment();
     }
 
-    public function setOrderTypesComment(string $orderTypesComment): self
+    public function setProductsComment(string $productsComment): self
     {
-        $this->entity->setOrderTypesComment($orderTypesComment);
+        $this->entity->setProductsComment($productsComment);
 
         return $this;
     }
@@ -1121,17 +1121,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    public function getOrderTypes(): array
+    public function getProducts(): array
     {
-        return PartialCreatorValueListAccessor::get($this, Field::ORDER_TYPES);
+        return PartialCreatorValueListAccessor::get($this, Field::PRODUCTS);
     }
 
     /**
-     * @param list<string> $orderTypes
+     * @param list<string> $products
      */
-    public function setOrderTypes(array $orderTypes): self
+    public function setProducts(array $products): self
     {
-        PartialCreatorValueListAccessor::set($this, Field::ORDER_TYPES, $orderTypes);
+        PartialCreatorValueListAccessor::set($this, Field::PRODUCTS, $products);
 
         return $this;
     }
@@ -1140,17 +1140,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      * @return list<string>
      */
     #[StrListLength(max: 4096)]
-    public function getOtherOrderTypes(): array
+    public function getOtherProducts(): array
     {
-        return PartialCreatorValueListAccessor::get($this, Field::OTHER_ORDER_TYPES);
+        return PartialCreatorValueListAccessor::get($this, Field::OTHER_PRODUCTS);
     }
 
     /**
-     * @param list<string> $otherOrderTypes
+     * @param list<string> $otherProducts
      */
-    public function setOtherOrderTypes(array $otherOrderTypes): self
+    public function setOtherProducts(array $otherProducts): self
     {
-        PartialCreatorValueListAccessor::set($this, Field::OTHER_ORDER_TYPES, $otherOrderTypes);
+        PartialCreatorValueListAccessor::set($this, Field::OTHER_PRODUCTS, $otherProducts);
 
         return $this;
     }
@@ -1278,17 +1278,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      * @return list<string>
      */
     #[StrListLength(max: 64)]
-    public function getCurrenciesAccepted(): array
+    public function getPricesIn(): array
     {
-        return PackedStringList::unpack($this->entity->getCurrenciesAccepted());
+        return PackedStringList::unpack($this->entity->getPricesIn());
     }
 
     /**
-     * @param list<string> $currenciesAccepted
+     * @param list<string> $pricesIn
      */
-    public function setCurrenciesAccepted(array $currenciesAccepted): self
+    public function setPricesIn(array $pricesIn): self
     {
-        $this->entity->setCurrenciesAccepted(PackedStringList::pack($currenciesAccepted));
+        $this->entity->setPricesIn(PackedStringList::pack($pricesIn));
 
         return $this;
     }

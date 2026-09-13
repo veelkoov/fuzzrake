@@ -13,7 +13,7 @@ final class Styles extends Dictionary
     public const string SEMI_REALISTIC = 'Semi Realistic';
     public const string REALISTIC = 'Realistic';
     public const string KEMONO = 'Kemono';
-    public const string KIGURUMI = 'Kigurumi';
+    public const string KIGURUMI = 'Kigurumi'; // TODO: Is an offer, not a style
     public const string ANIME = 'Anime';
 
     #[Override]

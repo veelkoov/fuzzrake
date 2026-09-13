@@ -6,8 +6,8 @@ namespace App\Form\Mx;
 
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\Features;
-use App\Data\Definitions\OrderTypes;
-use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
 use App\Data\Definitions\Styles;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
@@ -99,16 +99,16 @@ class CreatorType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('currenciesAccepted', TextareaType::class, [
+            ->add('pricesIn', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('productionModels', ChoiceType::class, [
+            ->add('offers', ChoiceType::class, [
                 'required' => false,
-                'choices'  => ProductionModels::getFormChoices(),
+                'choices'  => Offers::getFormChoices(),
                 'multiple' => true,
             ])
-            ->add('productionModelsComment', TextareaType::class, [
+            ->add('offersComment', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -125,16 +125,16 @@ class CreatorType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('orderTypes', ChoiceType::class, [
+            ->add('products', ChoiceType::class, [
                 'required' => false,
-                'choices'  => OrderTypes::getFormChoices(),
+                'choices'  => Products::getFormChoices(),
                 'multiple' => true,
             ])
-            ->add('otherOrderTypes', TextareaType::class, [
+            ->add('otherProducts', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('orderTypesComment', TextareaType::class, [
+            ->add('productsComment', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -346,12 +346,12 @@ class CreatorType extends AbstractTypeWithDelete
             ])
         ;
 
-        foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
+        foreach (['offers', 'styles', 'products', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
-            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
+            'commissionsUrls', 'pricesIn', 'formerly', 'languages', 'otherFeatures', 'otherProducts',
             'otherStyles', 'otherUrls', 'paymentMethods', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
             'formerCreatorIds', 'miniatureUrls',
         ] as $fieldName) {

@@ -84,12 +84,12 @@ trait FiltersTestTrait
             self::creator('BOTHORT', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], ['Standard commissions'],
                 ['Open for'], ['Most species'], true, false, false,
-                otherOrderTypes: ['Other order types']),
+                otherProducts: ['Other products']),
 
             self::creator('OTHRORT', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], [], ['Standard commissions'],
                 ['Open for'], ['Most species'], true, false, false,
-                otherOrderTypes: ['Other order types']),
+                otherProducts: ['Other products']),
 
             self::creator('NOPRDMD', 'FI', 'State', ['Language'],
                 ['Toony'], ['LED eyes'], ['Full plantigrade'], [],
@@ -173,16 +173,16 @@ trait FiltersTestTrait
                 ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000011', 'M000012'],
             ],
 
-            'c2'  => [self::getCombinedFiltersTestSet(), ['countries'        => ['CZ']],                        ['M000001']],
-            'c3'  => [self::getCombinedFiltersTestSet(), ['states'           => ['State2']],                    ['M000002']],
-            'c4'  => [self::getCombinedFiltersTestSet(), ['languages'        => ['Lang2']],                     ['M000003']],
-            'c5'  => [self::getCombinedFiltersTestSet(), ['styles'           => ['Realistic']],                 ['M000004']],
-            'c6'  => [self::getCombinedFiltersTestSet(), ['features'         => ['LED eyes', 'Indoor feet']],   ['M000005']],
-            'c7'  => [self::getCombinedFiltersTestSet(), ['orderTypes'       => ['Tails (as parts/separate)']], ['M000006']],
-            'c8'  => [self::getCombinedFiltersTestSet(), ['productionModels' => ['Premades']],                  ['M000007']],
-            'c9'  => [self::getCombinedFiltersTestSet(), ['openFor'          => ['Open2']],                     ['M000008']],
-            'c10' => [self::getCombinedFiltersTestSet(), ['species'          => ['Fantasy creatures']],         ['M000009']],
-            'c11' => [self::getCombinedFiltersTestSet(), ['paymentPlans'     => ['Not available']],             ['M000010']],
+            'c2'  => [self::getCombinedFiltersTestSet(), ['countries'    => ['CZ']],                        ['M000001']],
+            'c3'  => [self::getCombinedFiltersTestSet(), ['states'       => ['State2']],                    ['M000002']],
+            'c4'  => [self::getCombinedFiltersTestSet(), ['languages'    => ['Lang2']],                     ['M000003']],
+            'c5'  => [self::getCombinedFiltersTestSet(), ['styles'       => ['Realistic']],                 ['M000004']],
+            'c6'  => [self::getCombinedFiltersTestSet(), ['features'     => ['LED eyes', 'Indoor feet']],   ['M000005']],
+            'c7'  => [self::getCombinedFiltersTestSet(), ['products'     => ['Tails (as parts/separate)']], ['M000006']],
+            'c8'  => [self::getCombinedFiltersTestSet(), ['offers'       => ['Premades']],                  ['M000007']],
+            'c9'  => [self::getCombinedFiltersTestSet(), ['openFor'      => ['Open2']],                     ['M000008']],
+            'c10' => [self::getCombinedFiltersTestSet(), ['species'      => ['Fantasy creatures']],         ['M000009']],
+            'c11' => [self::getCombinedFiltersTestSet(), ['paymentPlans' => ['Not available']],             ['M000010']],
 
             'c12' => [
                 self::getCombinedFiltersTestSet(),
@@ -199,12 +199,11 @@ trait FiltersTestTrait
             'c14' => [
                 self::getCombinedFiltersTestSet(),
                 [
-                    'countries'        => ['FI', 'CZ'],
-                    'states'           => ['State1', 'State2'],
-                    'styles'           => ['Toony', 'Realistic'],
-                    'orderTypes'       => ['Tails (as parts/separate)', 'Full plantigrade'],
-                    'productionModels' => ['Premades', 'Standard commissions'],
-
+                    'countries'    => ['FI', 'CZ'],
+                    'states'       => ['State1', 'State2'],
+                    'styles'       => ['Toony', 'Realistic'],
+                    'products'     => ['Tails (as parts/separate)', 'Full plantigrade'],
+                    'offers'       => ['Premades', 'Standard commissions'],
                     'languages'    => ['Lang1'],
                     'features'     => ['LED eyes'],
                     'openFor'      => ['Open1'],
@@ -217,16 +216,16 @@ trait FiltersTestTrait
             'i1' => [self::getInactiveFiltersTestSet(), ['inactive' => []], ['ACTIVE1']],
             'i2' => [self::getInactiveFiltersTestSet(), ['inactive' => ['.']], ['ACTIVE1', 'INACTIV']],
 
-            's1'  => [self::getSpecialFiltersTestSet(), ['countries'        => ['?']], ['NOCNTRY']],
-            's2'  => [self::getSpecialFiltersTestSet(), ['states'           => ['?']], ['NOSTATE']],
-            's3'  => [self::getSpecialFiltersTestSet(), ['languages'        => ['?']], ['NOLANGG']],
-            's4'  => [self::getSpecialFiltersTestSet(), ['styles'           => ['?']], ['NOSTLES']],
-            's5'  => [self::getSpecialFiltersTestSet(), ['styles'           => ['*']], ['BOTHSTL', 'OTHRSTL']],
-            's6'  => [self::getSpecialFiltersTestSet(), ['features'         => ['?']], ['NOFTRES']],
-            's7'  => [self::getSpecialFiltersTestSet(), ['features'         => ['*']], ['BOTHFTR', 'OTHRFTR']],
-            's8'  => [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['?']], ['NOORTPS']],
-            's9'  => [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['*']], ['BOTHORT', 'OTHRORT']],
-            's10' => [self::getSpecialFiltersTestSet(), ['productionModels' => ['?']], ['NOPRDMD']],
+            's1'  => [self::getSpecialFiltersTestSet(), ['countries' => ['?']], ['NOCNTRY']],
+            's2'  => [self::getSpecialFiltersTestSet(), ['states'    => ['?']], ['NOSTATE']],
+            's3'  => [self::getSpecialFiltersTestSet(), ['languages' => ['?']], ['NOLANGG']],
+            's4'  => [self::getSpecialFiltersTestSet(), ['styles'    => ['?']], ['NOSTLES']],
+            's5'  => [self::getSpecialFiltersTestSet(), ['styles'    => ['*']], ['BOTHSTL', 'OTHRSTL']],
+            's6'  => [self::getSpecialFiltersTestSet(), ['features'  => ['?']], ['NOFTRES']],
+            's7'  => [self::getSpecialFiltersTestSet(), ['features'  => ['*']], ['BOTHFTR', 'OTHRFTR']],
+            's8'  => [self::getSpecialFiltersTestSet(), ['products'  => ['?']], ['NOORTPS']],
+            's9'  => [self::getSpecialFiltersTestSet(), ['products'  => ['*']], ['BOTHORT', 'OTHRORT']],
+            's10' => [self::getSpecialFiltersTestSet(), ['offers'    => ['?']], ['NOPRDMD']],
 
             'pp1' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => []],
                 ['UNKPAYP', 'NOPAYPL', 'PAYPLNS']],
@@ -260,16 +259,16 @@ trait FiltersTestTrait
      * @param list<string> $languages
      * @param list<string> $styles
      * @param list<string> $features
-     * @param list<string> $orderTypes
-     * @param list<string> $productionModels
+     * @param list<string> $products
+     * @param list<string> $offers
      * @param list<string> $openFor
      * @param list<string> $speciesDoes
      * @param list<string> $otherStyles
      * @param list<string> $otherFeatures
-     * @param list<string> $otherOrderTypes
+     * @param list<string> $otherProducts
      * @param list<string> $speciesDoesnt
      */
-    private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $orderTypes, array $productionModels, array $openFor, array $speciesDoes, ?bool $offersPaymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherOrderTypes = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
+    private static function creator(string $creatorIdAndName, string $country, string $state, array $languages, array $styles, array $features, array $products, array $offers, array $openFor, array $speciesDoes, ?bool $offersPaymentPlans, bool $nsfw, bool $worksWithMinors, array $otherStyles = [], array $otherFeatures = [], array $otherProducts = [], array $speciesDoesnt = [], string $inactiveReason = ''): Creator
     {
         return UserCreator::get()
             ->setCreatorId($creatorIdAndName)
@@ -279,8 +278,8 @@ trait FiltersTestTrait
             ->setLanguages($languages)
             ->setStyles($styles)
             ->setFeatures($features)
-            ->setOrderTypes($orderTypes)
-            ->setProductionModels($productionModels)
+            ->setProducts($products)
+            ->setOffers($offers)
             ->setOpenFor($openFor)
             ->setSpeciesDoes($speciesDoes)
             ->setOffersPaymentPlans($offersPaymentPlans)
@@ -291,7 +290,7 @@ trait FiltersTestTrait
             ->setWorksWithMinors($worksWithMinors)
             ->setOtherStyles($otherStyles)
             ->setOtherFeatures($otherFeatures)
-            ->setOtherOrderTypes($otherOrderTypes)
+            ->setOtherProducts($otherProducts)
             ->setSpeciesDoesnt($speciesDoesnt)
             ->setInactiveReason($inactiveReason)
         ;
