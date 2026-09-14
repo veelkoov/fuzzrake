@@ -77,7 +77,11 @@ final class SchemaFixer
                 $data[Field::PRODUCTS->value] = $data['ORDER_TYPES'];
                 unset($data['ORDER_TYPES_COMMENT']);
                 unset($data['OTHER_ORDER_TYPES']);
+                $data[Field::PRODUCTS->value] = $data['ORDER_TYPES'];
                 unset($data['ORDER_TYPES']);
+
+                $data[Field::PRICES_IN->value] = $data['CURRENCIES_ACCEPTED'];
+                unset($data['CURRENCIES_ACCEPTED']);
         }
 
         return $data;
