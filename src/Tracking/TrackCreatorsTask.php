@@ -29,7 +29,7 @@ final class TrackCreatorsTask
     public const int MAX_RETRIES = 1;
 
     public function __construct(
-        #[Autowire(service: 'monolog.logger.tracking')]
+        #[Autowire(service: 'monolog.logger.fuzzrake.tracking')]
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly CreatorUrlRepository $creatorUrlRepository,

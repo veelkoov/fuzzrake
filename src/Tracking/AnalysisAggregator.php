@@ -17,7 +17,7 @@ class AnalysisAggregator
     private readonly ContextLogger $logger;
 
     public function __construct(
-        #[Autowire(service: 'monolog.logger.tracking')]
+        #[Autowire(service: 'monolog.logger.fuzzrake.tracking')]
         LoggerInterface $logger,
     ) {
         $this->logger = new ContextLogger($logger);

@@ -1,74 +1,30 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
-        - tracking
+        - fuzzrake.tracking
         - fuzzrake.security
 
-    handlers:
-      security:
-        type: stream
-        path: "%kernel.logs_dir%/%kernel.environment%-security.log"
-        level: debug
-        channels: ["fuzzrake.security"]
-
-when@dev:
+when@dev: &when-at-dev
     monolog:
         handlers:
-            main:
-                type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
+            main: &handler-main
+                type: rotating_file
+                formatter: monolog.formatter.json
+                include_stacktraces: true
                 level: debug
-                channels: ["!event"]
-            console:
-                type: console
-                process_psr_3_messages: false
-                channels: ["!event", "!doctrine", "!console"]
+                max_files: 93
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
 
-when@test:
+when@test: *when-at-dev
+
+when@prod: &when-at-prod
     monolog:
         handlers:
             main:
                 type: fingers_crossed
                 action_level: warning
                 handler: nested
-                excluded_http_codes: [404, 405]
-                channels: ["!event"]
-            nested:
-                type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
-
-when@prod: &when-at-prod
-    monolog:
-        handlers:
-            normal:
-                type: stream
-                channels: ["!deprecation"]
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: info
-                formatter: monolog.formatter.json
-            issues:
-                type: fingers_crossed
-                action_level: warning
-                handler: issues_nested
-                excluded_http_codes: [404, 405]
-                buffer_size: 50 # How many messages should be saved? Prevent memory leaks
-            issues_nested:
-                channels: ["!deprecation", "!tracking"]
-                type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%-issues.log"
-                level: debug
-                formatter: monolog.formatter.json
-                include_stacktraces: true
-            console:
-                type: console
-                process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
-            deprecation:
-                type: stream
-                channels: [deprecation]
-                path: "%kernel.logs_dir%/%kernel.environment%-deprecations.log"
-                level: debug
-                formatter: monolog.formatter.json
+                passthru_level: info
+            nested: *handler-main
 
 when@beta: *when-at-prod
