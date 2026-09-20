@@ -22,24 +22,27 @@ class Label
     public private(set) ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    public private(set) DateTimeImmutable $addedAtUtc;
+    public readonly DateTimeImmutable $addedAtUtc;
+
+    #[ORM\Column(enumType: LabelSubject::class)]
+    public LabelSubject $subject;
+
+    #[ORM\Column(enumType: LabelType::class)]
+    public LabelType $type;
+
+    #[ORM\Column(type: Types::TEXT)]
+    public string $value = '';
+
+    #[ORM\Column(type: Types::TEXT)]
+    public string $comment = '';
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    public bool $active = true;
 
     public function __construct(
         #[ORM\ManyToOne(inversedBy: 'labels')]
         #[ORM\JoinColumn(nullable: false)]
-        public private(set) Creator $creator,
-
-        #[ORM\Column(enumType: LabelSubject::class)]
-        public private(set) LabelSubject $subject,
-
-        #[ORM\Column(enumType: LabelType::class)]
-        public private(set) LabelType $type,
-
-        #[ORM\Column(type: Types::TEXT)]
-        public private(set) string $value = '',
-
-        #[ORM\Column(type: Types::TEXT)]
-        public private(set) string $comment = '',
+        public readonly Creator $creator,
     ) {
         $this->addedAtUtc = UtcClock::now();
     }
