@@ -1,0 +1,38 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}{{ creator.name }} [{{ creator.lastCreatorId }}] - labels{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {{ form_start(new_label_form) }}
+    <div class="row">
+        <div class="col-4">
+            {{ form_row(new_label_form.subject) }}
+            {{ form_row(new_label_form.type) }}
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(new_label_form.value) }}
+                </div>
+                <div class="col">
+                    {{ form_row(new_label_form.comment) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(new_label_form.active) }}
+                </div>
+                <div class="col">
+                    <input type="submit" class="btn btn-primary" value="Save">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(new_label_form) }}
+
+    {% for label in labels %}
+        {{ dump(label) }}
+    {% endfor %}
+{% endblock %}
