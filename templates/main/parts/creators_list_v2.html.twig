@@ -5,7 +5,7 @@
         {% set creator_idx = loop.index %}
 
         <div class="creator-card" id="{{ creator.lastCreatorId }}">
-            {{ include('main/parts/creator_card_v2.html.twig') }}
+            {{ include('main/creator_card/creator_card.html.twig') }}
         </div>
     {% endfor %}
 </div>
