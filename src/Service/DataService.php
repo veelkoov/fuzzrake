@@ -133,7 +133,7 @@ class DataService
             $result = StringToInt::fromKeys(Fields::inStats()->names(), fn () => 0);
 
             foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
-                $creator = Creator::wrap($creatorE);
+                $creator = new Creator($creatorE);
 
                 foreach (Fields::inStats() as $field) {
                     if (Field::FORMER_MAKER_IDS === $field) {
@@ -189,7 +189,7 @@ class DataService
                     $result .= ',';
                 }
 
-                $result .= Json::encode(Creator::wrap($creatorE));
+                $result .= Json::encode(new Creator($creatorE));
             }
 
             $result .= ']';

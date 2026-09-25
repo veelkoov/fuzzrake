@@ -17,7 +17,7 @@ class SmartOfferStatusAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSet(): void
     {
-        $creator = Creator::wrap($entity = new CreatorE(new User()));
+        $creator = new Creator($entity = new CreatorE(new User()));
 
         $creator
             ->setOpenFor(['digigrades', 'plantigrades'])

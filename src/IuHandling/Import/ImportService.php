@@ -108,7 +108,7 @@ class ImportService
     private function getCreators(Submission $submission, Creator $submissionData, ?string $matchedCreatorId): array
     {
         if (null === $matchedCreatorId && null !== $submission->getCreator()) {
-            return [Creator::wrap($submission->getCreator())];
+            return [new Creator($submission->getCreator())];
         }
 
         // grep-code-legacy-submissions-with-no-creator-reference

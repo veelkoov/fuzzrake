@@ -6,7 +6,6 @@ namespace App\Controller\Mx;
 
 use App\Controller\Utils\ButtonClickedTrait;
 use App\Entity\Event;
-use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
 use App\Repository\CreatorRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +37,7 @@ class EventsController extends FuzzrakeAbstractController
         }
 
         $form = $this->createForm(EventType::class, $event, [
-            AbstractTypeWithDelete::OPT_DELETABLE => null !== $event->getId(),
+            EventType::OPT_DELETABLE => null !== $event->getId(),
         ]);
         $form->handleRequest($request);
 

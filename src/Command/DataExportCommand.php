@@ -76,7 +76,7 @@ final class DataExportCommand
 
         $row = 2;
         foreach ($generator as $creatorE) {
-            $creator = Creator::wrap($creatorE);
+            $creator = new Creator($creatorE);
 
             $col = 1;
             foreach ($fieldsList as $field) {
@@ -107,7 +107,7 @@ final class DataExportCommand
                 $json .= ',';
             }
 
-            $creator = Creator::wrap($creatorE);
+            $creator = new Creator($creatorE);
 
             $json .= Json::encode($onlyPublic ? $creator->getPublicData() : $creator->getAllData());
         }

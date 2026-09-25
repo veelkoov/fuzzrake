@@ -39,7 +39,7 @@ final class DataTidyCommand
             : $this->creatorRepository->getActivePaged();
 
         foreach ($creators as $creatorE) {
-            $creatorFixWip = new CreatorChanges(Creator::wrap($creatorE));
+            $creatorFixWip = new CreatorChanges(new Creator($creatorE));
             $fdv->perform($creatorFixWip);
             $creatorFixWip->apply();
         }

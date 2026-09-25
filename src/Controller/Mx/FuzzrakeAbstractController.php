@@ -21,7 +21,7 @@ abstract class FuzzrakeAbstractController extends AbstractController
     protected function getCreatorOrThrow404(string $creatorId): Creator
     {
         try {
-            return Creator::wrap($this->creatorRepository->findByCreatorId($creatorId));
+            return new Creator($this->creatorRepository->findByCreatorId($creatorId));
         } catch (NoResultException) {
             throw $this->createNotFoundException("Creator with creator ID '$creatorId' does not exist");
         }

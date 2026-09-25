@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use LogicException;
 use Override;
 use Stringable;
@@ -139,6 +140,12 @@ class Creator implements Stringable
     #[ORM\OneToMany(targetEntity: CreatorSpecie::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $species;
 
+    /**
+     * @var Collection<int, Label>
+     */
+    #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'creator', orphanRemoval: true)]
+    private Collection $labels;
+
     public function __construct(User $user)
     {
         $this->setUser($user);
@@ -148,6 +155,7 @@ class Creator implements Stringable
         $this->creatorIds = new ArrayCollection();
         $this->values = new ArrayCollection();
         $this->species = new ArrayCollection();
+        $this->labels = new ArrayCollection();
     }
 
     #[Override]
@@ -618,7 +626,7 @@ class Creator implements Stringable
     #[ORM\PreFlush]
     public function preFlush(PreFlushEventArgs $event): void
     {
-        SmartAccessDecorator::wrap($this)->assureNsfwSafety();
+        new SmartAccessDecorator($this)->assureNsfwSafety();
     }
 
     //
@@ -674,6 +682,34 @@ class Creator implements Stringable
         foreach ($formerCreatorIdsToSet as $creatorId) {
             $this->addCreatorId($creatorId);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Label>
+     */
+    public function getLabels(): Collection
+    {
+        return $this->labels;
+    }
+
+    public function addLabel(Label $label): self
+    {
+        if (!$this->labels->contains($label)) {
+            $this->labels->add($label);
+
+            if ($label->creator !== $this) {
+                throw new InvalidArgumentException('Label must belong to this creator.');
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeLabel(Label $label): self
+    {
+        $this->labels->removeElement($label);
 
         return $this;
     }

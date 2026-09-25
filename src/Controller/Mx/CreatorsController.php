@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\Controller\Utils\ButtonClickedTrait;
-use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\CreatorType;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use Symfony\Component\Form\FormInterface;
@@ -24,7 +23,7 @@ class CreatorsController extends FuzzrakeAbstractController
         $creator = $this->getCreatorOrThrow404($creatorId);
 
         $form = $this->createForm(CreatorType::class, $creator, [
-            AbstractTypeWithDelete::OPT_DELETABLE => true,
+            CreatorType::OPT_DELETABLE => true,
         ]);
         $form->handleRequest($request);
 
@@ -45,7 +44,7 @@ class CreatorsController extends FuzzrakeAbstractController
      */
     private function success(Creator $creator, FormInterface $form): bool
     {
-        if (self::clicked($form, AbstractTypeWithDelete::BTN_DELETE)) {
+        if (self::clicked($form, CreatorType::BTN_DELETE)) {
             $this->creatorRepository->remove($creator, true);
 
             return true;
