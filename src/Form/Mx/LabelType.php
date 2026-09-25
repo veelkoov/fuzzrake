@@ -6,22 +6,22 @@ namespace App\Form\Mx;
 
 use App\Entity\Label;
 use Override;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<Label>
+ * @extends AbstractTypeWithDelete<Label>
  */
-class LabelType extends AbstractType
+class LabelType extends AbstractTypeWithDelete
 {
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
+
         $builder
-            ->add('subject')
             ->add('type')
             ->add('value', TextareaType::class, [
                 'required' => false,
@@ -33,7 +33,6 @@ class LabelType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
-                'empty_data' => '',
             ])
         ;
     }
@@ -41,6 +40,8 @@ class LabelType extends AbstractType
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'data_class' => Label::class,
         ]);

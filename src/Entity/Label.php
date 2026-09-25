@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Data\LabelSubject;
 use App\Data\LabelType;
 use App\Repository\LabelRepository;
 use App\Utils\DateTime\UtcClock;
@@ -24,9 +23,6 @@ class Label
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     public readonly DateTimeImmutable $addedAtUtc;
 
-    #[ORM\Column(enumType: LabelSubject::class)]
-    public LabelSubject $subject;
-
     #[ORM\Column(enumType: LabelType::class)]
     public LabelType $type;
 
@@ -36,8 +32,15 @@ class Label
     #[ORM\Column(type: Types::TEXT)]
     public string $comment = '';
 
-    #[ORM\Column(type: Types::BOOLEAN)]
-    public bool $active = true;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    public ?DateTimeImmutable $activatedAtUtc = null;
+
+    public bool $active {
+        get => null !== $this->activatedAtUtc;
+        set {
+            $this->activatedAtUtc = $value ? $this->activatedAtUtc ?? UtcClock::now() : null;
+        }
+    }
 
     public function __construct(
         #[ORM\ManyToOne(inversedBy: 'labels')]
@@ -45,5 +48,12 @@ class Label
         public readonly Creator $creator,
     ) {
         $this->addedAtUtc = UtcClock::now();
+    }
+
+    public function setType(LabelType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }
