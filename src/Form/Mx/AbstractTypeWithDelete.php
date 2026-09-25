@@ -17,10 +17,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractTypeWithDelete extends AbstractType
 {
-    public const string BTN_SAVE = 'save';
-    public const string BTN_DELETE = 'delete';
+    final public const string BTN_SAVE = 'save';
+    final public const string BTN_DELETE = 'delete';
 
-    public const string OPT_DELETABLE = 'deletable';
+    final public const string OPT_DELETABLE = 'deletable';
 
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
