@@ -41,7 +41,7 @@ class UpdateMiniaturesMessageHandler
         $creator = $this->creatorRepository->find($creatorId);
 
         if (null !== $creator) {
-            $this->updater->updateCreatorMiniaturesFor(Creator::wrap($creator), true);
+            $this->updater->updateCreatorMiniaturesFor(new Creator($creator), true);
         } else {
             $this->logger->info("Creator with ID $creatorId not found. Discarding message.");
         }
@@ -50,7 +50,7 @@ class UpdateMiniaturesMessageHandler
     private function executeForAllCreators(): void
     {
         foreach ($this->creatorRepository->getAllPaged() as $creator) {
-            $this->updater->updateCreatorMiniaturesFor(Creator::wrap($creator), false);
+            $this->updater->updateCreatorMiniaturesFor(new Creator($creator), false);
         }
     }
 }

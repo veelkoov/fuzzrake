@@ -16,7 +16,7 @@ class SmartUrlAccessorTest extends FuzzrakeTestCase
 {
     public function testGetAndSetSingleAndMultiple(): void
     {
-        $creator = Creator::wrap($entity = new CreatorE(new User()));
+        $creator = new Creator($entity = new CreatorE(new User()));
 
         $creator
             ->setLinklistUrl('linklist')

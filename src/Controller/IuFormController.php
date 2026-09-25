@@ -70,7 +70,7 @@ class IuFormController extends AbstractController
             $initialPhotosCopyrightOk = false;
         } else {
             $isUpdate = true;
-            $submissionData = Creator::wrap($user->getCreator())->copy();
+            $submissionData = new Creator($user->getCreator())->copy();
             $initialPhotosCopyrightOk = $submissionData->hasData(Field::URL_PHOTOS);
         }
 

@@ -71,7 +71,7 @@ trait EntityManagerTrait
         $creator = self::getCreatorRepository()->findOneBy(['creatorId' => $creatorId]);
         self::assertNotNull($creator);
 
-        return Creator::wrap($creator);
+        return new Creator($creator);
     }
 
     protected static function persistAndFlush(object ...$entities): void
