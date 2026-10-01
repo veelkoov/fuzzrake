@@ -1,0 +1,59 @@
+---
+pipeline:
+  inputs:
+    - name: tail
+      db: /tail.db/fuzzrake.db
+      parser: symfony
+      path: /logs/*
+      path_key: source
+      read_from_head: true
+
+  filters:
+    - name: parser
+      match: "*"
+      key_name: datetime
+      parser: date_in_datetime
+      preserve_key: true
+      reserve_data: true
+
+    - name: parser
+      match: "*"
+      key_name: source
+      parser: file_to_env
+      preserve_key: true
+      reserve_data: true
+
+    - name: modify
+      match: "*"
+      remove:
+        - datetime # Was needed only for extracting "date" field
+
+  outputs:
+    - name: opensearch
+      buffer_size: 10M
+      host: opensearch-node1
+      http_user: admin
+      http_passwd: "${OPENSEARCH_INITIAL_ADMIN_PASSWORD}"
+      index: fuzzrake-$date
+      suppress_type_name: true
+      tls: true
+      tls.verify: false
+      retry_limit: 5
+
+parsers:
+  - name: symfony
+    format: json
+    time_key: datetime
+    time_keep: true
+    time_format: "%Y-%m-%dT%H:%M:%S.%L%z"
+
+  - name: date_in_datetime
+    format: regex
+    regex: '^(?<date>\d{4}-\d{2}-\d{2})'
+
+  - name: file_to_env
+    format: regex
+    regex: '^/logs/(?<env>.+)-\d{4}-\d{2}-\d{2}\.log'
+
+service:
+  log_level: info
