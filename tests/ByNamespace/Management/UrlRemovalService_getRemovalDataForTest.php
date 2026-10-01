@@ -138,7 +138,7 @@ class UrlRemovalService_getRemovalDataForTest extends FuzzrakeTestCase
 
         $subject->handleRemoval($creator, $input);
 
-        self::assertEmpty($creator->getCommissionsUrls());
+        self::assertCount(0, $creator->getCommissionsUrls());
         self::assertStringContainsString('https://com1.example.com/', $creator->getNotes(),
             'Removed tracking URLs should be mentioned in the notes.');
         self::assertStringContainsString('https://com2.example.com/', $creator->getNotes(),

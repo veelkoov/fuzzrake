@@ -111,6 +111,6 @@ class TrackCreatorsTaskTest extends FuzzrakeKernelTestCase
 
         $subject->trackCreatorsMessageHandler($message);
 
-        self::assertEmpty(self::getQueued(TrackCreatorsV1::class));
+        self::assertCount(0, self::getQueued(TrackCreatorsV1::class));
     }
 }

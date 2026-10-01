@@ -47,10 +47,10 @@ class MainControllerTest extends FuzzrakeWebTestCase
         $crawler = self::$client->request('GET', '/new');
         self::assertResponseStatusCodeIs(200);
 
-        self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older creator 1"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 2"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer creator 3"]'));
-        self::assertNotEmpty($crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 3A / Formerly 3B"]'));
+        self::assertCount(0, $crawler->filterXPath('//li/a[text() = "Older creator 1"]'));
+        self::assertNotCount(0, $crawler->filterXPath('//li/a[text() = "Newer creator 2"]'));
+        self::assertNotCount(0, $crawler->filterXPath('//li/a[text() = "Newer creator 3"]'));
+        self::assertNotCount(0, $crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 3A / Formerly 3B"]'));
     }
 
     /**

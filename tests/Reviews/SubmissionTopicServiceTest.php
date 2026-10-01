@@ -29,7 +29,7 @@ class SubmissionTopicServiceTest extends FuzzrakeKernelTestCase
         $subject = self::getContainerService(SubmissionTopicService::class);
         $result = $subject->getUnreadCounts($reviewer, []);
 
-        self::assertEmpty($result);
+        self::assertCount(0, $result);
     }
 
     #[DataProvider('getUnreadCountsOwnTopicsDataProvider')]

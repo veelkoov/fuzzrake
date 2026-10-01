@@ -29,7 +29,7 @@ trait HttpClientMockTrait
     public function checkIfAllResponsesHaveBeenUsed(): void
     {
         foreach ($this->unusedResponses as $mockUnusedResponses) {
-            self::assertEmpty($mockUnusedResponses, 'Not all expected HTTP calls have been performed.');
+            self::assertCount(0, $mockUnusedResponses, 'Not all expected HTTP calls have been performed.');
         }
     }
 

@@ -278,7 +278,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorTextSame('#manage_directives', 'New directives');
         self::assertSelectorTextSame('#manage_status option[selected]', 'Other');
 
-        self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
+        self::assertCount(0, self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
 
     public function testImportDoesntWorkWithoutAccepting(): void
@@ -296,7 +296,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::$client->submitForm('Import', []);
         self::assertResponseStatusCodeIs(200);
 
-        self::assertEmpty(self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
+        self::assertCount(0, self::getCreatorRepository()->findAll(), 'A creator should not have been persisted.');
     }
 
     public function testDirectivesWork(): void

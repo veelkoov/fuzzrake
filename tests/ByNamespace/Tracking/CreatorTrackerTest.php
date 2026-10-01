@@ -107,8 +107,8 @@ class CreatorTrackerTest extends FuzzrakeTestCase
         self::assertTrue($result);
         self::assertFalse($creator->getCsTrackerIssue());
         self::assertNull($creator->getCsLastCheck());
-        self::assertEmpty($creator->getOpenFor());
-        self::assertEmpty($creator->getClosedFor());
+        self::assertCount(0, $creator->getOpenFor());
+        self::assertCount(0, $creator->getClosedFor());
     }
 
     public function testAllTrackedUrlsAreQueriedAndProcessed(): void
@@ -134,13 +134,13 @@ class CreatorTrackerTest extends FuzzrakeTestCase
                 self::assertInstanceOf(AnalysisResult::class, $results[0]);
                 self::assertSame('https://example.com/url1', $results[0]->url);
                 self::assertSame('https://example.com/url1', $results[0]->openFor->single());
-                self::assertEmpty($results[0]->closedFor);
+                self::assertCount(0, $results[0]->closedFor);
                 self::assertFalse($results[0]->hasEncounteredIssues);
 
                 self::assertInstanceOf(AnalysisResult::class, $results[1]);
                 self::assertSame('https://example.com/url2', $results[1]->url);
                 self::assertSame('https://example.com/url2', $results[1]->openFor->single());
-                self::assertEmpty($results[1]->closedFor);
+                self::assertCount(0, $results[1]->closedFor);
                 self::assertFalse($results[1]->hasEncounteredIssues);
 
                 return new AnalysisResults(StringVec::of('Success'), StringVec::of(), false);
