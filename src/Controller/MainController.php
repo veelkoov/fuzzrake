@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Controller\Utils\CreatorByCreatorIdTrait;
 use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\RequestsHandling\FilteredDataProvider;
 use App\Filtering\RequestsHandling\RequestParser;
@@ -22,8 +21,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MainController extends AbstractController
 {
-    use CreatorByCreatorIdTrait;
-
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
         private readonly FilteredDataProvider $filtered,
@@ -40,18 +37,6 @@ class MainController extends AbstractController
         return $this->render('main/main.html.twig', [
             'filters' => $this->filterService->getCachedFiltersTplData(),
             'stats'   => $this->dataService->getMainPageStats(),
-        ]);
-    }
-
-    #[Route(path: '/c/{creatorId}', name: 'rt_creator')] // grep-code-creator-card-path
-    #[Cache(maxage: 900, public: true)]
-    public function creator(string $creatorId): Response
-    {
-        $creator = $this->getCreatorByCreatorIdOrThrow404($creatorId);
-
-        return $this->render('main/creator.html.twig', [
-            'creator' => $creator,
-            'searched_creator_id' => '',
         ]);
     }
 
