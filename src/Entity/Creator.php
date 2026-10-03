@@ -618,7 +618,7 @@ class Creator implements Stringable
     #[ORM\PreFlush]
     public function preFlush(PreFlushEventArgs $event): void
     {
-        SmartAccessDecorator::wrap($this)->assureNsfwSafety();
+        new SmartAccessDecorator($this)->assureNsfwSafety();
     }
 
     //

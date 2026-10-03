@@ -62,6 +62,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->entity->__toString();
     }
 
+    public function is(self|CreatorE|null $other): bool
+    {
+        if ($other instanceof self) {
+            $other = $other->entity;
+        }
+
+        return $other === $this->entity;
+    }
+
     /**
      * @param CreatorE[] $creators
      *
@@ -69,12 +78,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public static function wrapAll(array $creators): array
     {
-        return arr_map($creators, static fn (CreatorE $creator) => self::wrap($creator));
-    }
-
-    public static function wrap(CreatorE $creator): self
-    {
-        return new self($creator);
+        return arr_map($creators, static fn (CreatorE $creator) => new self($creator));
     }
 
     public function set(Field $field, mixed $newValue): self

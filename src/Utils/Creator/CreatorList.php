@@ -18,6 +18,6 @@ class CreatorList extends DVec
      */
     public static function wrap(array $entities): self
     {
-        return self::mapFrom($entities, Creator::wrap(...));
+        return self::mapFrom($entities, static fn (CreatorE $creator) => new Creator($creator));
     }
 }

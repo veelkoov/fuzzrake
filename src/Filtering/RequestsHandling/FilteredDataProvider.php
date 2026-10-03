@@ -49,7 +49,7 @@ class FilteredDataProvider
 
         $creators = iter_mapl($paginator,
             // grep-code-cannot-use-coalesce-in-doctrine-order-by
-            static fn (array $creatorAndOrderColumns) => Creator::wrap($creatorAndOrderColumns[0]),
+            static fn (array $creatorAndOrderColumns) => new Creator($creatorAndOrderColumns[0]),
         );
 
         return new ItemsPage(

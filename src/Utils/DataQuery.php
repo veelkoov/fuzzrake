@@ -73,7 +73,7 @@ class DataQuery
         $creators = $creatorRepository->getWithOtherItemsLikePaged($this->searchedItems);
 
         foreach ($creators as $creatorE) {
-            $creator = Creator::wrap($creatorE);
+            $creator = new Creator($creatorE);
 
             if ($this->creatorMatches($creator)) {
                 $this->result[] = $creator;

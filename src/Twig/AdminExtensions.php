@@ -20,7 +20,7 @@ class AdminExtensions
     public function smartFilter(Creator|CreatorE $creator): Creator
     {
         if (!$creator instanceof Creator) {
-            $creator = Creator::wrap($creator);
+            $creator = new Creator($creator);
         }
 
         return $creator;

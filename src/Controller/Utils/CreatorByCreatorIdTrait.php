@@ -12,7 +12,7 @@ trait CreatorByCreatorIdTrait
     protected function getCreatorByCreatorIdOrThrow404(string $creatorId): Creator
     {
         try {
-            return Creator::wrap($this->creatorRepository->findByCreatorId($creatorId));
+            return new Creator($this->creatorRepository->findByCreatorId($creatorId));
         } catch (UnexpectedResultException) {
             throw $this->createNotFoundException('Failed to find a creator with the given creator ID');
         }

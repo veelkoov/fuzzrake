@@ -103,6 +103,6 @@ class ManageController extends AbstractController
             new StringSet($update->inputData->getAllNames())
                 ->plusAll($update->fixedData->getAllNames())
                 ->minus('')
-        ))->filterNot(static fn (Creator $creator) => $creator->entity === $update->subjectCreator->entity);
+        ))->filterNot(static fn (Creator $creator) => $creator->is($update->subjectCreator));
     }
 }
