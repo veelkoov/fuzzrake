@@ -129,11 +129,3 @@ window.goToPage = function (pageNumber: number): void {
     }
   });
 })();
-
-MessageBus.listen("event-retrieved-userinfo", () => {
-  const roles: string[] = jQuery("#userinfo").data("roles").split(",");
-
-  if (roles.includes("ROLE_ADMIN")) {
-    jQuery("body").addClass("user-is-admin");
-  }
-});

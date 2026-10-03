@@ -37,7 +37,7 @@ div.creator-card {
     cursor: pointer;
   }
 
-  &.standalone div.open-new-card {
+  &.standalone .hide-when-standalone {
     display: none;
   }
 

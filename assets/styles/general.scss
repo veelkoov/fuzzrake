@@ -122,3 +122,7 @@ span.utc_datetime {
 body:not(.user-is-admin) .admin-user-only {
   display: none;
 }
+
+body.user-is-admin .force-d_block-for_admin {
+  display: block !important;
+}
