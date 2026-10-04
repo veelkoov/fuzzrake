@@ -64,6 +64,37 @@
     {% endif %}
 {% endmacro %}
 
+{% macro verified_list_with_others_comment_opt(items, other_items, comment, verified_items, legacy_verified_items) %}
+    {% if comment %}
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul class="condensed with-verification">
+            {% for item in items %}
+                {% if item in verified_items %}
+                    {% set icon = '<i class="fa-solid fa-circle-check"></i>' %}
+                    {% set class = 'verified-full' %}
+                {% elseif item in legacy_verified_items %}
+                    {% set icon = '<i class="fa-regular fa-circle-check"></i>' %}
+                    {% set class = 'verified-legacy' %}
+                {% else %}
+                    {% set icon = '<i class="fa-regular fa-circle"></i>' %}
+                    {% set class = 'not-verified' %}
+                {% endif %}
+
+                <li class="{{ class }}">{{ icon | raw }} {{ item }}</li>
+            {% endfor %}
+
+            {% for item in other_items %}
+                <li class="other show-expanded">{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
 {% macro link(uri, label, icon_class, additional_button_class = '') %}
     {% if uri %}
         <a class="{{ additional_button_class }} p-1 text-nowrap" href="{{ uri }}" target="_blank">
@@ -136,6 +167,12 @@
                         <br>
                         Speaking: {{ _self.list_cs_opt(creator.languages) }}
                     </small>
+                </div>
+
+                <div class="col col-auto header-box">
+                    {% for label in creator.creatorLabels %}
+                        <span class="badge text-bg-secondary creator-label"><i class="fa-solid fa-tag"></i> {{ label.type.text }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="col col-auto header-box show-expanded">
@@ -278,7 +315,7 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.offers, [], creator.offersComment) }}
+                {{ _self.verified_list_with_others_comment_opt(creator.offers, [], creator.offersComment, creator.verifiedOffers, creator.legacyVerifiedOffers) }}
             </div>
         </div>
 
@@ -298,7 +335,7 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment) }}
+                {{ _self.verified_list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment, creator.verifiedProducts, creator.legacyVerifiedProducts) }}
             </div>
         </div>
 

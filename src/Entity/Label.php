@@ -10,9 +10,11 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LabelRepository::class)]
 #[ORM\Table(name: 'labels')]
+#[ORM\Index(fields: ['type'])]
 class Label
 {
     #[ORM\Id]
@@ -24,22 +26,19 @@ class Label
     public readonly DateTimeImmutable $addedAtUtc;
 
     #[ORM\Column(enumType: LabelType::class)]
-    public LabelType $type;
+    public private(set) LabelType $type;
 
     #[ORM\Column(type: Types::TEXT)]
-    public string $value = '';
+    public private(set) string $value = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    public string $comment = '';
+    public private(set) string $comment = '';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    public ?DateTimeImmutable $activatedAtUtc = null;
+    public private(set) ?DateTimeImmutable $activatedAtUtc = null;
 
     public bool $active {
         get => null !== $this->activatedAtUtc;
-        set {
-            $this->activatedAtUtc = $value ? $this->activatedAtUtc ?? UtcClock::now() : null;
-        }
     }
 
     public function __construct(
@@ -56,4 +55,32 @@ class Label
 
         return $this;
     }
+
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function setComment(string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->activatedAtUtc = $active ? $this->activatedAtUtc ?? UtcClock::now() : null;
+
+        return $this;
+    }
+
+    // TODO
+    //    #[Assert\Callback]
+    //    public function validateValue(): void
+    //    {
+    //
+    //    }
 }

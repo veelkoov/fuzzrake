@@ -143,7 +143,7 @@ class Creator implements Stringable
     /**
      * @var Collection<int, Label>
      */
-    #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'creator', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $labels;
 
     public function __construct(User $user)
