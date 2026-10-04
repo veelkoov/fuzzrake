@@ -2,7 +2,14 @@
 environment_php_fpm_docker_image_name: "fuzzrake/php-fpm:latest"
 
 environment_systemd_services:
-  - name: "messenger-worker-{{ server_name }}"
+  - name: "{{ server_name }}-messenger-worker.service"
     template_src: "messenger_worker.service.j2"
-  - name: "scheduler-worker-{{ server_name }}"
-    template_src: "scheduler_worker.service.j2"
+    enable: true
+
+  - name: "{{ server_name }}-tracker.service"
+    template_src: "tracker.service.j2"
+    enable: false
+
+  - name: "{{ server_name }}-tracker.timer"
+    template_src: "tracker.timer.j2"
+    enable: true

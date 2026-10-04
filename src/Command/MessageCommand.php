@@ -50,7 +50,7 @@ final class MessageCommand
         $messageObject = match ($message) {
             self::MSG_SPECIES => new SpeciesSyncNotificationV1(),
             self::MSG_MINIATURES => new UpdateMiniaturesV1(),
-            self::MSG_TRACKING => new InitiateTrackingV1(0, false),
+            self::MSG_TRACKING => new InitiateTrackingV1(), // No parameters, could allow to specify if ever needed.
             default => throw new LogicException('Not implemented.'),
         };
 
