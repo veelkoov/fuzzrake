@@ -48,10 +48,10 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         self::assertCount(0, $crawler->filter('table tbody tr'));
 
         self::submitValidForm('Save', [
-            'label[type]' => 'PRODUCT_VERIFIED',
-            'label[value]' => 'Full plantigrade',
-            'label[comment]' => 'Some comment',
-            'label[active]' => false,
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Full plantigrade',
+            'creator_label[comment]' => 'Some comment',
+            'creator_label[active]' => false,
         ]);
         self::assertCount(1, self::$client->getCrawler()->filter('table tbody tr'));
     }
@@ -98,12 +98,12 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
 
         self::$client->click($crawler->filter($editLinkSelector)->link());
         self::assertResponseStatusCodeIs(200);
-        self::submitValidForm('Save', ['label[active]' => true]);
+        self::submitValidForm('Save', ['creator_label[active]' => true]);
         self::assertSelectorTextSame($activationTimeSelector, $nowText);
 
         self::$client->click($crawler->filter($editLinkSelector)->link());
         self::assertResponseStatusCodeIs(200);
-        self::submitValidForm('Save', ['label[active]' => false]);
+        self::submitValidForm('Save', ['creator_label[active]' => false]);
         self::assertSelectorTextSame($activationTimeSelector, 'Not active');
     }
 }

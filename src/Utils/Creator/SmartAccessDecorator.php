@@ -13,10 +13,10 @@ use App\Data\FieldValue;
 use App\Data\LabelType;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
+use App\Entity\CreatorLabel;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
-use App\Entity\CreatorLabel;
 use App\Entity\User;
 use App\Utils\Collections\Lists;
 use App\Utils\Collections\StringLists;
@@ -1511,11 +1511,34 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->entity->getUser();
     }
 
-    public function addLabel(LabelType $type, string $value, true $active): self
+    public function setLabel(LabelType $type, string $value, true $active): self
     {
-        $this->entity->addLabel(new CreatorLabel($this->entity)->setType($type)->setValue($value)->setActive($active)); // TODO: make this set label instead of add label?
+        $label = $this->findLabel($type, $value) ?? new CreatorLabel($this->entity)->setType($type)->setValue($value);
+        $label->setActive($active);
+        $this->entity->addLabel($label);
 
         return $this;
+    }
+
+    public function removeLabel(LabelType $type, string $value): self
+    {
+        $label = $this->findLabel($type, $value);
+        if (null !== $label) {
+            $this->entity->removeLabel($label);
+        }
+
+        return $this;
+    }
+
+    private function findLabel(LabelType $type, string $value): ?CreatorLabel
+    {
+        foreach ($this->entity->getLabels() as $label) {
+            if ($label->type === $type && $label->value === $value) {
+                return $label;
+            }
+        }
+
+        return null;
     }
 
     /** @return iterable<CreatorLabel> */
@@ -1524,7 +1547,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
     }
 
-    /** @return list<string> */
+    /** @return string[] */
     public function getVerifiedItems(LabelType $type): array
     {
         return $this->entity->getLabels()
@@ -1532,25 +1555,25 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             ->map(static fn (CreatorLabel $label) => $label->value)->toArray();
     }
 
-    /** @return list<string> */
+    /** @return string[] */
     public function getVerifiedOffers(): array
     {
         return $this->getVerifiedItems(LabelType::OFFER_VERIFIED);
     }
 
-    /** @return list<string> */
+    /** @return string[] */
     public function getLegacyVerifiedOffers(): array
     {
         return $this->getVerifiedItems(LabelType::OFFER_VERIFIED_BEFORE_2026);
     }
 
-    /** @return list<string> */
+    /** @return string[] */
     public function getVerifiedProducts(): array
     {
         return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED);
     }
 
-    /** @return list<string> */
+    /** @return string[] */
     public function getLegacyVerifiedProducts(): array
     {
         return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED_BEFORE_2026);

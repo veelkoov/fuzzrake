@@ -19,9 +19,9 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
     public function testLabelsBeingShown(): void
     {
         $creator = new Creator()->setCreatorId('TEST001')
-            ->addLabel(LabelType::PRODUCT_VERIFIED, Products::FULL_DIGITIGRADE, true)
-            ->addLabel(LabelType::OFFER_VERIFIED_BEFORE_2026, Offers::STANDARD_COMMISSIONS, true)
-            ->addLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true)
+            ->setLabel(LabelType::PRODUCT_VERIFIED, Products::FULL_DIGITIGRADE, true)
+            ->setLabel(LabelType::OFFER_VERIFIED_BEFORE_2026, Offers::STANDARD_COMMISSIONS, true)
+            ->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true)
         ;
         self::persistAndFlush($creator);
 
