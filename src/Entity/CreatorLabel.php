@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CreatorLabelRepository::class)]
-#[ORM\Table(name: 'labels')]
+#[ORM\Table(name: 'creators_labels')]
 #[ORM\Index(fields: ['type'])]
-class CreatorLabel // TODO: CreatorLabel
+class CreatorLabel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
