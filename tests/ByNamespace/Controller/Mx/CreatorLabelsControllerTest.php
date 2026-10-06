@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\Controller\Mx;
 
 use App\Data\LabelType;
-use App\Entity\Label;
+use App\Entity\CreatorLabel;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\UserCreator;
 use App\Utils\DateTime\DateTimeException;
@@ -22,16 +22,16 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
     {
         $creator1 = UserCreator::get(true);
         $creator2 = UserCreator::get(true);
-        $label1 = new Label($creator1->entity)->setType(LabelType::PRODUCT_VERIFIED);
+        $label1 = new CreatorLabel($creator1->entity)->setType(LabelType::PRODUCT_VERIFIED);
         self::persistAndFlush($creator1, $label1, $creator2);
 
         self::haveAnAdminUser();
         self::loginAdminUser();
 
-        self::$client->request('GET', self::getLabelEditPath($creator1, $label1));
+        self::$client->request('GET', self::getCreatorLabelEditPath($creator1, $label1));
         self::assertResponseStatusCodeIs(200);
 
-        self::$client->request('GET', self::getLabelEditPath($creator2, $label1));
+        self::$client->request('GET', self::getCreatorLabelEditPath($creator2, $label1));
         self::assertResponseStatusCodeIs(404);
     }
 
@@ -59,7 +59,7 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
     public function testRemovalWorks(): void
     {
         $creator = UserCreator::get(true);
-        $label = new Label($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
+        $label = new CreatorLabel($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
         self::persistAndFlush($creator, $label);
 
         self::haveAnAdminUser();
@@ -69,7 +69,7 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
         self::assertCount(1, $crawler->filter('table tbody tr'));
 
-        self::$client->request('GET', self::getLabelEditPath($creator, $label));
+        self::$client->request('GET', self::getCreatorLabelEditPath($creator, $label));
         self::assertResponseStatusCodeIs(200);
         self::submitValidForm('Delete', []);
         self::assertCount(0, self::$client->getCrawler()->filter('table tbody tr'));
@@ -83,7 +83,7 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         self::mockTime($now);
 
         $creator = UserCreator::get(true);
-        $label = new Label($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
+        $label = new CreatorLabel($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
         self::persistAndFlush($creator, $label);
 
         self::haveAnAdminUser();

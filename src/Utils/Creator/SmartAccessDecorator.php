@@ -16,7 +16,7 @@ use App\Entity\CreatorId;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
-use App\Entity\Label;
+use App\Entity\CreatorLabel;
 use App\Entity\User;
 use App\Utils\Collections\Lists;
 use App\Utils\Collections\StringLists;
@@ -1513,23 +1513,23 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function addLabel(LabelType $type, string $value, true $active): self
     {
-        $this->entity->addLabel(new Label($this->entity)->setType($type)->setValue($value)->setActive($active)); // TODO: Co todo?
+        $this->entity->addLabel(new CreatorLabel($this->entity)->setType($type)->setValue($value)->setActive($active)); // TODO: make this set label instead of add label?
 
         return $this;
     }
 
-    /** @return iterable<Label> */
+    /** @return iterable<CreatorLabel> */
     public function getCreatorLabels(): iterable
     {
-        return $this->entity->getLabels()->filter(static fn (Label $label) => $label->type->isForCreator());
+        return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
     }
 
     /** @return list<string> */
     public function getVerifiedItems(LabelType $type): array
     {
         return $this->entity->getLabels()
-            ->filter(static fn (Label $label) => $label->type === $type && $label->active)
-            ->map(static fn (Label $label) => $label->value)->toArray();
+            ->filter(static fn (CreatorLabel $label) => $label->type === $type && $label->active)
+            ->map(static fn (CreatorLabel $label) => $label->value)->toArray();
     }
 
     /** @return list<string> */

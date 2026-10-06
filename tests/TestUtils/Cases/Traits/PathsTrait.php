@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Entity\Creator as CreatorE;
-use App\Entity\Label;
+use App\Entity\CreatorLabel;
 use App\Entity\Post;
 use App\Entity\Submission;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -41,7 +41,7 @@ trait PathsTrait
         return "/submission/$submissionId/manage";
     }
 
-    protected function getLabelEditPath(Creator|CreatorE $creator, Label $label): string
+    protected function getCreatorLabelEditPath(Creator|CreatorE $creator, CreatorLabel $label): string
     {
         if ($creator instanceof CreatorE) {
             $creator = new Creator($creator);

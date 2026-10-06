@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Data\LabelType;
-use App\Repository\LabelRepository;
+use App\Repository\CreatorLabelRepository;
 use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: LabelRepository::class)]
+#[ORM\Entity(repositoryClass: CreatorLabelRepository::class)]
 #[ORM\Table(name: 'labels')]
 #[ORM\Index(fields: ['type'])]
-class Label
+class CreatorLabel // TODO: CreatorLabel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,7 +23,7 @@ class Label
     public private(set) ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    public readonly DateTimeImmutable $addedAtUtc;
+    public DateTimeImmutable $addedAtUtc;
 
     #[ORM\Column(enumType: LabelType::class)]
     public private(set) LabelType $type;
@@ -44,7 +44,7 @@ class Label
     public function __construct(
         #[ORM\ManyToOne(inversedBy: 'labels')]
         #[ORM\JoinColumn(nullable: false)]
-        public readonly Creator $creator,
+        public Creator $creator,
     ) {
         $this->addedAtUtc = UtcClock::now();
     }

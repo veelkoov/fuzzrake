@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Mx;
 
-use App\Entity\Label;
+use App\Entity\CreatorLabel;
 use Override;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -12,9 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractTypeWithDelete<Label>
+ * @extends AbstractTypeWithDelete<CreatorLabel>
  */
-class LabelType extends AbstractTypeWithDelete
+class CreatorLabelType extends AbstractTypeWithDelete
 {
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -43,7 +43,7 @@ class LabelType extends AbstractTypeWithDelete
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class' => Label::class,
+            'data_class' => CreatorLabel::class,
         ]);
     }
 }

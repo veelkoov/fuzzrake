@@ -141,9 +141,9 @@ class Creator implements Stringable
     private Collection $species;
 
     /**
-     * @var Collection<int, Label>
+     * @var Collection<int, CreatorLabel>
      */
-    #[ORM\OneToMany(targetEntity: Label::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CreatorLabel::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $labels;
 
     public function __construct(User $user)
@@ -687,27 +687,27 @@ class Creator implements Stringable
     }
 
     /**
-     * @return Collection<int, Label>
+     * @return Collection<int, CreatorLabel>
      */
     public function getLabels(): Collection
     {
         return $this->labels;
     }
 
-    public function addLabel(Label $label): self
+    public function addLabel(CreatorLabel $label): self
     {
         if (!$this->labels->contains($label)) {
             $this->labels->add($label);
 
             if ($label->creator !== $this) {
-                throw new InvalidArgumentException('Label must belong to this creator.');
+                throw new InvalidArgumentException('CreatorLabel must belong to this creator.');
             }
         }
 
         return $this;
     }
 
-    public function removeLabel(Label $label): self
+    public function removeLabel(CreatorLabel $label): self
     {
         $this->labels->removeElement($label);
 
