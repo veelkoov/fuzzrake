@@ -14,6 +14,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Submission>
@@ -55,7 +56,7 @@ class SubmissionRepository extends ServiceEntityRepository
             $pageNumber = Pagination::clamp($pageNumber, $pagesCount);
 
             $query
-                ->orderBy('d_s.id', 'DESC')
+                ->orderBy('d_s.id', SortDirection::Descending)
                 ->setFirstResult(Pagination::getFirstIdx(Pagination::PAGE_SIZE, $pageNumber))
                 ->setMaxResults(Pagination::PAGE_SIZE);
 
@@ -83,7 +84,7 @@ class SubmissionRepository extends ServiceEntityRepository
             $this->createQueryBuilder('d_s')
                 ->select('d_s.status, COUNT(d_s) AS count')
                 ->groupBy('d_s.status')
-                ->orderBy('count', 'DESC')
+                ->orderBy('count', SortDirection::Descending)
                 ->getQuery()
                 ->getArrayResult(),
             // @phpstan-ignore argument.type

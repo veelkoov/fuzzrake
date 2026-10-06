@@ -10,6 +10,7 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SortDirection;
 use Veelkoov\Debris\Vecs\StringVec;
 
 /**
@@ -31,7 +32,7 @@ class EventRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('d_e')
             ->where('d_e.timestamp >= :oldest')
-            ->orderBy('d_e.timestamp', 'DESC')
+            ->orderBy('d_e.timestamp', SortDirection::Descending)
             ->setParameter('oldest', UtcClock::at('-31 days'));
 
         if (true === $types?->isNotEmpty()) {

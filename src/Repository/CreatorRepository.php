@@ -24,6 +24,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use SortDirection;
 use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
@@ -70,7 +71,7 @@ class CreatorRepository extends ServiceEntityRepository
             ->andWhere('d_cv.value > :fieldValue')
             ->setParameter('fieldName', Field::DATE_ADDED->value)
             ->setParameter('fieldValue', NewCreator::getCutoffDateStr())
-            ->orderBy('d_cv.value', 'DESC')
+            ->orderBy('d_cv.value', SortDirection::Descending)
             // TODO: No pagination. https://github.com/veelkoov/fuzzrake/issues/248
             ->setMaxResults(100)
             ->getQuery()

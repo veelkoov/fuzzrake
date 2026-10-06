@@ -16,6 +16,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use InvalidArgumentException;
+use SortDirection;
 use Veelkoov\Debris\Sets\StringSet;
 
 class QueryChoicesAppender
@@ -86,7 +87,7 @@ class QueryChoicesAppender
 
         if (!$this->choices->creatorMode) {
             $builder->addOrderBy("CASE WHEN d_c.country = 'RU' THEN 1 ELSE 0 END"); // 2022-02-24 & 1939-09-17
-            $builder->addOrderBy('last_update_datetime', 'DESC'); // Put recently updated makers on top
+            $builder->addOrderBy('last_update_datetime', SortDirection::Descending); // Put recently updated makers on top
         }
 
         $builder
