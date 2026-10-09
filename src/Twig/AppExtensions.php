@@ -10,6 +10,7 @@ use App\Filtering\FiltersData\Item;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\Utils\Regexp\Pattern;
+use Composer\Pcre\Preg;
 use JsonException;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
@@ -91,5 +92,19 @@ class AppExtensions
     public function filterItemsMatchingFilter(ItemList $items, string $matchWord): ItemList
     {
         return $items->filter(static fn (Item $item) => false !== mb_stripos($item->label, $matchWord));
+    }
+
+    #[AsTwigFilter('glue_html_prefix', isSafe: ['html'], preEscape: 'html')]
+    public function glueHtmlPrefix(string $input, string $htmlPrefix): string
+    {
+        if (str_contains($input, '<')) {
+            return "$htmlPrefix $input"; // Not supported, let's play it safe
+        }
+
+        // This could work better. It seems that TYPICALLY lists look better when short items are mostly kept
+        // in a single piece. It's the very long items that make stuff go crazy.
+        // Good for now, better enough.
+
+        return Preg::replace('#^(?:(....\S*)(\s.*))?(.*)?$#s', "<span class=\"text-nowrap\">$htmlPrefix \\1\\3</span>\\2", $input, 1);
     }
 }
