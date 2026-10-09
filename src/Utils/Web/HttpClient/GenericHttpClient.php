@@ -56,8 +56,6 @@ class GenericHttpClient implements HttpClientInterface
         $headers = $response?->getHeaders() ?? [];
         $httpCode = $this->correctHttpCode($url, $response?->getStatusCode() ?? 0, $contents);
 
-        $errors = [];
-
         if (200 !== $httpCode) {
             $this->logger->info("Non-200 HTTP code ($httpCode): '{$url->getUrl()}'.");
 
