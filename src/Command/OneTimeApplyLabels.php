@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Data\Definitions\Fields\Field;
 use App\Data\LabelType;
 use App\Repository\CreatorRepository;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
@@ -61,6 +62,16 @@ class OneTimeApplyLabels
             $creator->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true);
         }
 
+        $this->applyLabelsToItems($creator, Field::PRODUCTS, LabelType::PRODUCT_VERIFIED_BEFORE_2026);
+        $this->applyLabelsToItems($creator, Field::OFFERS, LabelType::OFFER_VERIFIED_BEFORE_2026);
+
         $this->entityManager->persist($creator);
+    }
+
+    private function applyLabelsToItems(Creator $creator, Field $field, LabelType $labelType): void
+    {
+        foreach ($creator->getStringList($field) as $item) {
+            $creator->setLabel($labelType, $item, true);
+        }
     }
 }

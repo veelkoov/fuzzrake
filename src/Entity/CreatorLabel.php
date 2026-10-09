@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CreatorLabelRepository::class)]
 #[ORM\Table(name: 'creators_labels')]
 #[ORM\Index(fields: ['type'])]
+#[ORM\Index(fields: ['value'])]
 class CreatorLabel
 {
     #[ORM\Id]

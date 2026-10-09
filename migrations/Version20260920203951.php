@@ -22,6 +22,7 @@ final class Version20260920203951 extends AbstractMigration
         $this->addSql('CREATE TABLE creators_labels (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, added_at_utc DATETIME NOT NULL, type VARCHAR(255) NOT NULL, value CLOB NOT NULL, comment CLOB NOT NULL, activated_at_utc DATETIME DEFAULT NULL, creator_id INTEGER NOT NULL, CONSTRAINT FK_B5D1021161220EA6 FOREIGN KEY (creator_id) REFERENCES creators (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_6CA92BFF61220EA6 ON creators_labels (creator_id)');
         $this->addSql('CREATE INDEX IDX_6CA92BFF8CDE5729 ON creators_labels (type)');
+        $this->addSql('CREATE INDEX IDX_6CA92BFF1D775834 ON creators_labels (value)');
     }
 
     #[Override]
