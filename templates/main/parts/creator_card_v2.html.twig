@@ -83,7 +83,7 @@
                     {% set class = 'not-verified' %}
                 {% endif %}
 
-                <li class="{{ class }}">{{ icon | raw }} {{ item }}</li>
+                <li class="{{ class }}">{{ item | glue_html_prefix(icon) }}</li>
             {% endfor %}
 
             {% for item in other_items %}
