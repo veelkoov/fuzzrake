@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\ByNamespace\Controller;
 
+use App\Data\Definitions\Offers;
+use App\Data\Definitions\Products;
+use App\Data\LabelType;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Creator\SmartOfferStatusAccessor;
@@ -13,12 +16,29 @@ use PHPUnit\Framework\Attributes\Medium;
 #[Medium]
 class CreatorControllerTest extends FuzzrakeWebTestCase
 {
+    public function testLabelsBeingShown(): void
+    {
+        $creator = new Creator()->setCreatorId('TEST001')
+            ->setLabel(LabelType::PRODUCT_VERIFIED, Products::FULL_DIGITIGRADE, true)
+            ->setLabel(LabelType::OFFER_VERIFIED_BEFORE_2026, Offers::STANDARD_COMMISSIONS, true)
+            ->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true)
+        ;
+        self::persistAndFlush($creator);
+
+        self::$client->request('GET', '/c/TEST001');
+
+        self::assertSelectorCount(1, 'div.creator-card span.creator-label');
+        self::assertSelectorTextSame('div.creator-card span.creator-label', 'Added before 2026');
+
+        // TODO: product
+    }
+
     /**
      * @param list<string> $textsPresent
      * @param list<string> $allTexts
      */
-    #[DataProvider('commissionsStatusDisplayDataProvider')]
-    public function testCommissionsStatusDisplay(Creator $creator, array $textsPresent, array $allTexts): void
+    #[DataProvider('offerStatusDisplayDataProvider')]
+    public function testOfferStatusDisplay(Creator $creator, array $textsPresent, array $allTexts): void
     {
         self::persistAndFlush($creator);
 
@@ -36,7 +56,7 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
     /**
      * @return array<string, array{Creator, list<string>, list<string>}>
      */
-    public static function commissionsStatusDisplayDataProvider(): array
+    public static function offerStatusDisplayDataProvider(): array
     {
         $allTexts = [
             $notTracked = 'Not tracked.',

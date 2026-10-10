@@ -170,6 +170,7 @@ class CreatorRepository extends ServiceEntityRepository
             ->leftJoin('d_c.offerStatuses', 'd_cos')->addSelect('d_cos')
             ->leftJoin('d_c.creatorIds', 'd_ci')->addSelect('d_ci')
             ->leftJoin('d_c.values', 'd_cv')->addSelect('d_cv')
+            ->leftJoin('d_c.labels', 'd_cl')->addSelect('d_cl')
         ;
     }
 

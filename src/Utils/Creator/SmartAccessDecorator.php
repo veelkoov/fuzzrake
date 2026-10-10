@@ -10,8 +10,10 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\FieldValue;
+use App\Data\LabelType;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
+use App\Entity\CreatorLabel;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
@@ -1507,5 +1509,73 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getUser(): User
     {
         return $this->entity->getUser();
+    }
+
+    public function setLabel(LabelType $type, string $value, true $active): self
+    {
+        $label = $this->findLabel($type, $value) ?? new CreatorLabel($this->entity)->setType($type)->setValue($value);
+        $label->setActive($active);
+        $this->entity->addLabel($label);
+
+        return $this;
+    }
+
+    public function removeLabel(LabelType $type, string $value): self
+    {
+        $label = $this->findLabel($type, $value);
+        if (null !== $label) {
+            $this->entity->removeLabel($label);
+        }
+
+        return $this;
+    }
+
+    private function findLabel(LabelType $type, string $value): ?CreatorLabel
+    {
+        foreach ($this->entity->getLabels() as $label) {
+            if ($label->type === $type && $label->value === $value) {
+                return $label;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return iterable<CreatorLabel> */
+    public function getCreatorLabels(): iterable
+    {
+        return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
+    }
+
+    /** @return string[] */
+    public function getVerifiedItems(LabelType $type): array
+    {
+        return $this->entity->getLabels()
+            ->filter(static fn (CreatorLabel $label) => $label->type === $type && $label->active)
+            ->map(static fn (CreatorLabel $label) => $label->value)->toArray();
+    }
+
+    /** @return string[] */
+    public function getVerifiedOffers(): array
+    {
+        return $this->getVerifiedItems(LabelType::OFFER_VERIFIED);
+    }
+
+    /** @return string[] */
+    public function getLegacyVerifiedOffers(): array
+    {
+        return $this->getVerifiedItems(LabelType::OFFER_VERIFIED_BEFORE_2026);
+    }
+
+    /** @return string[] */
+    public function getVerifiedProducts(): array
+    {
+        return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED);
+    }
+
+    /** @return string[] */
+    public function getLegacyVerifiedProducts(): array
+    {
+        return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED_BEFORE_2026);
     }
 }
