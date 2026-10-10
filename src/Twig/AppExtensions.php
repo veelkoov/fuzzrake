@@ -101,6 +101,10 @@ class AppExtensions
             return "$htmlPrefix $input"; // Not supported, let's play it safe
         }
 
-        return Preg::replace('#^(?:(....\S*)(\s.*))?(.{0,4})?$#s', "<span class=\"text-nowrap\">$htmlPrefix \\1\\3</span>\\2", $input, 1);
+        // This could work better. It seems that TYPICALLY lists look better when short items are mostly kept
+        // in a single piece. It's the very long items that make stuff go crazy.
+        // Good for now, better enough.
+
+        return Preg::replace('#^(?:(....\S*)(\s.*))?(.*)?$#s', "<span class=\"text-nowrap\">$htmlPrefix \\1\\3</span>\\2", $input, 1);
     }
 }

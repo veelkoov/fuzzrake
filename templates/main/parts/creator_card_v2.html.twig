@@ -37,10 +37,10 @@
     {% endif %}
 
     {% for item in yes_items %}
-        <span class="text-nowrap">{{ nullable_boolean_symbol(true) }} {{ item }}&nbsp;</span>
+        {{ item | glue_html_prefix(nullable_boolean_symbol(true))}}&nbsp;
     {% endfor %}
     {% for item in no_items %}
-        <span class="text-nowrap">{{ nullable_boolean_symbol(false) }} {{ item }}&nbsp;</span>
+        {{ item | glue_html_prefix(nullable_boolean_symbol(false))}}&nbsp;
     {% endfor %}
 {% endmacro %}
 

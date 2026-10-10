@@ -53,6 +53,7 @@ class AppExtensionsTest extends TestCase
             ['No', '<span class="text-nowrap">PREFIX No</span>'],
             ['Any', '<span class="text-nowrap">PREFIX Any</span>'],
             ['SPAM', '<span class="text-nowrap">PREFIX SPAM</span>'],
+            ['Something', '<span class="text-nowrap">PREFIX Something</span>'],
         ];
     }
 }
