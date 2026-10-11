@@ -21,7 +21,6 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -137,20 +136,14 @@ class ImportService
 
     public function import(ImportData $importData): void
     {
-        $subjectCreator = $importData->subjectCreator;
+        $creator = $importData->subjectCreator;
         foreach (Fields::persisted() as $field) {
-            $subjectCreator->set($field, $importData->fixedData->get($field));
+            $creator->set($field, $importData->fixedData->get($field));
         }
 
-        $user = $importData->submission->getOwner();
-        if (null === $user) {
-            // TODO: https://github.com/veelkoov/fuzzrake/issues/327
-            throw new LogicException('Support for legacy submissions to be implemented.');
-        } else {
-            $subjectCreator->entity->setUser($user);
-        }
+        $creator->entity->setUser($importData->submission->getOwner());
 
-        $this->entityManager->persist($subjectCreator);
+        $this->entityManager->persist($creator);
         $this->entityManager->persist($this->getEventFor($importData));
         $this->entityManager->flush();
 

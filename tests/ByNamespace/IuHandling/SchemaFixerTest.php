@@ -6,6 +6,7 @@ namespace App\Tests\ByNamespace\IuHandling;
 
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\Submission;
+use App\Tests\TestUtils\TestUser;
 use App\Utils\Json;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
@@ -96,7 +97,7 @@ class SchemaFixerTest extends TestCase
         self::expectNotToPerformAssertions();
 
         // Should refactor... somehow. What are we testing here, schema fixer or submission data reader?
-        $result = new Submission(false)->setPayload(Json::encode(self::PAYLOAD))->getReader();
+        $result = new Submission(TestUser::get(), false)->setPayload(Json::encode(self::PAYLOAD))->getReader();
 
         foreach (Fields::readFromSubmissionData() as $field) {
             $result->get($field);

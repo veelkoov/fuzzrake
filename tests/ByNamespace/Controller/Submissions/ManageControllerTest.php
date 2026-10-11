@@ -177,47 +177,7 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.PRICES_IN.submitted-same.fixes-applied.changing');
     }
 
-    public function testSubmissionMatchingMultipleCreators(): void
-    {
-        // grep-code-legacy-submissions-with-no-creator-reference
-
-        $creator1 = new Creator(user: self::getCreatorUser())->setCreatorId('TEST001')->setName('Some testing creator')->setCity('Kuopio');
-        $creator2 = new Creator()->setCreatorId('TEST002')->setName('Testing creator');
-
-        self::persistAndFlush($creator1, $creator2);
-
-        $submissionData = new Creator()->setCreatorId('TEST001')->setFormerCreatorIds(['TEST002'])
-            ->setName('Testing creator')->setCity('Oulu');
-        $submission = $this->getEntityForSubmission(self::getCreatorUser(), $submissionData, true);
-        $submission->setCreator(null); // Simulate legacy submission
-        $submission->setOwner(null); // Simulate legacy submission
-        self::persistAndFlush($submission);
-
-        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
-        self::assertResponseStatusCodeIs(200);
-
-        // grep-code-matched-multiple-creators
-        self::assertSelectorTextSame('p', 'Matched multiple creators: Some testing creator (TEST001), Testing creator (TEST002). Unable to continue.');
-        self::assertSelectorTextSame('.invalid-feedback', 'Single creator must get selected.');
-
-        $cityValueBeforeSelector = 'tr.CITY.before span';
-
-        // With multiple creators matched, will be displayed as a new creator
-        self::assertSelectorTextSame('tr.CITY.submitted span', 'Oulu');
-        self::assertSelectorNotExists($cityValueBeforeSelector);
-
-        self::$client->submitForm('Update', [
-            'manage[directives]' => 'match-maker-id TEST001',
-        ]);
-
-        self::assertResponseStatusCodeIs(200);
-        self::assertSelectorNotExists('.invalid-feedback');
-
-        // With a single creator selected, display actual difference
-        self::assertSelectorTextSame($cityValueBeforeSelector, 'Kuopio');
-        self::assertSelectorTextSame('tr.CITY.submitted span', 'Oulu');
-        self::assertSelectorTextSame('tr.CITY.after span', 'Oulu');
-    }
+    // grep-code-legacy-submissions-with-no-creator-reference FIXME
 
     public function testShowingSimilarlyNamedCreators(): void
     {

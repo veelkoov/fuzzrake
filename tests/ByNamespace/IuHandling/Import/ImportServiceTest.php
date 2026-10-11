@@ -174,7 +174,7 @@ class ImportServiceTest extends FuzzrakeTestCase
     public function testAdditionCreatesCorrespondingEvent(): void
     {
         $entity = UserCreator::get()->setCreatorId('TEST0001');
-        $submission = new Submission(false)->setOwner($entity->entity->getUser());
+        $submission = new Submission($entity->entity->getUser(), false);
         $update = new ImportData($submission, [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
@@ -184,7 +184,7 @@ class ImportServiceTest extends FuzzrakeTestCase
     public function testUpdateCreatesCorrespondingEvent(): void
     {
         $entity = UserCreator::get()->setCreatorId('TEST0001');
-        $submission = new Submission(true)->setOwner($entity->entity->getUser());
+        $submission = new Submission($entity->entity->getUser(), true);
         $update = new ImportData($submission, [], $entity, $entity, $entity, [], true);
 
         $subject = $this->getUpdatesServiceForImport($update);
