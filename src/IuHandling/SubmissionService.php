@@ -40,10 +40,9 @@ class SubmissionService
 
     public function getEntityForSubmission(User $user, Creator $submissionData, bool $isUpdate): Submission
     {
-        return new Submission($isUpdate)
+        return new Submission($user, $isUpdate)
             ->setPayload($this->asJson($submissionData))
             ->setCreator($user->getCreator())
-            ->setOwner($user)
         ;
     }
 

@@ -41,15 +41,17 @@ class Submission
     private string $comment = '';
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?User $owner = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private User $owner;
 
     #[ORM\ManyToOne(targetEntity: Creator::class)]
     private ?Creator $creator = null;
 
     private ?SubmissionDataReader $reader = null;
 
-    public function __construct(bool $isUpdate)
+    public function __construct(User $owner, bool $isUpdate)
     {
+        $this->owner = $owner;
         $this->isUpdate = $isUpdate;
         $this->submittedAtUtc = UtcClock::now();
     }
@@ -132,16 +134,9 @@ class Submission
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): User
     {
         return $this->owner;
-    }
-
-    public function setOwner(?User $owner): Submission
-    {
-        $this->owner = $owner;
-
-        return $this;
     }
 
     public function getCreator(): ?Creator

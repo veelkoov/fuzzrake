@@ -6,6 +6,7 @@ namespace App\Tests\ByNamespace\IuHandling;
 
 use App\Data\Definitions\Fields\Fields;
 use App\Entity\Submission;
+use App\Tests\TestUtils\TestUser;
 use App\Utils\Json;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
@@ -43,7 +44,6 @@ class SchemaFixerTest extends TestCase
         'SPECIES_COMMENT' => '',
         'SPECIES_DOES' => [],
         'SPECIES_DOESNT' => [],
-        'IS_MINOR' => null,
         'AGES' => 'MINORS',
         'NSFW_WEBSITE' => true,
         'NSFW_SOCIAL' => true,
@@ -74,7 +74,11 @@ class SchemaFixerTest extends TestCase
         'URL_FURTRACK' => '',
         'URL_PHOTOS' => [],
         'URL_MINIATURES' => [],
-        'URL_OTHER' => '',
+        'URL_OTHER' => [],
+        'URL_BLUESKY' => '',
+        'URL_DONATIONS' => '',
+        'URL_TELEGRAM_CHANNEL' => '',
+        'URL_TIKTOK' => '',
         'NOTES' => 'MX testing',
         'INACTIVE_REASON' => '',
         'PASSWORD' => '...',
@@ -82,13 +86,9 @@ class SchemaFixerTest extends TestCase
         'CS_TRACKER_ISSUE' => false,
         'OPEN_FOR' => [],
         'CLOSED_FOR' => [],
-        'COMPLETENESS' => 0,
         'CONTACT_ALLOWED' => 'NO',
-        'CONTACT_METHOD' => '',
-        'CONTACT_ADDRESS_PLAIN' => '',
-        'CONTACT_INFO_OBFUSCATED' => '',
-        'CONTACT_INFO_ORIGINAL' => '',
-        'SCHEMA_VERSION' => 13,
+        'EMAIL_ADDRESS' => 'example@example.com',
+        'SCHEMA_VERSION' => 18,
     ];
 
     public function testLegacyReviewPagesLoadProperly(): void
@@ -96,7 +96,7 @@ class SchemaFixerTest extends TestCase
         self::expectNotToPerformAssertions();
 
         // Should refactor... somehow. What are we testing here, schema fixer or submission data reader?
-        $result = new Submission(false)->setPayload(Json::encode(self::PAYLOAD))->getReader();
+        $result = new Submission(TestUser::get(), false)->setPayload(Json::encode(self::PAYLOAD))->getReader();
 
         foreach (Fields::readFromSubmissionData() as $field) {
             $result->get($field);

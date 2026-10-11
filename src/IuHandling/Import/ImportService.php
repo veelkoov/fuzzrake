@@ -10,7 +10,6 @@ use App\Data\Fixer\Fixer;
 use App\Entity\Event;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
-use App\Repository\CreatorRepository;
 use App\Utils\Collections\Arrays;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
@@ -21,14 +20,12 @@ use App\ValueObject\CacheTags;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use App\ValueObject\Messages\SpeciesSyncNotificationV1;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class ImportService
 {
     public function __construct(
-        private readonly CreatorRepository $creatorRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly Fixer $fixer,
         private readonly MessageBusInterface $messageBus,
@@ -45,17 +42,7 @@ class ImportService
 
         $fixedInput = $this->fixer->getFixed($inputData);
 
-        $matchedCreators = $this->getCreators($submission, $fixedInput, $manager->getMatchedCreatorId());
-
-        if (1 === count($matchedCreators)) {
-            $subjectCreator = Arrays::single($matchedCreators);
-        } else {
-            $subjectCreator = new Creator();
-
-            if ([] !== $matchedCreators) {
-                $errors[] = 'Single creator must get selected.';
-            }
-        }
+        $subjectCreator = null !== $submission->getCreator() ? new Creator($submission->getCreator()) : new Creator();
 
         $this->handleSpecialFieldsInInput($inputData, $subjectCreator);
         $this->handleSpecialFieldsInInput($fixedInput, $subjectCreator);
@@ -66,7 +53,6 @@ class ImportService
 
         return new ImportData(
             $submission,
-            $matchedCreators,
             $subjectCreator,
             $inputData,
             $fixedData,
@@ -102,23 +88,6 @@ class ImportService
         $creator->assureNsfwSafety();
     }
 
-    /**
-     * @return Creator[]
-     */
-    private function getCreators(Submission $submission, Creator $submissionData, ?string $matchedCreatorId): array
-    {
-        if (null === $matchedCreatorId && null !== $submission->getCreator()) {
-            return [new Creator($submission->getCreator())];
-        }
-
-        // grep-code-legacy-submissions-with-no-creator-reference
-        return Creator::wrapAll($this->creatorRepository->findByCreatorIds(
-            null !== $matchedCreatorId
-                ? [$matchedCreatorId]
-                : $submissionData->getAllCreatorIds(),
-        ));
-    }
-
     private function handleSpecialFieldsInInput(Creator $input, Creator $original): void
     {
         if (null === $original->getId()) {
@@ -137,20 +106,14 @@ class ImportService
 
     public function import(ImportData $importData): void
     {
-        $subjectCreator = $importData->subjectCreator;
+        $creator = $importData->subjectCreator;
         foreach (Fields::persisted() as $field) {
-            $subjectCreator->set($field, $importData->fixedData->get($field));
+            $creator->set($field, $importData->fixedData->get($field));
         }
 
-        $user = $importData->submission->getOwner();
-        if (null === $user) {
-            // TODO: https://github.com/veelkoov/fuzzrake/issues/327
-            throw new LogicException('Support for legacy submissions to be implemented.');
-        } else {
-            $subjectCreator->entity->setUser($user);
-        }
+        $creator->entity->setUser($importData->submission->getOwner());
 
-        $this->entityManager->persist($subjectCreator);
+        $this->entityManager->persist($creator);
         $this->entityManager->persist($this->getEventFor($importData));
         $this->entityManager->flush();
 
@@ -165,7 +128,7 @@ class ImportService
     private function getEventFor(ImportData $importData): Event
     {
         return new Event()
-            ->setType($importData->submission->getIsUpdate() ? Event::TYPE_CREATOR_UPDATED : Event::TYPE_CREATOR_ADDED)
+            ->setType($importData->isUpdate() ? Event::TYPE_CREATOR_UPDATED : Event::TYPE_CREATOR_ADDED)
             ->setCreatorId($importData->subjectCreator->getCreatorId());
     }
 }

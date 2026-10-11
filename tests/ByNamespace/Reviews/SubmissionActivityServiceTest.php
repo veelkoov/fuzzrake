@@ -32,9 +32,9 @@ class SubmissionActivityServiceTest extends FuzzrakeKernelTestCase
         self::mockTime('2026-01-01T00:00:00'); // Time in the past for the submission to have sane times
 
         $creator1 = UserCreator::get(true);
-        $submission1 = new Submission(false)->setCreator($creator1->entity);
+        $submission1 = new Submission($creator1->entity->getUser(), false)->setCreator($creator1->entity);
         $creator2 = UserCreator::get(true);
-        $submission2 = new Submission(false)->setCreator($creator2->entity);
+        $submission2 = new Submission($creator1->entity->getUser(), false)->setCreator($creator2->entity);
 
         $reviewer1 = TestUser::get(true, roles: [Role::REVIEWER])->setNickname('Judy');
         $reviewer2 = TestUser::get(true, roles: [Role::REVIEWER])->setNickname('Nick');

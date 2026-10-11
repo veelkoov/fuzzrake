@@ -37,10 +37,11 @@ class SubmissionTopicServiceTest extends FuzzrakeKernelTestCase
     {
         self::mockTime();
 
+        $creatorUser = TestUser::get(roles: [Role::CREATOR]);
         $reviewer = TestUser::get(roles: [Role::REVIEWER]);
         $otherReviewer = TestUser::get(roles: [Role::REVIEWER]);
 
-        $submission = new Submission(false);
+        $submission = new Submission($creatorUser, false);
 
         $topic = new Post($topicPostOwned ? $reviewer : $otherReviewer, $submission);
 
@@ -57,7 +58,7 @@ class SubmissionTopicServiceTest extends FuzzrakeKernelTestCase
         if (null !== $topicRead) {
             self::persist($topicRead);
         }
-        self::persistAndFlush($reviewer, $otherReviewer, $submission, $topic, $response);
+        self::persistAndFlush($creatorUser, $reviewer, $otherReviewer, $submission, $topic, $response);
 
         $subject = self::getContainerService(SubmissionTopicService::class);
         $result = $subject->getUnreadCounts($reviewer, [$submission]);
@@ -82,15 +83,16 @@ class SubmissionTopicServiceTest extends FuzzrakeKernelTestCase
     {
         self::mockTime();
 
+        $creatorUser = TestUser::get(roles: [Role::CREATOR]);
         $reviewer1 = TestUser::get(roles: [Role::REVIEWER]);
         $reviewer2 = TestUser::get(roles: [Role::REVIEWER]);
 
-        $submission = new Submission(false);
+        $submission = new Submission($creatorUser, false);
 
         $topic = new Post($reviewer1, $submission);
         $topicRead = new TopicRead($reviewer1, $topic)->setLastRead(UtcClock::at('+1 minute'));
 
-        self::persistAndFlush($reviewer1, $reviewer2, $submission, $topic, $topicRead);
+        self::persistAndFlush($creatorUser, $reviewer1, $reviewer2, $submission, $topic, $topicRead);
 
         $subject = self::getContainerService(SubmissionTopicService::class);
         $result = $subject->getUnreadCounts($reviewer2, [$submission]);
