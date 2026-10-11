@@ -177,8 +177,6 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::assertSelectorExists('tr.PRICES_IN.submitted-same.fixes-applied.changing');
     }
 
-    // grep-code-legacy-submissions-with-no-creator-reference FIXME
-
     public function testShowingSimilarlyNamedCreators(): void
     {
         $creator1 = UserCreator::get()

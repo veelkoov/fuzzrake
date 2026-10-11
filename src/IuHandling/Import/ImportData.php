@@ -11,12 +11,10 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 final readonly class ImportData
 {
     /**
-     * @param Creator[] $matchedCreators
-     * @param string[]  $errors
+     * @param string[] $errors
      */
     public function __construct(
         public Submission $submission,
-        public array $matchedCreators, // grep-code-legacy-submissions-with-no-creator-reference
         public Creator $subjectCreator,
         public Creator $inputData,
         public Creator $fixedData,
@@ -40,8 +38,8 @@ final readonly class ImportData
         return !$this->subjectCreator->equals($field, $this->fixedData);
     }
 
-    public function isUpdate(): bool // grep-code-legacy-submissions-with-no-creator-reference
+    public function isUpdate(): bool
     {
-        return 1 === count($this->matchedCreators);
+        return $this->submission->getIsUpdate();
     }
 }

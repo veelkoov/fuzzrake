@@ -17,7 +17,6 @@ class Manager
     public const string CMD_ACCEPT = 'accept';
     public const string CMD_CLEAR = 'clear';
     public const string CMD_COMMENT = '//';
-    public const string CMD_MATCH_CREATOR_ID = 'match-maker-id';
     public const string CMD_SET = 'set';
 
     /**
@@ -25,7 +24,6 @@ class Manager
      */
     private array $corrections = [];
     private bool $isAccepted = false;
-    private ?string $matchedCreatorId = null;
 
     /**
      * @throws ManagerConfigError
@@ -41,11 +39,6 @@ class Manager
         foreach ($this->corrections as $correction) {
             $creator->set($correction->field, $correction->value);
         }
-    }
-
-    public function getMatchedCreatorId(): ?string
-    {
-        return $this->matchedCreatorId;
     }
 
     public function isAccepted(): bool
@@ -109,10 +102,6 @@ class Manager
 
             case self::CMD_COMMENT:
                 $buffer->readUntilEolOrEof();
-                break;
-
-            case self::CMD_MATCH_CREATOR_ID:
-                $this->matchedCreatorId = $buffer->readUntilWhitespaceOrEof();
                 break;
 
             case self::CMD_SET:

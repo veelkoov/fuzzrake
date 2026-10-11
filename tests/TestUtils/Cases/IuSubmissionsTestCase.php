@@ -27,17 +27,12 @@ abstract class IuSubmissionsTestCase extends FuzzrakeWebTestCase
         self::assertCount($expectedImports, $links, 'Expected submissions not matched.');
 
         foreach ($links as $link) {
-            $crawler = self::$client->request('GET', $link->getUri());
+            self::$client->request('GET', $link->getUri());
             self::assertResponseIsSuccessful();
-            self::assertSelectorTextNotContains('p',
-                'Matched multiple creators', // grep-code-matched-multiple-creators
-                'A single creator must be matched.');
 
-            $form = $crawler->selectButton('Import')->form([
+            self::submitValidForm('Import', [
                 'manage[directives]' => 'accept',
             ]);
-
-            self::submitValid($form);
         }
     }
 }

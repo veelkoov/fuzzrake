@@ -64,17 +64,6 @@ class ManagerTest extends TestCase
         self::assertSame('will be added', $creator->getNotes());
     }
 
-    public function testMatchCreatorIdCommand(): void
-    {
-        $manager = new Manager('accept');
-
-        self::assertNull($manager->getMatchedCreatorId());
-
-        $manager = new Manager('match-maker-id TEST001');
-
-        self::assertSame('TEST001', $manager->getMatchedCreatorId());
-    }
-
     public function testInvalidCommand(): void
     {
         try {

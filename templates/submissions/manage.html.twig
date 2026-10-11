@@ -5,21 +5,10 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {% if importData.matchedCreators|length > 1 %}
-        <p>
-            Matched multiple creators: {# grep-code-matched-multiple-creators #}
-
-            {% for creator in importData.matchedCreators %}
-                <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>
-                {%- if loop.last %}.{% else %},{% endif %}
-            {% endfor %}
-
-            <span class="text-danger">Unable to continue.</span>
-        </p>
-    {% elseif importData.matchedCreators is empty %}
+    {% if not importData.isUpdate %}
         <p>Adding a new creator.</p>
     {% else %}
-        {% set creator = importData.matchedCreators|first %}
+        {% set creator = importData.subjectCreator %}
 
         <p>
             Updating: <a href="{{ path('rt_main', {_fragment: creator.lastCreatorId}) }}">{{ creator.name }} ({{ creator.lastCreatorId }})</a>.
@@ -39,11 +28,6 @@
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
         </p>
-    {% endif %}
-
-    {% if importData.submission.isUpdate != importData.isUpdate %}
-        {# grep-code-legacy-submissions-with-no-creator-reference #}
-        <p><span class="badge bg-warning text-dark">NOTE</span> This submission was originally an {% if importData.submission.isUpdate %}update{% else %}addition{% endif %}.</p>
     {% endif %}
 
     <div class="row">
