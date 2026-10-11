@@ -37,10 +37,10 @@
     {% endif %}
 
     {% for item in yes_items %}
-        {{ item | glue_html_prefix(nullable_boolean_symbol(true))}}&nbsp;
+        {{ item|glue_html_prefix(nullable_boolean_symbol(true)) }}&nbsp;
     {% endfor %}
     {% for item in no_items %}
-        {{ item | glue_html_prefix(nullable_boolean_symbol(false))}}&nbsp;
+        {{ item|glue_html_prefix(nullable_boolean_symbol(false)) }}&nbsp;
     {% endfor %}
 {% endmacro %}
 
