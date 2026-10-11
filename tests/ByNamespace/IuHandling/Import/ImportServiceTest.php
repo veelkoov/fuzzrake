@@ -34,7 +34,7 @@ class ImportServiceTest extends FuzzrakeTestCase
         $submissionData = new Creator()->setCreatorId('TEST001');
         $submission = $this->getEntityForSubmission(new User(), $submissionData, false);
 
-        $subject = $this->getImportServiceForGetImportDataFor();
+        $subject = $this->getImportServiceMockedForGetImportDataFor();
         $result = $subject->getImportDataFor($submission);
 
         self::assertNull($result->subjectCreator->getDateAdded());
@@ -65,7 +65,7 @@ class ImportServiceTest extends FuzzrakeTestCase
         $submissionData = new Creator()->setCreatorId('TEST001');
         $submission = $this->getEntityForSubmission($user, $submissionData, true);
 
-        $subject = $this->getImportServiceForGetImportDataFor();
+        $subject = $this->getImportServiceMockedForGetImportDataFor();
         $result = $subject->getImportDataFor($submission);
 
         self::assertDateTimeSameIgnoreSubSeconds($dateAdded, $result->subjectCreator->getDateAdded());
@@ -95,7 +95,7 @@ class ImportServiceTest extends FuzzrakeTestCase
         ;
         $submission1 = $this->getEntityForSubmission($user, $submissionData1, true);
 
-        $result1 = $this->getImportServiceForGetImportDataFor()->getImportDataFor($submission1);
+        $result1 = $this->getImportServiceMockedForGetImportDataFor()->getImportDataFor($submission1);
 
         self::assertSame('The new creator name', $result1->fixedData->getName());
         self::assertEquals(['The old creator name'], $result1->fixedData->getFormerly());
@@ -110,7 +110,7 @@ class ImportServiceTest extends FuzzrakeTestCase
         ;
         $submission2 = $this->getEntityForSubmission($user, $submissionData2, true);
 
-        $result2 = $this->getImportServiceForGetImportDataFor()->getImportDataFor($submission2);
+        $result2 = $this->getImportServiceMockedForGetImportDataFor()->getImportDataFor($submission2);
 
         self::assertSame('The new creator name', $result2->fixedData->getName());
         self::assertEquals(['The old creator name'], $result2->fixedData->getFormerly());
@@ -118,7 +118,7 @@ class ImportServiceTest extends FuzzrakeTestCase
         self::assertEquals(['TEST002'], $result2->fixedData->getFormerCreatorIds());
     }
 
-    private function getImportServiceForGetImportDataFor(): ImportService
+    private function getImportServiceMockedForGetImportDataFor(): ImportService
     {
         $entityManagerStub = self::createStub(EntityManagerInterface::class);
         $messageBusStub = self::createStub(MessageBusInterface::class);
@@ -128,40 +128,40 @@ class ImportServiceTest extends FuzzrakeTestCase
 
     public function testAdditionCreatesCorrespondingEvent(): void
     {
-        $entity = UserCreator::get()->setCreatorId('TEST0001');
-        $submission = new Submission($entity->entity->getUser(), false);
-        $update = new ImportData($submission, $entity, $entity, $entity, [], true);
+        $creator = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission($creator->entity->getUser(), false);
+        $importData = new ImportData($submission, $creator, $creator, $creator, [], true);
 
-        $subject = $this->getUpdatesServiceForImport($update);
-        $subject->import($update);
+        $subject = $this->getImportServiceMockedForImport($importData);
+        $subject->import($importData);
     }
 
     public function testUpdateCreatesCorrespondingEvent(): void
     {
-        $entity = UserCreator::get()->setCreatorId('TEST0001');
-        $submission = new Submission($entity->entity->getUser(), true);
-        $update = new ImportData($submission, $entity, $entity, $entity, [], true);
+        $creator = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission($creator->entity->getUser(), true);
+        $importData = new ImportData($submission, $creator, $creator, $creator, [], true);
 
-        $subject = $this->getUpdatesServiceForImport($update);
-        $subject->import($update);
+        $subject = $this->getImportServiceMockedForImport($importData);
+        $subject->import($importData);
     }
 
-    private function getUpdatesServiceForImport(ImportData $update): ImportService
+    private function getImportServiceMockedForImport(ImportData $importData): ImportService
     {
         $creatorPersisted = false;
         $eventPersisted = false;
 
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $entityManagerMock->expects(self::exactly(2))->method('persist')->willReturnCallback(
-            function (object $entity) use ($update, &$creatorPersisted, &$eventPersisted): void {
+            function (object $entity) use ($importData, &$creatorPersisted, &$eventPersisted): void {
                 if ($entity instanceof Creator) {
                     self::assertFalse($creatorPersisted, 'Expected single creator to be persisted.');
-                    self::assertSame($update->subjectCreator, $entity);
+                    self::assertSame($importData->subjectCreator, $entity);
                     $creatorPersisted = true;
                 } elseif ($entity instanceof Event) {
                     self::assertFalse($eventPersisted, 'Expected single event to be persisted.');
-                    self::assertSame($update->subjectCreator->getCreatorId(), $entity->getCreatorId());
-                    self::assertSame(!$update->isUpdate() ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED, $entity->getType());
+                    self::assertSame($importData->subjectCreator->getCreatorId(), $entity->getCreatorId());
+                    self::assertSame(!$importData->isUpdate() ? Event::TYPE_CREATOR_ADDED : Event::TYPE_CREATOR_UPDATED, $entity->getType());
                     $eventPersisted = true;
                 } else {
                     self::fail('Unexpected entity type is being persisted.');
