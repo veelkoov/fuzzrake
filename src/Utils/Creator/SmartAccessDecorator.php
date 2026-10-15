@@ -30,6 +30,7 @@ use App\Utils\Parse;
 use App\Utils\StrUtils;
 use App\Validator\StrListLength;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 use JsonSerializable;
 use Override;
@@ -1541,8 +1542,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return null;
     }
 
-    /** @return iterable<CreatorLabel> */
-    public function getCreatorLabels(): iterable
+    /** @return Collection<int, CreatorLabel> */
+    public function getCreatorLabels(): Collection
     {
         return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
     }
