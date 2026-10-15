@@ -64,6 +64,13 @@
     {% endif %}
 {% endmacro %}
 
+{% macro legacy_verified_icon() -%}
+    <i class="fa-regular fa-circle-check"></i>
+{% endmacro %}
+{% macro unverified_icon() -%}
+    <i class="fa-regular fa-circle"></i>
+{% endmacro %}
+
 {% macro verified_list_with_others_comment_opt(items, other_items, comment, verified_items, legacy_verified_items) %}
     {% if comment %}
         <p class="nl2br comment show-expanded">{{ comment }}</p>
@@ -73,17 +80,14 @@
         <ul class="condensed with-verification">
             {% for item in items %}
                 {% if item in verified_items %}
-                    {% set icon = '<i class="fa-solid fa-circle-check"></i>' %}
-                    {% set class = 'verified-full' %}
+                    {% set icon = verified_item_icon() %}
                 {% elseif item in legacy_verified_items %}
-                    {% set icon = '<i class="fa-regular fa-circle-check"></i>' %}
-                    {% set class = 'verified-legacy' %}
+                    {% set icon = legacy_verified_item_icon() %}
                 {% else %}
-                    {% set icon = '<i class="fa-regular fa-circle"></i>' %}
-                    {% set class = 'not-verified' %}
+                    {% set icon = unverified_item_icon() %}
                 {% endif %}
 
-                <li class="{{ class }}">{{ item|glue_html_prefix(icon) }}</li>
+                <li>{{ item|glue_html_prefix(icon) }}</li>
             {% endfor %}
 
             {% for item in other_items %}
@@ -269,12 +273,21 @@
         </div>
     {% endif %}
 
-    {% if creator.creatorLabels %}
+    {% if creator.creatorLabels or creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty
+        or creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
         <div class="row show-expanded">
             <div class="col">
                 {% for label in creator.creatorLabels %}
                     <p class="small mx-2 my-1 align-middle">{{ _self.label(label) }} {{ label.type.explanation }}</p>
                 {% endfor %}
+
+                {% if creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty %}
+                    <p class="small mx-2 my-1 align-middle">{{ unverified_item_icon() }} Some items marked like this below have not been verified yet.</p>
+                {% endif %}
+
+                {% if creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
+                    <p class="small mx-2 my-1 align-middle">{{ legacy_verified_item_icon() }} Some items marked like this below have been added before verification started in 2026.</p>
+                {% endif %}
             </div>
         </div>
     {% endif %}
