@@ -19,6 +19,16 @@ enum LabelType: string
         self::CREATOR_PENDING_REVIEW,
     ];
 
+    public function isForCreator(): bool
+    {
+        return LabelSubject::CREATOR === $this->getSubject();
+    }
+
+    public function isImportant(): bool
+    {
+        return arr_contains(self::IMPORTANT, $this);
+    }
+
     public function getSubject(): LabelSubject
     {
         return match ($this) {
@@ -31,11 +41,6 @@ enum LabelType: string
             self::CREATOR_GOT_3_REVIEWS,
             self::CREATOR_ADDED_BEFORE_2026 => LabelSubject::CREATOR,
         };
-    }
-
-    public function isForCreator(): bool
-    {
-        return LabelSubject::CREATOR === $this->getSubject();
     }
 
     public function getText(): string
@@ -60,10 +65,5 @@ enum LabelType: string
 
             self::PRODUCT_VERIFIED, self::OFFER_VERIFIED, self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026 => '', // Not needed
         };
-    }
-
-    public function isImportant(): bool
-    {
-        return arr_contains(self::IMPORTANT, $this);
     }
 }

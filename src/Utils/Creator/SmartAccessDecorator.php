@@ -41,6 +41,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
@@ -1568,6 +1569,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->getVerifiedItems(LabelType::OFFER_VERIFIED_BEFORE_2026);
     }
 
+    public function getUnverifiedOffers(): StringVec
+    {
+        return new StringVec($this->getOffers())->minusAll($this->getVerifiedOffers())->minusAll($this->getLegacyVerifiedOffers());
+    }
+
     /** @return string[] */
     public function getVerifiedProducts(): array
     {
@@ -1578,5 +1584,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getLegacyVerifiedProducts(): array
     {
         return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED_BEFORE_2026);
+    }
+
+    public function getUnverifiedProducts(): StringVec
+    {
+        return new StringVec($this->getProducts())->minusAll($this->getVerifiedProducts())->minusAll($this->getLegacyVerifiedProducts());
     }
 }
