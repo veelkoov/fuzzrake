@@ -15,6 +15,10 @@ enum LabelType: string
     case CREATOR_GOT_3_REVIEWS = LabelSubject::CREATOR->value.'_GOT_3_REVIEWS';
     case CREATOR_ADDED_BEFORE_2026 = LabelSubject::CREATOR->value.'_ADDED_BEFORE_2026';
 
+    private const array IMPORTANT = [
+        self::CREATOR_PENDING_REVIEW,
+    ];
+
     public function getSubject(): LabelSubject
     {
         return match ($this) {
@@ -45,5 +49,21 @@ enum LabelType: string
             self::CREATOR_GOT_3_REVIEWS => 'Reviewed 3×',
             self::CREATOR_PENDING_REVIEW => 'Pending review',
         };
+    }
+
+    public function getExplanation(): string
+    {
+        return match ($this) {
+            self::CREATOR_PENDING_REVIEW => 'This studio/maker has not yet been reviewed yet.',
+            self::CREATOR_ADDED_BEFORE_2026 => 'This studio/maker has only been briefly reviewed, and added to the list before 2026.',
+            self::CREATOR_GOT_3_REVIEWS => 'This studio/maker have been checked by 3+ different reviewers during the 2026 reviews experiment.',
+
+            self::PRODUCT_VERIFIED, self::OFFER_VERIFIED, self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026 => '', // Not needed
+        };
+    }
+
+    public function isImportant(): bool
+    {
+        return arr_contains(self::IMPORTANT, $this);
     }
 }

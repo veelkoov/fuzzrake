@@ -117,6 +117,12 @@
     {% endif %}
 {% endmacro %}
 
+{% macro label(label) %}
+    <span class="badge creator-label {% if label.type.important %}important{% endif %}">
+        <i class="fa-solid fa-tag"></i> {{ label.type.text }}
+    </span>
+{% endmacro %}
+
 <div class="header {{ html_classes({
             hidden: creator.isHidden,
             'matched-creator-id': creator.hasCreatorId(searched_creator_id),
@@ -169,9 +175,9 @@
                     </small>
                 </div>
 
-                <div class="col col-auto header-box">
+                <div class="col col-auto hide-expanded header-box">
                     {% for label in creator.creatorLabels %}
-                        <span class="badge creator-label"><i class="fa-solid fa-tag"></i> {{ label.type.text }}</span>
+                        {{ _self.label(label) }}
                     {% endfor %}
                 </div>
 
@@ -245,6 +251,8 @@
                 </p>
             </div>
         </div>
+
+        <hr class="mt-0 mx-2 show-expanded border-secondary-subtle">
     {% endif %}
 
     {% if creator.hasValidPhotos %}
@@ -257,6 +265,16 @@
                         </a>
                     {% endfor %}
                 </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if creator.creatorLabels %}
+        <div class="row show-expanded">
+            <div class="col">
+                {% for label in creator.creatorLabels %}
+                    <p class="small mx-2 my-1 align-middle">{{ _self.label(label) }} {{ label.type.explanation }}</p>
+                {% endfor %}
             </div>
         </div>
     {% endif %}
