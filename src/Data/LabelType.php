@@ -46,11 +46,11 @@ enum LabelType: string
     public function getText(): string
     {
         return match ($this) {
-            self::CREATOR_ADDED_BEFORE_2026 => 'Before 2026',
             self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026 => 'Verified before 2026',
 
             self::PRODUCT_VERIFIED, self::OFFER_VERIFIED => 'Verified',
 
+            self::CREATOR_ADDED_BEFORE_2026 => 'Before 2026',
             self::CREATOR_GOT_3_REVIEWS => 'Reviewed 3×',
             self::CREATOR_PENDING_REVIEW => 'Pending review',
         };
