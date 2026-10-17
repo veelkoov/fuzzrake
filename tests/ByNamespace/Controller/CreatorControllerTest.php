@@ -106,6 +106,12 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
 
             'Mixed 3' => [self::getCreatorForLabelsDisplay(verifiedBefore2026: true, products: [$unverifiedProduct => 'u'], offers: [$legacyVrfdOffer => 'l']),
                 [$before2026BodyLabel, $before2026HeaderLabel, $unverifiedProductItem, $legacyVrfdOfferItem, $unverifiedIconExplanation, $legacyVerifiedIconExplanation], $allTexts],
+
+            'Mixed 4' => [self::getCreatorForLabelsDisplay(pendingReview: true, products: [$verifiedProduct => 'v'], offers: [$verifiedOffer => 'v']),
+                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $verifiedProductItem, $verifiedOfferItem], $allTexts],
+
+            'Mixed 5' => [self::getCreatorForLabelsDisplay(pendingReview: true, products: [$unverifiedProduct => 'u', $legacyVrfdProduct => 'l'], offers: [$verifiedOffer => 'v']),
+                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $unverifiedIconExplanation, $legacyVerifiedIconExplanation, $verifiedOfferItem, $legacyVrfdProductItem, $unverifiedProductItem], $allTexts],
         ];
     }
 
