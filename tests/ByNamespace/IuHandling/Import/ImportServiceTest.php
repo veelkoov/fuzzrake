@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\ByNamespace\IuHandling\Import;
 
 use App\Data\Fixer\Fixer;
+use App\Data\LabelType;
 use App\Entity\Event;
 use App\Entity\Submission;
 use App\Entity\User;
@@ -144,6 +145,33 @@ class ImportServiceTest extends FuzzrakeTestCase
 
         $subject = $this->getImportServiceMockedForImport($importData);
         $subject->import($importData);
+    }
+
+    public function testAddedReceivesPendingReviewLabel(): void
+    {
+        $creator = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission($creator->entity->getUser(), false);
+        $importData = new ImportData($submission, $creator, $creator, $creator, [], true);
+
+        $subject = $this->getImportServiceMockedForImport($importData);
+        $subject->import($importData);
+
+        $label = $creator->findLabel(LabelType::CREATOR_PENDING_REVIEW, '');
+        self::assertNotNull($label);
+        self::assertTrue($label->active);
+    }
+
+    public function testUpdatedDoesNotReceivePendingReviewLabel(): void
+    {
+        $creator = UserCreator::get()->setCreatorId('TEST0001');
+        $submission = new Submission($creator->entity->getUser(), true);
+        $importData = new ImportData($submission, $creator, $creator, $creator, [], true);
+
+        $subject = $this->getImportServiceMockedForImport($importData);
+        $subject->import($importData);
+
+        $label = $creator->findLabel(LabelType::CREATOR_PENDING_REVIEW, '');
+        self::assertNull($label);
     }
 
     private function getImportServiceMockedForImport(ImportData $importData): ImportService

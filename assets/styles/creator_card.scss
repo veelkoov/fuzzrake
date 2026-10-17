@@ -48,6 +48,17 @@ div.creator-card {
   .links a {
     color: #6089c5;
   }
+
+  .creator-label {
+    background-color: #f8f9fa;
+    border: 1px solid #c4c8cb;
+    color: #6c6f72;
+
+    &.important {
+      border: 1px solid #ff8800;
+      color: #1d1f1f;
+    }
+  }
 }
 
 div.creator-card:not(.expanded) {
@@ -96,20 +107,20 @@ div.creator-card {
       display: inline;
     }
 
-    li:before {
+    li.other {
+      opacity: 70%;
+    }
+
+    &:not(.with-verification) li:before {
       content: "▶\00a0";
       font-size: 50%;
       vertical-align: middle;
     }
 
-    li.other {
-      opacity: 70%;
-
-      &:before {
-        content: "▷\00a0";
-        font-size: 50%;
-        vertical-align: middle;
-      }
+    li.other:before {
+      content: "▷\00a0";
+      font-size: 50%;
+      vertical-align: middle;
     }
   }
 }
