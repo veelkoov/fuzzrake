@@ -71,4 +71,70 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         self::submitValidForm('Delete', []);
         self::assertCount(0, self::$client->getCrawler()->filter('table tbody tr'));
     }
+
+    public function testValueValidation(): void
+    {
+        $creator = UserCreator::get(true);
+        self::persistAndFlush($creator);
+
+        self::haveAnAdminUser();
+        self::loginAdminUser();
+
+        self::$client->request('GET', self::getCreatorLabelsPath($creator));
+
+        self::submitInvalidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => '',
+        ]);
+        self::submitInvalidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Something',
+        ]);
+        self::submitValidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Full plantigrade',
+        ]);
+
+        self::submitInvalidForm('Save', [
+            'creator_label[type]' => 'CREATOR_PENDING_REVIEW',
+            'creator_label[value]' => 'Something',
+        ]);
+        self::submitValidForm('Save', [
+            'creator_label[type]' => 'CREATOR_PENDING_REVIEW',
+            'creator_label[value]' => '',
+        ]);
+    }
+
+    public function testUniqueLabelValidation(): void
+    {
+        $creator = UserCreator::get(true);
+        self::persistAndFlush($creator);
+
+        self::haveAnAdminUser();
+        self::loginAdminUser();
+
+        self::$client->request('GET', self::getCreatorLabelsPath($creator));
+
+        self::submitValidForm('Save', [
+            'creator_label[type]' => 'CREATOR_PENDING_REVIEW',
+            'creator_label[value]' => '',
+        ]);
+        self::submitInvalidForm('Save', [
+            'creator_label[type]' => 'CREATOR_PENDING_REVIEW',
+            'creator_label[value]' => '',
+        ]);
+
+        self::submitValidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Full plantigrade',
+        ]);
+        self::submitInvalidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Full plantigrade',
+        ]);
+        self::submitValidForm('Save', [
+            'creator_label[type]' => 'PRODUCT_VERIFIED',
+            'creator_label[value]' => 'Full digigrate',
+        ]);
+    }
 }

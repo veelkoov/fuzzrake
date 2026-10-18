@@ -10,13 +10,16 @@ use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: CreatorLabelRepository::class)]
 #[ORM\Table(name: 'creators_labels')]
 #[ORM\Index(fields: ['type'])]
 #[ORM\Index(fields: ['value'])]
 #[ORM\UniqueConstraint(fields: ['type', 'value', 'creator'])]
+#[UniqueEntity(['type', 'value', 'creator'], message: 'This creator already has this label assigned.')]
 class CreatorLabel
 {
     #[ORM\Id]
@@ -65,10 +68,12 @@ class CreatorLabel
         return $this;
     }
 
-    // TODO
-    //    #[Assert\Callback]
-    //    public function validateValue(): void
-    //    {
-    //
-    //    }
+    #[Assert\Callback]
+    public function validateValue(ExecutionContextInterface $context, mixed $payload): void
+    {
+        if (!arr_contains($this->type->getSubject()->getValidValues(), $this->value)) {
+            $message = 'Invalid value. Allowed: "'.implode('", "', $this->type->getSubject()->getValidValues()).'"';
+            $context->buildViolation($message)->atPath('value')->addViolation();
+        }
+    }
 }
