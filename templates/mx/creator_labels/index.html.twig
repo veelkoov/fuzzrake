@@ -12,7 +12,6 @@
                 <th>Value</th>
                 <th>Comment</th>
                 <th>Added on</th>
-                <th>Active since</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -23,7 +22,6 @@
                     <td>{{ label.value|nl2br }}</td>
                     <td>{{ label.comment|nl2br }}</td>
                     <td>{{ label.addedAtUtc|nullable_datetime_utc }}</td>
-                    <td>{{ label.active ? label.activatedAtUtc|nullable_datetime_utc : 'Not active' }}</td>
                     <td><a href="{{ path('rt_mx_creator_label_edit', {creatorId: creator.lastCreatorId, labelId: label.id}) }}">Edit</a></td>
                 </tr>
             {% endfor %}
@@ -34,7 +32,6 @@
     <div class="row">
         <div class="col">
             {{ form_row(new_label_form.type) }}
-            {{ form_row(new_label_form.active) }}
         </div>
         <div class="col">
             {{ form_row(new_label_form.value) }}

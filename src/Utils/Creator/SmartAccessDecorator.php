@@ -1513,10 +1513,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->entity->getUser();
     }
 
-    public function setLabel(LabelType $type, string $value, true $active): self
+    public function setLabel(LabelType $type, string $value): self
     {
         $label = $this->findLabel($type, $value) ?? new CreatorLabel($this->entity)->setType($type)->setValue($value);
-        $label->setActive($active);
         $this->entity->addLabel($label);
 
         return $this;
@@ -1553,7 +1552,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getVerifiedItems(LabelType $type): array
     {
         return $this->entity->getLabels()
-            ->filter(static fn (CreatorLabel $label) => $label->type === $type && $label->active)
+            ->filter(static fn (CreatorLabel $label) => $label->type === $type)
             ->map(static fn (CreatorLabel $label) => $label->value)->toArray();
     }
 

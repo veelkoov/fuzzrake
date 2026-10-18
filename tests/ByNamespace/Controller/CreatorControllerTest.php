@@ -129,20 +129,20 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
         $creator = new Creator()->setCreatorId('TEST001');
 
         if ($verifiedBefore2026) {
-            $creator->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true);
+            $creator->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '');
         }
         if ($review3times) {
-            $creator->setLabel(LabelType::CREATOR_GOT_3_REVIEWS, '', true);
+            $creator->setLabel(LabelType::CREATOR_GOT_3_REVIEWS, '');
         }
         if ($pendingReview) {
-            $creator->setLabel(LabelType::CREATOR_PENDING_REVIEW, '', true);
+            $creator->setLabel(LabelType::CREATOR_PENDING_REVIEW, '');
         }
 
         foreach ($products as $product => $ulv) {
             $creator->setProducts([...$creator->getProducts(), $product]);
 
             if ('u' !== $ulv) {
-                $creator->setLabel('l' === $ulv ? LabelType::PRODUCT_VERIFIED_BEFORE_2026 : LabelType::PRODUCT_VERIFIED, $product, true);
+                $creator->setLabel('l' === $ulv ? LabelType::PRODUCT_VERIFIED_BEFORE_2026 : LabelType::PRODUCT_VERIFIED, $product);
             }
         }
 
@@ -150,7 +150,7 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
             $creator->setOffers([...$creator->getOffers(), $offer]);
 
             if ('u' !== $ulv) {
-                $creator->setLabel('l' === $ulv ? LabelType::OFFER_VERIFIED_BEFORE_2026 : LabelType::OFFER_VERIFIED, $offer, true);
+                $creator->setLabel('l' === $ulv ? LabelType::OFFER_VERIFIED_BEFORE_2026 : LabelType::OFFER_VERIFIED, $offer);
             }
         }
 

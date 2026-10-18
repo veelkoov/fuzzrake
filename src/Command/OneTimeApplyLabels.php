@@ -56,10 +56,10 @@ class OneTimeApplyLabels
     {
         if (array_any($creator->getAllCreatorIds(), static fn (string $creatorId) => arr_contains(self::GOT_3_REVIEWS_CREATORS, $creatorId))) {
             $creator->removeLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '');
-            $creator->setLabel(LabelType::CREATOR_GOT_3_REVIEWS, '', true);
+            $creator->setLabel(LabelType::CREATOR_GOT_3_REVIEWS, '');
         } else {
             $creator->removeLabel(LabelType::CREATOR_GOT_3_REVIEWS, '');
-            $creator->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '', true);
+            $creator->setLabel(LabelType::CREATOR_ADDED_BEFORE_2026, '');
         }
 
         $this->applyLabelsToItems($creator, Field::PRODUCTS, LabelType::PRODUCT_VERIFIED_BEFORE_2026);
@@ -71,7 +71,7 @@ class OneTimeApplyLabels
     private function applyLabelsToItems(Creator $creator, Field $field, LabelType $labelType): void
     {
         foreach ($creator->getStringList($field) as $item) {
-            $creator->setLabel($labelType, $item, true);
+            $creator->setLabel($labelType, $item);
         }
     }
 }

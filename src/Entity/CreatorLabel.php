@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'creators_labels')]
 #[ORM\Index(fields: ['type'])]
 #[ORM\Index(fields: ['value'])]
+#[ORM\UniqueConstraint(fields: ['type', 'value', 'creator'])]
 class CreatorLabel
 {
     #[ORM\Id]
@@ -34,13 +35,6 @@ class CreatorLabel
 
     #[ORM\Column(type: Types::TEXT)]
     public private(set) string $comment = '';
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    public private(set) ?DateTimeImmutable $activatedAtUtc = null;
-
-    public bool $active {
-        get => null !== $this->activatedAtUtc;
-    }
 
     public function __construct(
         #[ORM\ManyToOne(inversedBy: 'labels')]
@@ -67,13 +61,6 @@ class CreatorLabel
     public function setComment(string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->activatedAtUtc = $active ? $this->activatedAtUtc ?? UtcClock::now() : null;
 
         return $this;
     }

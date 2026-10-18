@@ -158,7 +158,6 @@ class ImportServiceTest extends FuzzrakeTestCase
 
         $label = $creator->findLabel(LabelType::CREATOR_PENDING_REVIEW, '');
         self::assertNotNull($label);
-        self::assertTrue($label->active);
     }
 
     public function testUpdatedDoesNotReceivePendingReviewLabel(): void

@@ -114,7 +114,7 @@ class ImportService
 
         $creator->entity->setUser($importData->submission->getOwner());
         if (!$importData->isUpdate()) {
-            $creator->setLabel(LabelType::CREATOR_PENDING_REVIEW, '', true);
+            $creator->setLabel(LabelType::CREATOR_PENDING_REVIEW, '');
         }
 
         $this->entityManager->persist($creator);

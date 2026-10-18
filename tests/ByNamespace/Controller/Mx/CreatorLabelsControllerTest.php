@@ -8,8 +8,6 @@ use App\Data\LabelType;
 use App\Entity\CreatorLabel;
 use App\Tests\TestUtils\Cases\FuzzrakeWebTestCase;
 use App\Tests\TestUtils\UserCreator;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
@@ -51,7 +49,6 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
             'creator_label[type]' => 'PRODUCT_VERIFIED',
             'creator_label[value]' => 'Full plantigrade',
             'creator_label[comment]' => 'Some comment',
-            'creator_label[active]' => false,
         ]);
         self::assertCount(1, self::$client->getCrawler()->filter('table tbody tr'));
     }
@@ -73,37 +70,5 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         self::assertResponseStatusCodeIs(200);
         self::submitValidForm('Delete', []);
         self::assertCount(0, self::$client->getCrawler()->filter('table tbody tr'));
-    }
-
-    /** @throws DateTimeException */
-    public function testActivatingDeactivatingLabel(): void
-    {
-        $nowText = '2026-09-25 05:05 UTC';
-        $now = UtcClock::at('2026-09-25 05:05:05');
-        self::mockTime($now);
-
-        $creator = UserCreator::get(true);
-        $label = new CreatorLabel($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
-        self::persistAndFlush($creator, $label);
-
-        self::haveAnAdminUser();
-        self::loginAdminUser();
-
-        $activationTimeSelector = 'table tbody tr td:nth-child(5)';
-        $editLinkSelector = 'table tbody tr td:last-child a';
-
-        $crawler = self::$client->request('GET', self::getCreatorLabelsPath($creator));
-        self::assertResponseStatusCodeIs(200);
-        self::assertSelectorTextSame($activationTimeSelector, 'Not active');
-
-        self::$client->click($crawler->filter($editLinkSelector)->link());
-        self::assertResponseStatusCodeIs(200);
-        self::submitValidForm('Save', ['creator_label[active]' => true]);
-        self::assertSelectorTextSame($activationTimeSelector, $nowText);
-
-        self::$client->click($crawler->filter($editLinkSelector)->link());
-        self::assertResponseStatusCodeIs(200);
-        self::submitValidForm('Save', ['creator_label[active]' => false]);
-        self::assertSelectorTextSame($activationTimeSelector, 'Not active');
     }
 }
