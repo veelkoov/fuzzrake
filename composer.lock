@@ -1632,20 +1632,20 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.1.5",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "b043439dbdf954e6c28b5ea7e34b0100f83165e0"
+                "reference": "6bf24518accf32cf845bca305e0b92078700fd01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/b043439dbdf954e6c28b5ea7e34b0100f83165e0",
-                "reference": "b043439dbdf954e6c28b5ea7e34b0100f83165e0",
+                "url": "https://api.github.com/repos/nette/utils/zipball/6bf24518accf32cf845bca305e0b92078700fd01",
+                "reference": "6bf24518accf32cf845bca305e0b92078700fd01",
                 "shasum": ""
             },
             "require": {
-                "php": "8.2 - 8.5"
+                "php": "8.2 - 8.6"
             },
             "conflict": {
                 "nette/finder": "<3",
@@ -1717,9 +1717,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.1.5"
+                "source": "https://github.com/nette/utils/tree/v4.1.6"
             },
-            "time": "2026-07-17T23:02:45+00:00"
+            "time": "2026-10-20T17:07:56+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -10040,16 +10040,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.39",
+            "version": "12.5.40",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4e8cbead3741cc57f16d142f4c5dc73c2747820a"
+                "reference": "76bd3198f16aeb375a4d5f3626471445aed0966e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4e8cbead3741cc57f16d142f4c5dc73c2747820a",
-                "reference": "4e8cbead3741cc57f16d142f4c5dc73c2747820a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/76bd3198f16aeb375a4d5f3626471445aed0966e",
+                "reference": "76bd3198f16aeb375a4d5f3626471445aed0966e",
                 "shasum": ""
             },
             "require": {
@@ -10118,7 +10118,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.39"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.40"
             },
             "funding": [
                 {
@@ -10126,7 +10126,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-12T15:27:27+00:00"
+            "time": "2026-10-16T05:55:07+00:00"
         },
         {
             "name": "react/cache",
