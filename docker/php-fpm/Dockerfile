@@ -15,7 +15,7 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && rm /tmp/composer_installer
 
 # Git is needed for managing Symfony recipes in the container
-RUN apk add --no-cache icu php-intl util-linux libzip libpng acl \
+RUN apk add --no-cache icu php-intl util-linux libzip libpng acl pnpm \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev \
     && docker-php-ext-install -j$(nproc) intl zip gd bcmath \
     && if [ "$DEV_MACHINE" = "yes" ]; then \

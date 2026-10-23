@@ -42,9 +42,8 @@ function run_console() {
     run_docker_compose_exec ./bin/console "$@"
 }
 
-function run_yarn() {
-    # Known issue: requires local installation of Yarn
-    run_command yarn "$@"
+function run_pnpm() {
+    run_docker_compose_exec pnpm "$@"
 }
 
 function action_get_snapshots() {
@@ -130,16 +129,16 @@ Usage:
     $0 ACTION [arguments ...]
 
 Available actions:
-    branch       docker-up + composer install + yarn install + yep
+    branch       docker-up + composer install + pnpm install + pep
 
     docker-up    "ups" the Docker Compose project
     docker-down  "downs" the Docker Compose project
     docker-re    docker-down + docker-up
 
     composer     run Composer
-    yarn         run Yarn (needs to be installed locally)
+    pnpm         run pnpm
 
-    yep          execute 'yarn encore production'
+    pep          execute 'pnpm encore production'
 
     console      run Symfony console command
 
@@ -169,17 +168,17 @@ function action() {
         'branch')
             action docker-up
             run_composer install
-            run_yarn install
-            run_yarn encore production
+            run_pnpm install
+            run_pnpm encore production
         ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
         'docker-re')    action docker-down && action docker-up ;;
 
-        'yep')          run_yarn encore production ;;
+        'pep')          run_pnpm encore production ;;
 
         'composer')     run_composer "$@" ;;
-        'yarn')         run_yarn "$@" ;;
+        'pnpm')         run_pnpm "$@" ;;
 
         'console')      run_console "$@" ;;
 
@@ -198,8 +197,8 @@ function action() {
         'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint --fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')           run_yarn eslint assets/scripts/ "$@" ;;
-        'prettier')     run_yarn prettier . --write "$@" ;;
+        'el')           run_pnpm eslint assets/scripts/ "$@" ;;
+        'prettier')     run_pnpm prettier . --write "$@" ;;
         'al')           pushd ansible; ansible-lint *.yaml ;;
         'yl')           yamllint . ;;
 

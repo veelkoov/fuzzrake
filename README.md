@@ -11,7 +11,6 @@ See [getfursu.it/info](https://getfursu.it/info)
 
 - Docker w/Compose plugin
 - ACL-enabled filesystem
-- Yarn
 
 ## Quickstart
 
