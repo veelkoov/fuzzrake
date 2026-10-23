@@ -7,14 +7,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> symfony/webpack-encore-bundle ###
-/node_modules/
-/public/build/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-bundle ###
-
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
@@ -37,3 +29,8 @@ yarn-error.log
 /db_dump/*
 !/db_dump/.gitkeep
 /.pnpm-store
+
+###> symfony/reprise ###
+/node_modules/
+/public/build/
+###< symfony/reprise ###

@@ -195,9 +195,6 @@
             "public/.htaccess"
         ]
     },
-    "symfony/asset": {
-        "version": "v5.4.0-RC1"
-    },
     "symfony/browser-kit": {
         "version": "v5.4.0-RC1"
     },
@@ -425,6 +422,20 @@
             "config/packages/property_info.yaml"
         ]
     },
+    "symfony/reprise": {
+        "version": "1.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.1",
+            "ref": "a452d21b563cd68e93020876bc542225eb9f9e20"
+        },
+        "files": [
+            "assets/app.js",
+            "assets/styles/app.css",
+            "config/packages/reprise.yaml"
+        ]
+    },
     "symfony/routing": {
         "version": "7.4",
         "recipe": {
@@ -526,22 +537,6 @@
         "files": [
             "config/packages/web_profiler.yaml",
             "config/routes/web_profiler.yaml"
-        ]
-    },
-    "symfony/webpack-encore-bundle": {
-        "version": "2.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.2",
-            "ref": "b618bf5f17ed61f523da7153025bf58ec9502f65"
-        },
-        "files": [
-            "assets/app.js",
-            "assets/styles/app.css",
-            "config/packages/webpack_encore.yaml",
-            "package.json",
-            "webpack.config.js"
         ]
     },
     "symfony/yaml": {
