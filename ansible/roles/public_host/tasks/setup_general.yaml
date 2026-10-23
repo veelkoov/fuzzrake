@@ -1,13 +1,4 @@
 ---
-- name: "Setup Yarn 1 repository"
-  ansible.builtin.yum_repository:
-    baseurl: "https://dl.yarnpkg.com/rpm/"
-    description: "Yarn Repository"
-    enabled: "1"
-    gpgcheck: "1"
-    gpgkey: "https://dl.yarnpkg.com/rpm/pubkey.gpg"
-    name: "yarn"
-
 - name: "Enable epel-release"
   ansible.builtin.dnf:
     name: "epel-release"
@@ -25,7 +16,6 @@
       - "python3-certbot-apache"
       - "python3-firewall"
       - "vim"
-      - "yarn"
     state: "installed"
 
 - name: "Enable firewalld"

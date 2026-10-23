@@ -36,3 +36,4 @@ yarn-error.log
 /.idea/
 /db_dump/*
 !/db_dump/.gitkeep
+/.pnpm-store
