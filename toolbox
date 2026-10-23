@@ -129,7 +129,7 @@ Usage:
     $0 ACTION [arguments ...]
 
 Available actions:
-    branch       docker-up + composer install + pnpm install + pep
+    branch       docker-up + composer install + pnpm install + pvb
 
     docker-up    "ups" the Docker Compose project
     docker-down  "downs" the Docker Compose project
@@ -138,7 +138,7 @@ Available actions:
     composer     run Composer
     pnpm         run pnpm
 
-    pep          execute 'pnpm encore production'
+    pvb          execute 'pnpm vite build'
 
     console      run Symfony console command
 
@@ -169,13 +169,13 @@ function action() {
             action docker-up
             run_composer install
             run_pnpm install
-            run_pnpm encore production
+            run_pnpm vite build
         ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
         'docker-re')    action docker-down && action docker-up ;;
 
-        'pep')          run_pnpm encore production ;;
+        'pvb')          run_pnpm vite build ;;
 
         'composer')     run_composer "$@" ;;
         'pnpm')         run_pnpm "$@" ;;
