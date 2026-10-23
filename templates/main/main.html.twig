@@ -3,15 +3,15 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {{ encore_entry_script_tags('main') }}
-    {{ encore_entry_script_tags('creator_card') }}
+    {{ reprise_entry_script_tags('main') }}
+    {{ reprise_entry_script_tags('creator_card') }}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 
-    {{ encore_entry_link_tags('main') }}
-    {{ encore_entry_link_tags('creator_card') }}
+    {{ reprise_entry_link_tags('main') }}
+    {{ reprise_entry_link_tags('creator_card') }}
 {% endblock %}
 
 {% block body %}
