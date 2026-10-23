@@ -3,13 +3,13 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {{ encore_entry_script_tags('creator_card') }}
+    {{ reprise_entry_script_tags('creator_card') }}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 
-    {{ encore_entry_link_tags('creator_card') }}
+    {{ reprise_entry_link_tags('creator_card') }}
 {% endblock %}
 
 {% block title %}{{ creator.name }}{% endblock %}
