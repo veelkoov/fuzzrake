@@ -3,7 +3,7 @@
     "alwaysStrict": true,
     "strict": true,
     "downlevelIteration": true,
-    "target": "ES6",
+    "target": "es2016",
     "moduleResolution": "Node",
     "experimentalDecorators": true,
     "rootDir": "./assets/scripts"
