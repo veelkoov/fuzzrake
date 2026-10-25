@@ -79,7 +79,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
         self::assertLessThan(500, self::$client->getResponse()->getStatusCode(), 'Server returned 5XX');
 
         $fields = [];
-        foreach ($crawler->filter('input.is-invalid') as $field) {
+        foreach ($crawler->filter('.is-invalid') as $field) {
             if (!$field instanceof DOMElement) {
                 throw new LogicException("Unexpected node type marked as invalid input: $field->nodeType");
             }

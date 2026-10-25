@@ -56,7 +56,9 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
     public function testRemovalWorks(): void
     {
         $creator = UserCreator::get(true);
-        $label = new CreatorLabel($creator->entity)->setType(LabelType::PRODUCT_VERIFIED);
+        $label = new CreatorLabel($creator->entity)
+            ->setType(LabelType::PRODUCT_VERIFIED)
+            ->setValue('Full plantigrade');
         self::persistAndFlush($creator, $label);
 
         self::haveAnAdminUser();
@@ -134,7 +136,7 @@ class CreatorLabelsControllerTest extends FuzzrakeWebTestCase
         ]);
         self::submitValidForm('Save', [
             'creator_label[type]' => 'PRODUCT_VERIFIED',
-            'creator_label[value]' => 'Full digigrate',
+            'creator_label[value]' => 'Full digitigrade',
         ]);
     }
 }
