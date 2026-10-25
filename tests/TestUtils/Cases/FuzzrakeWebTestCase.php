@@ -51,7 +51,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
     }
 
     /**
-     * @param array<string, string> $formData
+     * @param array<string, string|int> $formData
      */
     protected static function submitValidForm(string $buttonName, array $formData): void
     {
@@ -91,7 +91,7 @@ abstract class FuzzrakeWebTestCase extends WebTestCase
     }
 
     /**
-     * @param array<string, string> $formData
+     * @param array<string, string|int> $formData
      */
     protected static function submitInvalidForm(string $buttonName, array $formData): void
     {
