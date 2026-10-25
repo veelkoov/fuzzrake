@@ -10,4 +10,8 @@ MessageBus.listen("event-creators-page-loaded", () => {
   });
 
   localizeDateTimes(jQuery(".creator-card"));
+
+  jQuery(".labels-expl-toggle-btn").on("click", () => {
+    jQuery("body").toggleClass("hide-labels-explanations");
+  });
 });

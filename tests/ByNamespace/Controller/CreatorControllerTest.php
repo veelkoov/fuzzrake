@@ -65,24 +65,25 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
         $unverifiedOffer = 'Premades';
 
         $allTexts = [
-            $verifiedOfferItem = "$verifiedIcon Standard</span> commissions",
-            $legacyVrfdOfferItem = "$legacyVrfdIcon Artistic</span> liberty commissions",
-            $unverifiedOfferItem = "$unverifiedIcon Premades",
+            $verifiedOfferListItem = "$verifiedIcon Standard</span> commissions",
+            $legacyVrfdOfferListItem = "$legacyVrfdIcon Artistic</span> liberty commissions",
+            $unverifiedOfferListItem = "$unverifiedIcon Premades",
 
-            $verifiedProductItem = "$verifiedIcon Head</span> (as parts/separate)",
-            $legacyVrfdProductItem = "$legacyVrfdIcon Full</span> plantigrade",
-            $unverifiedProductItem = "$unverifiedIcon Full</span> digitigrade",
+            $verifiedProductListItem = "$verifiedIcon Head</span> (as parts/separate)",
+            $legacyVrfdProductListItem = "$legacyVrfdIcon Full</span> plantigrade",
+            $unverifiedProductListItem = "$unverifiedIcon Full</span> digitigrade",
 
-            $legacyVerifiedIconExplanation = "$legacyVrfdIcon Some items marked like this below have been added before verification started in 2026.",
-            $unverifiedIconExplanation = "$unverifiedIcon Some items marked like this below have not been verified yet.",
+            $verifiedIconExplanation   = "#$verifiedIcon\s+<span[^.]*>\s*Offers and products marked this way are verified\.#",
+            $legacyVrfdIconExplanation = "#$legacyVrfdIcon\s+<span[^.]*>\s*Offers and products marked like this have been added before verification started in 2026\.#",
+            $unverifiedIconExplanation = "#$unverifiedIcon\s+<span[^.]*>\s*Offers and products marked like this have not been verified yet\.#",
 
             $pendingReviewHeaderLabel  = '//div[contains(@class, "header")]//span[normalize-space(.)="Pending review"]/i',
             $before2026HeaderLabel     = '//div[contains(@class, "header")]//span[normalize-space(.)="Before 2026"]/i',
             $reviewed3timesHeaderLabel = '//div[contains(@class, "header")]//span[normalize-space(.)="Reviewed 3×"]/i',
 
-            $pendingReviewBodyLabel  = '#<p[^>]*>\s*<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Pending review\s*</span>\s*This studio/maker has not yet been reviewed yet\.</p>#',
-            $before2026BodyLabel     = '#<p[^>]*>\s*<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Before 2026\s*</span>\s*This studio/maker has only been briefly reviewed, and added to the list before 2026\.</p>#',
-            $reviewed3timesBodyLabel = '#<p[^>]*>\s*<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Reviewed 3×\s*</span>\s*This studio/maker have been checked by 3\+ different reviewers during the 2026 reviews experiment\.</p>#',
+            $pendingReviewBodyLabel  = '#<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Pending review\s*</span>\s*<span[^>]*>\s*This studio/maker has not yet been reviewed yet\.#',
+            $before2026BodyLabel     = '#<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Before 2026\s*</span>\s*<span[^>]*>\s*This studio/maker has only been briefly reviewed, and added to the list before 2026\.#',
+            $reviewed3timesBodyLabel = '#<span[^>]+class="[^"]*creator-label[^"]*"[^>]*>\s*<i[^>]*></i>\s*Reviewed 3×\s*</span>\s*<span[^>]*>\s*This studio/maker have been checked by 3\+ different reviewers during the 2026 reviews experiment\.#',
         ];
 
         return [
@@ -90,28 +91,28 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
             'Creator before 2026'    => [self::getCreatorForLabelsDisplay(verifiedBefore2026: true), [$before2026HeaderLabel, $before2026BodyLabel], $allTexts],
             'Creator pending review' => [self::getCreatorForLabelsDisplay(pendingReview: true), [$pendingReviewHeaderLabel, $pendingReviewBodyLabel], $allTexts],
 
-            'Verified product'   => [self::getCreatorForLabelsDisplay(products: [$verifiedProduct => 'v']), [$verifiedProductItem], $allTexts],
-            'Leg.ver. product'   => [self::getCreatorForLabelsDisplay(products: [$legacyVrfdProduct => 'l']), [$legacyVrfdProductItem, $legacyVerifiedIconExplanation], $allTexts],
-            'Unverified product' => [self::getCreatorForLabelsDisplay(products: [$unverifiedProduct => 'u']), [$unverifiedProductItem, $unverifiedIconExplanation], $allTexts],
+            'Verified product'   => [self::getCreatorForLabelsDisplay(products: [$verifiedProduct => 'v']), [$verifiedProductListItem, $verifiedIconExplanation], $allTexts],
+            'Leg.ver. product'   => [self::getCreatorForLabelsDisplay(products: [$legacyVrfdProduct => 'l']), [$legacyVrfdProductListItem, $legacyVrfdIconExplanation], $allTexts],
+            'Unverified product' => [self::getCreatorForLabelsDisplay(products: [$unverifiedProduct => 'u']), [$unverifiedProductListItem, $unverifiedIconExplanation], $allTexts],
 
-            'Verified offer'   => [self::getCreatorForLabelsDisplay(offers: [$verifiedOffer => 'v']), [$verifiedOfferItem], $allTexts],
-            'Leg.ver. offer'   => [self::getCreatorForLabelsDisplay(offers: [$legacyVrfdOffer => 'l']), [$legacyVrfdOfferItem, $legacyVerifiedIconExplanation], $allTexts],
-            'Unverified offer' => [self::getCreatorForLabelsDisplay(offers: [$unverifiedOffer => 'u']), [$unverifiedOfferItem, $unverifiedIconExplanation], $allTexts],
+            'Verified offer'   => [self::getCreatorForLabelsDisplay(offers: [$verifiedOffer => 'v']), [$verifiedOfferListItem, $verifiedIconExplanation], $allTexts],
+            'Leg.ver. offer'   => [self::getCreatorForLabelsDisplay(offers: [$legacyVrfdOffer => 'l']), [$legacyVrfdOfferListItem, $legacyVrfdIconExplanation], $allTexts],
+            'Unverified offer' => [self::getCreatorForLabelsDisplay(offers: [$unverifiedOffer => 'u']), [$unverifiedOfferListItem, $unverifiedIconExplanation], $allTexts],
 
             'Mixed 1' => [self::getCreatorForLabelsDisplay(products: [$unverifiedProduct => 'u'], offers: [$unverifiedOffer => 'u']),
-                [$unverifiedProductItem, $unverifiedOfferItem, $unverifiedIconExplanation], $allTexts],
+                [$unverifiedProductListItem, $unverifiedOfferListItem, $unverifiedIconExplanation], $allTexts],
 
             'Mixed 2' => [self::getCreatorForLabelsDisplay(products: [$unverifiedProduct => 'u'], offers: [$legacyVrfdOffer => 'l']),
-                [$unverifiedProductItem, $legacyVrfdOfferItem, $unverifiedIconExplanation, $legacyVerifiedIconExplanation], $allTexts],
+                [$unverifiedProductListItem, $legacyVrfdOfferListItem, $unverifiedIconExplanation, $legacyVrfdIconExplanation], $allTexts],
 
             'Mixed 3' => [self::getCreatorForLabelsDisplay(verifiedBefore2026: true, products: [$unverifiedProduct => 'u'], offers: [$legacyVrfdOffer => 'l']),
-                [$before2026BodyLabel, $before2026HeaderLabel, $unverifiedProductItem, $legacyVrfdOfferItem, $unverifiedIconExplanation, $legacyVerifiedIconExplanation], $allTexts],
+                [$before2026BodyLabel, $before2026HeaderLabel, $unverifiedProductListItem, $legacyVrfdOfferListItem, $unverifiedIconExplanation, $legacyVrfdIconExplanation], $allTexts],
 
             'Mixed 4' => [self::getCreatorForLabelsDisplay(pendingReview: true, products: [$verifiedProduct => 'v'], offers: [$verifiedOffer => 'v']),
-                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $verifiedProductItem, $verifiedOfferItem], $allTexts],
+                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $verifiedIconExplanation, $verifiedProductListItem, $verifiedOfferListItem], $allTexts],
 
             'Mixed 5' => [self::getCreatorForLabelsDisplay(pendingReview: true, products: [$unverifiedProduct => 'u', $legacyVrfdProduct => 'l'], offers: [$verifiedOffer => 'v']),
-                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $unverifiedIconExplanation, $legacyVerifiedIconExplanation, $verifiedOfferItem, $legacyVrfdProductItem, $unverifiedProductItem], $allTexts],
+                [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $unverifiedIconExplanation, $verifiedIconExplanation, $legacyVrfdIconExplanation, $verifiedOfferListItem, $legacyVrfdProductListItem, $unverifiedProductListItem], $allTexts],
         ];
     }
 

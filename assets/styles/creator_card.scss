@@ -253,3 +253,14 @@ div.imgs-container {
     margin-bottom: 0;
   }
 }
+
+body.hide-labels-explanations .labels-explanations-shown {
+  display: none;
+}
+body.hide-labels-explanations .labels-expl-toggle-btn i {
+  rotate: 180deg;
+}
+
+body:not(.hide-labels-explanations) .labels-explanations-hidden {
+  display: none;
+}

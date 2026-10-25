@@ -273,20 +273,44 @@
         </div>
     {% endif %}
 
-    {% if creator.creatorLabels or creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty
-        or creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
+    {% set any_verified = creator.verifiedOffers or creator.verifiedProducts %}
+    {% set any_legacy_verified = creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
+    {% set any_unverified = creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty %}
+    {% if creator.creatorLabels or any_unverified or any_legacy_verified %}
         <div class="row show-expanded">
-            <div class="col">
+            <div class="col-auto pe-0 pt-2 d-flex align-items-end hide-when-standalone">
+                <button class="btn btn-sm btn-outline-secondary mx-2 labels-expl-toggle-btn">
+                    <i class="fa-solid fa-angles-up"></i>
+                    <span class="labels-explanations-hidden">Explain</span>
+                </button>
+            </div>
+            <div class="col ps-0 pt-2">
                 {% for label in creator.creatorLabels %}
-                    <p class="small mx-2 my-1 align-middle">{{ _self.label(label) }} {{ label.type.explanation }}</p>
+                    {{ _self.label(label) }}
+                    <span class="labels-explanations-shown">
+                        {{ label.type.explanation }} <br>
+                    </span>
                 {% endfor %}
 
-                {% if creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty %}
-                    <p class="small mx-2 my-1 align-middle">{{ unverified_item_icon() }} Some items marked like this below have not been verified yet.</p>
+                {% if any_verified %}
+                    {{ verified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers and products marked this way are verified.<br>
+                    </span>
                 {% endif %}
 
-                {% if creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
-                    <p class="small mx-2 my-1 align-middle">{{ legacy_verified_item_icon() }} Some items marked like this below have been added before verification started in 2026.</p>
+                {% if any_legacy_verified %}
+                    {{ legacy_verified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers and products marked like this have been added before verification started in 2026.<br>
+                    </span>
+                {% endif %}
+
+                {% if any_unverified %}
+                    {{ unverified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers and products marked like this have not been verified yet.<br>
+                    </span>
                 {% endif %}
             </div>
         </div>
@@ -350,16 +374,6 @@
             </div>
         </div>
 
-        <div class="look-ma-am-box styles">
-            <div class="box-header">
-                <h5>Styles</h5>
-            </div>
-
-            <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
-            </div>
-        </div>
-
         <div class="look-ma-am-box products">
             <div class="box-header">
                 <h5>Products</h5>
@@ -367,6 +381,16 @@
 
             <div class="box-content">
                 {{ _self.verified_list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment, creator.verifiedProducts, creator.legacyVerifiedProducts) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box styles">
+            <div class="box-header">
+                <h5>Styles</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
             </div>
         </div>
 
