@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45f812e8d7458666b7a431db5757b847",
+    "content-hash": "765799e0e8de6f57ed04a8b560bba541",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -6138,6 +6138,94 @@
             "time": "2026-08-07T15:35:35+00:00"
         },
         {
+            "name": "symfony/reprise",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/reprise.git",
+                "reference": "76527bd850678ac4b2c526062d955fa93ff4bd8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/reprise/zipball/76527bd850678ac4b2c526062d955fa93ff4bd8a",
+                "reference": "76527bd850678ac4b2c526062d955fa93ff4bd8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "symfony/asset": "^7.4|^8.0",
+                "symfony/config": "^7.4|^8.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/event-dispatcher": "^7.4|^8.0",
+                "symfony/http-foundation": "^7.4|^8.0",
+                "symfony/http-kernel": "^7.4|^8.0",
+                "symfony/service-contracts": "^3",
+                "twig/twig": "^3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "phpstan/phpstan": "^2.2",
+                "phpunit/phpunit": "^13.2",
+                "shipmonk/composer-dependency-analyser": "^1.8",
+                "symfony/cache": "^7.4|^8.0",
+                "symfony/error-handler": "^7.4|^8.0",
+                "symfony/framework-bundle": "^7.4|^8.0",
+                "symfony/twig-bundle": "^7.4|^8.0",
+                "symfony/web-link": "^7.4|^8.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Reprise\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hugo Alliaume",
+                    "email": "hugo@alliau.me"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Integrate Vite and Rsbuild with Symfony, a reprise of Webpack Encore Bundle.",
+            "keywords": [
+                "assets",
+                "encore",
+                "rsbuild",
+                "symfony",
+                "vite"
+            ],
+            "support": {
+                "issues": "https://github.com/symfony/reprise/issues",
+                "source": "https://github.com/symfony/reprise/tree/v1.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-09-26T17:46:02+00:00"
+        },
+        {
             "name": "symfony/routing",
             "version": "v8.1.9",
             "source": {
@@ -7691,82 +7779,6 @@
             "time": "2026-10-07T07:28:40+00:00"
         },
         {
-            "name": "symfony/webpack-encore-bundle",
-            "version": "2.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/webpack-encore-bundle.git",
-                "reference": "0cbc3485f127cd9f85e395f8177607ef00535634"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/webpack-encore-bundle/zipball/0cbc3485f127cd9f85e395f8177607ef00535634",
-                "reference": "0cbc3485f127cd9f85e395f8177607ef00535634",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1.0",
-                "symfony/asset": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/config": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/dependency-injection": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/http-kernel": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/service-contracts": "^1.1.9 || ^2.1.3 || ^3.0"
-            },
-            "require-dev": {
-                "symfony/framework-bundle": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/http-client": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/phpunit-bridge": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/twig-bundle": "^5.4 || ^6.2 || ^7.0 || ^8.0",
-                "symfony/web-link": "^5.4 || ^6.2 || ^7.0 || ^8.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/webpack-encore",
-                    "name": "symfony/webpack-encore"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\WebpackEncoreBundle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Integration of your Symfony app with Webpack Encore",
-            "support": {
-                "issues": "https://github.com/symfony/webpack-encore-bundle/issues",
-                "source": "https://github.com/symfony/webpack-encore-bundle/tree/2.4.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2026-09-17T12:45:02+00:00"
-        },
-        {
             "name": "symfony/yaml",
             "version": "v8.1.9",
             "source": {
@@ -8356,16 +8368,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.5.1",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "528948210cc46f967a4b98e83b19e76f2b504993"
+                "reference": "9dfce66f1e97360ea5e6d3e38ab14277e4cc591e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/528948210cc46f967a4b98e83b19e76f2b504993",
-                "reference": "528948210cc46f967a4b98e83b19e76f2b504993",
+                "url": "https://api.github.com/repos/composer/semver/zipball/9dfce66f1e97360ea5e6d3e38ab14277e4cc591e",
+                "reference": "9dfce66f1e97360ea5e6d3e38ab14277e4cc591e",
                 "shasum": ""
             },
             "require": {
@@ -8417,7 +8429,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.5.1"
+                "source": "https://github.com/composer/semver/tree/3.5.2"
             },
             "funding": [
                 {
@@ -8429,7 +8441,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-05T13:12:12+00:00"
+            "time": "2026-10-22T15:37:26+00:00"
         },
         {
             "name": "composer/xdebug-handler",

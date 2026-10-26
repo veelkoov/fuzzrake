@@ -11,7 +11,7 @@
   register: "environment_cmd_res"
   changed_when: '"success Already up-to-date." not in environment_cmd_res.stdout'
 
-- name: "Execute: pnpm encore production"
+- name: "Execute: pnpm vite build"
   ansible.builtin.command:
-    cmd: "docker exec {{ php_fpm_container_name | quote }} pnpm encore production"
+    cmd: "docker exec {{ php_fpm_container_name | quote }} pnpm vite build"
   changed_when: "not ansible_check_mode" # TODO: Make it real (if possible)

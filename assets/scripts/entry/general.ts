@@ -7,7 +7,7 @@ import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Navbar from "../class/navbar/Navbar";
 import { localizeDateTimes } from "../datetimes";
 import MessageBus from "../class/MessageBus";
-import * as jQuery from "jquery";
+import jQuery from "jquery";
 
 // @ts-expect-error I am incompetent, and I don't care to learn frontend
 window.jQuery = jQuery;

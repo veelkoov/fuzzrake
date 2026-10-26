@@ -1,0 +1,10 @@
+---
+# It's local, but the recipe requires it, idk. I'm committing it.
+
+workers:
+  # Start the Vite dev server
+  vite:
+    cmd: ["npx", "vite"]
+  # Or instead, if you use Rsbuild (https://rsbuild.rs/)
+  #rsbuild:
+  #    cmd: ['npx', 'rsbuild', 'dev']

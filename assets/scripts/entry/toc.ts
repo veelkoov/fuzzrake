@@ -1,4 +1,3 @@
-import * as jQuery from "jquery";
 import tocbot from "tocbot";
 
 import "../../styles/toc.scss";
