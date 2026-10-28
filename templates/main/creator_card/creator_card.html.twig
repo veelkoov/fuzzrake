@@ -1,3 +1,5 @@
+{% import "_macros.html.twig" as macros %}
+
 {% macro crafting_since(input) %}
     {% set months = {
         '01': 'Jan',
@@ -64,13 +66,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro legacy_verified_icon() -%}
-    <i class="fa-regular fa-circle-check"></i>
-{% endmacro %}
-{% macro unverified_icon() -%}
-    <i class="fa-regular fa-circle"></i>
-{% endmacro %}
-
 {% macro verified_list_with_others_comment_opt(items, other_items, comment, verified_items, legacy_verified_items) %}
     {% if comment %}
         <p class="nl2br comment show-expanded">{{ comment }}</p>
@@ -119,12 +114,6 @@
     {% else %}
         {{ a_bug() }}
     {% endif %}
-{% endmacro %}
-
-{% macro label(label) %}
-    <span class="badge creator-label {% if label.type.important %}important{% endif %}">
-        <i class="fa-solid fa-tag"></i> {{ label.type.text }}
-    </span>
 {% endmacro %}
 
 <div class="header {{ html_classes({
@@ -181,7 +170,7 @@
 
                 <div class="col col-auto hide-expanded header-box labels">
                     {% for label in creator.creatorLabels %}
-                        {{ _self.label(label) }}
+                        {{ macros.label(label.type) }}
                     {% endfor %}
                 </div>
 
@@ -286,7 +275,7 @@
             </div>
             <div class="col ps-0 pt-2">
                 {% for label in creator.creatorLabels %}
-                    {{ _self.label(label) }}
+                    {{ macros.label(label.type) }}
                     <span class="labels-explanations-shown">
                         {{ label.type.explanation }} <br>
                     </span>
@@ -312,6 +301,8 @@
                         Offers and products marked like this have not been verified yet.<br>
                     </span>
                 {% endif %}
+
+                {# TODO: Link /reviews-labels #}
             </div>
         </div>
     {% endif %}

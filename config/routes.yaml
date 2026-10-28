@@ -76,3 +76,9 @@ legacy_statistics:
   controller: *redirect
   defaults:
     route: rt_statistics
+
+legacy_reviews:
+  path: /queue
+  controller: *redirect
+  defaults:
+    route: rt_reviews_and_labels

@@ -25,9 +25,9 @@ class CrawlersController extends AbstractController
             'rt_info',
             'rt_main',
             'rt_new_creators',
+            'rt_reviews_and_labels',
             'rt_should_know',
             'rt_statistics',
-            'rt_submission_queue_main',
             'rt_tracking',
         ], fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL));
 

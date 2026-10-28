@@ -71,4 +71,11 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/should_know.html.twig', []);
     }
+
+    #[Route('reviews-labels', name: 'rt_reviews_and_labels')]
+    #[Cache(maxage: 3600, public: true)]
+    public function reviewsAndLabels(): Response
+    {
+        return $this->render('pages/reviews_and_labels.html.twig');
+    }
 }
