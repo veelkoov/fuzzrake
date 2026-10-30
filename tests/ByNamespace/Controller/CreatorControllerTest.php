@@ -64,6 +64,10 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
         $legacyVrfdOffer = 'Artistic liberty commissions';
         $unverifiedOffer = 'Premades';
 
+        $verifiedStyle = 'Realistic';
+        $legacyVrfdStyle = 'Kemono';
+        $unverifiedStyle = 'Toony';
+
         $allTexts = [
             $verifiedOfferListItem = "$verifiedIcon Standard</span> commissions",
             $legacyVrfdOfferListItem = "$legacyVrfdIcon Artistic</span> liberty commissions",
@@ -73,9 +77,13 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
             $legacyVrfdProductListItem = "$legacyVrfdIcon Full</span> plantigrade",
             $unverifiedProductListItem = "$unverifiedIcon Full</span> digitigrade",
 
-            $verifiedIconExplanation   = "#$verifiedIcon\s+<span[^.]*>\s*Offers and products marked this way are verified\.#",
-            $legacyVrfdIconExplanation = "#$legacyVrfdIcon\s+<span[^.]*>\s*Offers and products marked like this have been added before verification started in 2026\.#",
-            $unverifiedIconExplanation = "#$unverifiedIcon\s+<span[^.]*>\s*Offers and products marked like this have not been verified yet\.#",
+            $verifiedStyleListItem = "$verifiedIcon Realistic",
+            $legacyVrfdStyleListItem = "$legacyVrfdIcon Kemono",
+            $unverifiedStyleListItem = "$unverifiedIcon Toony",
+
+            $verifiedIconExplanation   = "#$verifiedIcon\s+<span[^.]*>\s*Offers, products, and styles marked this way are verified\.#",
+            $legacyVrfdIconExplanation = "#$legacyVrfdIcon\s+<span[^.]*>\s*Offers, products, and styles marked like this have been added before verification started in 2026\.#",
+            $unverifiedIconExplanation = "#$unverifiedIcon\s+<span[^.]*>\s*Offers, products, and styles marked like this have not been verified yet\.#",
 
             $pendingReviewHeaderLabel  = '//div[contains(@class, "header")]//span[normalize-space(.)="Pending review"]/i',
             $before2026HeaderLabel     = '//div[contains(@class, "header")]//span[normalize-space(.)="Before 2026"]/i',
@@ -99,6 +107,10 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
             'Leg.ver. offer'   => [self::getCreatorForLabelsDisplay(offers: [$legacyVrfdOffer => 'l']), [$legacyVrfdOfferListItem, $legacyVrfdIconExplanation], $allTexts],
             'Unverified offer' => [self::getCreatorForLabelsDisplay(offers: [$unverifiedOffer => 'u']), [$unverifiedOfferListItem, $unverifiedIconExplanation], $allTexts],
 
+            'Verified style'   => [self::getCreatorForLabelsDisplay(styles: [$verifiedStyle => 'v']), [$verifiedStyleListItem, $verifiedIconExplanation], $allTexts],
+            'Leg.ver. style'   => [self::getCreatorForLabelsDisplay(styles: [$legacyVrfdStyle => 'l']), [$legacyVrfdStyleListItem, $legacyVrfdIconExplanation], $allTexts],
+            'Unverified style' => [self::getCreatorForLabelsDisplay(styles: [$unverifiedStyle => 'u']), [$unverifiedStyleListItem, $unverifiedIconExplanation], $allTexts],
+
             'Mixed 1' => [self::getCreatorForLabelsDisplay(products: [$unverifiedProduct => 'u'], offers: [$unverifiedOffer => 'u']),
                 [$unverifiedProductListItem, $unverifiedOfferListItem, $unverifiedIconExplanation], $allTexts],
 
@@ -113,12 +125,34 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
 
             'Mixed 5' => [self::getCreatorForLabelsDisplay(pendingReview: true, products: [$unverifiedProduct => 'u', $legacyVrfdProduct => 'l'], offers: [$verifiedOffer => 'v']),
                 [$pendingReviewBodyLabel, $pendingReviewHeaderLabel, $unverifiedIconExplanation, $verifiedIconExplanation, $legacyVrfdIconExplanation, $verifiedOfferListItem, $legacyVrfdProductListItem, $unverifiedProductListItem], $allTexts],
+
+            'Mixed 6' => [self::getCreatorForLabelsDisplay(pendingReview: true,
+                products: [$unverifiedProduct => 'u'],
+                offers: [$legacyVrfdOffer => 'l'],
+                styles: [$verifiedStyle => 'v'],
+            ), [
+                $pendingReviewBodyLabel, $pendingReviewHeaderLabel,
+                $unverifiedIconExplanation, $legacyVrfdIconExplanation, $verifiedIconExplanation,
+                $unverifiedProductListItem, $legacyVrfdOfferListItem, $verifiedStyleListItem,
+            ], $allTexts],
+
+            'Mixed 7' => [self::getCreatorForLabelsDisplay(review3times: true,
+                products: [$unverifiedProduct => 'u', $legacyVrfdProduct => 'l'],
+                offers: [$legacyVrfdOffer => 'l', $verifiedOffer => 'v'],
+                styles: [$unverifiedStyle => 'u', $verifiedStyle => 'v'],
+            ), [
+                $reviewed3timesBodyLabel, $reviewed3timesHeaderLabel,
+                $unverifiedIconExplanation, $legacyVrfdIconExplanation, $verifiedIconExplanation,
+                $unverifiedProductListItem, $legacyVrfdProductListItem, $legacyVrfdOfferListItem,
+                $verifiedOfferListItem, $unverifiedStyleListItem, $verifiedStyleListItem,
+            ], $allTexts],
         ];
     }
 
     /**
      * @param array<string, 'u'|'l'|'v'> $products
      * @param array<string, 'u'|'l'|'v'> $offers
+     * @param array<string, 'u'|'l'|'v'> $styles
      */
     private static function getCreatorForLabelsDisplay(
         bool $verifiedBefore2026 = false,
@@ -126,6 +160,7 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
         bool $pendingReview = false,
         array $products = [],
         array $offers = [],
+        array $styles = [],
     ): Creator {
         $creator = new Creator()->setCreatorId('TEST001');
 
@@ -152,6 +187,14 @@ class CreatorControllerTest extends FuzzrakeWebTestCase
 
             if ('u' !== $ulv) {
                 $creator->setLabel('l' === $ulv ? LabelType::OFFER_VERIFIED_BEFORE_2026 : LabelType::OFFER_VERIFIED, $offer);
+            }
+        }
+
+        foreach ($styles as $style => $ulv) {
+            $creator->setStyles([...$creator->getStyles(), $style]);
+
+            if ('u' !== $ulv) {
+                $creator->setLabel('l' === $ulv ? LabelType::STYLE_VERIFIED_BEFORE_2026 : LabelType::STYLE_VERIFIED, $style);
             }
         }
 

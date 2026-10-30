@@ -1,6 +1,6 @@
-{% extends '_base.html.twig' %}
+{% extends '_base_with_toc.html.twig' %}
 
-{% import "_macros.html.twig" as macros %}
+{% import '_macros.html.twig' as macros %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -16,7 +16,7 @@
 
 {% block title %}reviews, verification, labels{% endblock %}
 
-{% block body %}
+{% block contents %}
     <h1>Reviews, verification, labels</h1>
 
     <p>Since the beginning of getfursu.it until 2026 all request to be added to the list (submissions) were being reviewed by a single person; this will no longer be the case. See <a href="https://www.tumblr.com/getfursuit/807379325214162944">this Tumblr post</a> for explanation.</p>
@@ -33,9 +33,9 @@
 
     <p>Studios added during the reviews experiment are marked with {{ macros.label(constant('\\App\\Data\\LabelType::CREATOR_GOT_3_REVIEWS')) }} label. At least three different people reviewed them and agreed on adding.</p>
 
-    <p>Additionally, offers and products now show the verification status. Until these items will get verified, they will be marked with {{ unverified_item_icon() }}. Items which have been added before the labeling system has been implemented are marked with {{ legacy_verified_item_icon() }}. It should be possible to get them reviewed later.</p>
+    <p>Additionally, offers, products, and styles now show the verification status. Until these items will get verified, they will be marked with {{ unverified_item_icon() }}. Items which have been added before the labeling system has been implemented are marked with {{ legacy_verified_item_icon() }}. It should be possible to get them reviewed later.</p>
 
-    <p>Fully verified offers and products will get the {{ verified_item_icon() }} mark. In the future (near or distant) we may add verification to styles, features, possibly more.</p>
+    <p>Fully verified offers, products, and styles will get the {{ verified_item_icon() }} mark. In the future (near or distant) we may add verification to styles, features, possibly more.</p>
 
     <h2>What's next</h2>
 

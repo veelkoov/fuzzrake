@@ -1,4 +1,4 @@
-{% import "_macros.html.twig" as macros %}
+{% import '_macros.html.twig' as macros %}
 
 {% macro crafting_since(input) %}
     {% set months = {
@@ -262,9 +262,9 @@
         </div>
     {% endif %}
 
-    {% set any_verified = creator.verifiedOffers or creator.verifiedProducts %}
-    {% set any_legacy_verified = creator.legacyVerifiedOffers or creator.legacyVerifiedProducts %}
-    {% set any_unverified = creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty %}
+    {% set any_verified = creator.verifiedOffers or creator.verifiedProducts or creator.verifiedStyles %}
+    {% set any_legacy_verified = creator.legacyVerifiedOffers or creator.legacyVerifiedProducts or creator.legacyVerifiedStyles %}
+    {% set any_unverified = creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty or creator.unverifiedStyles.notEmpty %}
     {% if creator.creatorLabels or any_unverified or any_legacy_verified %}
         <div class="row show-expanded">
             <div class="col-auto pe-0 pt-2">
@@ -284,21 +284,21 @@
                 {% if any_verified %}
                     {{ verified_item_icon() }}
                     <span class="labels-explanations-shown">
-                        Offers and products marked this way are verified.<br>
+                        Offers, products, and styles marked this way are verified.<br>
                     </span>
                 {% endif %}
 
                 {% if any_legacy_verified %}
                     {{ legacy_verified_item_icon() }}
                     <span class="labels-explanations-shown">
-                        Offers and products marked like this have been added before verification started in 2026.<br>
+                        Offers, products, and styles marked like this have been added before verification started in 2026.<br>
                     </span>
                 {% endif %}
 
                 {% if any_unverified %}
                     {{ unverified_item_icon() }}
                     <span class="labels-explanations-shown">
-                        Offers and products marked like this have not been verified yet.<br>
+                        Offers, products, and styles marked like this have not been verified yet.<br>
                     </span>
                 {% endif %}
 
@@ -381,7 +381,7 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
+                {{ _self.verified_list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment, creator.verifiedStyles, creator.legacyVerifiedStyles) }}
             </div>
         </div>
 

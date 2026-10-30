@@ -64,6 +64,7 @@ class OneTimeApplyLabels
 
         $this->applyLabelsToItems($creator, Field::PRODUCTS, LabelType::PRODUCT_VERIFIED_BEFORE_2026);
         $this->applyLabelsToItems($creator, Field::OFFERS, LabelType::OFFER_VERIFIED_BEFORE_2026);
+        $this->applyLabelsToItems($creator, Field::STYLES, LabelType::STYLE_VERIFIED_BEFORE_2026);
 
         $this->entityManager->persist($creator);
     }

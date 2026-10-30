@@ -8,8 +8,10 @@ enum LabelType: string
 {
     case PRODUCT_VERIFIED = LabelSubject::PRODUCT->value.'_VERIFIED';
     case OFFER_VERIFIED = LabelSubject::OFFER->value.'_VERIFIED';
+    case STYLE_VERIFIED = LabelSubject::STYLE->value.'_VERIFIED';
     case PRODUCT_VERIFIED_BEFORE_2026 = LabelSubject::PRODUCT->value.'_VERIFIED_BEFORE_2026';
     case OFFER_VERIFIED_BEFORE_2026 = LabelSubject::OFFER->value.'_VERIFIED_BEFORE_2026';
+    case STYLE_VERIFIED_BEFORE_2026 = LabelSubject::STYLE->value.'_VERIFIED_BEFORE_2026';
 
     case CREATOR_PENDING_REVIEW = LabelSubject::CREATOR->value.'_PENDING_REVIEW';
     case CREATOR_GOT_3_REVIEWS = LabelSubject::CREATOR->value.'_GOT_3_REVIEWS';
@@ -36,6 +38,8 @@ enum LabelType: string
             self::PRODUCT_VERIFIED_BEFORE_2026 => LabelSubject::PRODUCT,
             self::OFFER_VERIFIED,
             self::OFFER_VERIFIED_BEFORE_2026 => LabelSubject::OFFER,
+            self::STYLE_VERIFIED,
+            self::STYLE_VERIFIED_BEFORE_2026 => LabelSubject::STYLE,
 
             self::CREATOR_PENDING_REVIEW,
             self::CREATOR_GOT_3_REVIEWS,
@@ -46,9 +50,10 @@ enum LabelType: string
     public function getText(): string
     {
         return match ($this) {
-            self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026 => 'Verified before 2026',
+            self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026,
+            self::STYLE_VERIFIED_BEFORE_2026 => 'Verified before 2026',
 
-            self::PRODUCT_VERIFIED, self::OFFER_VERIFIED => 'Verified',
+            self::PRODUCT_VERIFIED, self::OFFER_VERIFIED, self::STYLE_VERIFIED => 'Verified',
 
             self::CREATOR_ADDED_BEFORE_2026 => 'Before 2026',
             self::CREATOR_GOT_3_REVIEWS => 'Reviewed 3×',
@@ -63,7 +68,8 @@ enum LabelType: string
             self::CREATOR_ADDED_BEFORE_2026 => 'This studio/maker has only been briefly reviewed, and added to the list before 2026.',
             self::CREATOR_GOT_3_REVIEWS => 'This studio/maker have been checked by 3+ different reviewers during the 2026 reviews experiment.',
 
-            self::PRODUCT_VERIFIED, self::OFFER_VERIFIED, self::PRODUCT_VERIFIED_BEFORE_2026, self::OFFER_VERIFIED_BEFORE_2026 => '', // Not needed
+            self::PRODUCT_VERIFIED, self::OFFER_VERIFIED, self::STYLE_VERIFIED, self::PRODUCT_VERIFIED_BEFORE_2026,
+            self::OFFER_VERIFIED_BEFORE_2026, self::STYLE_VERIFIED_BEFORE_2026 => '', // Not needed
         };
     }
 }

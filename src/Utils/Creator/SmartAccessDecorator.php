@@ -1589,4 +1589,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     {
         return new StringVec($this->getProducts())->minusAll($this->getVerifiedProducts())->minusAll($this->getLegacyVerifiedProducts());
     }
+
+    /** @return string[] */
+    public function getVerifiedStyles(): array
+    {
+        return $this->getVerifiedItems(LabelType::STYLE_VERIFIED);
+    }
+
+    /** @return string[] */
+    public function getLegacyVerifiedStyles(): array
+    {
+        return $this->getVerifiedItems(LabelType::STYLE_VERIFIED_BEFORE_2026);
+    }
+
+    public function getUnverifiedStyles(): StringVec
+    {
+        return new StringVec($this->getStyles())->minusAll($this->getVerifiedStyles())->minusAll($this->getLegacyVerifiedStyles());
+    }
 }

@@ -6,20 +6,23 @@ namespace App\Data;
 
 use App\Data\Definitions\Offers;
 use App\Data\Definitions\Products;
+use App\Data\Definitions\Styles;
 
 enum LabelSubject: string
 {
     case CREATOR = 'CREATOR';
-    case PRODUCT = 'PRODUCT';
     case OFFER = 'OFFER';
+    case PRODUCT = 'PRODUCT';
+    case STYLE = 'STYLE';
 
     /** @return list<string> */
     public function getValidValues(): array
     {
         return match ($this) {
             self::CREATOR => [''],
-            self::PRODUCT => Products::getValues(),
             self::OFFER => Offers::getValues(),
+            self::PRODUCT => Products::getValues(),
+            self::STYLE => Styles::getValues(),
         };
     }
 }
