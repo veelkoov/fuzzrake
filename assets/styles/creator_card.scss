@@ -8,6 +8,17 @@ a {
   text-decoration: none;
 }
 
+.creator-label {
+  background-color: #f8f9fa;
+  border: 1px solid #c4c8cb;
+  color: #6c6f72;
+
+  &.important {
+    border: 1px solid #ff8800;
+    color: #1d1f1f;
+  }
+}
+
 div.creator-card {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
@@ -75,7 +86,7 @@ div.creator-card.expanded {
   }
 
   @each $item in languages, state, features, offers, styles, products, links,
-    commissions, species, photos, allergy-warning
+    commissions, species, photos, allergy-warning, labels
   {
     &:not(.show-#{$item}) .creator-card:not(.expanded) .#{$item} {
       display: none !important;
@@ -96,20 +107,20 @@ div.creator-card {
       display: inline;
     }
 
-    li:before {
+    li.other {
+      opacity: 70%;
+    }
+
+    &:not(.with-verification) li:before {
       content: "▶\00a0";
       font-size: 50%;
       vertical-align: middle;
     }
 
-    li.other {
-      opacity: 70%;
-
-      &:before {
-        content: "▷\00a0";
-        font-size: 50%;
-        vertical-align: middle;
-      }
+    li.other:before {
+      content: "▷\00a0";
+      font-size: 50%;
+      vertical-align: middle;
     }
   }
 }
@@ -241,4 +252,15 @@ div.imgs-container {
   h5 {
     margin-bottom: 0;
   }
+}
+
+body.hide-labels-explanations .labels-explanations-shown {
+  display: none;
+}
+body.hide-labels-explanations .labels-expl-toggle-btn i {
+  rotate: 180deg;
+}
+
+body:not(.hide-labels-explanations) .labels-explanations-hidden {
+  display: none;
 }

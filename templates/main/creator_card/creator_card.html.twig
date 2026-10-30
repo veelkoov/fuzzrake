@@ -1,3 +1,5 @@
+{% import '_macros.html.twig' as macros %}
+
 {% macro crafting_since(input) %}
     {% set months = {
         '01': 'Jan',
@@ -53,6 +55,34 @@
         <ul class="condensed">
             {% for item in items %}
                 <li>{{ item }}</li>
+            {% endfor %}
+
+            {% for item in other_items %}
+                <li class="other show-expanded">{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro verified_list_with_others_comment_opt(items, other_items, comment, verified_items, legacy_verified_items) %}
+    {% if comment %}
+        <p class="nl2br comment show-expanded">{{ comment }}</p>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul class="condensed with-verification">
+            {% for item in items %}
+                {% if item in verified_items %}
+                    {% set icon = verified_item_icon() %}
+                {% elseif item in legacy_verified_items %}
+                    {% set icon = legacy_verified_item_icon() %}
+                {% else %}
+                    {% set icon = unverified_item_icon() %}
+                {% endif %}
+
+                <li>{{ item|glue_html_prefix(icon) }}</li>
             {% endfor %}
 
             {% for item in other_items %}
@@ -138,6 +168,12 @@
                     </small>
                 </div>
 
+                <div class="col col-auto hide-expanded header-box labels">
+                    {% for label in creator.creatorLabels %}
+                        {{ macros.label(label.type) }}
+                    {% endfor %}
+                </div>
+
                 <div class="col col-auto header-box show-expanded">
                     Crafting since {{ _self.crafting_since(creator.since) }}
                     <br>
@@ -184,6 +220,10 @@
 
             <br class="admin-user-only show-expanded">
 
+            <a class="admin-user-only" href="{{ path('rt_mx_creator_labels', {creatorId: creator.lastCreatorId}) }}">
+                <i class="fa-solid fa-tags"></i>
+            </a>
+
             <a class="hide-when-standalone" href="{{ path('rt_creator', {creatorId: creator.lastCreatorId}) }}" target="_blank">
                 <i class="fa-solid fa-up-right-from-square"></i>
             </a>
@@ -204,6 +244,8 @@
                 </p>
             </div>
         </div>
+
+        <hr class="mt-0 mx-2 show-expanded border-secondary-subtle">
     {% endif %}
 
     {% if creator.hasValidPhotos %}
@@ -216,6 +258,51 @@
                         </a>
                     {% endfor %}
                 </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% set any_verified = creator.verifiedOffers or creator.verifiedProducts or creator.verifiedStyles %}
+    {% set any_legacy_verified = creator.legacyVerifiedOffers or creator.legacyVerifiedProducts or creator.legacyVerifiedStyles %}
+    {% set any_unverified = creator.unverifiedOffers.notEmpty or creator.unverifiedProducts.notEmpty or creator.unverifiedStyles.notEmpty %}
+    {% if creator.creatorLabels or any_unverified or any_legacy_verified %}
+        <div class="row show-expanded">
+            <div class="col-auto pe-0 pt-2">
+                <button class="btn btn-sm btn-outline-secondary mx-2 labels-expl-toggle-btn">
+                    <i class="fa-solid fa-angles-up"></i>
+                    <span class="labels-explanations-hidden">Explain</span>
+                </button>
+            </div>
+            <div class="col ps-0 pt-2">
+                {% for label in creator.creatorLabels %}
+                    {{ macros.label(label.type) }}
+                    <span class="labels-explanations-shown">
+                        {{ label.type.explanation }} <br>
+                    </span>
+                {% endfor %}
+
+                {% if any_verified %}
+                    {{ verified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers, products, and styles marked this way are verified.<br>
+                    </span>
+                {% endif %}
+
+                {% if any_legacy_verified %}
+                    {{ legacy_verified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers, products, and styles marked like this have been added before verification started in 2026.<br>
+                    </span>
+                {% endif %}
+
+                {% if any_unverified %}
+                    {{ unverified_item_icon() }}
+                    <span class="labels-explanations-shown">
+                        Offers, products, and styles marked like this have not been verified yet.<br>
+                    </span>
+                {% endif %}
+
+                <a class="labels-explanations-shown" href="{{ path('rt_reviews_and_labels') }}" target="_blank">Learn more</a>
             </div>
         </div>
     {% endif %}
@@ -274,17 +361,7 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.offers, [], creator.offersComment) }}
-            </div>
-        </div>
-
-        <div class="look-ma-am-box styles">
-            <div class="box-header">
-                <h5>Styles</h5>
-            </div>
-
-            <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
+                {{ _self.verified_list_with_others_comment_opt(creator.offers, [], creator.offersComment, creator.verifiedOffers, creator.legacyVerifiedOffers) }}
             </div>
         </div>
 
@@ -294,7 +371,17 @@
             </div>
 
             <div class="box-content">
-                {{ _self.list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment) }}
+                {{ _self.verified_list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment, creator.verifiedProducts, creator.legacyVerifiedProducts) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box styles">
+            <div class="box-header">
+                <h5>Styles</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.verified_list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment, creator.verifiedStyles, creator.legacyVerifiedStyles) }}
             </div>
         </div>
 

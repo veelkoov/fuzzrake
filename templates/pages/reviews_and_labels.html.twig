@@ -1,0 +1,47 @@
+{% extends '_base_with_toc.html.twig' %}
+
+{% import '_macros.html.twig' as macros %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('creator_card') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {{ encore_entry_link_tags('creator_card') }}
+{% endblock %}
+
+{% block title %}reviews, verification, labels{% endblock %}
+
+{% block contents %}
+    <h1>Reviews, verification, labels</h1>
+
+    <p>Since the beginning of getfursu.it until 2026 all request to be added to the list (submissions) were being reviewed by a single person; this will no longer be the case. See <a href="https://www.tumblr.com/getfursuit/807379325214162944">this Tumblr post</a> for explanation.</p>
+
+    <p>During 2026, with help from a few volunteers, we've made a reviews experiment, which resulted in the rejection of a few submissions, addition of 2 studios, and some observations.</p>
+
+    <h2>After the first experiment</h2>
+
+    <p>getfursu.it just got labels system. This will allow to add studios/makers early, while marking them as not fully verified. This resolves one significant issue with the reviews experiment: a studio is stuck in the review until last the last remaining issue gets addressed.</p>
+
+    <p>Now, studios will be added after only a basic verification, and marked with the {{ macros.label(constant('\\App\\Data\\LabelType::CREATOR_PENDING_REVIEW')) }} label. This basically means that any information could be inaccurate, or some basic stuff could be even missing.</p>
+
+    <p>Studios added before 2026 will get the {{ macros.label(constant('\\App\\Data\\LabelType::CREATOR_ADDED_BEFORE_2026')) }} label. These studios have been reviewed only by a single person, briefly.</p>
+
+    <p>Studios added during the reviews experiment are marked with {{ macros.label(constant('\\App\\Data\\LabelType::CREATOR_GOT_3_REVIEWS')) }} label. At least three different people reviewed them and agreed on adding.</p>
+
+    <p>Additionally, offers, products, and styles now show the verification status. Until these items will get verified, they will be marked with {{ unverified_item_icon() }}. Items which have been added before the labeling system has been implemented are marked with {{ legacy_verified_item_icon() }}. It should be possible to get them reviewed later.</p>
+
+    <p>Fully verified offers, products, and styles will get the {{ verified_item_icon() }} mark. In the future (near or distant) we may add verification to styles, features, possibly more.</p>
+
+    <h2>What's next</h2>
+
+    <p>We are looking for best ways to verify all the unconfirmed information, and I have no idea how to do that. Share your ideas on the <em>#getfursuit</em> channel on the <a href="https://discord.gg/mep6nUy" target="_blank">FursuitReview's Discord</a>.</p> {# grep-code-fsr-discord-url #}
+
+    <h3>Have questions? AMA</h3>
+
+    <p>Ask through the <a href="{{ path('rt_contact') }}">email or social media</a>. You can also <a href="{{ path('rt_feedback_form') }}">submit anonymous feedback</a> (e.g. "I think you should explain this and that").</p>
+{% endblock %}

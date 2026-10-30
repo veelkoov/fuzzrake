@@ -1,0 +1,5 @@
+{% macro label(label_type) %}
+    <span class="badge creator-label {% if label_type.important %}important{% endif %}">
+        <i class="fa-solid fa-tag"></i> {{ label_type.text }}
+    </span>
+{% endmacro %}

@@ -59,6 +59,10 @@ class PagesControllerTest extends FuzzrakeWebTestCase
             'should-know' => ['/should-know', [
                 'h1' => 'What you should know',
             ]],
+
+            'reviews-labels' => ['/reviews-labels', [
+                'h1' => 'Reviews, verification, labels',
+            ]],
         ];
     }
 
