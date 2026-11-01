@@ -61,7 +61,7 @@ class PagesControllerTest extends FuzzrakeWebTestCase
             ]],
 
             'reviews-labels' => ['/reviews-labels', [
-                'h1' => 'Reviews, verification, labels',
+                'h1' => 'labels, verification, reviews',
             ]],
         ];
     }
