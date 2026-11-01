@@ -45,7 +45,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.0",
-            "ref": "d39a3bd844edfe90c20ae520b804a3bf4f82b4ad"
+            "ref": "7d10295408f32426bffd6e99c75c2cb0a7b823f2"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -54,16 +54,16 @@
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
-        "version": "3.4",
+        "version": "4.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "3.1",
-            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
+            "version": "3.7",
+            "ref": "22bf81c4b6beb7c8258f08ab92f4007306880a18"
         },
         "files": [
             "config/packages/doctrine_migrations.yaml",
-            "migrations/.gitignore"
+            "src/Migrations/.gitignore"
         ]
     },
     "doctrine/event-manager": {
@@ -298,7 +298,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "8.1",
-            "ref": "d3714db4cc12adbfd4c0453cf854be32788ef549"
+            "ref": "3eee55306efebbd99462341126bbd4cac7cd8ba7"
         },
         "files": [
             ".editorconfig",
@@ -442,12 +442,12 @@
         "version": "v5.4.0-RC1"
     },
     "symfony/security-bundle": {
-        "version": "7.4",
+        "version": "8.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "7.4",
-            "ref": "c42fee7802181cdd50f61b8622715829f5d2335c"
+            "ref": "02d47835088cd548c827e5d53b3c4b361bca3390"
         },
         "files": [
             "config/packages/security.yaml",
@@ -572,12 +572,12 @@
         "version": "v3.3.4"
     },
     "vincentlanglet/twig-cs-fixer": {
-        "version": "3.4",
+        "version": "3.14",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
             "version": "3.0",
-            "ref": "d42582ae1bce86fd43491d6264c738b0867f8ffe"
+            "ref": "0a2d420aa6554f632804a3f21624e16314fe8588"
         }
     },
     "webmozart/assert": {

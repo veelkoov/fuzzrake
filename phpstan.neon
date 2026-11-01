@@ -2,7 +2,6 @@ parameters:
   level: 10
   paths:
     - global
-    - migrations
     - src
     - tests
 
