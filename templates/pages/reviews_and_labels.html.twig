@@ -2,18 +2,6 @@
 
 {% import '_macros.html.twig' as macros %}
 
-{% block javascripts %}
-    {{ parent() }}
-
-    {{ encore_entry_script_tags('creator_card') }}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-
-    {{ encore_entry_link_tags('creator_card') }}
-{% endblock %}
-
 {% block title %}labels, verification, reviews{% endblock %}
 
 {% block contents %}
