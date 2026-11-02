@@ -6,18 +6,18 @@ import Storage from "../class/Storage";
 const LABELS_HIDDEN_STORAGE_KEY: string = "labels-explanations-hidden";
 const LABELS_HIDING_BODY_CLASS: string = "hide-labels-explanations";
 
-function setupLabelsExplanationsToggleButton(): void {
-  if (Storage.getBoolean(LABELS_HIDDEN_STORAGE_KEY, true)) {
-    jQuery("body").addClass(LABELS_HIDING_BODY_CLASS);
-  }
-
-  const toggler = jQuery("div.creator-card .header .toggle");
+function setupToggingTheCardOnHeaderClick(): void {
+  const toggler = jQuery("div.creator-card:not(.standalone) .header .toggle");
   toggler.addClass("toggling");
   toggler.on("click", function () {
     jQuery(this).parents("div.creator-card").toggleClass("expanded");
   });
+}
 
-  localizeDateTimes(jQuery(".creator-card"));
+function setupTogglingLabelsExplanations(): void {
+  if (Storage.getBoolean(LABELS_HIDDEN_STORAGE_KEY, true)) {
+    jQuery("body").addClass(LABELS_HIDING_BODY_CLASS);
+  }
 
   jQuery(".labels-expl-toggle-btn").on("click", () => {
     const hiddenNow = jQuery("body")
@@ -28,11 +28,14 @@ function setupLabelsExplanationsToggleButton(): void {
   });
 }
 
+function setupEverything(): void {
+  setupToggingTheCardOnHeaderClick();
+  setupTogglingLabelsExplanations();
+  localizeDateTimes(jQuery(".creator-card"));
+}
+
 // Setup on standalone pages
-setupLabelsExplanationsToggleButton();
+setupEverything();
 
 // Setup for main/list
-MessageBus.listen(
-  "event-creators-page-loaded",
-  setupLabelsExplanationsToggleButton,
-);
+MessageBus.listen("event-creators-page-loaded", setupEverything);
