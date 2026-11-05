@@ -1548,22 +1548,20 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
     }
 
-    /** @return string[] */
-    public function getVerifiedItems(LabelType $type): array
+    public function getVerifiedItems(LabelType $type): StringVec
     {
-        return $this->entity->getLabels()
-            ->filter(static fn (CreatorLabel $label) => $label->type === $type)
-            ->map(static fn (CreatorLabel $label) => $label->value)->toArray();
+        return StringVec::mapFrom(
+            $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type === $type),
+            static fn (CreatorLabel $label) => $label->value,
+        );
     }
 
-    /** @return string[] */
-    public function getVerifiedOffers(): array
+    public function getVerifiedOffers(): StringVec
     {
         return $this->getVerifiedItems(LabelType::OFFER_VERIFIED);
     }
 
-    /** @return string[] */
-    public function getLegacyVerifiedOffers(): array
+    public function getLegacyVerifiedOffers(): StringVec
     {
         return $this->getVerifiedItems(LabelType::OFFER_VERIFIED_BEFORE_2026);
     }
@@ -1573,14 +1571,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return new StringVec($this->getOffers())->minusAll($this->getVerifiedOffers())->minusAll($this->getLegacyVerifiedOffers());
     }
 
-    /** @return string[] */
-    public function getVerifiedProducts(): array
+    public function getVerifiedProducts(): StringVec
     {
         return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED);
     }
 
-    /** @return string[] */
-    public function getLegacyVerifiedProducts(): array
+    public function getLegacyVerifiedProducts(): StringVec
     {
         return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED_BEFORE_2026);
     }
@@ -1590,14 +1586,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return new StringVec($this->getProducts())->minusAll($this->getVerifiedProducts())->minusAll($this->getLegacyVerifiedProducts());
     }
 
-    /** @return string[] */
-    public function getVerifiedStyles(): array
+    public function getVerifiedStyles(): StringVec
     {
         return $this->getVerifiedItems(LabelType::STYLE_VERIFIED);
     }
 
-    /** @return string[] */
-    public function getLegacyVerifiedStyles(): array
+    public function getLegacyVerifiedStyles(): StringVec
     {
         return $this->getVerifiedItems(LabelType::STYLE_VERIFIED_BEFORE_2026);
     }
