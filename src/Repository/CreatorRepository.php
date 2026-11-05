@@ -18,9 +18,11 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
@@ -84,19 +86,20 @@ class CreatorRepository extends ServiceEntityRepository
     private function getPaged(QueryBuilder $queryBuilder): Generator
     {
         $query = $queryBuilder->getQuery();
-        $first = 0;
-        $total = 1; // Temporary false value to start the loop
+        $window = Pagination::getWindow(1);
 
-        while ($first < $total) {
-            $query->setFirstResult($first)->setMaxResults(Pagination::PAGE_SIZE);
-            $creatorsPage = new Paginator($query, fetchJoinCollection: true);
+        while (true) {
+            $page = new OffsetPaginator()->paginate($query, $window);
 
-            $total = $creatorsPage->count();
-            $first += Pagination::PAGE_SIZE;
-
-            foreach ($creatorsPage as $creator) {
+            foreach ($page as $creator) {
                 yield $creator; // @phpstan-ignore generator.valueType
             }
+
+            if (!$page->hasNextPage()) {
+                return;
+            }
+
+            $window = $page->getNextWindow();
         }
     }
 
@@ -352,15 +355,19 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Paginator<array{0: Creator}>
+     * @return WindowPage<array{0: Creator}>
      */
-    public function getFiltered(QueryChoicesAppender $appender): Paginator
+    public function getFilteredPage(QueryChoicesAppender $appender, int $pageNumber): WindowPage
     {
         $builder = $this->getCreatorsQueryBuilder();
-
         $appender->applyChoices($builder);
 
-        return new Paginator($builder->getQuery(), fetchJoinCollection: true); // @phpstan-ignore return.type (grep-code-cannot-use-coalesce-in-doctrine-order-by)
+        $query = $builder->getQuery();
+        /** @var Query<null, array{0: Creator}> $query */
+
+        // grep-code-cannot-use-coalesce-in-doctrine-order-by
+        // @phpstan-ignore-next-line varTag.type
+        return Pagination::getExistingPage($query, $pageNumber);
     }
 
     public function getWithIds(IntVec $idsOfCreators): CreatorList

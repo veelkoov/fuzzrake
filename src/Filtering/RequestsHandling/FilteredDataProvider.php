@@ -8,7 +8,6 @@ use App\Repository\CreatorRepository;
 use App\Service\Cache;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Pagination\ItemsPage;
-use App\Utils\Pagination\Pagination;
 use App\ValueObject\CacheTags;
 
 class FilteredDataProvider
@@ -36,44 +35,19 @@ class FilteredDataProvider
      */
     private function filterCreatorsBy(Choices $choices): ItemsPage
     {
-        $pagesCount = null;
+        $appender = new QueryChoicesAppender($choices);
+        $page = $this->repository->getFilteredPage($appender, $choices->pageNumber);
 
-        do {
-            $choices = $this->getChoicesWithFixedPageNumber($choices, $pagesCount);
-
-            $appender = new QueryChoicesAppender($choices);
-            $paginator = $this->repository->getFiltered($appender);
-
-            $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
-        } while ($choices->pageNumber > $pagesCount);
-
-        $creators = iter_mapl($paginator,
+        $creators = iter_mapl($page,
             // grep-code-cannot-use-coalesce-in-doctrine-order-by
             static fn (array $creatorAndOrderColumns) => new Creator($creatorAndOrderColumns[0]),
         );
 
         return new ItemsPage(
             $creators,
-            $paginator->count(),
-            $choices->pageNumber,
-            $pagesCount,
+            $page->getTotalCount(),
+            $page->getPageNumber(),
+            $page->getPageCount(),
         );
-    }
-
-    private function getChoicesWithFixedPageNumber(Choices $choices, ?int $lastPageNumber): Choices
-    {
-        if ($choices->pageNumber < 1) {
-            $newPageNumber = 1;
-        } elseif (null !== $lastPageNumber && $choices->pageNumber > $lastPageNumber) {
-            $newPageNumber = $lastPageNumber;
-        } else {
-            $newPageNumber = $choices->pageNumber;
-        }
-
-        if ($choices->pageNumber !== $newPageNumber) {
-            $choices = $choices->changePage($newPageNumber);
-        }
-
-        return $choices;
     }
 }
