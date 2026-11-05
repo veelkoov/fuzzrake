@@ -10,8 +10,10 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\ValidationGroups;
 use App\Data\FieldValue;
+use App\Data\LabelType;
 use App\Entity\Creator as CreatorE;
 use App\Entity\CreatorId;
+use App\Entity\CreatorLabel;
 use App\Entity\CreatorUrl;
 use App\Entity\CreatorValue;
 use App\Entity\CreatorVolatileData;
@@ -28,6 +30,7 @@ use App\Utils\Parse;
 use App\Utils\StrUtils;
 use App\Validator\StrListLength;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 use JsonSerializable;
 use Override;
@@ -38,6 +41,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Veelkoov\Debris\Vecs\StringVec;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
@@ -1507,5 +1511,93 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getUser(): User
     {
         return $this->entity->getUser();
+    }
+
+    public function setLabel(LabelType $type, string $value): self
+    {
+        $label = $this->findLabel($type, $value) ?? new CreatorLabel($this->entity)->setType($type)->setValue($value);
+        $this->entity->addLabel($label);
+
+        return $this;
+    }
+
+    public function removeLabel(LabelType $type, string $value): self
+    {
+        $label = $this->findLabel($type, $value);
+        if (null !== $label) {
+            $this->entity->removeLabel($label);
+        }
+
+        return $this;
+    }
+
+    public function findLabel(LabelType $type, string $value): ?CreatorLabel
+    {
+        foreach ($this->entity->getLabels() as $label) {
+            if ($label->type === $type && $label->value === $value) {
+                return $label;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return Collection<int, CreatorLabel> */
+    public function getCreatorLabels(): Collection
+    {
+        return $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type->isForCreator());
+    }
+
+    public function getVerifiedItems(LabelType $type): StringVec
+    {
+        return StringVec::mapFrom(
+            $this->entity->getLabels()->filter(static fn (CreatorLabel $label) => $label->type === $type),
+            static fn (CreatorLabel $label) => $label->value,
+        );
+    }
+
+    public function getVerifiedOffers(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::OFFER_VERIFIED);
+    }
+
+    public function getLegacyVerifiedOffers(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::OFFER_VERIFIED_BEFORE_2026);
+    }
+
+    public function getUnverifiedOffers(): StringVec
+    {
+        return new StringVec($this->getOffers())->minusAll($this->getVerifiedOffers())->minusAll($this->getLegacyVerifiedOffers());
+    }
+
+    public function getVerifiedProducts(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED);
+    }
+
+    public function getLegacyVerifiedProducts(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::PRODUCT_VERIFIED_BEFORE_2026);
+    }
+
+    public function getUnverifiedProducts(): StringVec
+    {
+        return new StringVec($this->getProducts())->minusAll($this->getVerifiedProducts())->minusAll($this->getLegacyVerifiedProducts());
+    }
+
+    public function getVerifiedStyles(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::STYLE_VERIFIED);
+    }
+
+    public function getLegacyVerifiedStyles(): StringVec
+    {
+        return $this->getVerifiedItems(LabelType::STYLE_VERIFIED_BEFORE_2026);
+    }
+
+    public function getUnverifiedStyles(): StringVec
+    {
+        return new StringVec($this->getStyles())->minusAll($this->getVerifiedStyles())->minusAll($this->getLegacyVerifiedStyles());
     }
 }
