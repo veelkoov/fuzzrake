@@ -365,16 +365,6 @@
             </div>
         </div>
 
-        <div class="look-ma-am-box products">
-            <div class="box-header">
-                <h5>Products</h5>
-            </div>
-
-            <div class="box-content">
-                {{ _self.verified_list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment, creator.verifiedProducts, creator.legacyVerifiedProducts) }}
-            </div>
-        </div>
-
         <div class="look-ma-am-box styles">
             <div class="box-header">
                 <h5>Styles</h5>
@@ -382,6 +372,16 @@
 
             <div class="box-content">
                 {{ _self.verified_list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment, creator.verifiedStyles, creator.legacyVerifiedStyles) }}
+            </div>
+        </div>
+
+        <div class="look-ma-am-box products">
+            <div class="box-header">
+                <h5>Products</h5>
+            </div>
+
+            <div class="box-content">
+                {{ _self.verified_list_with_others_comment_opt(creator.products, creator.otherProducts, creator.productsComment, creator.verifiedProducts, creator.legacyVerifiedProducts) }}
             </div>
         </div>
 
