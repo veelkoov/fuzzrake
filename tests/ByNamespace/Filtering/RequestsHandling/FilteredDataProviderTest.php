@@ -103,9 +103,9 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         $result = $subject->getCreatorsPage($input);
 
-        self::assertSame($numberOfCreators, $result->totalItems); // Sanity check
-        self::assertSame($pageReturned, $result->pageNumber);
-        self::assertSame($pagesCount, $result->totalPages);
+        self::assertSame($numberOfCreators, $result->totalItems, "Expected $numberOfCreators creators.");
+        self::assertSame($pagesCount, $result->totalPages, "Expected $pagesCount pages.");
+        self::assertSame($pageReturned, $result->pageNumber, "Expected page number $pageReturned.");
 
         $first = Parse::int(array_first($result->items)?->getCity() ?? '0');
         $last = Parse::int(array_last($result->items)?->getCity() ?? '0');
