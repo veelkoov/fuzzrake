@@ -10,7 +10,6 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
 use App\Filtering\Consts;
-use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Join;
@@ -30,7 +29,6 @@ class QueryChoicesAppender
     {
         $this->applyFilters($builder);
         $this->applyOrder($builder);
-        $this->applyPaging($builder);
     }
 
     private function applyFilters(QueryBuilder $builder): void
@@ -93,14 +91,6 @@ class QueryChoicesAppender
         $builder
             ->addOrderBy('LOWER(d_c.name)') // Then sort by name as typical
             ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
-        ;
-    }
-
-    private function applyPaging(QueryBuilder $builder): void
-    {
-        $builder
-            ->setFirstResult(Pagination::getFirstIdx($this->choices->pageSize, $this->choices->pageNumber))
-            ->setMaxResults($this->choices->pageSize)
         ;
     }
 

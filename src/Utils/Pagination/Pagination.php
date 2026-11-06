@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Pagination;
 
 use App\Utils\Traits\UtilityClass;
-use Countable;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\Window;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Veelkoov\Debris\Sets\IntSet;
 
 final class Pagination
@@ -14,19 +17,33 @@ final class Pagination
 
     public const int PAGE_SIZE = 25;
 
-    public static function countPages(Countable $paginator, int $pageSize): int
+    /**
+     * @template T
+     *
+     * @param Query<null, T> $query
+     *
+     * @return WindowPage<T>
+     */
+    public static function getExistingPage(Query $query, int $pageNumber): WindowPage
     {
-        return (int) max(1, ceil($paginator->count() / $pageSize));
+        if ($pageNumber <= 0) {
+            $pageNumber = 1;
+        }
+
+        while (true) {
+            $page = new OffsetPaginator()->paginate($query, Pagination::getWindow($pageNumber));
+
+            if ($pageNumber > $page->getPageCount()) {
+                $pageNumber = $page->getPageCount();
+            } else {
+                return $page;
+            }
+        }
     }
 
-    public static function getFirstIdx(int $pageSize, int $pageNumber): int
+    public static function getWindow(int $pageNumber): Window
     {
-        return $pageSize * ($pageNumber - 1);
-    }
-
-    public static function clamp(int $pageNumber, int $pagesCount): int
-    {
-        return max(1, min($pageNumber, $pagesCount));
+        return Window::fromPageNumberAndSize($pageNumber, self::PAGE_SIZE);
     }
 
     public static function getPaginationPages(int $pageNumber, int $pagesCount): IntSet
