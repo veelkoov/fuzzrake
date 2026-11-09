@@ -12,8 +12,13 @@
   tags: "build"
 
 - name: "Clear cache"
-  ansible.builtin.command: "docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear"
+  ansible.builtin.command:
+    cmd: "docker exec {{ php_fpm_container_name | quote }} {{ item }}"
   changed_when: "not ansible_check_mode"
+  loop:
+    # TODO: Find the right&proper way to clear cache with the new "share" directory added
+    - "rm -rf {{ ('var/cache/' ~ app_env) | quote }} {{ ('var/share/' ~ app_env) | quote }}"
+    - "bin/console cache:warmup"
 
 - name: "Migrate DB schema"
   ansible.builtin.import_tasks: "migrate_db_schema.yaml"
