@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Migrations;
+namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Override;
 
-final class Version20261101160000 extends AbstractMigration
+final class Version20261109181312 extends AbstractMigration
 {
     #[Override]
     public function getDescription(): string
