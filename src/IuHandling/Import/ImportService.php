@@ -7,6 +7,7 @@ namespace App\IuHandling\Import;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
+use App\Data\LabelType;
 use App\Entity\Event;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
@@ -112,6 +113,9 @@ class ImportService
         }
 
         $creator->entity->setUser($importData->submission->getOwner());
+        if (!$importData->isUpdate()) {
+            $creator->setLabel(LabelType::CREATOR_PENDING_REVIEW, '');
+        }
 
         $this->entityManager->persist($creator);
         $this->entityManager->persist($this->getEventFor($importData));

@@ -1,5 +1,7 @@
 {% extends '_base_with_toc.html.twig' %}
 
+{% import '_macros.html.twig' as macros %}
+
 {% block title %}What you should know{% endblock %}
 
 {% set refs = {
@@ -178,6 +180,9 @@
     <p>
         New makers are marked like this: <span class="new-creator"><i class="fa-solid fa-leaf"></i> recently added</span>. Everyone starts some day, so everyone will bear that mark at some point. But if a scammer made it on getfursu.it, they would probably still have this. Be more careful (or even "carefulest") with those makers.
     </p>
+
+    {# Deliberately not linking the rt_reviews_and_labels page with explanation, to avoid distracting the user. The information below is more universal and thus more important. #}
+    <p><strong>Changing in 2026:</strong> labels are being added to getfursu.it. Be sure to read their explanations, and take them into account while choosing a studio/maker. This is an example label you may encounter: {{ macros.label(constant('\\App\\Data\\LabelType::CREATOR_PENDING_REVIEW')) }}.</p>
 
     <h4 id="general-advice" class="pt-3">General advice</h4>
 

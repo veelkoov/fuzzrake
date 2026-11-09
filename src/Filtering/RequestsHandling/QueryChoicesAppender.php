@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Filtering\RequestsHandling;
 
 use App\Data\Definitions\Fields\Field;
+use App\Data\LabelType;
 use App\Entity\Creator;
+use App\Entity\CreatorLabel;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
@@ -84,6 +86,10 @@ class QueryChoicesAppender
         ;
 
         if (!$this->choices->creatorMode) {
+            // Place unverified at the end
+            $clTableId = QueryBuilderUtils::getUniqueId();
+            $builder->addOrderBy('CASE WHEN EXISTS (SELECT 1 FROM '.CreatorLabel::class." $clTableId WHERE $clTableId.creator = d_c AND $clTableId.type = '".LabelType::CREATOR_PENDING_REVIEW->value."') THEN 1 ELSE 0 END");
+
             $builder->addOrderBy("CASE WHEN d_c.country = 'RU' THEN 1 ELSE 0 END"); // 2022-02-24 & 1939-09-17
             $builder->addOrderBy('last_update_datetime', SortDirection::Descending); // Put recently updated makers on top
         }

@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Data\Submission\Filter;
 use App\Entity\Submission;
-use App\Utils\Collections\StatusToInt;
 use App\Utils\Pagination\ItemsPage;
 use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -52,20 +51,6 @@ class SubmissionRepository extends ServiceEntityRepository
             $page->getTotalCount(),
             $page->getPageNumber(),
             $page->getPageCount(),
-        );
-    }
-
-    public function getStatusToCount(): StatusToInt
-    {
-        return StatusToInt::mapFrom(
-            $this->createQueryBuilder('d_s')
-                ->select('d_s.status, COUNT(d_s) AS count')
-                ->groupBy('d_s.status')
-                ->orderBy('count', SortDirection::Descending)
-                ->getQuery()
-                ->getArrayResult(),
-            // @phpstan-ignore argument.type
-            static fn (array $row, mixed $_) => [$row['status'], $row['count']],
         );
     }
 }

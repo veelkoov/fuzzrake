@@ -107,4 +107,22 @@ class AppExtensions
 
         return Preg::replace('#^(?:(....\S*)(\s.*))?(.*)?$#s', "<span class=\"text-nowrap\">$htmlPrefix \\1\\3</span>\\2", $input, 1);
     }
+
+    #[AsTwigFunction('verified_item_icon', isSafe: ['html'])]
+    public function verifiedItemIcon(): string
+    {
+        return '<span class="verified-full"><i class="fa-solid fa-circle-check"></i></span>';
+    }
+
+    #[AsTwigFunction('legacy_verified_item_icon', isSafe: ['html'])]
+    public function legacyVerifiedItemIcon(): string
+    {
+        return '<span class="verified-legacy"><i class="fa-regular fa-circle-check"></i></span>';
+    }
+
+    #[AsTwigFunction('unverified_item_icon', isSafe: ['html'])]
+    public function unverifiedItemIcon(): string
+    {
+        return '<span class="not-verified"><i class="fa-regular fa-circle"></i></span>';
+    }
 }
