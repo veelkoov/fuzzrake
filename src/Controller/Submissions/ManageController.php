@@ -44,9 +44,10 @@ class ManageController extends AbstractController
      * @throws DateTimeException
      */
     #[Route(path: '/submissions/social', name: 'rt_submissions_social')]
-    public function social(): Response
+    public function social(Request $request): Response
     {
-        $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
+        $hours = $request->query->getInt('hours', 4);
+        $fourHoursAgo = UtcClock::at("-$hours hours")->getTimestamp();
 
         $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
             static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
