@@ -15,7 +15,7 @@ final class Pagination
 {
     use UtilityClass;
 
-    public const int PAGE_SIZE = 25;
+    public const int PAGE_SIZE = 10;
 
     /**
      * @template T
