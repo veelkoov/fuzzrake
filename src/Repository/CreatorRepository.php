@@ -166,12 +166,13 @@ class CreatorRepository extends ServiceEntityRepository
 
     private function getCreatorsQueryBuilder(): QueryBuilder
     {
+        // Very odd way of optimizing the site speed.
         return $this->createQueryBuilder('d_c')
-            ->leftJoin('d_c.volatileData', 'd_cvd')->addSelect('d_cvd')
-            ->leftJoin('d_c.urls', 'd_cu')->addSelect('d_cu')
+            ->leftJoin('d_c.volatileData', 'd_cvd') //->addSelect('d_cvd')
+            ->leftJoin('d_c.urls', 'd_cu') // ->addSelect('d_cu')
             ->leftJoin('d_cu.state', 'd_cus') // ->addSelect('d_cus')
-            ->leftJoin('d_c.offerStatuses', 'd_cos')->addSelect('d_cos')
-            ->leftJoin('d_c.creatorIds', 'd_ci')->addSelect('d_ci')
+            ->leftJoin('d_c.offerStatuses', 'd_cos') //->addSelect('d_cos')
+            ->leftJoin('d_c.creatorIds', 'd_ci') //->addSelect('d_ci')
             ->leftJoin('d_c.values', 'd_cv') // ->addSelect('d_cv')
             ->leftJoin('d_c.labels', 'd_cl') // ->addSelect('d_cl')
         ;
