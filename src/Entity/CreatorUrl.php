@@ -36,7 +36,7 @@ class CreatorUrl implements Stringable, Url
     #[ORM\Column(type: Types::TEXT)]
     private string $url = '';
 
-    #[ORM\OneToOne(targetEntity: CreatorUrlState::class, mappedBy: 'url', cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: CreatorUrlState::class, mappedBy: 'url', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorUrlState $state = null;
 
     public function getId(): ?int
