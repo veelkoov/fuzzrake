@@ -8,7 +8,6 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\Creator as CreatorE;
 use App\IuHandling\Import\ImportData;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
-use App\Utils\DataQuery;
 use App\Utils\StrUtils;
 use Composer\Pcre\Preg;
 use Twig\Attribute\AsTwigFilter;
@@ -95,15 +94,6 @@ class AdminExtensions
     public function tumblrAt(string $tumblrUrl): string
     {
         return Preg::replace('~^https://www\.tumblr\.com/([^/#?]+).*$~', '@$1 _FIX_', $tumblrUrl);
-    }
-
-    /**
-     * @param list<string> $input
-     */
-    #[AsTwigFilter('filter_by_query')]
-    public function filterFilterByQuery(array $input, DataQuery $query): string
-    {
-        return implode(', ', $query->filterList($input));
     }
 
     #[AsTwigFunction('submission_row_classes')]

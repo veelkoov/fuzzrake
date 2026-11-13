@@ -58,7 +58,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/main', false],
             ['/user/iu_form/start', false],
 
-            ['/mx/query/', false],
+            ['/mx/creator_urls/', false],
             ['/submissions/1/', false],
             ['/submission/SID/manage', false],
             ['/submission/SID/review', false],
@@ -83,7 +83,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/main', true],
             ['/user/iu_form/start', true],
 
-            ['/mx/query/', false],
+            ['/mx/creator_urls/', false],
             ['/submissions/1/', false],
             ['/submission/SID/manage', false],
             ['/submission/SID/review', false],
@@ -113,7 +113,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/main', true],
             ['/user/iu_form/start', false],
 
-            ['/mx/query/', true],
+            ['/mx/creator_urls/', true],
             ['/submissions/1/', true],
             ['/submission/SID/manage', true],
             ['/submission/SID/review', true],
@@ -131,7 +131,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
         return [
             ['/user/main', true],
 
-            ['/mx/query/', false],
+            ['/mx/creator_urls/', false],
             ['/submissions/1/', false],
             ['/submission/SID/manage', false],
             ['/submission/SID/review', false],
@@ -147,7 +147,7 @@ class BasicPermissionsTest extends FuzzrakeWebTestCase
             ['/user/main', true],
             ['/user/iu_form/start', false],
 
-            ['/mx/query/', false],
+            ['/mx/creator_urls/', false],
             ['/submissions/1/', true],
             ['/submission/SID/manage', false],
             ['/submission/SID/review', true],

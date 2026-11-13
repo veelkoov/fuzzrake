@@ -16,7 +16,6 @@
         {% if not ignore_session and is_granted('ROLE_ADMIN') %}
             {{ include('_menu_item.html.twig', {name: 'rt_mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'rt_mx_creators_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}
-            {{ include('_menu_item.html.twig', {name: 'rt_mx_query', fa_icon: 'filter', label: 'Query', priority: 'low'}) }}
         {% endif %}
 
         {% if not ignore_session and is_granted('ROLE_REVIEWER') %}

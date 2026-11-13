@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
-use App\Entity\CreatorValue;
 use App\Filtering\RequestsHandling\QueryChoicesAppender;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
@@ -15,11 +14,9 @@ use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
 use App\Utils\Exceptions\UnbelievableRuntimeException;
 use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
 use Doctrine\ORM\Tools\Pagination\WindowPage;
@@ -27,10 +24,8 @@ use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
 use SortDirection;
-use Veelkoov\Debris\Maps\Base\DStringMap;
 use Veelkoov\Debris\Maps\NullBoolToInt;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
 use Veelkoov\Debris\Strings;
 use Veelkoov\Debris\Vecs\IntVec;
@@ -119,45 +114,6 @@ class CreatorRepository extends ServiceEntityRepository
         $queryBuilder = $this->getCreatorsQueryBuilder()
             ->where('d_c.inactiveReason = :empty')
             ->setParameter('empty', '')
-            ->orderBy('d_c.id')
-        ;
-
-        return $this->getPaged($queryBuilder);
-    }
-
-    /**
-     * @param list<string> $items
-     *
-     * @return Generator<Creator>
-     */
-    public function getWithOtherItemsLikePaged(array $items): Generator
-    {
-        $items = StringToString::mapFrom($items, static fn (string $value, int $key) => ["item$key", $value]);
-
-        $parameters = new ArrayCollection([
-            new Parameter('empty', ''),
-            new Parameter('otherFieldNames', [
-                Field::OTHER_FEATURES->value,
-                Field::OTHER_PRODUCTS->value,
-                Field::OTHER_STYLES->value,
-            ]),
-            // grep-code-debris-needs-improvements
-            ...$items->mapInto(new DStringMap(), static fn (string $key, string $value) => [$key, new Parameter($key, "%$value%")]),
-        ]);
-
-        $queryBuilder = $this->getCreatorsQueryBuilder();
-        $queryBuilder
-            ->where('d_c.inactiveReason = :empty')
-            ->andWhere($queryBuilder->expr()->exists(
-                $this->getEntityManager()->getRepository(CreatorValue::class)->createQueryBuilder('cv')
-                    ->select('1')
-                    ->where('d_cv.creator = d_c')
-                    ->andWhere('d_cv.fieldName IN (:otherFieldNames)')
-                    ->andWhere($queryBuilder->expr()->orX(
-                        ...$items->getKeys()->map(static fn (string $parName) => "cv.value LIKE :$parName")
-                    )),
-            ))
-            ->setParameters($parameters)
             ->orderBy('d_c.id')
         ;
 
