@@ -264,27 +264,6 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $creatorIds
-     *
-     * @return Creator[]
-     */
-    public function findByCreatorIds(array $creatorIds): array
-    {
-        $builder = $this->createQueryBuilder('d_c')
-            ->leftJoin('d_c.creatorIds', 'd_ci');
-
-        $i = 0;
-
-        foreach ($creatorIds as $creatorId) {
-            $builder->orWhere("d_ci.creatorId = :eq$i");
-            $builder->setParameter("eq$i", $creatorId);
-            ++$i;
-        }
-
-        return $builder->getQuery()->getResult();
-    }
-
-    /**
      * @throws NoResultException
      */
     public function findByCreatorId(string $creatorId): Creator
