@@ -132,8 +132,8 @@ class DataService
         return $this->cache->get(function (): StringToInt {
             $result = StringToInt::fromKeys(Fields::inStats()->names(), fn () => 0);
 
-            foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
-                $creator = new Creator($creatorE);
+            foreach ($this->creatorRepository->getActiveIds() as $id) {
+                $creator = $this->getCreatorDataById($id);
 
                 foreach (Fields::inStats() as $field) {
                     if (Field::FORMER_MAKER_IDS === $field) {
@@ -200,7 +200,16 @@ class DataService
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
+        // TODO: https://github.com/veelkoov/fuzzrake/issues/186
         return $this->cache->get(fn () => $this->eventRepository->getLatestEventTimestamp(),
-            [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__); // TODO: https://github.com/veelkoov/fuzzrake/issues/251);
+            [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__);
+    }
+
+    // TODO: Generator for all and active
+    public function getCreatorDataById(int $id): Creator
+    {
+        return $this->cache->get(function () use ($id): Creator {
+            return new Creator($this->creatorRepository->getCompleteById($id)); // TODO: Should detach to avoid accidental changes
+        }, CacheTags::creatorWithId($id), [__METHOD__, $id]);
     }
 }

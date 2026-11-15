@@ -6,6 +6,7 @@ namespace App\Tracking;
 
 use App\Repository\CreatorRepository;
 use App\Repository\CreatorUrlRepository;
+use App\Service\Cache;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
@@ -75,6 +76,10 @@ final class TrackCreatorsTask
         }
 
         $failedIds = $this->trackAndGetFailedIds($creators, $message->retryAllowed(), $message->refetchPages);
+
+        $successfulIds = $message->idsOfCreators->minusAll($failedIds);
+        $individualCreatorTagsToInvalidate = iter_mapl($successfulIds, CacheTags::creatorWithId(...));
+        $this->messageBus->dispatch(new InvalidateCacheTagsV1(...$individualCreatorTagsToInvalidate));
 
         $this->handleFailedIds($failedIds, $message);
 

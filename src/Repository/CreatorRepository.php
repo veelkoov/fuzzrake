@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
-use App\Filtering\RequestsHandling\QueryChoicesAppender;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
@@ -16,10 +15,8 @@ use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
-use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
@@ -106,18 +103,15 @@ class CreatorRepository extends ServiceEntityRepository
         return $this->getPaged($this->getCreatorsQueryBuilder());
     }
 
-    /**
-     * @return Generator<Creator>
-     */
-    public function getActivePaged(): Generator
+    public function getCompleteById(int $id): ?Creator
     {
-        $queryBuilder = $this->getCreatorsQueryBuilder()
-            ->where('d_c.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->orderBy('d_c.id')
-        ;
-
-        return $this->getPaged($queryBuilder);
+        // @phpstan-ignore return.type (I don't know how to fix that)
+        return $this->getCreatorsQueryBuilder()
+            ->andWhere('d_c.id = :id')
+            ->setParameter('id', $id)
+            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     private function getCreatorsQueryBuilder(): QueryBuilder
@@ -290,22 +284,6 @@ class CreatorRepository extends ServiceEntityRepository
         return (int) $resultData;
     }
 
-    /**
-     * @return WindowPage<array{0: Creator}>
-     */
-    public function getFilteredPage(QueryChoicesAppender $appender, int $pageNumber): WindowPage
-    {
-        $builder = $this->getCreatorsQueryBuilder();
-        $appender->applyChoices($builder);
-
-        $query = $builder->getQuery();
-        /** @var Query<null, array{0: Creator}> $query */
-
-        // grep-code-cannot-use-coalesce-in-doctrine-order-by
-        // @phpstan-ignore-next-line varTag.type
-        return Pagination::getExistingPage($query, $pageNumber);
-    }
-
     public function getWithIds(IntVec $idsOfCreators): CreatorList
     {
         $entities = $this->getCreatorsQueryBuilder()
@@ -315,5 +293,25 @@ class CreatorRepository extends ServiceEntityRepository
             ->getResult();
 
         return CreatorList::wrap($entities);
+    }
+
+    public function getAllIds(): IntVec
+    {
+        // @phpstan-ignore argument.type (I don't know how to fix that)
+        return new IntVec($this->createQueryBuilder('d_c')
+            ->select('d_c.id')
+            ->getQuery()
+            ->getSingleColumnResult());
+    }
+
+    public function getActiveIds(): IntVec
+    {
+        // @phpstan-ignore argument.type (I don't know how to fix that)
+        return new IntVec($this->createQueryBuilder('d_c')
+            ->select('d_c.id')
+            ->where('d_c.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getSingleColumnResult());
     }
 }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Events;
 use Psr\Cache\CacheItemPoolInterface;
 
 #[AsDoctrineListener(event: Events::postFlush)]
-class PostFlushSubscriber
+class PostFlushSubscriber // FIXME: Remove this abomination
 {
     public function __construct(
         private readonly CacheItemPoolInterface $cacheProvider,
