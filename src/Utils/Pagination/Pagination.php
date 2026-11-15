@@ -41,6 +41,9 @@ final class Pagination
         }
     }
 
+    /**
+     * @param int<1, max> $pageNumber
+     */
     public static function getWindow(int $pageNumber): Window
     {
         return Window::fromPageNumberAndSize($pageNumber, self::PAGE_SIZE);

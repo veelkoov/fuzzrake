@@ -16,7 +16,7 @@ final readonly class ItemsPage
     public bool $hasNext;
 
     /**
-     * @param list<T> $items
+     * @param T[] $items
      */
     public function __construct(
         public array $items,
