@@ -52,7 +52,7 @@ class FilteredDataProvider
 
         $creators = iter_mapl($page,
             // grep-code-cannot-use-coalesce-in-doctrine-order-by
-            fn (array $creatorAndOrderColumns) => $this->dataService->getCreatorById($creatorAndOrderColumns[0]->getId() ?? 0), // Zero is impossible
+            fn (array $creatorAndOrderColumns) => $this->dataService->getCreatorDataById($creatorAndOrderColumns[0]->getId() ?? 0),
         );
 
         return new ItemsPage(

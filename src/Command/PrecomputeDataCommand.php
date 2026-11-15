@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Repository\CreatorRepository;
 use App\Service\DataService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -17,12 +20,24 @@ final class PrecomputeDataCommand
 {
     public function __construct(
         private readonly DataService $dataService,
+        private readonly CreatorRepository $creatorRepository,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function __invoke(
         SymfonyStyle $io,
     ): int {
+        $io->comment('Preloading creators');
+        $progress = new ProgressBar($io, $this->creatorRepository->countAll());
+
+        foreach ($this->creatorRepository->getAllIds() as $id) {
+            $this->dataService->getCreatorDataById($id);
+            $this->entityManager->clear();
+            $progress->advance();
+        }
+        $progress->finish();
+
         $io->comment('Provided info stats');
         $this->dataService->getProvidedInfoStats();
 

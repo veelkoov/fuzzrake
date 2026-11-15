@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Entity\Creator as CreatorE;
 use App\Repository\CreatorRepository;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\Service\DataService;
 use App\Utils\Json;
 use App\Utils\StrUtils;
-use Generator;
 use InvalidArgumentException;
 use JsonException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,6 +18,7 @@ use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Veelkoov\Debris\Vecs\IntVec;
 
 #[AsCommand(
     name: 'app:data:export',
@@ -29,6 +28,7 @@ final class DataExportCommand
 {
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -44,13 +44,13 @@ final class DataExportCommand
         #[Option(suggestedValues: ['xlsx', 'json'])]
         string $format = 'xlsx',
     ): int {
-        $generator = $onlyActive
-            ? $this->creatorRepository->getActivePaged()
-            : $this->creatorRepository->getAllPaged();
+        $ids = $onlyActive
+            ? $this->creatorRepository->getActiveIds()
+            : $this->creatorRepository->getAllIds();
 
         match (strtolower($format)) {
-            'xlsx' => $this->exportToXlsx($onlyPublic, $generator),
-            'json' => $this->exportToJson($onlyPublic, $generator),
+            'xlsx' => $this->exportToXlsx($onlyPublic, $ids),
+            'json' => $this->exportToJson($onlyPublic, $ids),
             default => throw new InvalidArgumentException("Unknown format: '$format'."),
         };
 
@@ -59,10 +59,7 @@ final class DataExportCommand
         return Command::SUCCESS;
     }
 
-    /**
-     * @param Generator<CreatorE> $generator
-     */
-    private function exportToXlsx(bool $onlyPublic, Generator $generator): void
+    private function exportToXlsx(bool $onlyPublic, IntVec $ids): void
     {
         $fieldsList = $onlyPublic ? Fields::public() : Fields::all();
 
@@ -75,8 +72,8 @@ final class DataExportCommand
         }
 
         $row = 2;
-        foreach ($generator as $creatorE) {
-            $creator = new Creator($creatorE);
+        foreach ($ids as $id) {
+            $creator = $this->dataService->getCreatorDataById($id);
 
             $col = 1;
             foreach ($fieldsList as $field) {
@@ -91,23 +88,21 @@ final class DataExportCommand
     }
 
     /**
-     * @param Generator<CreatorE> $generator
-     *
      * @throws JsonException
      */
-    private function exportToJson(bool $onlyPublic, Generator $generator): void
+    private function exportToJson(bool $onlyPublic, IntVec $ids): void
     {
         $json = '[';
 
         $empty = true;
-        foreach ($generator as $creatorE) {
+        foreach ($ids as $id) {
             if ($empty) {
                 $empty = false;
             } else {
                 $json .= ',';
             }
 
-            $creator = new Creator($creatorE);
+            $creator = $this->dataService->getCreatorDataById($id);
 
             $json .= Json::encode($onlyPublic ? $creator->getPublicData() : $creator->getAllData());
         }

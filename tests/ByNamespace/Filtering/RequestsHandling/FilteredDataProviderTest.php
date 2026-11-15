@@ -23,7 +23,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
     private static function getDataServiceStub(): DataService
     {
         $result = self::createStub(DataService::class);
-        $result->method('getCreatorById')
+        $result->method('getCreatorDataById')
             ->willReturnCallback(fn (int $id) => new Creator(self::getCreatorRepository()->find($id)));
 
         return $result;

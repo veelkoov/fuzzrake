@@ -123,7 +123,7 @@ class ImportService
 
         try {
             $this->messageBus->dispatch(new SpeciesSyncNotificationV1());
-            $this->messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS));
+            $this->messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS, CacheTags::creatorWithId($creator->getId() ?? 0)));
         } catch (ExceptionInterface $exception) {
             throw new UncheckedException($exception);
         }

@@ -132,8 +132,8 @@ class DataService
         return $this->cache->get(function (): StringToInt {
             $result = StringToInt::fromKeys(Fields::inStats()->names(), fn () => 0);
 
-            foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
-                $creator = new Creator($creatorE);
+            foreach ($this->creatorRepository->getActiveIds() as $id) {
+                $creator = $this->getCreatorDataById($id);
 
                 foreach (Fields::inStats() as $field) {
                     if (Field::FORMER_MAKER_IDS === $field) {
@@ -205,10 +205,11 @@ class DataService
             [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__);
     }
 
-    public function getCreatorById(int $id): Creator
+    // TODO: Generator for all and active
+    public function getCreatorDataById(int $id): Creator
     {
         return $this->cache->get(function () use ($id): Creator {
-            return new Creator($this->creatorRepository->getCompleteById($id));
+            return new Creator($this->creatorRepository->getCompleteById($id)); // TODO: Should detach to avoid accidental changes
         }, CacheTags::creatorWithId($id), [__METHOD__, $id]);
     }
 }

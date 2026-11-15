@@ -7,9 +7,13 @@ namespace App\Controller\Mx;
 use App\Controller\Utils\ButtonClickedTrait;
 use App\Form\Mx\CreatorType;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
+use App\ValueObject\CacheTags;
+use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/mx/creators')]
@@ -17,8 +21,11 @@ class CreatorsController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
 
+    /**
+     * @throws ExceptionInterface
+     */
     #[Route(path: '/{creatorId}/edit', name: 'rt_mx_creator_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, string $creatorId): Response
+    public function edit(MessageBusInterface $messageBus, Request $request, string $creatorId): Response
     {
         $creator = $this->getCreatorOrThrow404($creatorId);
 
@@ -30,6 +37,8 @@ class CreatorsController extends FuzzrakeAbstractController
         $creator->assureNsfwSafety();
 
         if ($form->isSubmitted() && $this->success($creator, $form)) {
+            $messageBus->dispatch(new InvalidateCacheTagsV1(CacheTags::CREATORS, CacheTags::creatorWithId($creator->getId() ?? 0)));
+
             return $this->redirectToRoute('rt_main', ['_fragment' => $creator->getLastCreatorId()]);
         }
 

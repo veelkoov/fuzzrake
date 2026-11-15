@@ -103,22 +103,9 @@ class CreatorRepository extends ServiceEntityRepository
         return $this->getPaged($this->getCreatorsQueryBuilder());
     }
 
-    /**
-     * @return Generator<Creator>
-     */
-    public function getActivePaged(): Generator
-    {
-        $queryBuilder = $this->getCreatorsQueryBuilder()
-            ->where('d_c.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->orderBy('d_c.id')
-        ;
-
-        return $this->getPaged($queryBuilder);
-    }
-
     public function getCompleteById(int $id): ?Creator
     {
+        // @phpstan-ignore return.type (I don't know how to fix that)
         return $this->getCreatorsQueryBuilder()
             ->andWhere('d_c.id = :id')
             ->setParameter('id', $id)
@@ -306,5 +293,25 @@ class CreatorRepository extends ServiceEntityRepository
             ->getResult();
 
         return CreatorList::wrap($entities);
+    }
+
+    public function getAllIds(): IntVec
+    {
+        // @phpstan-ignore argument.type (I don't know how to fix that)
+        return new IntVec($this->createQueryBuilder('d_c')
+            ->select('d_c.id')
+            ->getQuery()
+            ->getSingleColumnResult());
+    }
+
+    public function getActiveIds(): IntVec
+    {
+        // @phpstan-ignore argument.type (I don't know how to fix that)
+        return new IntVec($this->createQueryBuilder('d_c')
+            ->select('d_c.id')
+            ->where('d_c.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getSingleColumnResult());
     }
 }
