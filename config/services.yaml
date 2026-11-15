@@ -31,3 +31,9 @@ services:
     App\Event\DisrespectfulLegacyScraper:
         tags:
             - { name: 'kernel.event_subscriber' }
+
+    App\Event\Doctrine\PostFlushSubscriber:
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+        arguments:
+            - '@cache.app'
