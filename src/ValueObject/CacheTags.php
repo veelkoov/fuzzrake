@@ -8,4 +8,9 @@ final class CacheTags
 {
     public const string CREATORS = 'creators';
     public const string TRACKING = 'tracking';
+
+    public static function creatorWithId(int $id): string
+    {
+        return "creator-$id";
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Tests\ByNamespace\Filtering\RequestsHandling;
 
 use App\Filtering\RequestsHandling\Choices;
 use App\Filtering\RequestsHandling\FilteredDataProvider;
+use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\FuzzrakeKernelTestCase;
 use App\Tests\TestUtils\UserCreator;
@@ -19,6 +20,15 @@ use Veelkoov\Debris\Sets\StringSet;
 #[Medium]
 class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 {
+    private static function getDataServiceStub(): DataService
+    {
+        $result = self::createStub(DataService::class);
+        $result->method('getCreatorById')
+            ->willReturnCallback(fn (int $id) => new Creator(self::getCreatorRepository()->find($id)));
+
+        return $result;
+    }
+
     public function testWorkingWithMinors(): void
     {
         $a1 = UserCreator::get()->setCreatorId('M000001')->setWorksWithMinors(false);
@@ -31,7 +41,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getCreatorRepository(), self::getDataServiceStub(), CacheUtils::getArrayBased());
 
         $result = $subject->getCreatorsPage($this->getChoices(isAdult: false, wantsSfw: false, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000002', self::creatorsListToCreatorIdList($result));
@@ -52,7 +62,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
-        $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getCreatorRepository(), self::getDataServiceStub(), CacheUtils::getArrayBased());
 
         $result = $subject->getCreatorsPage($this->getChoices(isAdult: true, wantsSfw: true, wantsInactive: false, pageNumber: 1));
         self::assertSame('M000001', self::creatorsListToCreatorIdList($result));
@@ -97,7 +107,7 @@ class FilteredDataProviderTest extends FuzzrakeKernelTestCase
 
         self::flush();
 
-        $subject = new FilteredDataProvider(self::getCreatorRepository(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getCreatorRepository(), self::getDataServiceStub(), CacheUtils::getArrayBased());
 
         $input = $this->getChoices(isAdult: true, wantsSfw: false, wantsInactive: true, pageNumber: $pageRequested);
 

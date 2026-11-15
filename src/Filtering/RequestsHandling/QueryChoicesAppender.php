@@ -11,6 +11,7 @@ use App\Entity\CreatorLabel;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Entity\CreatorUrl;
+use App\Entity\CreatorVolatileData;
 use App\Filtering\Consts;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
@@ -96,7 +97,6 @@ class QueryChoicesAppender
 
         $builder
             ->addOrderBy('LOWER(d_c.name)') // Then sort by name as typical
-            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
         ;
     }
 
@@ -313,11 +313,19 @@ class QueryChoicesAppender
             Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
-            $cvdCsTrackerIssueValueTrue = QueryBuilderUtils::getUniqueId();
+            $cvd = QueryBuilderUtils::getUniqueId();
+            $trueParam = QueryBuilderUtils::getUniqueId();
 
-            $conditions[] = $builder->expr()->eq('d_cvd.csTrackerIssue', ":$cvdCsTrackerIssueValueTrue");
+            $conditions[] = $builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorVolatileData::class)
+                    ->createQueryBuilder($cvd)
+                    ->select('1')
+                    ->where("$cvd.creator = d_c")
+                    ->andWhere("$cvd.csTrackerIssue = :$trueParam")
+            );
 
-            $builder->setParameter($cvdCsTrackerIssueValueTrue, true, ParameterType::BOOLEAN);
+            $builder->setParameter($trueParam, true, ParameterType::BOOLEAN);
         }
 
         if ($items->hasSpecial(Consts::FILTER_VALUE_NOT_TRACKED)) {

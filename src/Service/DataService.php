@@ -200,7 +200,15 @@ class DataService
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
+        // TODO: https://github.com/veelkoov/fuzzrake/issues/186
         return $this->cache->get(fn () => $this->eventRepository->getLatestEventTimestamp(),
-            [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__); // TODO: https://github.com/veelkoov/fuzzrake/issues/251);
+            [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__);
+    }
+
+    public function getCreatorById(int $id): Creator
+    {
+        return $this->cache->get(function () use ($id): Creator {
+            return new Creator($this->creatorRepository->getCompleteById($id));
+        }, CacheTags::creatorWithId($id), [__METHOD__, $id]);
     }
 }

@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewCreator;
 use App\Entity\Creator;
-use App\Filtering\RequestsHandling\QueryChoicesAppender;
 use App\Utils\Creator\CreatorId;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as CreatorSAD;
@@ -16,10 +15,8 @@ use App\Utils\Pagination\Pagination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
-use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
@@ -118,6 +115,16 @@ class CreatorRepository extends ServiceEntityRepository
         ;
 
         return $this->getPaged($queryBuilder);
+    }
+
+    public function getCompleteById(int $id): ?Creator
+    {
+        return $this->getCreatorsQueryBuilder()
+            ->andWhere('d_c.id = :id')
+            ->setParameter('id', $id)
+            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     private function getCreatorsQueryBuilder(): QueryBuilder
@@ -288,22 +295,6 @@ class CreatorRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return (int) $resultData;
-    }
-
-    /**
-     * @return WindowPage<array{0: Creator}>
-     */
-    public function getFilteredPage(QueryChoicesAppender $appender, int $pageNumber): WindowPage
-    {
-        $builder = $this->getCreatorsQueryBuilder();
-        $appender->applyChoices($builder);
-
-        $query = $builder->getQuery();
-        /** @var Query<null, array{0: Creator}> $query */
-
-        // grep-code-cannot-use-coalesce-in-doctrine-order-by
-        // @phpstan-ignore-next-line varTag.type
-        return Pagination::getExistingPage($query, $pageNumber);
     }
 
     public function getWithIds(IntVec $idsOfCreators): CreatorList
