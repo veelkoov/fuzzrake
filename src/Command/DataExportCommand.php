@@ -38,8 +38,6 @@ final class DataExportCommand
     public function __invoke(
         SymfonyStyle $io,
         #[Option]
-        bool $onlyPublic = true,
-        #[Option]
         bool $onlyActive = true,
         #[Option(suggestedValues: ['xlsx', 'json'])]
         string $format = 'xlsx',
@@ -49,8 +47,8 @@ final class DataExportCommand
             : $this->creatorRepository->getAllIds();
 
         match (strtolower($format)) {
-            'xlsx' => $this->exportToXlsx($onlyPublic, $ids),
-            'json' => $this->exportToJson($onlyPublic, $ids),
+            'xlsx' => $this->exportToXlsx($ids),
+            'json' => $this->exportToJson($ids),
             default => throw new InvalidArgumentException("Unknown format: '$format'."),
         };
 
@@ -59,15 +57,13 @@ final class DataExportCommand
         return Command::SUCCESS;
     }
 
-    private function exportToXlsx(bool $onlyPublic, IntVec $ids): void
+    private function exportToXlsx(IntVec $ids): void
     {
-        $fieldsList = $onlyPublic ? Fields::public() : Fields::all();
-
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         $col = 1;
-        foreach ($fieldsList as $field) {
+        foreach (Fields::public() as $field) {
             $sheet->getCell([$col++, 1])->setValue($field->value);
         }
 
@@ -76,7 +72,7 @@ final class DataExportCommand
             $creator = $this->dataService->getCreatorDataById($id);
 
             $col = 1;
-            foreach ($fieldsList as $field) {
+            foreach (Fields::public() as $field) {
                 $sheet->getCell([$col++, $row])->setValue(StrUtils::asStr($creator->get($field)));
             }
 
@@ -90,7 +86,7 @@ final class DataExportCommand
     /**
      * @throws JsonException
      */
-    private function exportToJson(bool $onlyPublic, IntVec $ids): void
+    private function exportToJson(IntVec $ids): void // FIXME: Use DataService / CreatorDataService when possible
     {
         $json = '[';
 
@@ -104,7 +100,7 @@ final class DataExportCommand
 
             $creator = $this->dataService->getCreatorDataById($id);
 
-            $json .= Json::encode($onlyPublic ? $creator->getPublicData() : $creator->getAllData());
+            $json .= Json::encode($creator->getPublicData());
         }
 
         $json .= ']';
