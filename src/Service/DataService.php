@@ -17,7 +17,9 @@ use App\Utils\Json;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnexpectedResultException;
+use Generator;
 use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
@@ -31,6 +33,7 @@ class DataService
         private readonly CreatorVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly EventRepository $eventRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
@@ -132,7 +135,7 @@ class DataService
         return $this->cache->get(function (): StringToInt {
             $result = StringToInt::fromKeys(Fields::inStats()->names(), fn () => 0);
 
-            foreach ($this->creatorRepository->getActiveIds() as $id) {
+            foreach ($this->creatorRepository->getIds(false) as $id) {
                 $creator = $this->getCreatorDataById($id);
 
                 foreach (Fields::inStats() as $field) {
@@ -176,26 +179,26 @@ class DataService
         }, CacheTags::TRACKING, __METHOD__);
     }
 
-    public function getCreatorsPublicDataJsonString(): string
+    public function getCreatorsPublicDataJsonString(bool $includeInactive): string
     {
-        return $this->cache->get(function (): string {
+        return $this->cache->get(function () use ($includeInactive): string {
             $result = '[';
             $empty = true;
 
-            foreach ($this->creatorRepository->getAllPaged() as $creatorE) {
+            foreach ($this->getCreatorsData($includeInactive) as $creator) {
                 if ($empty) {
                     $empty = false;
                 } else {
                     $result .= ',';
                 }
 
-                $result .= Json::encode(new Creator($creatorE));
+                $result .= Json::encode($creator->getPublicData());
             }
 
             $result .= ']';
 
             return $result;
-        }, CacheTags::CREATORS, __METHOD__);
+        }, CacheTags::CREATORS, [__METHOD__, $includeInactive]);
     }
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
@@ -205,11 +208,23 @@ class DataService
             [CacheTags::CREATORS, CacheTags::TRACKING], __METHOD__);
     }
 
-    // TODO: Generator for all and active
     public function getCreatorDataById(int $id): Creator
     {
         return $this->cache->get(function () use ($id): Creator {
-            return new Creator($this->creatorRepository->getCompleteById($id)); // TODO: Should detach to avoid accidental changes
+            $entity = $this->creatorRepository->getCompleteById($id);
+            $this->entityManager->detach($entity);
+
+            return new Creator($entity);
         }, CacheTags::creatorWithId($id), [__METHOD__, $id]);
+    }
+
+    /**
+     * @return Generator<Creator>
+     */
+    public function getCreatorsData(bool $includeInactive): Generator
+    {
+        foreach ($this->creatorRepository->getIds($includeInactive) as $id) {
+            yield $this->getCreatorDataById($id);
+        }
     }
 }

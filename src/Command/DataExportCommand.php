@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Repository\CreatorRepository;
 use App\Service\DataService;
-use App\Utils\Json;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 use JsonException;
@@ -18,7 +16,6 @@ use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Veelkoov\Debris\Vecs\IntVec;
 
 #[AsCommand(
     name: 'app:data:export',
@@ -27,7 +24,6 @@ use Veelkoov\Debris\Vecs\IntVec;
 final class DataExportCommand
 {
     public function __construct(
-        private readonly CreatorRepository $creatorRepository,
         private readonly DataService $dataService,
     ) {
     }
@@ -38,17 +34,13 @@ final class DataExportCommand
     public function __invoke(
         SymfonyStyle $io,
         #[Option]
-        bool $onlyActive = true,
+        bool $includeInactive = false,
         #[Option(suggestedValues: ['xlsx', 'json'])]
         string $format = 'xlsx',
     ): int {
-        $ids = $onlyActive
-            ? $this->creatorRepository->getActiveIds()
-            : $this->creatorRepository->getAllIds();
-
         match (strtolower($format)) {
-            'xlsx' => $this->exportToXlsx($ids),
-            'json' => $this->exportToJson($ids),
+            'xlsx' => $this->exportToXlsx($includeInactive),
+            'json' => $this->exportToJson($includeInactive),
             default => throw new InvalidArgumentException("Unknown format: '$format'."),
         };
 
@@ -57,7 +49,7 @@ final class DataExportCommand
         return Command::SUCCESS;
     }
 
-    private function exportToXlsx(IntVec $ids): void
+    private function exportToXlsx(bool $includeInactive): void
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -68,9 +60,7 @@ final class DataExportCommand
         }
 
         $row = 2;
-        foreach ($ids as $id) {
-            $creator = $this->dataService->getCreatorDataById($id);
-
+        foreach ($this->dataService->getCreatorsData($includeInactive) as $creator) {
             $col = 1;
             foreach (Fields::public() as $field) {
                 $sheet->getCell([$col++, $row])->setValue(StrUtils::asStr($creator->get($field)));
@@ -86,24 +76,9 @@ final class DataExportCommand
     /**
      * @throws JsonException
      */
-    private function exportToJson(IntVec $ids): void // FIXME: Use DataService / CreatorDataService when possible
+    private function exportToJson(bool $includeInactive): void
     {
-        $json = '[';
-
-        $empty = true;
-        foreach ($ids as $id) {
-            if ($empty) {
-                $empty = false;
-            } else {
-                $json .= ',';
-            }
-
-            $creator = $this->dataService->getCreatorDataById($id);
-
-            $json .= Json::encode($creator->getPublicData());
-        }
-
-        $json .= ']';
+        $json = $this->dataService->getCreatorsPublicDataJsonString($includeInactive);
 
         new Filesystem()->dumpFile('getfursu.it_data.json', $json);
     }

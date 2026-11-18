@@ -46,6 +46,25 @@ class DataServiceTest extends FuzzrakeKernelTestCase
         self::assertSame(2, $result->activeCreatorsCount);
     }
 
+    public function testGetCreatorsPublicDataJsonString(): void
+    {
+        $creator1 = UserCreator::get()->setName('Active')->setInactiveReason('');
+        $creator2 = UserCreator::get()->setName('Hidden')->setInactiveReason('This is a hidden creator');
+        self::persistAndFlush($creator1, $creator2);
+
+        $subject = $this->getDataService();
+
+        $result1 = $subject->getCreatorsPublicDataJsonString(false);
+        self::assertJson($result1);
+        self::assertStringContainsString('Active', $result1);
+        self::assertStringNotContainsString('Hidden', $result1);
+
+        $result2 = $subject->getCreatorsPublicDataJsonString(true);
+        self::assertJson($result2);
+        self::assertStringContainsString('Active', $result2);
+        self::assertStringContainsString('Hidden', $result2);
+    }
+
     private function getDataService(): DataService
     {
         return new DataService(
@@ -54,6 +73,7 @@ class DataServiceTest extends FuzzrakeKernelTestCase
             self::createStub(CreatorVolatileDataRepository::class),
             self::createStub(CreatorOfferStatusRepository::class),
             self::createStub(EventRepository::class),
+            self::getEM(),
             CacheUtils::getArrayBased(),
             self::createStub(LoggerInterface::class),
         );

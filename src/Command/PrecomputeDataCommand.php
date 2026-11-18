@@ -31,8 +31,7 @@ final class PrecomputeDataCommand
         $io->comment('Preloading creators');
         $progress = new ProgressBar($io, $this->creatorRepository->countAll());
 
-        foreach ($this->creatorRepository->getAllIds() as $id) {
-            $this->dataService->getCreatorDataById($id);
+        foreach ($this->dataService->getCreatorsData(true) as $_) {
             $this->entityManager->clear();
             $progress->advance();
         }

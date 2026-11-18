@@ -75,9 +75,9 @@ class CreatorRepository extends ServiceEntityRepository
     /**
      * @return Generator<Creator>
      */
-    private function getPaged(QueryBuilder $queryBuilder): Generator
+    public function getAllPaged(): Generator
     {
-        $query = $queryBuilder->getQuery();
+        $query = $this->getCreatorsQueryBuilder()->getQuery();
         $window = Pagination::getWindow(1);
 
         while (true) {
@@ -95,23 +95,19 @@ class CreatorRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @return Generator<Creator>
-     */
-    public function getAllPaged(): Generator
+    public function getCompleteById(int $id): Creator
     {
-        return $this->getPaged($this->getCreatorsQueryBuilder());
-    }
-
-    public function getCompleteById(int $id): ?Creator
-    {
-        // @phpstan-ignore return.type (I don't know how to fix that)
-        return $this->getCreatorsQueryBuilder()
-            ->andWhere('d_c.id = :id')
-            ->setParameter('id', $id)
-            ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            // @phpstan-ignore return.type (I don't know how to fix that)
+            return $this->getCreatorsQueryBuilder()
+                ->andWhere('d_c.id = :id')
+                ->setParameter('id', $id)
+                ->addOrderBy('d_cu.id') // Keep miniatures in the same order on creator cards; grep-code-order-support-workaround
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NonUniqueResultException $exception) {
+            throw new UnbelievableRuntimeException($exception);
+        }
     }
 
     private function getCreatorsQueryBuilder(): QueryBuilder
@@ -295,23 +291,15 @@ class CreatorRepository extends ServiceEntityRepository
         return CreatorList::wrap($entities);
     }
 
-    public function getAllIds(): IntVec
+    public function getIds(bool $includeInactive): IntVec
     {
-        // @phpstan-ignore argument.type (I don't know how to fix that)
-        return new IntVec($this->createQueryBuilder('d_c')
-            ->select('d_c.id')
-            ->getQuery()
-            ->getSingleColumnResult());
-    }
+        $queryBuilder = $this->createQueryBuilder('d_c')->select('d_c.id');
 
-    public function getActiveIds(): IntVec
-    {
+        if (!$includeInactive) {
+            $queryBuilder->where('d_c.inactiveReason = :empty')->setParameter('empty', '');
+        }
+
         // @phpstan-ignore argument.type (I don't know how to fix that)
-        return new IntVec($this->createQueryBuilder('d_c')
-            ->select('d_c.id')
-            ->where('d_c.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->getSingleColumnResult());
+        return new IntVec($queryBuilder->getQuery()->getSingleColumnResult());
     }
 }

@@ -15,7 +15,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 /**
- * @phpstan-type Keyable Field|string|int
+ * @phpstan-type Keyable Field|string|int|bool
  */
 class Cache
 {
@@ -78,6 +78,8 @@ class Cache
                 $result = $item;
             } elseif (is_int($item)) {
                 $result = (string) $item;
+            } elseif (is_bool($item)) {
+                $result = $item ? 'true' : 'false';
             } else {
                 throw new RuntimeException(gettype($item).' is not supported as a cache key part');
             }

@@ -27,7 +27,7 @@ class RestApiController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function creators(): JsonResponse
     {
-        $result = $this->dataService->getCreatorsPublicDataJsonString();
+        $result = $this->dataService->getCreatorsPublicDataJsonString(true);
 
         return new JsonResponse($result, json: true);
     }
