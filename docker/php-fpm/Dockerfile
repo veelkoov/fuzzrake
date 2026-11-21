@@ -1,10 +1,13 @@
-FROM php:8.5.13-fpm-alpine3.24
+FROM php:8.6.0-fpm-alpine3.24
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
 
 ARG DOCKER_UID=1000
 ENV DOCKER_UID="$DOCKER_UID"
+
+ARG PIE_VERSION=1.5.5
+ARG PIE_SHA256_CHECKSUM=2ca0dff6868f1b53c095625674deef38ac698588e0a25e4321cd834a5b7553bc
 
 #
 # Packages installation
@@ -21,8 +24,12 @@ RUN apk add --no-cache icu php-intl util-linux libzip libpng acl pnpm \
     && if [ "$DEV_MACHINE" = "yes" ]; then \
         echo "Setting up develop software" \
         && apk add --no-cache chromium chromium-chromedriver git \
-        && pecl install xdebug \
-        && docker-php-ext-enable xdebug.so; \
+        && curl -sSfL --max-redirs 5 -o /usr/local/bin/pie.phar "https://github.com/php/pie/releases/download/$PIE_VERSION/pie.phar" \
+        && chmod a+x /usr/local/bin/pie.phar \
+        && echo "$PIE_SHA256_CHECKSUM /usr/local/bin/pie.phar" > /tmp/pie.phar.sha256sum \
+        && sha256sum -c /tmp/pie.phar.sha256sum \
+        && rm /tmp/pie.phar.sha256sum \
+        && pie.phar install xdebug/xdebug:3.6.0alpha1@alpha; \
     else \
         echo "Skipping develop software"; \
     fi \
@@ -53,7 +60,7 @@ RUN if [ "$DEV_MACHINE" = "yes" ]; then \
 #
 
 COPY entrypoint.sh /entrypoint.sh
-CMD /entrypoint.sh
+CMD ["/entrypoint.sh"]
 
 #
 # Set up working directory
