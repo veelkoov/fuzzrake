@@ -37,7 +37,7 @@ final class UserCreator
                 ->setCountry('FI')
             ;
 
-            switch (rand(1, 3)) {
+            switch (random_int(1, 3)) {
                 case 1:
                     $result->setAges(Ages::ADULTS)->setDoesNsfw(true)->setWorksWithMinors(false)
                         ->setNsfwWebsite(self::rndBool())->setNsfwSocial(self::rndBool());
@@ -60,6 +60,6 @@ final class UserCreator
 
     private static function rndBool(): bool
     {
-        return 0 === rand(0, 1);
+        return 0 === random_int(0, 1);
     }
 }

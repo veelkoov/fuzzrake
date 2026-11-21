@@ -217,7 +217,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, HasEmai
     }
 
     #[Override]
-    public function __toString()
+    public function __toString(): string
     {
         return self::class."[$this->email]";
     }

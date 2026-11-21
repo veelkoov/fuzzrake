@@ -26,7 +26,7 @@ class PostReadTracker
             return true;
         }
 
-        $topic = null === $post->getParent() ? $post : $post->getParent();
+        $topic = $post->getParent() ?? $post;
         $topicRead = $this->getTopicReadFor($topic);
 
         return $topicRead->getLastRead()->getTimestamp() > ($post->getEditedUtc()?->getTimestamp() ?? $post->getPostedUtc()->getTimestamp());

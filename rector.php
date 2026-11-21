@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 
 return RectorConfig::configure()
@@ -16,7 +16,7 @@ return RectorConfig::configure()
         symfony: true,
     )
     ->withSkip([
-        NullToStrictStringFuncCallArgRector::class, // False-positives; allow PHPStan to take care of those
+        ClassPropertyAssignToConstructorPromotionRector::class, // Leave my Doctrine entities alone
         ReadOnlyClassRector::class, // Prefer to put readonly over data-primarily classes
     ])
 ;
