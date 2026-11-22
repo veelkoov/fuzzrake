@@ -9,6 +9,7 @@ use App\Data\Definitions\Fields\FieldsList;
 use App\Entity\CreatorUrl;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<CreatorUrl>
@@ -34,8 +35,8 @@ class CreatorUrlRepository extends ServiceEntityRepository
             ->addSelect('d_cvd')
             ->addSelect('d_cus')
             ->addSelect('d_ci')
-            ->orderBy('d_cus.lastSuccessUtc', 'ASC')
-            ->addOrderBy('d_cus.lastFailureUtc', 'ASC');
+            ->orderBy('d_cus.lastSuccessUtc', SortDirection::Ascending)
+            ->addOrderBy('d_cus.lastFailureUtc', SortDirection::Ascending);
 
         if (!$excluded->isEmpty()) {
             $builder
@@ -43,9 +44,8 @@ class CreatorUrlRepository extends ServiceEntityRepository
                 ->setParameter('excluded', $excluded->names());
         }
 
-        $resultData = $builder->getQuery()->execute();
-
-        return $resultData; // @phpstan-ignore return.type (Lack of skill to fix this)
+        // @phpstan-ignore return.type (Lack of skill to fix this)
+        return $builder->getQuery()->execute();
     }
 
     /**
