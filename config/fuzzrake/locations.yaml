@@ -45,6 +45,7 @@ parameters:
       "^ukraine$": "UA"
       "^united states( of america)?$": "US"
       '^(u\\.?s\\.?( of america)?|usa)$': "US"
+      "^Venezuela$": "VE"
       "^south africa$": "ZA"
 
   state_fixes:
@@ -130,6 +131,7 @@ parameters:
       MX: Mexico
       PE: Peru
       US: United States
+      VE: Venezuela
     Europe:
       AT: Austria
       BE: Belgium
