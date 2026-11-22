@@ -3,7 +3,10 @@
 {% block title %}Submission #{{ importData.submission.id }}{% endblock %}
 
 {% block body %}
-    <h1>{{ block('title') }}</h1>
+    <h1>
+        {{ block('title') }}
+        <small class="text-body-secondary">{{ importData.submission.submittedAtUtc|fragile_datetime_utc }}</small>
+    </h1>
 
     {% if not importData.isUpdate %}
         <p>Adding a new creator.</p>
