@@ -26,4 +26,5 @@ return new PhpCsFixer\Config()
         'no_useless_else' => false, // Context-dependent readability
     ])
     ->setFinder($finder)
+    ->setUnsupportedPhpVersionAllowed(true) // FIXME: Revert
 ;

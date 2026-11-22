@@ -18,9 +18,24 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && rm /tmp/composer_installer
 
 # Git is needed for managing Symfony recipes in the container
-RUN apk add --no-cache icu php-intl util-linux libzip libpng acl pnpm \
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev \
-    && docker-php-ext-install -j$(nproc) intl zip gd bcmath \
+# oniguruma(-dev) required by mbstring
+RUN apk add --no-cache \
+        acl \
+        icu \
+        libpng \
+        libzip \
+        oniguruma \
+        pnpm \
+        php-intl \
+        util-linux
+
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+        icu-dev \
+        linux-headers \
+        libpng-dev \
+        libzip-dev \
+        oniguruma-dev \
+    && docker-php-ext-install -j$(nproc) bcmath gd intl mbstring zip \
     && if [ "$DEV_MACHINE" = "yes" ]; then \
         echo "Setting up develop software" \
         && apk add --no-cache chromium chromium-chromedriver git \
