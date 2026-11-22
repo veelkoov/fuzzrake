@@ -48,11 +48,11 @@ class ManageController extends AbstractController
     #[Route(path: '/submissions/social', name: 'rt_submissions_social')]
     public function social(Request $request): Response
     {
-        $hours = $request->query->getInt('hours', 4);
-        $fourHoursAgo = UtcClock::at("-$hours hours")->getTimestamp();
+        $minutes = $request->query->getInt('minutes', 4 * 60);
+        $cutoffTimestamp = UtcClock::at("-$minutes minutes")->getTimestamp();
 
         $creators = array_filter([...$this->dataService->getCreatorsDataByIds($this->creatorRepository->getNewIds())],
-            static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
+            static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $cutoffTimestamp);
 
         return $this->render('submissions/social.html.twig', [
             'creators' => $creators,
