@@ -29,6 +29,7 @@ parameters:
       "^kyrgyzstan$": "KG"
       "^latvia$": "LV"
       "^lithuania$": "LT"
+      "^Luxembourg$": "LU"
       "^mexico$": "MX"
       "^(the )?netherlands$": "NL"
       "^new zealand$": "NZ"
@@ -151,6 +152,7 @@ parameters:
       IE: Ireland
       IT: Italy
       LT: Lithuania
+      LU: Luxembourg
       LV: Latvia
       NL: Netherlands
       "NO": Norway
