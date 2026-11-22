@@ -56,23 +56,6 @@ class CreatorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Creator[]
-     */
-    public function getNewWithLimit(): array
-    {
-        return $this->getCreatorsQueryBuilder()
-            ->where('d_cv.fieldName = :fieldName')
-            ->andWhere('d_cv.value > :fieldValue')
-            ->setParameter('fieldName', Field::DATE_ADDED->value)
-            ->setParameter('fieldValue', NewCreator::getCutoffDateStr())
-            ->orderBy('d_cv.value', SortDirection::Descending)
-            // TODO: No pagination. https://github.com/veelkoov/fuzzrake/issues/248
-            ->setMaxResults(100)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * @return Generator<Creator>
      */
     public function getAllPaged(): Generator
@@ -298,6 +281,21 @@ class CreatorRepository extends ServiceEntityRepository
         if (!$includeInactive) {
             $queryBuilder->where('d_c.inactiveReason = :empty')->setParameter('empty', '');
         }
+
+        // @phpstan-ignore argument.type (I don't know how to fix that)
+        return new IntVec($queryBuilder->getQuery()->getSingleColumnResult());
+    }
+
+    public function getNewIds(): IntVec
+    {
+        $queryBuilder = $this->createQueryBuilder('d_c')
+            ->select('d_c.id')
+            ->join('d_c.values', 'd_cv')
+            ->where('d_cv.fieldName = :fieldName', 'd_cv.value > :value')
+            ->setParameter('fieldName', Field::DATE_ADDED->value)
+            ->setParameter('value', NewCreator::getCutoffDateStr())
+            ->orderBy('d_cv.value', SortDirection::Descending)
+        ;
 
         // @phpstan-ignore argument.type (I don't know how to fix that)
         return new IntVec($queryBuilder->getQuery()->getSingleColumnResult());

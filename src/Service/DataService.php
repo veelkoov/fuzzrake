@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\IntVec;
 
 class DataService
 {
@@ -221,10 +222,18 @@ class DataService
     /**
      * @return Generator<Creator>
      */
-    public function getCreatorsData(bool $includeInactive): Generator
+    public function getCreatorsDataByIds(IntVec $ids): Generator
     {
-        foreach ($this->creatorRepository->getIds($includeInactive) as $id) {
+        foreach ($ids as $id) {
             yield $this->getCreatorDataById($id);
         }
+    }
+
+    /**
+     * @return Generator<Creator>
+     */
+    public function getCreatorsData(bool $includeInactive): Generator
+    {
+        return $this->getCreatorsDataByIds($this->creatorRepository->getIds($includeInactive));
     }
 }

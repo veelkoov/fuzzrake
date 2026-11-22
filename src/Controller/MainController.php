@@ -10,7 +10,6 @@ use App\Filtering\RequestsHandling\RequestParser;
 use App\Repository\CreatorRepository;
 use App\Service\DataService;
 use App\Utils\Creator\CreatorId;
-use App\Utils\Creator\SmartAccessDecorator as Creator;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -54,7 +53,7 @@ class MainController extends AbstractController
     public function newCreators(): Response
     {
         return $this->render('main/new.html.twig', [
-            'creators' => Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
+            'creators' => [...$this->dataService->getCreatorsDataByIds($this->creatorRepository->getNewIds())],
         ]);
     }
 

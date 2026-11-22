@@ -12,6 +12,7 @@ use App\Form\Submission\ManageType;
 use App\IuHandling\Import\ImportData;
 use App\IuHandling\Import\ImportService;
 use App\Repository\CreatorRepository;
+use App\Service\DataService;
 use App\Utils\Creator\CreatorList;
 use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
@@ -37,6 +38,7 @@ class ManageController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly ImportService $importService,
         private readonly CreatorRepository $creatorRepository,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -49,7 +51,7 @@ class ManageController extends AbstractController
         $hours = $request->query->getInt('hours', 4);
         $fourHoursAgo = UtcClock::at("-$hours hours")->getTimestamp();
 
-        $creators = array_filter(Creator::wrapAll($this->creatorRepository->getNewWithLimit()),
+        $creators = array_filter([...$this->dataService->getCreatorsDataByIds($this->creatorRepository->getNewIds())],
             static fn (Creator $creator) => ($creator->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('submissions/social.html.twig', [
