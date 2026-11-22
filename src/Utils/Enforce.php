@@ -89,7 +89,7 @@ final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues
             throw new InvalidArgumentException("Expected an array of $class");
         }
 
-        return arr_map($input, static fn ($item) => Enforce::objectOf($item, $class));
+        return arr_map($input, Enforce::objectOf(?, $class));
     }
 
     /**

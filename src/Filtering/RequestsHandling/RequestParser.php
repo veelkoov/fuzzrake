@@ -83,11 +83,11 @@ class RequestParser
 
     private static function getBooleansFromRequest(Request $request): StringToBool
     {
-        return StringToBool::fromKeys(self::BOOLEANS, static fn ($reqKey) => $request->query->getBoolean($reqKey, false));
+        return StringToBool::fromKeys(self::BOOLEANS, $request->query->getBoolean(?, false));
     }
 
     private static function getStringsFromRequest(Request $request): StringToString
     {
-        return StringToString::fromKeys(self::STRINGS, static fn ($reqKey) => $request->query->get($reqKey, ''));
+        return StringToString::fromKeys(self::STRINGS, $request->query->get(?, ''));
     }
 }

@@ -27,14 +27,12 @@ class MiniaturesUpdaterTest extends FuzzrakeTestCase
         $loggerMock = self::createStub(LoggerInterface::class);
 
         $furtrackResolverMock = self::createStub(FurtrackMiniatureUrlResolver::class);
-        $furtrackResolverMock->method('supports')->willReturnCallback(
-            static fn (string $url) => str_starts_with($url, 'furtrack_photo_'));
+        $furtrackResolverMock->method('supports')->willReturnCallback(str_starts_with(?, 'furtrack_photo_'));
         $furtrackResolverMock->method('getMiniatureUrl')->willReturnCallback(
             static fn (Url $url) => str_replace('furtrack_photo_', 'furtrack_miniature_', $url->getUrl()));
 
         $scritchResolverMock = self::createStub(ScritchMiniatureUrlResolver::class);
-        $scritchResolverMock->method('supports')->willReturnCallback(
-            static fn (string $url) => str_starts_with($url, 'scritch_photo_'));
+        $scritchResolverMock->method('supports')->willReturnCallback(str_starts_with(?, 'scritch_photo_'));
         $scritchResolverMock->method('getMiniatureUrl')->willReturnCallback(
             static fn (Url $url) => str_replace('scritch_photo_', 'scritch_miniature_', $url->getUrl()));
 

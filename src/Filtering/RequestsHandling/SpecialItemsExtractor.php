@@ -14,8 +14,7 @@ class SpecialItemsExtractor
 
     public function __construct(StringSet $items, string ...$allowedSpecialItems)
     {
-        $this->special = StringToBool::fromKeys($allowedSpecialItems,
-            static fn (string $specialItem): bool => $items->contains($specialItem))->freeze();
+        $this->special = StringToBool::fromKeys($allowedSpecialItems, $items->contains(?))->freeze();
 
         $this->common = $items->minusAll($allowedSpecialItems)->freeze();
     }

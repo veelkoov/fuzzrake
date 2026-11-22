@@ -63,6 +63,7 @@ class FiltersData
      */
     private static function getSpecieNamesFrom(array $creators): array
     {
-        return Lists::unique(array_merge(...arr_map($creators, static fn (Creator $creator) => $creator->getSpeciesDoes())));
+        return array_merge(...arr_map($creators, static fn (Creator $creator) => $creator->getSpeciesDoes()))
+                |> Lists::unique(...);
     }
 }
