@@ -87,7 +87,7 @@
                                     Old&nbsp;data
                                 </td>
                                 <td></td>
-                                <td>
+                                <td class="text-break">
                                     {{ field|difference('danger', importData.subjectCreator, importData.fixedData)|link_urls }}
                                 </td>
                             </tr>
@@ -98,7 +98,7 @@
                             <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
                             </td>
-                            <td>
+                            <td class="text-break">
                                 {{ field|difference('primary', importData.inputData, importData.fixedData)|link_urls }}
                             </td>
                         </tr>
@@ -109,7 +109,7 @@
                                 <button class="btn btn-sm btn-outline-warning clear-button"><i class="fa-solid fa-trash-can"></i></button>
                                 <button class="btn btn-sm btn-outline-secondary fix-button"><i class="fa-solid fa-screwdriver-wrench"></i></button>
                             </td>
-                            <td class="{{ new_value_class }}">
+                            <td class="text-break {{ new_value_class }}">
                                 {{ field|difference('success', importData.fixedData, importData.subjectCreator)|link_urls }}
                             </td>
                         </tr>
