@@ -181,7 +181,7 @@ class ResetPasswordController extends AbstractController
 
         $mailer->sendPasswordResetLink($user, $resetToken);
         $this->setTokenObjectInSession($resetToken);
-        $this->logger->info('Password reset email sent.', ['user ID' => $user->getId(), 'email' => $user->getEmail()]);
+        $this->logger->info('Password reset email sent.', ['user ID' => $user->getId(), 'email' => Email::obfuscate($user->getEmail())]);
 
         return $this->redirectToRoute('rt_user_password_reset_email_sent');
     }
