@@ -6,6 +6,7 @@ ENV DEV_MACHINE="$DEV_MACHINE"
 ARG DOCKER_UID=1000
 ENV DOCKER_UID="$DOCKER_UID"
 
+# No gh in the container; manual version management & checksum validation
 ARG PIE_VERSION=1.5.5
 ARG PIE_SHA256_CHECKSUM=2ca0dff6868f1b53c095625674deef38ac698588e0a25e4321cd834a5b7553bc
 
