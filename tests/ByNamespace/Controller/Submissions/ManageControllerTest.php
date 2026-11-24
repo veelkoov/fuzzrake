@@ -316,6 +316,13 @@ class ManageControllerTest extends FuzzrakeWebTestCase
         self::$client->request('GET', "/submission/{$submission->getId()}/manage");
         self::assertResponseStatusCodeIs(200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
+
+        $submission->setDirectives("set SPECIES_COMMENT 'A comment");
+        self::flush();
+
+        self::$client->request('GET', "/submission/{$submission->getId()}/manage");
+        self::assertResponseStatusCodeIs(200);
+        self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
     public function testMissingSubmissionReturns404(): void

@@ -11,6 +11,7 @@ use App\Utils\Creator\SmartAccessDecorator as Creator;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
 class Manager
 {
@@ -51,13 +52,17 @@ class Manager
      */
     private function readDirectives(string $directives): void
     {
-        $buffer = new StringBuffer($directives);
+        try {
+            $buffer = new StringBuffer($directives);
 
-        $buffer->skipWhitespace();
-
-        while (!$buffer->isEmpty()) {
-            $this->readCommand($buffer);
             $buffer->skipWhitespace();
+
+            while (!$buffer->isEmpty()) {
+                $this->readCommand($buffer);
+                $buffer->skipWhitespace();
+            }
+        } catch (UnexpectedValueException $exception) {
+            throw new ManagerConfigError("Incorrect directives: {$exception->getMessage()}", previous: $exception);
         }
     }
 
