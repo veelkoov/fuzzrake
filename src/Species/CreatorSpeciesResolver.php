@@ -42,7 +42,7 @@ final class CreatorSpeciesResolver
 
             $thisAndDescendantsNames = $specie->getThisAndDescendants()->getNames();
 
-            return $speciesNames->any(static fn (string $specieName) => $thisAndDescendantsNames->contains($specieName));
+            return $speciesNames->any($thisAndDescendantsNames->contains(?));
         })->getNames();
     }
 

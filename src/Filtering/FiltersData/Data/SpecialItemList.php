@@ -18,6 +18,6 @@ final class SpecialItemList extends DVec
      */
     public static function from(iterable $source, int $totalForPopularity): SpecialItemList
     {
-        return SpecialItemList::mapFrom($source, static fn (MutableSpecialItem $item) => SpecialItem::from($item, $totalForPopularity));
+        return SpecialItemList::mapFrom($source, SpecialItem::from(?, $totalForPopularity));
     }
 }

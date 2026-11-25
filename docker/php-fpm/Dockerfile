@@ -1,10 +1,14 @@
-FROM php:8.5.13-fpm-alpine3.24
+FROM php:8.6.0-fpm-alpine3.24
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE="$DEV_MACHINE"
 
 ARG DOCKER_UID=1000
 ENV DOCKER_UID="$DOCKER_UID"
+
+# No gh in the container; manual version management & checksum validation
+ARG PIE_VERSION=1.5.5
+ARG PIE_SHA256_CHECKSUM=2ca0dff6868f1b53c095625674deef38ac698588e0a25e4321cd834a5b7553bc
 
 #
 # Packages installation
@@ -15,14 +19,33 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && rm /tmp/composer_installer
 
 # Git is needed for managing Symfony recipes in the container
-RUN apk add --no-cache icu php-intl util-linux libzip libpng acl pnpm \
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers libzip-dev libpng-dev \
-    && docker-php-ext-install -j$(nproc) intl zip gd bcmath \
+# oniguruma(-dev) required by mbstring
+RUN apk add --no-cache \
+        acl \
+        icu \
+        libpng \
+        libzip \
+        oniguruma \
+        pnpm \
+        php-intl \
+        util-linux
+
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+        icu-dev \
+        linux-headers \
+        libpng-dev \
+        libzip-dev \
+        oniguruma-dev \
+    && docker-php-ext-install -j$(nproc) bcmath gd intl mbstring zip \
     && if [ "$DEV_MACHINE" = "yes" ]; then \
         echo "Setting up develop software" \
         && apk add --no-cache chromium chromium-chromedriver git \
-        && pecl install xdebug \
-        && docker-php-ext-enable xdebug.so; \
+        && curl -sSfL --max-redirs 5 -o /usr/local/bin/pie.phar "https://github.com/php/pie/releases/download/$PIE_VERSION/pie.phar" \
+        && chmod a+x /usr/local/bin/pie.phar \
+        && echo "$PIE_SHA256_CHECKSUM /usr/local/bin/pie.phar" > /tmp/pie.phar.sha256sum \
+        && sha256sum -c /tmp/pie.phar.sha256sum \
+        && rm /tmp/pie.phar.sha256sum \
+        && pie.phar install xdebug/xdebug:3.6.0alpha1@alpha; \
     else \
         echo "Skipping develop software"; \
     fi \
@@ -53,7 +76,7 @@ RUN if [ "$DEV_MACHINE" = "yes" ]; then \
 #
 
 COPY entrypoint.sh /entrypoint.sh
-CMD /entrypoint.sh
+CMD ["/entrypoint.sh"]
 
 #
 # Set up working directory
