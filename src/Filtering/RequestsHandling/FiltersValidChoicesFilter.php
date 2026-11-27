@@ -26,7 +26,7 @@ class FiltersValidChoicesFilter
         $countries = self::onlyValidValues($choices->countries,
             $this->dataService->getCountries(), Consts::FILTER_VALUE_UNKNOWN);
         $states = self::onlyValidValues($choices->states,
-            $this->dataService->getStates(), Consts::FILTER_VALUE_UNKNOWN);
+            $this->dataService->getStates(), Consts::FILTER_VALUE_UNKNOWN); // FIXME: Allow Other which will match anything outside US/CA
         $languages = self::onlyValidValues($choices->languages,
             $this->dataService->getLanguages(), Consts::FILTER_VALUE_UNKNOWN);
 
