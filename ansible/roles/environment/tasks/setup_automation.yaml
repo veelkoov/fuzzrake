@@ -17,4 +17,4 @@
   ansible.builtin.systemd_service:
     enabled: true
     name: "{{ item.item.name }}"
-    state: '{{ "restarted" if item.changed else "started" }}'
+    state: "restarted" # Restart every time; code change could've made the worker incompatible or sth
