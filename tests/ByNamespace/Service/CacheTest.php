@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\ByNamespace\Service;
 
-use App\Data\Definitions\Fields\Field;
 use App\Service\Cache;
 use Override;
 use PHPUnit\Framework\Attributes\Small;
@@ -46,28 +45,5 @@ class CacheTest extends TestCase
         self::assertSame('a-result-5', $this->subject->get(static fn () => 'a-result-5', 'a-tag-1', 'a-key-1'));
         /* @phpstan-ignore staticMethod.impossibleType (Testing the contract) */
         self::assertSame('a-result-3', $this->subject->get(static fn () => 'a-result-6', 'a-tag-2', 'a-key-2'));
-    }
-
-    public function testKeysHandling(): void
-    {
-        self::assertSame(
-            $this->subject->getKeyFromParts(Field::FEATURES),
-            $this->subject->getKeyFromParts('FEATURES'),
-        );
-
-        self::assertSame(
-            $this->subject->getKeyFromParts(Field::FEATURES),
-            $this->subject->getKeyFromParts(['FEATURES']),
-        );
-
-        self::assertSame(
-            $this->subject->getKeyFromParts(['abc', Field::FEATURES]),
-            $this->subject->getKeyFromParts(['abc', 'FEATURES']),
-        );
-
-        self::assertNotSame(
-            $this->subject->getKeyFromParts(['abc', 'FEATURES']),
-            $this->subject->getKeyFromParts('abc.FEATURES'),
-        );
     }
 }

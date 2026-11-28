@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Data\Definitions\Fields\Field;
+use App\Utils\CacheKey;
 use App\Utils\Exceptions\UncheckedException;
 use App\ValueObject\Messages\InvalidateCacheTagsV1;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 /**
- * @phpstan-type Keyable Field|string|int|bool
+ * @phpstan-import-type Keyable from CacheKey
  */
 class Cache
 {
@@ -35,7 +34,7 @@ class Cache
      */
     public function get(callable $callback, array|string $tags, mixed $keyParts): mixed
     {
-        $key = $this->getKeyFromParts($keyParts);
+        $key = CacheKey::get($keyParts);
 
         try {
             $getCached = $this->cache->get($key, function (ItemInterface $item) use ($tags, $callback) {
@@ -58,35 +57,5 @@ class Cache
         } catch (InvalidArgumentException $exception) {
             throw new UncheckedException($exception);
         }
-    }
-
-    /**
-     * @param Keyable[]|Keyable $keyParts
-     *
-     * @internal
-     */
-    public function getKeyFromParts(mixed $keyParts): string
-    {
-        if (!is_array($keyParts)) {
-            $keyParts = [$keyParts];
-        }
-
-        $keyParts = arr_map($keyParts, function (mixed $item): string {
-            if ($item instanceof Field) {
-                $result = $item->value;
-            } elseif (is_string($item)) {
-                $result = $item;
-            } elseif (is_int($item)) {
-                $result = (string) $item;
-            } elseif (is_bool($item)) {
-                $result = $item ? 'true' : 'false';
-            } else {
-                throw new RuntimeException(gettype($item).' is not supported as a cache key part');
-            }
-
-            return str_replace('.', '..', $result);
-        });
-
-        return implode('.', $keyParts);
     }
 }
